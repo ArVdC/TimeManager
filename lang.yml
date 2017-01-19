@@ -1,0 +1,62 @@
+# [TimeManager] by ArVdC
+# lang.yml
+# -----
+# *version*
+#  This field is automatically checked and refreshed, don't modify it manually.
+# -----
+# *useMultiLang*
+#  Set true or false to use automatic translation for the /now command.
+# -----
+# *defaultLang*
+#  Choose the translation to use if player's locale doesn't exist in the lang.yml or when useMultiLang is false.
+# -----
+# *languages*
+#  Don't try to override the 'default' language's params, those keys are reseted on every loading.
+#  Provide multi-language support by adding new translation to this lang.yml file.
+#  [WARN] Languages names are case sensitive, use only Minecraft locale codes from : http://minecraft.gamepedia.com/Language#Available_languages.
+#  Possible placeholders are: {time}, {dayPart}, {targetWorld} and {player}.
+# -----
+version: ''
+useMultiLang: ''
+defaultLang: ''
+languages:
+  default:
+    prefix: §8§l[§6§lTime Manager§8§l]
+    msg: Please ask an admin to properly define the default language in the lang.yml file then reload the plugin.
+    dayparts:
+      day: begin at 6.00 am or tick #0
+      dusk: begin at 5.30 pm or tick #11500
+      night: begin at 7.00 pm or tick #13000
+      dawn: begin at 4.30 am or tick #22500
+  en_US:
+    prefix: §e§l[Time]
+    msg: It's §e{time}§r in {targetWorld}, this is {dayPart}.
+    dayparts:
+      day: the day
+      dusk: the sunset
+      night: the night
+      dawn: the sunrise
+  fr_FR:
+    prefix: §e§l[Heure]
+    msg: Il est &e{time}§r dans le monde {targetWorld}, c'est {dayPart}.
+    dayparts:
+      day: la journée
+      dusk: le crépuscule
+      night: la nuit
+      dawn: l'aurore
+  nl_NL:
+    prefix: §e§l[Uur]
+    msg: Het is §e{time}§r in wereld {targetWorld}, dit is {dayPart} nu.
+    dayparts:
+      day: de dag
+      dusk: de schemering
+      night: de avond
+      dawn: de dageraad
+  de_DE:
+    prefix: §e§l[Stunde]
+    msg: Es §e{time}§r in der welt {targetWorld}, das ist {dayPart}.
+    dayparts:
+      day: die tag
+      dusk: die dämmerung
+      night: die nacht
+      dawn: die morgendämmerung

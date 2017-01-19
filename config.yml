@@ -1,0 +1,49 @@
+# [TimeManager] by ArVdC
+# config.yml
+# -----
+# *version*
+#  This field is automatically checked and refreshed, don't modify it manually.
+# -----
+# *defTimeUnits*
+#  Default time units for the player's command /now, possible values are 'hours' and 'ticks'.
+# -----
+# *refreshRate*
+#  The delay in ticks before actualizing the speed stretch/expand effect.
+#  Must be a integer between 5 and 25.
+#  Default value is 10 ticks, a too small value can cause server lags.
+# -----
+# *worldsList*
+#  The list of available worlds will be refreshed on server startup. Nether and Ender worlds will be erased if present.
+#   *start*
+#    Define the time at server startup for the specified world. By default, all worlds will start at tick #0. A complete Minecraft day has 24000 ticks.
+#   *speed*
+#    Define if the time will be locked, accelerated, decelerated or normally spend for the specified world.
+#    Value must be a decimal number from 0 to 10.
+#    Use 0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1 to get normal speed and numbers bigger than 1 to speedup time.
+# -----
+# *mySql*
+#  Permit to share the initial tick from a reference server to others.
+#  Use it with or without BungeCord, just set 'refServer' to 'true' in the reference server config.yml file and 'false' in others.
+#  WARN: A new reference tick value will create when reference server restart.
+#  Set every 'refServer' values to 'false' to make your server time immutable. The first server using the database will create a static reference tick.
+#  mySql functions are TODO !
+#   *useMySql*
+#    Enable the mySql database encoding: true or false (its provide a possible sharing of the reference server startup tick)
+#   *refServer*
+#    Set a new reference ticks on server startup: true or false (only one of the servers should turn it true)
+#   *url* *database* *user* *password*
+#    For 'url', use this format: 'mysql://ip:port/' (for example: 'mysql://localhost:3306/')
+#    Default database name is 'timemanager' but you could choose anything else.
+#    If you don't handle databases, follow this tutorial to setup an user account: http://www.yourwebskills.com/dbphpmyadminusers.php
+# -----
+version: ''
+defTimeUnits: hours
+refreshRate: ''
+worldsList: ''
+mySql:
+  useMySql: false
+  refServer: true
+  url: ''
+  database: ''
+  user: ''
+  password: ''

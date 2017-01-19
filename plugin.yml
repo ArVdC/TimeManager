@@ -1,0 +1,50 @@
+name: TimeManager
+version: 1.0
+author: ArVdC
+main: net.vdcraft.arvdc.timemanager.MainTM
+website: vdc.serveminecraft.net
+description: Display actual time (in mc hours or in ticks) in the chat, define the speed and the start time then synchronize worlds timers.
+load: POSTWORLD
+softdepend: [Multiverse-Core, Multiworld]
+database: false
+permissions:
+  timemanager.*:
+    default: op
+    children:
+      timemanager.admin:
+        default: op
+      timemanager.now.*:
+        default: true
+        children:
+          timemanager.now.cmd:
+            default: true
+          timemanager.now.units:
+            default: true
+          timemanager.now.worlds:
+            default: true
+commands:
+  timemanager:
+    permission: timemanager.admin
+    usage: |
+            Here is the complete commands list:
+            /<command> help [cmd]
+            /<command> reload [all|config|lang]
+            /<command> resync [all|world]
+            /<command> servtime
+            /<command> set deflang [lg_LG]
+            /<command> set multilang [true|false]
+            /<command> set refreshrate [tick]
+            /<command> set speed [decimal] [all|world]
+            /<command> set start [tick] [all|world]
+            /<command> set time [tick] [all|world]
+    description: Type /<command> help for complete admins commands descriptions
+    aliases:
+      - tm
+      - tmanag
+  now:
+    permission: timemanager.now.cmd
+    usage: /<command> <units> <world>
+    description: Display actual time (in mc hours or in ticks) in the chat.
+    aliases:
+      - time
+      - hour
