@@ -13,7 +13,7 @@ public class TmHelp extends MainTM {
 	 */
 	public static boolean cmdHelp(CommandSender sender, String[] args) {
 		int argsNb = args.length;
-		if(argsNb == 2) {		
+		if(argsNb == 2) {	
 			// /tm help reload
 			if(args[1].equalsIgnoreCase("reload")) {
 				sender.sendMessage(prefixTMColor + " " + reloadHelpMsg); // Final msg (in case of arg)
@@ -31,7 +31,7 @@ public class TmHelp extends MainTM {
 			}
 			// /tm set <null>   
 			else if(args[1].equalsIgnoreCase("set")) {
-				sender.sendMessage(prefixTMColor + " §c" + missingSetArgHelpMsg);  // Final msg (in case of arg)
+				sender.sendMessage(prefixTMColor + " Â§c" + missingSetArgHelpMsg);  // Final msg (in case of arg)
 				return true;
 			}
 		}
@@ -80,7 +80,7 @@ public class TmHelp extends MainTM {
 		public static void sendErrorMsg(CommandSender sender, String msgError, String cmdHelp) {
 	    MainTM.getInstance();
 	    if(sender instanceof Player) {
-			sender.sendMessage(prefixTMColor + " §c" + msgError); // Player error msg (in case is player)
+			sender.sendMessage(prefixTMColor + " Â§c" + msgError); // Player error msg (in case is player)
 	    }
 		Bukkit.getLogger().warning(prefixTM + " " + msgError); // Console error msg (always)
         Bukkit.dispatchCommand(sender, "tm help " + cmdHelp); // Sender help msg (always)

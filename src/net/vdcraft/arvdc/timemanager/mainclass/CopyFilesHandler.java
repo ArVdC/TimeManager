@@ -11,7 +11,7 @@ public class CopyFilesHandler extends MainTM {
 
 	/** 
 	 * Export files from the .jar
-	 */ 
+	 */
 	public static void copy(InputStream in, File file) {
         try {
             OutputStream out = new FileOutputStream(file);

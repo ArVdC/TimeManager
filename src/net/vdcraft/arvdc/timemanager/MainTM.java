@@ -32,7 +32,7 @@ public class MainTM extends JavaPlugin {
 	public static MainTM instanceMainClass;
 	
 	// Plugin version
-	public static String versionTM = "1.0";
+	public static String versionTM = "1.0.0";
 	
 	// Files names
 	public static String configFileName = "config.yml";
@@ -44,7 +44,7 @@ public class MainTM extends JavaPlugin {
 	
 	// Admin and Console messages
 	public static String prefixTM = "[TimeManager]";
-	public static String prefixTMColor = "§8§l[§6§lTimeManager§8§l]§r";
+	public static String prefixTMColor = "Â§8Â§l[Â§6Â§lTimeManagerÂ§8Â§l]Â§r";
 	
 	public static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
 	public static String plDisabledMsg = "The plugin is now disabled.";
@@ -119,8 +119,8 @@ public class MainTM extends JavaPlugin {
 	public static Integer dayEnd = 24000;
 	
 	// Default sentences in the lang.yml
-	public static String defaultMsg = "Please ask an admin to properly define the default language in the lang.yml file then reload this plugin."; // Le msg par défaut
-	public static String defaultDay = "begin at 6.00 am or tick #" + dayStart; // Les parties de la journée
+	public static String defaultMsg = "Please ask an admin to properly define the default language in the lang.yml file then reload this plugin."; // Le msg par dÃ©faut
+	public static String defaultDay = "begin at 6.00 am or tick #" + dayStart; // Les parties de la journÃ©e
 	public static String defaultDusk = "begin at 5.30 pm or tick #" + duskStart; 
 	public static String defaultNight = "begin at 7.00 pm or tick #" + nightStart; 
 	public static String defaultDawn = "begin at 4.30 am or tick #" + dawnStart;
@@ -131,18 +131,18 @@ public class MainTM extends JavaPlugin {
 	public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
 	
 	// Help messages (copy it in README.md)
-	public static String helpHelpMsg = "§e/tm help <cmd> §rHelp provides you the correct usage and a short description of each command.";
-	public static String reloadHelpMsg = "§e/tm reload <all|config|lang> §rThis command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.";
-	public static String resyncHelpMsg = "§e/tm resync <all|world> §rThis command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.";
-	public static String servtimeHelpMsg = "§e/tm servtime §rAdmins and console can display a debug/managing message, who displays the startup server's time (in HH:mm:ss and ticks), the current server's time (in HH:mm:ss and ticks) and each world current time (in ticks).";
-	public static String setMultilangHelpMsg = "§e/tm set multilang [true|false] §rSet true or false to use an automatic translation for the /now command.";
-	public static String setDefLangHelpMsg = "§e/tm set deflang [lg_LG] §rChoose the translation to use if player's locale doesn't exist in the lang.yml or when useMultiLang is false.";
-	public static String setRefreshRateHelpMsg = "§e/tm set refreshrate [ticks] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between " + refreshMin + " and " + refreshMax + ". Default value is " + defRefresh + " ticks, please note that a too small value can cause server lags.";
-	public static String setSpeedHelpMsg = "§e/tm set speed [decimal] <all|world> §rThe decimal number argument will multiply the world(s) speed. Use 0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1 to get normal speed and numbers bigger than 1 to speedup time. Value must be a decimal or integer number from 0.0 to " + speedMax + ".";
-	public static String setStartHelpMsg = "§e/tm set start [ticks] <all|world> §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at tick #0. A complete Minecraft day has 24000 ticks. The world's timer will be immediately resynchronized.";
-	public static String setTimeHelpMsg = "§e/tm set time [ticks] <all|world> §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §e/time §rcommand.";
+	public static String helpHelpMsg = "Â§e/tm help [cmd] Â§rHelp provides you the correct usage and a short description of each command.";
+	public static String reloadHelpMsg = "Â§e/tm reload [all|config|lang] Â§rThis command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.";
+	public static String resyncHelpMsg = "Â§e/tm resync [all|world] Â§rThis command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.";
+	public static String servtimeHelpMsg = "Â§e/tm servtime Â§rAdmins and console can display a debug/managing message, who displays the startup server's time, the current server's time and each world current time, start time and speed.";
+	public static String setMultilangHelpMsg = "Â§e/tm set multilang [true|false] Â§rSet true or false to use an automatic translation for the /now command.";
+	public static String setDefLangHelpMsg = "Â§e/tm set deflang [lg_LG] Â§rChoose the translation to use if player's locale doesn't exist in the lang.yml or when useMultiLang is false.";
+	public static String setRefreshRateHelpMsg = "Â§e/tm set refreshrate [ticks] Â§rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between " + refreshMin + " and " + refreshMax + ". Default value is " + defRefresh + " ticks, please note that a too small value can cause server lags.";
+	public static String setSpeedHelpMsg = "Â§e/tm set speed [decimal] [all|world] Â§rThe decimal number argument will multiply the world(s) speed. Use 0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1 to get normal speed and numbers bigger than 1 to speedup time. Value must be a decimal or integer number from 0.0 to " + speedMax + ".";
+	public static String setStartHelpMsg = "Â§e/tm set start [ticks] [all|world] Â§rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at tick Â§e#0/24000Â§r. The timer(s) will be immediately resynchronized.";
+	public static String setTimeHelpMsg = "Â§e/tm set time [ticks] [all|world] Â§rSets current time for the specified world (or all of them). Consider using this instead of the vanilla Â§e/time Â§rcommand. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
 	 // Help message when 'set' is used without additional argument
-	public static String missingSetArgHelpMsg = "§e/tm help set <deflang|multilang|refreshrate|speed|start|time> §rThis command, use with arguments, permit to change plugin parameters.";
+	public static String missingSetArgHelpMsg = "Â§e/tm help set [deflang|multilang|refreshrate|speed|start|time] Â§rThis command, use with arguments, permit to change plugin parameters.";
 	
 	// Check if schedule is already active
 	public static boolean ScheduleIsOn = false;
@@ -210,7 +210,7 @@ public class MainTM extends JavaPlugin {
 	 */
 	@Override
 	public void onDisable() {
-		// Confirmer la bonne désactivation du plugin dans la console
+		// Confirmer la bonne dÃ©sactivation du plugin dans la console
 		this.saveConfig();
 		LgFileHandler.SaveLangYml();
 		Bukkit.getLogger().info(prefixTM + " " + plDisabledMsg);		 

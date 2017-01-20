@@ -11,9 +11,9 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 
 public class TmSetSpeed extends MainTM {
 
-	/** 
+	/**
 	 * CMD /tm set speed [tick] [world]
-	 */ 
+	 */
 	public static void cmdSetSpeed(CommandSender sender, double speedToSet, String worldToSet) {
 		
 		// Adapt wrong values
@@ -35,7 +35,7 @@ public class TmSetSpeed extends MainTM {
 			// Notifications
 	        Bukkit.getLogger().info(prefixTM + " " + allSpeedChgMsg + " " + speedToSet + "."); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " " + allSpeedChgMsg + " §e" + speedToSet + "§r."); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " " + allSpeedChgMsg + " Â§e" + speedToSet + "Â§r."); // Player final msg (in case)
 			}
 		}
     	// Else, if the string argument is a listed world, modify a single world
@@ -52,7 +52,7 @@ public class TmSetSpeed extends MainTM {
 			// Notifications
 	        Bukkit.getLogger().info(prefixTM + " World " + worldToSet + " " + worldSpeedChgMsg + " " + speedToSet + "."); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " World " + worldToSet  + " " + worldSpeedChgMsg  + " §e" + speedToSet + "§r."); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " World " + worldToSet  + " " + worldSpeedChgMsg  + " Â§e" + speedToSet + "Â§r."); // Player final msg (in case)
 	        }
         }
 		// Else, return an error and help message

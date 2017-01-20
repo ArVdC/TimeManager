@@ -11,7 +11,7 @@ public class TmSetRefreshRate extends MainTM {
 
 	/** 
 	 * CMD /tm set refreshrate [ticks]
-	 */ 
+	 */
 	public static void cmdRefRate(CommandSender sender, Integer refreshRate) {
 
 		// Adapt wrong values
@@ -22,7 +22,7 @@ public class TmSetRefreshRate extends MainTM {
 		
 		// Notifications
         if(sender instanceof Player) {
-        	sender.sendMessage(prefixTMColor + " " + refreshRateMsg + " §e" + refreshRate + " ticks§r."); // Notify the player (in case)
+        	sender.sendMessage(prefixTMColor + " " + refreshRateMsg + " Â§e" + refreshRate + " ticksÂ§r."); // Notify the player (in case)
         }
         Bukkit.getLogger().info(prefixTM + " " + refreshRateMsg + " " + refreshRate + " ticks."); // Notify the console (always)
 	};

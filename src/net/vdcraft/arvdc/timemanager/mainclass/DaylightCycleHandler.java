@@ -8,7 +8,7 @@ public class DaylightCycleHandler extends MainTM {
 	
     /**
      * Configure the gamerule doDaylightCycle in targeted world(s), based on actual speed
-     * 
+     *
      */
     public static void doDaylightCheck(String worldToSet)
     {

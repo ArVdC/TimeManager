@@ -11,7 +11,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
 
 public class TmSetStart extends MainTM {
 
-	/** 
+	/**
 	 * CMD /tm set start [tick] [world]
 	 */ 
 	public static void cmdSetStart(CommandSender sender, Long tickToSet, String worldToSet) {
@@ -32,7 +32,7 @@ public class TmSetStart extends MainTM {
     		String timeToSet = NowFormatTime.ticksAsTime(tickToSet);
 	        Bukkit.getLogger().info(prefixTM + " " + allStartChgMsg + tickToSet + " tick #" +tickToSet + " (" + timeToSet + ")."); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " " + allStartChgMsg + " §etick #" + tickToSet + " §r(§e" + timeToSet + "§r)."); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " " + allStartChgMsg + " Â§etick #" + tickToSet + " Â§r(Â§e" + timeToSet + "Â§r)."); // Player final msg (in case)
 	        }
 		}
     	// Else, if the string argument is a listed world, modify a single world
@@ -46,7 +46,7 @@ public class TmSetStart extends MainTM {
     		String timeToSet = NowFormatTime.ticksAsTime(tickToSet);
 	        Bukkit.getLogger().info(prefixTM + " World " + worldToSet + " " + worldStartChgMsg + " tick #" + tickToSet + " (" + timeToSet + ")."); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " World " + worldToSet + " " + worldStartChgMsg + " §etick #" + tickToSet + " §r(§e" + timeToSet + "§r)."); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " World " + worldToSet + " " + worldStartChgMsg + " Â§etick #" + tickToSet + " Â§r(Â§e" + timeToSet + "Â§r)."); // Player final msg (in case)
 	        }
         }
 		// Else, return an error and help message

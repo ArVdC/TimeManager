@@ -16,7 +16,7 @@ public class TmServTime extends MainTM {
 	/** 
 	 * CMD /tm servtime
 	 * 
-	 */ 
+	 */
 	public static void cmdServerTime(CommandSender sender) {
 		
 		// Get the current server tick
@@ -29,7 +29,7 @@ public class TmServTime extends MainTM {
 			
 		// Display the reference tick and HH:mm:ss
 		if(sender instanceof Player) {
-			sender.sendMessage(prefixTMColor + " " + serverInitTickMsg + " §e#" + initialTick + " §r(§e" + initialTime + "§r)."); // Final player msg
+			sender.sendMessage(prefixTMColor + " " + serverInitTickMsg + " Â§e#" + initialTick + " Â§r(Â§e" + initialTime + "Â§r)."); // Final player msg
 			waitTime(500);
 		} else
 		{
@@ -38,7 +38,7 @@ public class TmServTime extends MainTM {
 		
 		// Get current tick
 		if(sender instanceof Player) {
-			sender.sendMessage(prefixTMColor + " " + serverCurrentTickMsg + " §e#" + currentServerTick + " §r(§e" + currentServerTime + "§r)."); // Final player msg
+			sender.sendMessage(prefixTMColor + " " + serverCurrentTickMsg + " Â§e#" + currentServerTick + " Â§r(Â§e" + currentServerTime + "Â§r)."); // Final player msg
 			waitTime(500);	
 		} else
 		{
@@ -54,11 +54,11 @@ public class TmServTime extends MainTM {
     		String listedWorldCurrentTime = NowFormatTime.ticksAsTime(listedWorldCurrentTick);
     		String listedWorldSpeed = (MainTM.getInstance().getConfig().getString("worldsList."+listedWorld+".speed"));
 			if(sender instanceof Player) {
-				sender.sendMessage(prefixTMColor + " World " + listedWorld + worldCurrentStartMsg + " §e#" + listedWorldStartTick + " §r(§e" + listedWorldStartTime + "§r).");  // Final player msg
+				sender.sendMessage(prefixTMColor + " World " + listedWorld + worldCurrentStartMsg + " Â§e#" + listedWorldStartTick + " Â§r(Â§e" + listedWorldStartTime + "Â§r).");  // Final player msg
 				waitTime(1000);
-				sender.sendMessage(prefixTMColor + " World " + listedWorld + worldCurrentTickMsg + " §e#" + listedWorldCurrentTick + " §r(§e" + listedWorldCurrentTime + "§r)."); // Final player msg
+				sender.sendMessage(prefixTMColor + " World " + listedWorld + worldCurrentTickMsg + " Â§e#" + listedWorldCurrentTick + " Â§r(Â§e" + listedWorldCurrentTime + "Â§r)."); // Final player msg
 				waitTime(1000);
-				sender.sendMessage(prefixTMColor + " World " + listedWorld + worldCurrentSpeedMsg + " §e" +  listedWorldSpeed + "§r."); // Final player msg
+				sender.sendMessage(prefixTMColor + " World " + listedWorld + worldCurrentSpeedMsg + " Â§e" +  listedWorldSpeed + "Â§r."); // Final player msg
 				waitTime(1000);
 			} else
 			{

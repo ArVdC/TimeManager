@@ -7,7 +7,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class UserDefineLang extends MainTM {
 	
-	/**	
+	/**
 	 * Define the language to use, in regards to the locale and parameters
 	 */
 	public static String setLangToUse(CommandSender sender) {

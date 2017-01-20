@@ -15,7 +15,7 @@
 # *worldsList*
 #  The list of available worlds will be refreshed on server startup. Nether and Ender worlds will be erased if present.
 #   *start*
-#    Define the time at server startup for the specified world. By default, all worlds will start at tick #0. A complete Minecraft day has 24000 ticks.
+#    Define the time at server startup for the specified world. By default, all worlds will start at tick #0/24000. The tab completion also provides presets like "day", "night", etc. 
 #   *speed*
 #    Define if the time will be locked, accelerated, decelerated or normally spend for the specified world.
 #    Value must be a decimal number from 0 to 10.
@@ -37,7 +37,7 @@
 #    If you don't handle databases, follow this tutorial to setup an user account: http://www.yourwebskills.com/dbphpmyadminusers.php
 # -----
 version: ''
-defTimeUnits: hours
+defTimeUnits: ''
 refreshRate: ''
 worldsList: ''
 mySql:

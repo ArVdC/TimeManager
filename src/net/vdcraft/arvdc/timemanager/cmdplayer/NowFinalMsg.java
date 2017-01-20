@@ -14,13 +14,13 @@ public class NowFinalMsg extends MainTM {
 		String msgPrefix = MainTM.getInstance().langConf.getString("languages."+finalLang+".prefix");
 		String msgNow = MainTM.getInstance().langConf.getString("languages."+finalLang+".msg");
 		String msgDayPart = MainTM.getInstance().langConf.getString("languages."+finalLang+".dayparts."+finaldayPart);
-		msgPrefix = msgPrefix.replace("&", "ง");
-		msgNow = msgNow.replace("&", "ง");
+		msgPrefix = msgPrefix.replace("&", "ยง");
+		msgNow = msgNow.replace("&", "ยง");
 		msgNow = msgNow.replace("{player}", sender.getName());
 		msgNow = msgNow.replace("{time}", finalTime);
 		msgNow = msgNow.replace("{targetWorld}", finalWorld);
 		msgNow = msgNow.replace("{dayPart}", msgDayPart);
-		sender.sendMessage(msgPrefix + "งr " + msgNow);
+		sender.sendMessage(msgPrefix + "ยงr " + msgNow);
 		return true;
 	};
 }

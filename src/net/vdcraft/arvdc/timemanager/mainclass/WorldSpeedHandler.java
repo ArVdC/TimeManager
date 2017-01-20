@@ -9,7 +9,7 @@ public class WorldSpeedHandler extends MainTM {
 	
 	/** 
 	 * Modify worlds speed with an auto cancel/repeat capable scheduler
-	 */	    
+	 */	   
     public static void WorldSpeedModify() {
     	ScheduleIsOn = true;
     	refreshRateLong = MainTM.getInstance().getConfig().getLong("refreshRate");

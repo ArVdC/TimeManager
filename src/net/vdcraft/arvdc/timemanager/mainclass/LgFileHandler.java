@@ -14,7 +14,7 @@ public class LgFileHandler extends MainTM {
 
 	/** 
 	 * Activate or reload the language file
-	 */ 
+	 */
     public static void loadLang(String firstOrRe) {
     	
     	// #1. When it is the server startup
@@ -86,7 +86,7 @@ public class LgFileHandler extends MainTM {
 	    	}
 		  	// Then actualize 'defLang' from lang.yml file for checking
 			serverLang = new String(MainTM.getInstance().langConf.getString("defaultLang"));
-			MainTM.getInstance().laConsole.sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§r."); // Console log msg
+			MainTM.getInstance().laConsole.sendMessage(prefixTM + " " + defLangCheckMsg + " Â§e" + serverLang + "Â§r."); // Console log msg
 			// Check if key 'defLang' correspond to an existing language who contains every needed keys
 		    if(!MainTM.getInstance().langConf.getConfigurationSection("languages").getKeys(false).contains(serverLang)) {
 		    	restoreDefLang();    	
@@ -94,7 +94,7 @@ public class LgFileHandler extends MainTM {
 				Set<String> langKeys = MainTM.getInstance().langConf.getConfigurationSection("languages."+serverLang).getKeys(true);
 				if(langKeys.contains("prefix") && langKeys.contains("msg") && langKeys.contains("dayparts") && langKeys.contains("dayparts.day") && langKeys.contains("dayparts.dusk") && langKeys.contains("dayparts.night") && langKeys.contains("dayparts.dawn")) {
 				    // If every key exists, keep actual 'defLang'
-				    MainTM.getInstance().laConsole.sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangOkMsg); // Console log msg
+				    MainTM.getInstance().laConsole.sendMessage(prefixTM + " Â§e" + serverLang + "Â§r " + defLangOkMsg); // Console log msg
 				} else {
 					restoreDefLang();
 				}
@@ -108,7 +108,7 @@ public class LgFileHandler extends MainTM {
 	private static void restoreDefLang() { 
 		MainTM.getInstance().langConf.set("defaultLang", "default");
 	    serverLang = new String(MainTM.getInstance().langConf.getString("defaultLang"));
-		MainTM.getInstance().laConsole.sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangResetMsg);	// Console log msg
+		MainTM.getInstance().laConsole.sendMessage(prefixTM + " Â§e" + serverLang + "Â§r " + defLangResetMsg);	// Console log msg
 	}
 
 	/** 

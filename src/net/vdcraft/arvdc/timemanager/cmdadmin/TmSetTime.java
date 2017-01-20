@@ -13,7 +13,7 @@ public class TmSetTime extends MainTM {
 
 	/** 
 	 * CMD /tm set start [tick] [world]
-	 */ 
+	 */
 	public static void cmdSetTime(CommandSender sender, Long tickToSet, String worldToSet) {
 
 		// Adapt wrong values
@@ -28,7 +28,7 @@ public class TmSetTime extends MainTM {
     		String timeToSet = NowFormatTime.ticksAsTime(tickToSet);
 	        Bukkit.getLogger().info(prefixTM + " " + allTimeChgMsg + tickToSet + " tick #" +tickToSet + " (" + timeToSet + ")."); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " " + allTimeChgMsg + " §etick #" + tickToSet + " §r(§e" + timeToSet + "§r)."); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " " + allTimeChgMsg + " Â§etick #" + tickToSet + " Â§r(Â§e" + timeToSet + "Â§r)."); // Player final msg (in case)
 			}
 		}
 		// Else, if the string argument is a listed world, modify a single world
@@ -40,7 +40,7 @@ public class TmSetTime extends MainTM {
     		String timeToSet = NowFormatTime.ticksAsTime(tickToSet);
 	        Bukkit.getLogger().info(prefixTM + " World " + worldToSet + " " + worldTimeChgMsg + " tick #" + tickToSet + " (" + timeToSet + ")."); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " World " + worldToSet + " " + worldTimeChgMsg + " §etick #" + tickToSet + " §r(§e" + timeToSet + "§r)."); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " World " + worldToSet + " " + worldTimeChgMsg + " Â§etick #" + tickToSet + " Â§r(Â§e" + timeToSet + "Â§r)."); // Player final msg (in case)
 	        }
 		}
 		// Else, return an error and help message

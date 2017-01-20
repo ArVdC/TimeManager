@@ -11,7 +11,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 
 public class TmReload extends MainTM {
 
-	/** 
+	/**
 	 * CMD /tm reload [all|config|lang]
 	 */
 	public static void cmdReload(CommandSender sender, String whatToReload) {

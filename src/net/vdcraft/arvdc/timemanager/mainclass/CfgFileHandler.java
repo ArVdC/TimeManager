@@ -9,7 +9,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class CfgFileHandler extends MainTM {
 
-	/** 
+	/**
 	 * Activate or reload the configuration file
 	 */
 	public static void loadConfig(String firstOrRe) {

@@ -6,7 +6,7 @@ public class NowGetDayPart extends MainTM {
 
 	/**	
 	 * Define the part of the day
-	 */ 
+	 */
 	public static String SetDayPartToDisplay(long actualTick)
 	{
 		String wichPart = new String();

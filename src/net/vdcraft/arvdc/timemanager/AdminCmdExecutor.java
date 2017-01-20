@@ -23,7 +23,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 	
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {	
-	    MainTM.getInstance();	
+	    MainTM.getInstance();
 		// Count # of arguments
 		int argsNumb = args.length;
 

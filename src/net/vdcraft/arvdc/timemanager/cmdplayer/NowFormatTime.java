@@ -4,7 +4,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class NowFormatTime extends MainTM {
 
-	/**	
+	/**
 	 * Convert actual tick to MC hours and minutes
 	 */
 	public static String ticksAsTime(Long ticks) { // add (Long ticks, CommandSender sender) for debug msg
@@ -28,8 +28,8 @@ public class NowFormatTime extends MainTM {
 		int finalTimeM = (int) roundedTimeM;
 		/**
 		 * ==Debug==
-		 * sender.sendMessage("les heures : " + decimalTimeH + " ticks qui deviennent " + dividedTimeH + "h, qui arrondies deviennent " + roundedTimeH + "h, qui ajustées deviennent " + adjustedTimeH + "h."); // debug msg
-		 * sender.sendMessage("les minutes : " + dividedTimeH + "h - " + roundedTimeH + "h = " + decimalTimeM +  "h restantes, qui multipliées par 60 font " + adjustedTimeM + "min, qui arrondies font " + roundedTimeM + "min."); // debug msg
+		 * sender.sendMessage("les heures : " + decimalTimeH + " ticks qui deviennent " + dividedTimeH + "h, qui arrondies deviennent " + roundedTimeH + "h, qui ajustÃ©es deviennent " + adjustedTimeH + "h."); // debug msg
+		 * sender.sendMessage("les minutes : " + dividedTimeH + "h - " + roundedTimeH + "h = " + decimalTimeM +  "h restantes, qui multipliÃ©es par 60 font " + adjustedTimeM + "min, qui arrondies font " + roundedTimeM + "min."); // debug msg
 		 * sender.sendMessage(ticks + " ticks deviennent donc " + pad(finalTimeH, 2) + ":" + pad(finalTimeM, 2)); // debug msg
 		 */
 		// #3. Output

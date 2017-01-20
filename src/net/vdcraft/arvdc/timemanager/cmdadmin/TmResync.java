@@ -9,7 +9,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
 
 public class TmResync extends MainTM {
 
-	/** 
+	/**
 	 * CMD /tm resync [all|world]
 	 */
 	public static void cmdResync(CommandSender sender, String worldToSet) {

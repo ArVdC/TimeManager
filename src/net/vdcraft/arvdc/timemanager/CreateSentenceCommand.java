@@ -55,8 +55,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	****************/
 	
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args)
-	{
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		List<String> outputArgsList = new ArrayList<String>();
 		MainTM.getInstance();
 		

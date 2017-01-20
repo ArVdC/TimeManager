@@ -12,7 +12,7 @@ public class RestrainValuesHandler extends MainTM {
 			newSpeed = speedMax;		
 		} else if(newSpeed < 0) { // Forbid too small numbers
 			newSpeed = 0.0;
-		}    	
+		}
 		return newSpeed;
 	};
 		

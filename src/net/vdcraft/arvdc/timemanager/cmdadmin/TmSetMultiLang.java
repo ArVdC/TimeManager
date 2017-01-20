@@ -11,7 +11,7 @@ public class TmSetMultiLang extends MainTM {
 
 	/** 
 	 * CMD /tm set multilang [true|false]
-	 */ 
+	 */
 	public static void cmdMultiLg(CommandSender sender, String onOff) {
 		
 		// Check if the argument matches what is expected

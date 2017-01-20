@@ -13,7 +13,7 @@ public class TmSetDefLang extends MainTM {
 	 * CMD /tm set deflang [lg_LG]
 	 */ 
 	public static void cmdDefLg(CommandSender sender, String newLang) {
-		
+	
 		// Check if the argument matches what is expected
 		if(MainTM.getInstance().langConf.getConfigurationSection("languages").getKeys(false).contains(newLang)) {			
 			MainTM.getInstance().langConf.set("defaultLang", newLang);

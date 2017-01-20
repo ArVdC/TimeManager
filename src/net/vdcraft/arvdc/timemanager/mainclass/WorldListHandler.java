@@ -9,7 +9,7 @@ public class WorldListHandler extends MainTM {
 
 	/** 
 	 *  Manage available worlds list
-	 */ 
+	 */
 	public static void listLoadedWorlds() {
 		
 		// #1. Avoid missing 'worldsList' key

@@ -12,7 +12,7 @@ import net.vdcraft.arvdc.timemanager.cmdplayer.NowFormatTime;
 
 public class WorldSyncHandler extends MainTM {
 	
-	/** 
+	/**
 	 * Delayed sync on startup method
 	 */	
     public static void WorldSyncFirst() { // Run only once

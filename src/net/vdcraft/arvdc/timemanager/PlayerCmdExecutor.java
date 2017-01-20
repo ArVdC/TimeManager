@@ -15,7 +15,7 @@ public class PlayerCmdExecutor implements CommandExecutor {
 
 	@Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		
+	
 		// #1. Check if sender is a Player or the Console
 		if(sender instanceof Player) {} else {return false;}
 		
