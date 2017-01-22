@@ -20,14 +20,20 @@ public class TmReload extends MainTM {
 		boolean argOk = true; 
 		
 		// When do reload the config.yml file
-		if(whatToReload.equalsIgnoreCase("config") || whatToReload.contains("conf") || whatToReload.contains("cfg") || whatToReload.contains("all")) {
+		if(whatToReload.equalsIgnoreCase("config") || whatToReload.equalsIgnoreCase("conf") || whatToReload.equalsIgnoreCase("cfg") || whatToReload.equalsIgnoreCase("all")) {
 			CfgFileHandler.loadConfig("re");					
 			
 			// Re-synchronize all the worlds based on a server constant point
 			TmResync.cmdResync(MainTM.getInstance().laConsole, "all");
 			// Launch scheduler if is inactive
-	    	if (ScheduleIsOn = false) {
-	    		WorldSpeedHandler.WorldSpeedModify();
+	    	if(increaseScheduleIsOn == false) {
+	    		WorldSpeedHandler.WorldIncreaseSpeed();
+	    	}
+	    	if(decreaseScheduleIsOn == false) {
+	    		WorldSpeedHandler.WorldDecreaseSpeed();
+	    	}
+	    	if(realScheduleIsOn == false) {
+	    		WorldSpeedHandler.WorldIncreaseSpeed();
 	    	}
 			// 'config.yml is reloaded' notification
 			if(sender instanceof Player) {
@@ -37,7 +43,7 @@ public class TmReload extends MainTM {
 			argOk = false; 
 		}
 		// When do reload the lang.yml file
-		if(whatToReload.equalsIgnoreCase("language") || whatToReload.contains("lang") || whatToReload.contains("lg") || whatToReload.contains("all")) {
+		if(whatToReload.equalsIgnoreCase("language") || whatToReload.equalsIgnoreCase("lang") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
 			LgFileHandler.loadLang("re");
 			// 'lang.yml is reloaded' notification		
 			if(sender instanceof Player) {

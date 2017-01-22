@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.RestrainValuesHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class TmSetRefreshRate extends MainTM {
 
@@ -15,7 +15,7 @@ public class TmSetRefreshRate extends MainTM {
 	public static void cmdRefRate(CommandSender sender, Integer refreshRate) {
 
 		// Adapt wrong values
-		refreshRate = RestrainValuesHandler.returnCorrectRate(refreshRate);
+		refreshRate = ValuesConverter.returnCorrectRate(refreshRate);
 		
 		MainTM.getInstance().getConfig().set("refreshRate", refreshRate);
 		MainTM.getInstance().saveConfig();

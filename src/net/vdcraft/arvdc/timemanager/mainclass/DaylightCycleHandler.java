@@ -21,7 +21,7 @@ public class DaylightCycleHandler extends MainTM {
 		} else // For a single world
 		{
 	    	double speedModifier = MainTM.getInstance().getConfig().getDouble("worldsList."+worldToSet+".speed"); // Read config.yml to get the world's 'speed' value    		
-			if(speedModifier == 0) {
+	    	if(speedModifier == realtimeSpeed || speedModifier < 1.0) {
 				Bukkit.getWorld(worldToSet).setGameRuleValue("doDaylightCycle", "false");
 			} else {
 			    Bukkit.getWorld(worldToSet).setGameRuleValue("doDaylightCycle", "true");

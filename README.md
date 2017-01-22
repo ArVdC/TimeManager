@@ -1,18 +1,21 @@
-#TimeManager
-##Spigot plugin for time management and display
+# TimeManager
+
+## Spigot plugin for time management and display
 
 
-###TIME MANAGING FUNCTIONALITIES
-Define a start time and a speed modifier per world.
+### TIME MANAGING FUNCTIONALITIES
+Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
 
-Worlds timers will be synchronized on server startup.
+Time could be stretched/extended up to x10 or match real UTC time, with a per world time adjust.
 
-Timers and speed can be modified or re-synchronize with in-game commands.
+Worlds list is actualized and timers are synchronized on each server startup and reload. Most values are automatically checked and corrected depending on the case.
 
-This plugin override the vanilla "/time" command. The command to change a single world timer is "/tm set time \[ticks] \[world]".
+Timers and speeds can be modified or re-synchronize with in-game commands or reloading after manually changes. Switching sync/async permit some useful original combinations for rpg or minigames.
+
+This plugin override the vanilla "/time" command. The command to change a single world timer is "/tm set time \[ticks|daypart] \[world]".
 
 
-###PLAYERS COMMAND /now <units> <world>
+### PLAYERS COMMAND /now <units> <world>
 A single player command is used to display time (in ticks or hours) for any available world.
 
 Chat messages support multi-language and could automatically be accorded to any player's locale available in the lang.yml file.
@@ -23,8 +26,10 @@ Using the permissions, you can permit players to choose units and/or world argum
 
 Four combinations are therefore possible: "/now", "/now \<units>", "/now \<world>" and "/now \<units> \<world>".
 
+This command doesn't display time of Nether and the End worlds.
 
-###ADMINS COMMAND /timemanager or /tm
+
+### ADMINS COMMAND /timemanager or /tm
 **/tm help \[cmdName]** Help provides you the correct usage and a short description of each command.
 
 **/tm reload \[all|config|lang]** This command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.
@@ -33,20 +38,24 @@ Four combinations are therefore possible: "/now", "/now \<units>", "/now \<world
 
 **/tm servtime** Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and each world current time, start time and speed.
 
-**/tm set multilang \[true|false]** Set true or false to use an automatic translation for the /now command.
+**/tm set multilang \[true|false]** Set true or false to use an automatic translation for the _/now_ command.
 
-**/tm set deflang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when useMultiLang is false.
+**/tm set deflang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when _useMultiLang_ is false.
 
-**/tm set refreshrate \[ticks]** Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between 5 and 25. Default value is 10 ticks, please note that a too small value can cause server lags.
+**/tm set refreshrate \[ticks]** Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between _5_ and _25_. Default value is _10 ticks_, please note that a too small value can cause server lags.
 
-**/tm set speed \[decimal] \[all|world]** The decimal number argument will multiply the world(s) speed. Use 0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1 to get normal speed and numbers bigger than 1 to speedup time. Value must be a decimal or integer number from 0 to 10.
+**/tm set speed \[decimal] \[all|world]** The decimal number argument will multiply the world(s) speed. Use _0_ to freeze time, numbers from _0.1_ to _0.9_ to slow time, 1 to get normal speed and numbers from _1_ to _10_ to speedup time. Set this value to _24_ or _realtime_ to make the world time match the real speed time.
 
-**/tm set start \[ticks] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0/24000. The timer(s) will be immediately resynchronized.
+**/tm set start \[ticks|daypart] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
 
-**/tm set time \[ticks] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla "/time" command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
+**/tm set time \[ticks|daypart] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
+
+**/tm set sleepUntilDawn \[true|false] \[all|world]** Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is frozen or in real time who will be necessary false.
+
+**/tm sqlcheck** Check the availability of the mySql server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.
 
 
-###SHORT LIST OF COMMANDS AND ARGS
+### SHORT LIST OF COMMANDS AND ARGS
 - For Players:
   - /now \<units> \<world>
 - For Admins:
@@ -57,12 +66,14 @@ Four combinations are therefore possible: "/now", "/now \<units>", "/now \<world
   - /tm set deflang \[true|false]
   - /tm set multilang \[lg_LG]
   - /tm set refreshrate \[ticks]
+  - /tm set sleepUntilDawn \[true|false] \[all|world]
   - /tm set speed \[decimal] \[all|world]
-  - /tm set start \[ticks] \[all|world]
-  - /tm set time \[ticks] \[all|world]
+  - /tm set start \[ticks|daypart] \[all|world]
+  - /tm set time \[ticks|daypart] \[all|world]
+  - /tm sqlcheck
 
 
-###PERMISSIONS NODES
+### PERMISSIONS NODES
 - timemanager.*
   - timemanager.admin
   - timemanager.now.*
@@ -75,7 +86,7 @@ Four combinations are therefore possible: "/now", "/now \<units>", "/now \<world
 **timemanager.now:** provide or deny access to /now commands with or without restrain available arguments.
 
 
-###TODO
-* Make a MySql database to share the reference initial tick.
-* Make a speed value for 'real time' spending (1/72).
-* Fix a bug whit spaces in world names.
+### TODO
+* Need to fix a bug with spaces in world names. They make infinite loops in tab completion.
+* Make a separate speed time for the night and day.
+* Make compatible with mc versions under 1.12 - adapt the getLocale() method in /now command.

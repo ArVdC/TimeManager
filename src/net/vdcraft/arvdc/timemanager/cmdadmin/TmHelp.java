@@ -29,6 +29,11 @@ public class TmHelp extends MainTM {
 				sender.sendMessage(prefixTMColor + " " + servtimeHelpMsg); // Final msg (in case of arg)
 				return true;
 			}
+			// /tm help sqlcheck
+			else if(args[1].equalsIgnoreCase("sqlcheck")) {
+				sender.sendMessage(prefixTMColor + " " + sqlcheckHelpMsg); // Final msg (in case of arg)
+				return true;
+			}
 			// /tm set <null>   
 			else if(args[1].equalsIgnoreCase("set")) {
 				sender.sendMessage(prefixTMColor + " §c" + missingSetArgHelpMsg);  // Final msg (in case of arg)
@@ -66,6 +71,11 @@ public class TmHelp extends MainTM {
 				// /tm help set time
 				else if(args[2].equalsIgnoreCase("time")) {
 					sender.sendMessage(prefixTMColor + " " + setTimeHelpMsg); // Final msg (in case of arg)
+					return true;
+				}
+				// /tm help set sleepUntilDawn
+				else if(args[2].equalsIgnoreCase("sleepUntilDawn")) {
+					sender.sendMessage(prefixTMColor + " " + setSleepUntilDawnHelpMsg); // Final msg (in case of arg)
 					return true;
 				}
 			}

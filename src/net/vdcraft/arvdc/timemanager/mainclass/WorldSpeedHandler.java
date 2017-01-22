@@ -8,10 +8,10 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class WorldSpeedHandler extends MainTM {
 	
 	/** 
-	 * Modify worlds speed with an auto cancel/repeat capable scheduler
+	 * Increase worlds speed to a custom rate with an auto cancel/repeat capable scheduler
 	 */	   
-    public static void WorldSpeedModify() {
-    	ScheduleIsOn = true;
+    public static void WorldIncreaseSpeed() {
+    	increaseScheduleIsOn = true;
     	refreshRateLong = MainTM.getInstance().getConfig().getLong("refreshRate");
     	
         BukkitScheduler speedSheduler = MainTM.getInstance().getServer().getScheduler();
@@ -22,27 +22,93 @@ public class WorldSpeedHandler extends MainTM {
             	for(String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
             		long actualWorldTime = Bukkit.getWorld(w).getTime(); // Get the current time of the world
                 	double speedModifier = MainTM.getInstance().getConfig().getDouble("worldsList."+w+".speed");
-                	if(speedModifier > 0 && speedModifier != 1 && speedModifier <= speedMax) { // Don't treat worlds with frozen or normal timers
+                	String isSpeedRealTime = MainTM.getInstance().getConfig().getString("worldsList."+w+".speed");
+                	if(speedModifier > 1.0 && speedModifier <= speedMax && !(isSpeedRealTime.equals("realTime"))) { // Only treat worlds with increased timers
                 		loopMore = true;
                     	long modifTime = (long) Math.ceil(refreshRateInt * speedModifier);
-                		//Bukkit.getLogger().info(prefixTM + " " + w + " modifier: " + refreshRateLong + " * " + speedModifier + "."); // Console debug msg
-                    	
                 		long newTime = actualWorldTime + modifTime - refreshRateLong;
-                		//Bukkit.getLogger().info(prefixTM + " " + w + " time: " + actualWorldTime + " + " + modifTime + " - " + refreshRateLong + "."); // debug msg
-                    	// Restrain too big and too small values
-                    	newTime = RestrainValuesHandler.returnCorrectTicks(newTime);
+                		// Restrain too big and too small values
+                    	newTime = ValuesConverter.returnCorrectTicks(newTime);
                     	// Change world's timer
                     	Bukkit.getWorld(w).setTime(newTime);
-                		//Bukkit.getLogger().info(prefixTM + " " + w+ "'s time is now tick #" + newTime + "."); // Console debug msg	
             		}                
                 }
             	if(loopMore == true) {
-            		WorldSpeedModify();
+            		WorldIncreaseSpeed();
             	} else {
-                	ScheduleIsOn = false;
+            		increaseScheduleIsOn = false;
             	}
             }
         }, refreshRateLong);
     };
-
+	
+	/** 
+	 * Decrease worlds speed to a custom rate with an auto cancel/repeat capable scheduler
+	 */	   
+    public static void WorldDecreaseSpeed() {
+    	decreaseScheduleIsOn = true;
+    	refreshRateLong = MainTM.getInstance().getConfig().getLong("refreshRate");
+    	
+        BukkitScheduler speedSheduler = MainTM.getInstance().getServer().getScheduler();
+        speedSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+            	boolean loopMore = false;
+            	for(String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+            		long actualWorldTime = Bukkit.getWorld(w).getTime(); // Get the current time of the world
+                	double speedModifier = MainTM.getInstance().getConfig().getDouble("worldsList."+w+".speed");
+                	String isSpeedRealTime = MainTM.getInstance().getConfig().getString("worldsList."+w+".speed");
+                	if(speedModifier > 0.0 && speedModifier < 1.0 && !(isSpeedRealTime.equals("realTime"))) { // Only treat worlds with increased timers
+                		loopMore = true;
+                    	long modifTime = (long) Math.floor((refreshRateInt * speedModifier));                   	
+                		long newTime = actualWorldTime + modifTime;
+                    	// Restrain too big and too small values
+                    	newTime = ValuesConverter.returnCorrectTicks(newTime);
+                    	// Change world's timer
+                    	Bukkit.getWorld(w).setTime(newTime);
+            		}                
+                }
+            	if(loopMore == true) {
+            		WorldDecreaseSpeed();
+            	} else {
+                	decreaseScheduleIsOn = false;
+            	}
+            }
+        }, refreshRateLong);
+    };
+	
+	/** 
+	 * Modify worlds speed to real time speed with an auto cancel/repeat capable scheduler
+	 */	   
+    public static void WorldRealSpeed() {
+    	realScheduleIsOn = true;
+    	
+        BukkitScheduler realSpeedSheduler = MainTM.getInstance().getServer().getScheduler();
+        realSpeedSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
+            @Override
+            public void run() {
+            	boolean loopMore = false;
+            	for(String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+                	String isSpeedRealTime = MainTM.getInstance().getConfig().getString("worldsList."+w+".speed");
+                	long worldStartAt = MainTM.getInstance().getConfig().getLong("worldsList."+w+".start");
+                	if(isSpeedRealTime.contains("24")) { // Only treat worlds with a '24.0' timers
+                		loopMore = true;
+                    	// Get the current server tick
+                		long currentServerTick = ValuesConverter.returnServerTick();
+                		long newTime = (currentServerTick / 72L) + (worldStartAt - 6000L); // -6000 cause a mc's day start at 6:00
+                    	// Restrain too big and too small values
+                    	newTime = ValuesConverter.returnCorrectTicks(newTime);
+                    	// Change world's timer
+                    	Bukkit.getWorld(w).setTime(newTime);
+            		}                
+                }
+            	if(loopMore == true) {
+            		WorldRealSpeed();
+            	} else {
+            		realScheduleIsOn = false;
+            	}
+            }
+        }, 72L);
+    };
+ 
 }

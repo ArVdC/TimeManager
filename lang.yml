@@ -23,40 +23,72 @@ languages:
   default:
     prefix: §8§l[§6§lTime Manager§8§l]
     msg: Please ask an admin to properly define the default language in the lang.yml file then reload the plugin.
+    noMsg: There is no day-night cycle in the Nether and the End dimensions.
     dayparts:
       day: begin at 6.00 am or tick #0
       dusk: begin at 5.30 pm or tick #11500
       night: begin at 7.00 pm or tick #13000
       dawn: begin at 4.30 am or tick #22500
-  en_US:
-    prefix: §e§l[Time]
-    msg: It's §e{time}§r in {targetWorld}, this is {dayPart}.
-    dayparts:
-      day: the day
-      dusk: the sunset
-      night: the night
-      dawn: the sunrise
-  fr_FR:
-    prefix: §e§l[Heure]
-    msg: Il est &e{time}§r dans le monde {targetWorld}, c'est {dayPart}.
-    dayparts:
-      day: la journée
-      dusk: le crépuscule
-      night: la nuit
-      dawn: l'aurore
-  nl_NL:
-    prefix: §e§l[Uur]
-    msg: Het is §e{time}§r in wereld {targetWorld}, dit is {dayPart} nu.
-    dayparts:
-      day: de dag
-      dusk: de schemering
-      night: de avond
-      dawn: de dageraad
   de_DE:
     prefix: §e§l[Stunde]
     msg: Es §e{time}§r in der welt {targetWorld}, das ist {dayPart}.
+    noMsg: Es gibt keinen tag-nacht zyklus in dieser dimension!
     dayparts:
       day: die tag
       dusk: die dämmerung
       night: die nacht
       dawn: die morgendämmerung
+  en_US:
+    prefix: §e§l[Time]
+    msg: It's §e{time}§r in world {targetWorld}, this is {dayPart}.
+    noMsg: There is no day-night cycle in this dimension!
+    dayparts:
+      day: the day
+      dusk: the sunset
+      night: the night
+      dawn: the sunrise
+  es_ES:
+    prefix: §e§l[Hora]
+    msg: Son las §e{time}§r en el mundo {targetWorld}, es {dayPart}.
+    noMsg: No existe un ciclo de día-noche en esta dimensión!
+    dayparts:
+      day: la jornada
+      dusk: el crepúsculo
+      night: de noche
+      dawn: el amanecer
+  fr_FR:
+    prefix: §e§l[Heure]
+    msg: Il est &e{time}§r dans le monde {targetWorld}, c'est {dayPart}.
+    noMsg: Il n'y a pas de cycle jour-nuit dans cette dimension!
+    dayparts:
+      day: la journée
+      dusk: le crépuscule
+      night: la nuit
+      dawn: l'aurore
+  it_IT:
+    prefix: §e§l[Ora]
+    msg: È §e{time}§r in del monde {targetWorld}, è {dayPart}.
+    noMsg: Non esiste un ciclo giorno-notte in questa dimensione!
+    dayparts:
+      day: il giorno
+      dusk: il tramonto
+      night: la notte
+      dawn: l'aurora
+  nl_NL:
+    prefix: §e§l[Uur]
+    msg: Het is §e{time}§r in wereld {targetWorld}, dit is {dayPart} nu.
+    noMsg: Er is geen dag-nacht cyclus in deze dimensie!
+    dayparts:
+      day: de dag
+      dusk: de schemering
+      night: de avond
+      dawn: de dageraad
+  pt_PT:
+    prefix: §e§l[Hora]
+    msg: É §e{time}§r do mundo {targetWorld}, é {dayPart}.
+    noMsg: Não há ciclo de dia-noite nesta dimensão!
+    dayparts:
+      day: o dia
+      dusk: o crepúsculo
+      night: a noite
+      dawn: o amanhecer

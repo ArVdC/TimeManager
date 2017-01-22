@@ -18,9 +18,9 @@ public class LgFileHandler extends MainTM {
     public static void loadLang(String firstOrRe) {
     	
     	// #1. When it is the server startup
-    	if(firstOrRe.equalsIgnoreCase("first")) { 
+    	if(firstOrRe.equalsIgnoreCase("first")) {
     		// Creation of lang.yml file if doesn't exist
-		    if(!MainTM.getInstance().langFileYaml.exists()) { 	    
+		    if(!(MainTM.getInstance().langFileYaml.exists())) { 	    
 		    	Bukkit.getLogger().info(prefixTM + " " + lgFileCreaMsg); // Console log msg
 		    	 // Copy the file from src in .jar
 				CopyFilesHandler.copy(MainTM.getInstance().getResource(langFileName), MainTM.getInstance().langFileYaml);
@@ -31,12 +31,14 @@ public class LgFileHandler extends MainTM {
 		    }
 	    }
     	
-    	// #2. When using the admin command reload
-    	if(firstOrRe.equalsIgnoreCase("re")) {    				
-    		// Notification
-            Bukkit.getLogger().info(prefixTM + " " + lgFileTryReloadMsg);
-			// Reload values from lang.yml file
-			MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);    		
+    	// #2. When using the admin command /tm reload
+    	if(firstOrRe.equalsIgnoreCase("re")) {
+		    if(MainTM.getInstance().langFileYaml.exists()) { 		
+	    		// Notification
+	            Bukkit.getLogger().info(prefixTM + " " + lgFileTryReloadMsg);
+				// Reload values from lang.yml file
+				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
+		    } else loadLang("first");
     	}
     	
     	// #3. In both case
@@ -45,6 +47,7 @@ public class LgFileHandler extends MainTM {
 		MainTM.getInstance().langConf.set("version", versionTM);
 		MainTM.getInstance().langConf.set("languages.default.prefix", prefixTMColor);
 		MainTM.getInstance().langConf.set("languages.default.msg", defaultMsg);
+		MainTM.getInstance().langConf.set("languages.default.noMsg", defaultNoMsg);
     	MainTM.getInstance().langConf.set("languages.default.dayparts.day", defaultDay);
 	    MainTM.getInstance().langConf.set("languages.default.dayparts.dusk", defaultDusk); 
 	    MainTM.getInstance().langConf.set("languages.default.dayparts.night", defaultNight); 
@@ -74,25 +77,25 @@ public class LgFileHandler extends MainTM {
     };
     
 	/** 
-	 * Check 'defLang' integrity in lang.yml
+	 * Check 'defaultLang' integrity in lang.yml
 	 */
-    // Check if 'defLang' key exists in yaml, if not create it and set it to default
+    // Check if 'defaultLang' key exists in yaml, if not create it and set it to default
     private static void checkDefLang() {
 	    if(!MainTM.getInstance().langConf.getKeys(false).contains("defaultLang")) {
 	    	restoreDefLang();
-	    } else { // Else, if 'defLang' key exists but is void set it to default
+	    } else { // Else, if 'defaultLang' key exists but is void set it to default
 	    	if(MainTM.getInstance().langConf.getString("defaultLang").equals("")) {
 	    		MainTM.getInstance().langConf.set("defaultLang", "default");
 	    	}
-		  	// Then actualize 'defLang' from lang.yml file for checking
+		  	// Then actualize 'defaultLang' from lang.yml file for checking
 			serverLang = new String(MainTM.getInstance().langConf.getString("defaultLang"));
 			MainTM.getInstance().laConsole.sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§r."); // Console log msg
-			// Check if key 'defLang' correspond to an existing language who contains every needed keys
+			// Check if key 'defaultLang' correspond to an existing language who contains every needed keys
 		    if(!MainTM.getInstance().langConf.getConfigurationSection("languages").getKeys(false).contains(serverLang)) {
 		    	restoreDefLang();    	
 			} else {
 				Set<String> langKeys = MainTM.getInstance().langConf.getConfigurationSection("languages."+serverLang).getKeys(true);
-				if(langKeys.contains("prefix") && langKeys.contains("msg") && langKeys.contains("dayparts") && langKeys.contains("dayparts.day") && langKeys.contains("dayparts.dusk") && langKeys.contains("dayparts.night") && langKeys.contains("dayparts.dawn")) {
+				if(langKeys.contains("prefix") && langKeys.contains("msg") && langKeys.contains("noMsg") && langKeys.contains("dayparts") && langKeys.contains("dayparts.day") && langKeys.contains("dayparts.dusk") && langKeys.contains("dayparts.night") && langKeys.contains("dayparts.dawn")) {
 				    // If every key exists, keep actual 'defLang'
 				    MainTM.getInstance().laConsole.sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangOkMsg); // Console log msg
 				} else {

@@ -24,22 +24,22 @@ public class CreateSentenceCommand implements TabCompleter {
 	****************/
 
 	// Configurer la liste des sous-commandes admins
-	List<String> tmCmdArgsList = Arrays.asList("help", "reload", "resync", "servtime", "set");
+	List<String> tmCmdArgsList = Arrays.asList("help", "reload", "resync", "servtime", "set", "sqlcheck");
 	// Configurer la liste des arguments possibles pour '/tm reload'
 	// Configurer la liste des sous-commandes admins
-	List<String> tmHelpArgsList = Arrays.asList("reload", "resync", "servtime", "set");
+	List<String> tmHelpArgsList = Arrays.asList("reload", "resync", "servtime", "set", "sqlcheck");
 	// Configurer la liste des arguments possibles pour '/tm reload'
 	List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang");
 	// Configurer la liste des arguments possibles pour '/tm set'
-	List<String> tmSetArgsList = Arrays.asList("deflang", "multilang", "refreshrate", "speed", "start", "time");
+	List<String> tmSetArgsList = Arrays.asList("deflang", "multilang", "refreshrate", "speed", "start", "time", "sleepUntilDawn");
 	// Configurer la liste des arguments possibles pour '/tm set deflang
 	List<String> tmDefLangArgsList = LgFileHandler.setAnyListFromLang("languages");
 	// Configurer la liste des arguments possibles pour '/tm set multilang
-	List<String> tmMultiLgArgsList = Arrays.asList("true", "false");
+	List<String> tmBooleanArgsList = Arrays.asList("true", "false");
 	// Configurer la liste des 1ers arguments 'tick'  pour '/tm set start' et '/tm set time'
 	List<String> tmTimeArgsList = Arrays.asList("morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
 	// Configurer la liste des 1ers arguments 'speed' pour '/tm set speed'
-	List<String> tmSpeedArgsList = Arrays.asList("0", "0.5", "1", "1.5", "2", "2.5", "5");
+	List<String> tmSpeedArgsList = Arrays.asList("0", "0.5", "1", "1.5", "2", "2.5", "5", "realtime");
 	// Configurer la liste des arguments 'tick' pour '/tm set refreshrate'
 	List<String> tmRefRateArgsList = Arrays.asList("5", "10", "15", "20", "25");
 	// Configurer la liste des arguments 'world' pour '/tm resync', '/tm set speed', '/tm set start' et '/tm set time'
@@ -107,7 +107,7 @@ public class CreateSentenceCommand implements TabCompleter {
 						}
 					} else if(args[1].equalsIgnoreCase("multilang")) // Command '/tm set multilang <...>'
 					{
-						for(String verif : tmMultiLgArgsList)
+						for(String verif : tmBooleanArgsList)
 						{
 							if(verif.startsWith(args[2])) outputArgsList.add(verif);
 						}
@@ -135,6 +135,12 @@ public class CreateSentenceCommand implements TabCompleter {
 						{
 							if(verif.startsWith(args[2])) outputArgsList.add(verif);
 						}
+					} else if(args[1].equalsIgnoreCase("sleepUntilDawn")) // Command '/tm set sleepUntilDawn <...>'
+					{
+						for(String verif : tmBooleanArgsList)
+						{
+							if(verif.startsWith(args[2])) outputArgsList.add(verif);
+						}
 					}
 				} else if(args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("set")) // Command '/tm help set <...>'
 				{
@@ -146,7 +152,7 @@ public class CreateSentenceCommand implements TabCompleter {
 					return null;
 				}
 			} else if(args.length == 4) {
-				if((args[0].equalsIgnoreCase("set")) && (args[1].equalsIgnoreCase("speed") || args[1].equalsIgnoreCase("start") || args[1].equalsIgnoreCase("time"))) // Command '/tm set <...> <...> <...>'
+				if((args[0].equalsIgnoreCase("set")) && (args[1].equalsIgnoreCase("speed") || args[1].equalsIgnoreCase("start") || args[1].equalsIgnoreCase("time") || args[1].equalsIgnoreCase("sleepUntilDawn"))) // Command '/tm set <...> <...> <...>'
 				{
 					for(String verif : tmWorldsArgsList)
 					{

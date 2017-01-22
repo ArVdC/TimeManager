@@ -17,7 +17,8 @@ public class TmSetDefLang extends MainTM {
 		// Check if the argument matches what is expected
 		if(MainTM.getInstance().langConf.getConfigurationSection("languages").getKeys(false).contains(newLang)) {			
 			MainTM.getInstance().langConf.set("defaultLang", newLang);
-			LgFileHandler.SaveLangYml();	
+			LgFileHandler.SaveLangYml();
+			serverLang = newLang;
 	        Bukkit.getLogger().info(prefixTM + " " + defLangCheckMsg + " " + newLang + "."); // Console final msg (always)
 	        if(sender instanceof Player) {
 	        	sender.sendMessage(prefixTMColor + " " + defLangCheckMsg + " " + newLang + "."); // Player final msg (in case)

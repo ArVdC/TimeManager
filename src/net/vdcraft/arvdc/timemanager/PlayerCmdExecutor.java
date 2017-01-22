@@ -11,6 +11,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import net.vdcraft.arvdc.timemanager.cmdplayer.NowFinalMsg;
+import net.vdcraft.arvdc.timemanager.cmdplayer.UserDefineLang;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
+
 public class PlayerCmdExecutor implements CommandExecutor {
 
 	@Override
@@ -18,53 +22,81 @@ public class PlayerCmdExecutor implements CommandExecutor {
 	
 		// #1. Check if sender is a Player or the Console
 		if(sender instanceof Player) {} else {return false;}
-		
-		// #2. Accept max two arguments (units and world)
-		if(args.length <= 2) {} else {return false;}
 
-		// #3. Get the world
-		World worldToDisplay = ((Player) sender).getWorld(); // First set this to the world he's stand in
-		// Check if player give a world name in argument + if he has permission to do that
-		if(args.length == 1 && sender.hasPermission("timemanager.now.worlds")) {
+
+		// #2. Get the world the player stands in as default value
+		World worldToDisplay = ((Player) sender).getWorld();
 		
-			for(World loadedWorld : Bukkit.getServer().getWorlds()) {	// List the loaded worlds on the server
-			
-				if(loadedWorld.getName().equals(args[0])) {
-				
-					worldToDisplay = loadedWorld;
+
+		// #3. Check if player has permission to define the world with an argument
+		if(sender.hasPermission("timemanager.now.worlds")) {
+			// #3. Check if at least one argument exists, if yes, check it is equal to a unit of time the redefine the world name
+			Integer nbArgum = args.length;
+			Integer argumRest = nbArgum;
+			Integer argumActu;
+			String givenWorldName = new String();
+			if(nbArgum == 1) {
+				if(args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks")) {					
+				} else {
+					givenWorldName = args[0]; 
+				}
+			} else if(nbArgum == 2) {
+				if(args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks")) {
+					givenWorldName = args[1];
+				} else {
+					givenWorldName = args[0] + " " + args[1];
+				}
+			} else if(nbArgum > 2) {
+				if(args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks")) {
+					givenWorldName = args[1];
+					argumActu = 2;
+					while(argumRest > 2) {
+						givenWorldName = givenWorldName + " " + args[argumActu];
+						argumRest--;
+						argumActu++;
+					}
+				} else {
+					givenWorldName = args[0];
+					argumActu = 1;
+					while(argumRest > 1) {
+						givenWorldName = givenWorldName + " " + args[argumActu];
+						argumRest--;
+						argumActu++;
+					}
 				}
 			}	
-		} else if(args.length == 2 && sender.hasPermission("timemanager.now.worlds")) {
-		
-			for(World loadedWorld : Bukkit.getServer().getWorlds())	{ // List the loaded worlds on the server
+			// #4. Compare given world name with permitted worlds list
+			for(World loadedWorld : Bukkit.getServer().getWorlds()) {	// List the loaded worlds on the server
 			
-				if(loadedWorld.getName().equals(args[1])) {
+				if(loadedWorld.getName().equals(givenWorldName)) {
 				
-					worldToDisplay = loadedWorld;
+					worldToDisplay = loadedWorld; // Switch from the player's world to the specified one
 				}
-			}
+			}		
 		}
+			
+		// #5. Use the name of the targeted world
 		String worldNameToDisplay = worldToDisplay.getName();
 		
-		// #4. Get the actual tick in regard of the world value
+		// #6. Get the actual tick in regard of the world value
 		Long timeInTicks = worldToDisplay.getTime();
 		
-		// #5. Define the part of the days in regard of the tick value
+		// #7. Define the part of the days in regard of the tick value
 		String dayPartToDisplay = net.vdcraft.arvdc.timemanager.cmdplayer.NowGetDayPart.SetDayPartToDisplay(timeInTicks);
 
-		// #6. Check if the cmd arg is 'hours' or 'ticks' to set the time format
+		// #8. Check if the first arg is 'hours' or 'ticks' to set the time format
 		String timeToDisplay = "tick #" + timeInTicks.toString(); // Format time to display
 		String defUnits = MainTM.getInstance().getConfig().getString("defTimeUnits"); // By default, check the config.yml
 		if(args.length > 0 && sender.hasPermission("timemanager.now.units") && (args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks"))) {
 			defUnits = args[0].toString(); // Else store command argument as actual time units param
 		}
 			if(defUnits.equalsIgnoreCase("hours")) {				
-				timeToDisplay = net.vdcraft.arvdc.timemanager.cmdplayer.NowFormatTime.ticksAsTime(timeInTicks); // Convert time display format	
+				timeToDisplay = ValuesConverter.returnTicksAsTime(timeInTicks); // Convert time display format	
 			}
-		// #7. Check the player's locale and try to use it
-		String langToUse = net.vdcraft.arvdc.timemanager.cmdplayer.UserDefineLang.setLangToUse(sender);
+		// #9. Check the player's locale and try to use it
+		String langToUse = UserDefineLang.setLangToUse(sender);
 		
-		// #8. Send final msg to user, who returns a 'true' value
-		return net.vdcraft.arvdc.timemanager.cmdplayer.NowFinalMsg.SendNowMsg(sender, worldNameToDisplay, dayPartToDisplay, timeToDisplay, langToUse);
+		// #10. Send final msg to user, who will returns a 'true' value at the end
+		return NowFinalMsg.SendNowMsg(sender, worldNameToDisplay, dayPartToDisplay, timeToDisplay, langToUse);
 	};
 }

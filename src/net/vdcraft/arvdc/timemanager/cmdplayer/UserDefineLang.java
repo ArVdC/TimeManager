@@ -16,7 +16,7 @@ public class UserDefineLang extends MainTM {
 			return serverLang;
 		}
 		// Get player locale and format it
-		String lowerCaseLocale = ((Player) sender).spigot().getLocale();
+		String lowerCaseLocale = ((Player) sender).getLocale();
 		String checkedLocale;
 		if(lowerCaseLocale.contains("_")) {
 			String[] splitLocale = lowerCaseLocale.split("_");

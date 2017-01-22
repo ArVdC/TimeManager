@@ -27,6 +27,7 @@ public class WorldListHandler extends MainTM {
 			// If not, create it in list with default parameters
 				MainTM.getInstance().getConfig().set("worldsList."+loadedWorld.getName()+".start", defStart);
 				MainTM.getInstance().getConfig().set("worldsList."+loadedWorld.getName()+".speed", defSpeed);
+				MainTM.getInstance().getConfig().set("worldsList."+loadedWorld.getName()+".sleepUntilDawn", defSleepUntilDawn);
 			} // If a world already exists, check its 'speed' and 'start' keys
 			else if(MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(loadedWorld.getName())) {
 				// Check if 'start' exist
@@ -38,6 +39,11 @@ public class WorldListHandler extends MainTM {
 				if(!(MainTM.getInstance().getConfig().getConfigurationSection("worldsList."+loadedWorld.getName()).getKeys(false).contains("speed")))
 				{ // If not, create it in list with default parameters
 					MainTM.getInstance().getConfig().set("worldsList."+loadedWorld.getName()+".speed", defSpeed);
+				}
+				// Check if 'sleepUntilNextDay' exist
+				if(!(MainTM.getInstance().getConfig().getConfigurationSection("worldsList."+loadedWorld.getName()).getKeys(false).contains("sleepUntilDawn")))
+				{ // If not, create it in list with default parameters
+					MainTM.getInstance().getConfig().set("worldsList."+loadedWorld.getName()+".sleepUntilDawn", defSleepUntilDawn);
 				}
 			}
 		}

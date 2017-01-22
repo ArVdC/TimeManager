@@ -6,8 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.cmdplayer.NowFormatTime;
-import net.vdcraft.arvdc.timemanager.mainclass.RestrainValuesHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class TmSetTime extends MainTM {
 
@@ -17,15 +16,15 @@ public class TmSetTime extends MainTM {
 	public static void cmdSetTime(CommandSender sender, Long tickToSet, String worldToSet) {
 
 		// Adapt wrong values
-		tickToSet = RestrainValuesHandler.returnCorrectTicks(tickToSet);
+		tickToSet = ValuesConverter.returnCorrectTicks(tickToSet);
 
 		// Modify all worlds
-		if(worldToSet.equals("all")) {
+		if(worldToSet.equalsIgnoreCase("all")) {
 			for(String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
 				Bukkit.getWorld(listedWorld).setTime(tickToSet);
 			}
 			// Notifications
-    		String timeToSet = NowFormatTime.ticksAsTime(tickToSet);
+    		String timeToSet = ValuesConverter.returnTicksAsTime(tickToSet);
 	        Bukkit.getLogger().info(prefixTM + " " + allTimeChgMsg + tickToSet + " tick #" +tickToSet + " (" + timeToSet + ")."); // Console final msg (always)
 	        if(sender instanceof Player) {
 	        	sender.sendMessage(prefixTMColor + " " + allTimeChgMsg + " §etick #" + tickToSet + " §r(§e" + timeToSet + "§r)."); // Player final msg (in case)
@@ -37,7 +36,7 @@ public class TmSetTime extends MainTM {
 			World w = Bukkit.getWorld(worldToSet);
 			w.setTime(tickToSet);
 			// Notifications
-    		String timeToSet = NowFormatTime.ticksAsTime(tickToSet);
+    		String timeToSet = ValuesConverter.returnTicksAsTime(tickToSet);
 	        Bukkit.getLogger().info(prefixTM + " World " + worldToSet + " " + worldTimeChgMsg + " tick #" + tickToSet + " (" + timeToSet + ")."); // Console final msg (always)
 	        if(sender instanceof Player) {
 	        	sender.sendMessage(prefixTMColor + " World " + worldToSet + " " + worldTimeChgMsg + " §etick #" + tickToSet + " §r(§e" + timeToSet + "§r)."); // Player final msg (in case)

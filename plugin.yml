@@ -35,8 +35,10 @@ commands:
             /<command> set multilang [true|false]
             /<command> set refreshrate [tick]
             /<command> set speed [decimal] [all|world]
-            /<command> set start [tick] [all|world]
-            /<command> set time [tick] [all|world]
+            /<command> set start [tick|daypart] [all|world]
+            /<command> set time [tick|daypart] [all|world]
+            /<command> set sleepUntilDawn [true|false] [all|world]
+            /<command> sqlcheck
     description: Type /<command> help for complete admins commands descriptions
     aliases:
       - tm

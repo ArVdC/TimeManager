@@ -14,7 +14,7 @@ public class TmResync extends MainTM {
 	 */
 	public static void cmdResync(CommandSender sender, String worldToSet) {
 		// Re-synchronize all worlds
-		if(worldToSet.equals("all")) {
+		if(worldToSet.equalsIgnoreCase("all")) {
 			// Do the synchronization
 			WorldSyncHandler.WorldSyncRe(worldToSet);
 	        // Notifications

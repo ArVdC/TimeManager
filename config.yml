@@ -9,8 +9,8 @@
 # -----
 # *refreshRate*
 #  The delay in ticks before actualizing the speed stretch/expand effect.
-#  Must be a integer between 5 and 25.
-#  Default value is 10 ticks, a too small value can cause server lags.
+#  Must be an integer between 5 and 25.
+#  Default value is 10 ticks, a too small value can cause server lags, depends on the server resources and the number of maps using a 'speed' modifier.
 # -----
 # *worldsList*
 #  The list of available worlds will be refreshed on server startup. Nether and Ender worlds will be erased if present.
@@ -18,32 +18,44 @@
 #    Define the time at server startup for the specified world. By default, all worlds will start at tick #0/24000. The tab completion also provides presets like "day", "night", etc. 
 #   *speed*
 #    Define if the time will be locked, accelerated, decelerated or normally spend for the specified world.
-#    Value must be a decimal number from 0 to 10.
-#    Use 0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1 to get normal speed and numbers bigger than 1 to speedup time.
+#    Use 0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1 to get normal speed and numbers from 1 to 10 to speedup time.
+#    Set this value to '24' or 'realtime' to make the world time match the real speed time.
+#   *sleep*
+#    Since sleeping at night make important time changes, it is a priority setting to handle if you want keep sync between maps. Turning this 'false' will cancel sleeping events but still allows the player to enter in a bed and save his position.
+# -----
+# *initialTick*
+#   *initialTickNb*
+#    If it is set to 'false', your server will create a new local temporary reference tick at each startup. If 'true', the tick value will be saved somewhere and used as reference on the next startup.
+#   *resetOnStartup*
+#    Reset the existing reference tick and save a new one on each server startup by setting it to 'true'.
+#    Normal use is to let this on 'false', because it allows you to maintain continuity in worlds timers after the server restarts.
+#    In case of working with several servers, at most one of them should turn it true. Set every related servers with an 'false' value will make the reference tick immutable.
+#   *useMySqlDb*
+#    Enable or not the mySql database (true or false), its provide a possible sharing of the reference server startup tick. See lower for more details.
 # -----
 # *mySql*
-#  Permit to share the initial tick from a reference server to others.
-#  Use it with or without BungeCord, just set 'refServer' to 'true' in the reference server config.yml file and 'false' in others.
-#  WARN: A new reference tick value will create when reference server restart.
-#  Set every 'refServer' values to 'false' to make your server time immutable. The first server using the database will create a static reference tick.
-#  mySql functions are TODO !
-#   *useMySql*
-#    Enable the mySql database encoding: true or false (its provide a possible sharing of the reference server startup tick)
-#   *refServer*
-#    Set a new reference ticks on server startup: true or false (only one of the servers should turn it true)
-#   *url* *database* *user* *password*
-#    For 'url', use this format: 'mysql://ip:port/' (for example: 'mysql://localhost:3306/')
-#    Default database name is 'timemanager' but you could choose anything else.
+#  Permit to share the initial tick from a reference server to others. The first server using the database will create a reference tick into it.
+#  Use this with or without BungeeCord, just set 'initialTick.isHardSaved' and 'initialTick.useMySqlDb' to 'true' in each config.yml file.
+#  *host* *port* *ssl* *database* *username* *password*
+#    For 'host', use your server ip. (for example: 'localhost' or 'www.minecraftserver.com').
+#    Default mySQL port is '3306' but you could change it to match your custom configuration.
+#    Default database name is 'timemanager' but you could choose anything else to order it correctly.
 #    If you don't handle databases, follow this tutorial to setup an user account: http://www.yourwebskills.com/dbphpmyadminusers.php
 # -----
 version: ''
 defTimeUnits: ''
 refreshRate: ''
 worldsList: ''
+initialTick:
+  initialTickNb: ''
+  resetOnStartup: ''
+  useMySql: ''
 mySql:
-  useMySql: false
-  refServer: true
-  url: ''
+  host: ''
+  port: ''
+  ssl: ''
+  dbPrefix: ''
   database: ''
-  user: ''
+  table: ''
+  username: ''
   password: ''
