@@ -1,5 +1,7 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
+import org.bukkit.Bukkit;
+
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class ValuesConverter extends MainTM {
@@ -235,6 +237,18 @@ public class ValuesConverter extends MainTM {
 				MainTM.getInstance().getConfig().set("worldsList."+w+".sleepUntilDawn", "false");
 			}
 		}
+	};
+	
+	/** 
+	 *  Check the minecraft version of the server and return only the decimal part
+	 */
+	public static Double KeepDecimalOfMcVersion() {
+		String completeServerVersion = Bukkit.getVersion();
+		String[] split1 = completeServerVersion.split("MC: 1.");
+		String split2 = split1[1];
+		String mcVersionString = split2.substring(0,split2.length()-1);
+		Double mcVersion = Double.parseDouble(mcVersionString);
+		return mcVersion;
 	};
 
 }

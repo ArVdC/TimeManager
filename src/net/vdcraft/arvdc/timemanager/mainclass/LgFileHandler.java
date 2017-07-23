@@ -8,6 +8,7 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import net.vdcraft.arvdc.timemanager.CreateSentenceCommand;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class LgFileHandler extends MainTM {
@@ -37,7 +38,9 @@ public class LgFileHandler extends MainTM {
 	    		// Notification
 	            Bukkit.getLogger().info(prefixTM + " " + lgFileTryReloadMsg);
 				// Reload values from lang.yml file
-				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
+				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);			    
+			    // Reload languages list used by the tab completion
+			    CreateSentenceCommand.tmDefLangArgsList = setAnyListFromLang("languages");
 		    } else loadLang("first");
     	}
     	
@@ -72,7 +75,7 @@ public class LgFileHandler extends MainTM {
 		// #D. Save the lang.yml file
 	    SaveLangYml();
 				
-		// #E. Notification
+		// E. Notification
         Bukkit.getLogger().info(prefixTM + " " + lgVersionMsg + MainTM.getInstance().langConf.getString("version") + ".");
     };
     

@@ -33,7 +33,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	// Configurer la liste des arguments possibles pour '/tm set'
 	List<String> tmSetArgsList = Arrays.asList("deflang", "multilang", "refreshrate", "speed", "start", "time", "sleepUntilDawn");
 	// Configurer la liste des arguments possibles pour '/tm set deflang
-	List<String> tmDefLangArgsList = LgFileHandler.setAnyListFromLang("languages");
+	public static List<String> tmDefLangArgsList = LgFileHandler.setAnyListFromLang("languages");
 	// Configurer la liste des arguments possibles pour '/tm set multilang
 	List<String> tmBooleanArgsList = Arrays.asList("true", "false");
 	// Configurer la liste des 1ers arguments 'tick'  pour '/tm set start' et '/tm set time'
@@ -44,7 +44,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmRefRateArgsList = Arrays.asList("5", "10", "15", "20", "25");
 	// Configurer la liste des arguments 'world' pour '/tm resync', '/tm set speed', '/tm set start' et '/tm set time'
 	List<String> allArg = Arrays.asList("all");
-	List<String> worldsArgs = CfgFileHandler.setAnyListFromConfig("worldsList");
+	public static List<String> worldsArgs = CfgFileHandler.setAnyListFromConfig("worldsList");
 	List<String> tmWorldsArgsList = Stream.concat(allArg.stream(), worldsArgs.stream()).collect(Collectors.toList());
 	// Configurer la liste des arguments 'units' and 'world' for '/now x x'
 	List<String> nowUnitsArgsList = Arrays.asList("hours", "ticks");

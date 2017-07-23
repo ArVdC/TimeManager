@@ -20,7 +20,7 @@
 #    Define if the time will be locked, accelerated, decelerated or normally spend for the specified world.
 #    Use 0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1 to get normal speed and numbers from 1 to 10 to speedup time.
 #    Set this value to '24' or 'realtime' to make the world time match the real speed time.
-#   *sleep*
+#   *sleepUntilDawn*
 #    Since sleeping at night make important time changes, it is a priority setting to handle if you want keep sync between maps. Turning this 'false' will cancel sleeping events but still allows the player to enter in a bed and save his position.
 # -----
 # *initialTick*

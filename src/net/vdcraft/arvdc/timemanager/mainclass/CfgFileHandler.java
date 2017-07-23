@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 
+import net.vdcraft.arvdc.timemanager.CreateSentenceCommand;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class CfgFileHandler extends MainTM {
@@ -42,6 +43,8 @@ public class CfgFileHandler extends MainTM {
 				SqlHandler.initSqlDatas();
 			    // #D. Check for ref tick. If SQL is needed, open the connection, else use config.yml
 				WorldSyncHandler.refreshRefTickAndTime();
+			    // #E. Reload world list used by the tab completion
+			    CreateSentenceCommand.worldsArgs = setAnyListFromConfig("worldsList");
 		    } else loadConfig("first");
     	}
     	
@@ -82,7 +85,7 @@ public class CfgFileHandler extends MainTM {
 		Bukkit.getLogger().info(prefixTM + " " + cfgVersionMsg + MainTM.getInstance().getConfig().getString("version") + "."); // Console version msg
 		
 		// #I.Save the changes
-		MainTM.getInstance().saveConfig();    	
+		MainTM.getInstance().saveConfig();
 	};
 
 	/** 

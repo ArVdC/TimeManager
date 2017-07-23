@@ -17,6 +17,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SleepUntilDawnHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
 
 import org.bukkit.Bukkit;
@@ -33,9 +34,12 @@ public class MainTM extends JavaPlugin {
 	
 	// Main class
 	public static MainTM instanceMainClass;
-	
+
 	// Plugin version
-	public static String versionTM = "1.0.0";
+	public static String versionTM = "1.0.1";
+	
+	// Minecraft server minimal required version
+	public static Double minRequiredVersion = 9.0;
 	
 	// Files names
 	public static String configFileName = "config.yml";
@@ -50,6 +54,7 @@ public class MainTM extends JavaPlugin {
 	public static String prefixTMColor = "§8§l[§6§lTimeManager§8§l]§r";
 	
 	public static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
+	public static String plBadVersionMsg = "§cThe plugin is not compatible with versions under 1." + minRequiredVersion + " and you are running a ";
 	public static String plDisabledMsg = "The plugin is now disabled.";
 	public static String cfgFileCreaMsg = "The configuration file was created.";
 	public static String lgFileCreaMsg = "The language file was created.";
@@ -220,36 +225,42 @@ public class MainTM extends JavaPlugin {
 	 * 1. On Plugin enabling
 	 */
 	@Override
-	public void onEnable() {		
-		// #1. Initiate this main class as the contain of the instance
-		instanceMainClass = this;
+	public void onEnable() {
 
-		// #2. Activate the configuration file
-		CfgFileHandler.loadConfig("first");
-		
-		// #3. Activate the languages file
-		LgFileHandler.loadLang("first");
-
-		// #4. Activate the class with admins commands
-		CommandExecutor timemanagerExecutor = new AdminCmdExecutor();
-		getCommand(cmdTm).setExecutor(timemanagerExecutor);
-		// Activate tab completion for admins commands
-		getCommand(cmdTm).setTabCompleter(new CreateSentenceCommand());
-		
-		// #5. Activate the class with players commands
-		CommandExecutor nowExecutor = new PlayerCmdExecutor();
-		getCommand(cmdNow).setExecutor(nowExecutor);	
-		// Activate tab completion for players commands
-		getCommand(cmdNow).setTabCompleter(new CreateSentenceCommand());
-		
-		// #6. Listen to sleep events
-		getServer().getPluginManager().registerEvents(new SleepUntilDawnHandler(), this);
-		
-		// #7. Synchronize worlds and create scheduled task for faking the time stretch/expand
-		WorldSyncHandler.WorldSyncFirst();
-		
-		// #8. Confirm activation in console
-		Bukkit.getLogger().info(prefixTM + " " + plEnabledMsg);
+		// #0. Don't start the plugin with 1.8 or older versions
+		if(ValuesConverter.KeepDecimalOfMcVersion() < minRequiredVersion) {	
+			laConsole.sendMessage(prefixTM + " " + plBadVersionMsg + "1." + ValuesConverter.KeepDecimalOfMcVersion() + " server.");
+		} else {			
+			// #1. Initiate this main class as the contain of the instance
+			instanceMainClass = this;
+	
+			// #2. Activate the configuration file
+			CfgFileHandler.loadConfig("first");
+			
+			// #3. Activate the languages file
+			LgFileHandler.loadLang("first");
+	
+			// #4. Activate the class with admins commands
+			CommandExecutor timemanagerExecutor = new AdminCmdExecutor();
+			getCommand(cmdTm).setExecutor(timemanagerExecutor);
+			// Activate tab completion for admins commands
+			getCommand(cmdTm).setTabCompleter(new CreateSentenceCommand());
+			
+			// #5. Activate the class with players commands
+			CommandExecutor nowExecutor = new PlayerCmdExecutor();
+			getCommand(cmdNow).setExecutor(nowExecutor);	
+			// Activate tab completion for players commands
+			getCommand(cmdNow).setTabCompleter(new CreateSentenceCommand());
+			
+			// #6. Listen to sleep events
+			getServer().getPluginManager().registerEvents(new SleepUntilDawnHandler(), this);
+			
+			// #7. Synchronize worlds and create scheduled task for faking the time stretch/expand
+			WorldSyncHandler.WorldSyncFirst();
+			
+			// #8. Confirm activation in console
+			Bukkit.getLogger().info(prefixTM + " " + plEnabledMsg);
+		}
 	};
 
 	/**
@@ -258,16 +269,20 @@ public class MainTM extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		// Save YAMLs
-		this.saveConfig();
-		LgFileHandler.SaveLangYml();
-		
-		// Close SQL connection
-		SqlHandler.closeConnection("Host");
-		SqlHandler.closeConnection("DB");	
-		
-		// Confirm disabling in console
-		Bukkit.getLogger().info(prefixTM + " " + plDisabledMsg);		
+		// #0. Don't disable the plugin with 1.8 or older versions
+		if(ValuesConverter.KeepDecimalOfMcVersion() < minRequiredVersion) {
+		} else {
+			// Save YAMLs
+			this.saveConfig();
+			LgFileHandler.SaveLangYml();
+			
+			// Close SQL connection
+			SqlHandler.closeConnection("Host");
+			SqlHandler.closeConnection("DB");	
+			
+			// Confirm disabling in console
+			Bukkit.getLogger().info(prefixTM + " " + plDisabledMsg);
+		}
 	};
 	
-}
+};

@@ -1,4 +1,4 @@
-# TimeManager
+![alt text](http://vdc.serveminecraft.net/plugins/TimeManager/tm-logo.png "TimeManager")
 
 ## Spigot plugin for time management and display
 
@@ -89,4 +89,5 @@ This command doesn't display time of Nether and the End worlds.
 ### TODO
 * Need to fix a bug with spaces in world names. They make infinite loops in tab completion.
 * Make a separate speed time for the night and day.
-* Make compatible with mc versions under 1.12 - adapt the getLocale() method in /now command.
+* ~~Make compatible with mc versions under 1.12 - adapt the getLocale() method in /now command.é~~~
+* Maybe make a 1.8 (and under?) compatible version - something to fix up with the lang.yml, UTF-8 and accented characters.
