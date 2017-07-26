@@ -91,3 +91,7 @@ This command doesn't display time of Nether and the End worlds.
 * Make a separate speed time for the night and day.
 * ~~Make compatible with mc versions under 1.12 - adapt the getLocale() method in /now command.é~~~
 * Maybe make a 1.8 (and under?) compatible version - something to fix up with the lang.yml, UTF-8 and accented characters.
+
+### TUTORIALS
+[![IMAGE 1. How to Install and Configure the Plugin](http://vdc.serveminecraft.net/plugins/TimeManager/1.%20How%20to%20Install%20and%20Configure%20the%20Plugin.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
+
