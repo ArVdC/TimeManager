@@ -1,9 +1,12 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmServTime;
 
 public class WorldListHandler extends MainTM {
 
@@ -47,12 +50,26 @@ public class WorldListHandler extends MainTM {
 				}
 			}
 		}
-		// #4. Remove 'Example' + 'nether' + 'ender' worlds if they are present in the config list		
-		for(String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {	
-			if(listedWorld.equals("Example") || listedWorld.contains("_the_end") || listedWorld.contains("_nether")) {			
+		// #4. Remove 'Example' + 'nether' + 'ender' + inexistent worlds if they are present in the config list
+		List<World> loadedWorlds = Bukkit.getServer().getWorlds();
+		String loadedWorldsNames = "" + loadedWorlds;
+		loadedWorldsNames = loadedWorldsNames.replace("},", ",").replace("CraftWorld{name=", "");
+		loadedWorldsNames = loadedWorldsNames.substring(0,loadedWorldsNames.length()-2);
+		loadedWorldsNames = loadedWorldsNames.substring(1,loadedWorldsNames.length());
+		for(String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+			Boolean eraseWorld = false;
+			if(listedWorld.equals("Example") || listedWorld.contains("_the_end") || listedWorld.contains("_nether")) {		
+				eraseWorld = true;
+			} else {
+					if(!(loadedWorldsNames.contains(listedWorld))) {
+						eraseWorld = true;
+					}
+			}
+			TmServTime.waitTime(1000);
+			if(eraseWorld == true) {
 				MainTM.getInstance().getConfig().getConfigurationSection("worldsList").set(listedWorld, null);
 			}
-		}
+		}		
 		// #5. Save the file
 		MainTM.getInstance().saveConfig();
 		// #6. Notification

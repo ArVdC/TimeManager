@@ -1,4 +1,4 @@
-# [TimeManager] by ArVdC
+# [TimeManager]' by ArVdC
 # lang.yml
 # -----
 # *version*
@@ -13,7 +13,7 @@
 # *languages*
 #  Don't try to override the 'default' language's params, those keys are reseted on every loading.
 #  Provide multi-language support by adding new translation to this lang.yml file.
-#  [WARN] Languages names are case sensitive, use only Minecraft locale codes from : http://minecraft.gamepedia.com/Language#Available_languages.
+#  [WARN]' Languages names are case sensitive, use only Minecraft locale codes from : http://minecraft.gamepedia.com/Language#Available_languages.
 #  Possible placeholders are: {time}, {dayPart}, {targetWorld} and {player}.
 # -----
 version: ''
@@ -21,7 +21,7 @@ useMultiLang: ''
 defaultLang: ''
 languages:
   default:
-    prefix: §8§l[§6§lTime Manager§8§l]
+    prefix: '&8&l[&6&lTime Manager&8&l]'
     msg: Please ask an admin to properly define the default language in the lang.yml file then reload the plugin.
     noMsg: There is no day-night cycle in the Nether and the End dimensions.
     dayparts:
@@ -30,8 +30,8 @@ languages:
       night: begin at 7.00 pm or tick #13000
       dawn: begin at 4.30 am or tick #22500
   de_DE:
-    prefix: §e§l[Stunde]
-    msg: Es §e{time}§r in der welt {targetWorld}, das ist {dayPart}.
+    prefix: '&e&l[Stunde]'
+    msg: Es &e{time}&r in der welt {targetWorld}, das ist {dayPart}.
     noMsg: Es gibt keinen tag-nacht zyklus in dieser dimension!
     dayparts:
       day: die tag
@@ -39,8 +39,8 @@ languages:
       night: die nacht
       dawn: die morgendämmerung
   en_US:
-    prefix: §e§l[Time]
-    msg: It's §e{time}§r in world {targetWorld}, this is {dayPart}.
+    prefix: '&e&l[Time]'
+    msg: It's &e{time}&r in world {targetWorld}, this is {dayPart}.
     noMsg: There is no day-night cycle in this dimension!
     dayparts:
       day: the day
@@ -48,8 +48,8 @@ languages:
       night: the night
       dawn: the sunrise
   es_ES:
-    prefix: §e§l[Hora]
-    msg: Son las §e{time}§r en el mundo {targetWorld}, es {dayPart}.
+    prefix: '&e&l[Hora]'
+    msg: Son las &e{time}&r en el mundo {targetWorld}, es {dayPart}.
     noMsg: No existe un ciclo de día-noche en esta dimensión!
     dayparts:
       day: la jornada
@@ -57,8 +57,8 @@ languages:
       night: de noche
       dawn: el amanecer
   fr_FR:
-    prefix: §e§l[Heure]
-    msg: Il est &e{time}§r dans le monde {targetWorld}, c'est {dayPart}.
+    prefix: '&e&l[Heure]'
+    msg: Il est &e{time}&r dans le monde {targetWorld}, c'est {dayPart}.
     noMsg: Il n'y a pas de cycle jour-nuit dans cette dimension!
     dayparts:
       day: la journée
@@ -66,8 +66,8 @@ languages:
       night: la nuit
       dawn: l'aurore
   it_IT:
-    prefix: §e§l[Ora]
-    msg: È §e{time}§r in del monde {targetWorld}, è {dayPart}.
+    prefix: '&e&l[Ora]'
+    msg: È &e{time}&r in del monde {targetWorld}, è {dayPart}.
     noMsg: Non esiste un ciclo giorno-notte in questa dimensione!
     dayparts:
       day: il giorno
@@ -75,8 +75,8 @@ languages:
       night: la notte
       dawn: l'aurora
   nl_NL:
-    prefix: §e§l[Uur]
-    msg: Het is §e{time}§r in wereld {targetWorld}, dit is {dayPart} nu.
+    prefix: '&e&l[Uur]'
+    msg: Het is &e{time}&r in wereld {targetWorld}, dit is {dayPart} nu.
     noMsg: Er is geen dag-nacht cyclus in deze dimensie!
     dayparts:
       day: de dag
@@ -84,8 +84,8 @@ languages:
       night: de avond
       dawn: de dageraad
   pt_PT:
-    prefix: §e§l[Hora]
-    msg: É §e{time}§r do mundo {targetWorld}, é {dayPart}.
+    prefix: '&e&l[Hora]'
+    msg: É &e{time}&r do mundo {targetWorld}, é {dayPart}.
     noMsg: Não há ciclo de dia-noite nesta dimensão!
     dayparts:
       day: o dia

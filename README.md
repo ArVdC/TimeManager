@@ -1,6 +1,6 @@
-![alt text](http://vdc.serveminecraft.net/plugins/TimeManager/tm-logo.png "TimeManager")
+![TimeManager](http://imageshack.com/a/img922/9061/ECwdWj.png "TimeManager")
 
-## Spigot plugin for time management and display
+## Spigot//CraftBukkit plugin for time management and display
 
 
 ### TIME MANAGING FUNCTIONALITIES
@@ -81,17 +81,19 @@ This command doesn't display time of Nether and the End worlds.
     - timemanager.now.units
     - timemanager.now.worlds
 
-**timemanager.admin:** provide or deny access to /tm commands with all arguments.
+**timemanager.admin:** provide or deny access to /tm subcommands with all arguments.
 
-**timemanager.now:** provide or deny access to /now commands with or without restrain available arguments.
-
-
-### TODO
-* Need to fix a bug with spaces in world names. They make infinite loops in tab completion.
-* Make a separate speed time for the night and day.
-* ~~Make compatible with mc versions under 1.12 - adapt the getLocale() method in /now command.é~~~
-* Maybe make a 1.8 (and under?) compatible version - something to fix up with the lang.yml, UTF-8 and accented characters.
+**timemanager.now:** provide or deny access to /now subcommands with or without restrain available arguments.
 
 ### TUTORIALS
-[![IMAGE 1. How to Install and Configure the Plugin](http://vdc.serveminecraft.net/plugins/TimeManager/1.%20How%20to%20Install%20and%20Configure%20the%20Plugin.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
+[![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
+
+### COMPATIBILITY
+* v-1.0.2: Spigot + CraftBukkit 1.4.6 to 1.12
+* v-1.0.1: Spigot 1.9 to 1.12 + CraftBukkit 1.12
+* v-1.0.0: Spigot + CraftBukkit 1.12
+
+### TODO
+* Fix a bug with tab completion. The worlds names containing spaces make infinite repetitions.
+* Make a separate speed time for the night and day.
 

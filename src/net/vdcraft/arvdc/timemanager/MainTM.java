@@ -22,7 +22,6 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -36,10 +35,10 @@ public class MainTM extends JavaPlugin {
 	public static MainTM instanceMainClass;
 
 	// Plugin version
-	public static String versionTM = "1.0.1";
+	public static String versionTM = "1.0.2";
 	
 	// Minecraft server minimal required version
-	public static Double minRequiredVersion = 9.0;
+	public static Double minRequiredVersion = 4.6;
 	
 	// Files names
 	public static String configFileName = "config.yml";
@@ -55,7 +54,7 @@ public class MainTM extends JavaPlugin {
 	
 	public static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
 	public static String plBadVersionMsg = "§cThe plugin is not compatible with versions under 1." + minRequiredVersion + " and you are running a ";
-	public static String plDisabledMsg = "The plugin is now disabled.";
+	public static String plDisabledMsg = "The plugin is now disabled.";	
 	public static String cfgFileCreaMsg = "The configuration file was created.";
 	public static String lgFileCreaMsg = "The language file was created.";
 	public static String cfgFileExistMsg = "The configuration file already exists.";
@@ -69,6 +68,7 @@ public class MainTM extends JavaPlugin {
 	public static String worldsCheckMsg = "Worlds list was actualized.";
 	public static String multiLangIsOnMsg = "Multilanguage support is enable.";
 	public static String multiLangIsOffMsg = "Multilanguage support is disable.";
+	public static String multiLangDoesntWork = "Multilanguage is not supported by CraftBukkit under the 1.12 version. Upgrade or try with Spigot.";
 	public static String defLangCheckMsg = "Default translation is actually set to";
 	public static String defLangResetMsg = "is missing or corrupt, back to the default parameter.";
 	public static String defLangOkMsg = "exists in " + langFileName + ", keep it as default translation.";
@@ -163,6 +163,7 @@ public class MainTM extends JavaPlugin {
 	public static Integer dayEnd = 24000;
 	
 	// Default sentences in the lang.yml
+	public static String defaultPrefix = "&8&l[&6&lTime Manager&8&l]";
 	public static String defaultMsg = "Please ask an admin to properly define the default language in the lang.yml file then reload this plugin.";
 	public static String defaultNoMsg = "There is no day-night cycle in the Nether and the End dimensions.";	
 	public static String defaultDay = "begin at 6.00 am or tick #" + dayStart;
@@ -202,9 +203,6 @@ public class MainTM extends JavaPlugin {
 	
 	// Language to use if locale doesn't exist in the lang.yml = 'defaultLang' 
     public static String serverLang;
-    
-    // Use the Console as a sender
-    public CommandSender laConsole = this.getServer().getConsoleSender();
 	
 	/*****************
 	***** METHOD *****
@@ -220,7 +218,6 @@ public class MainTM extends JavaPlugin {
 	/*****************
 	***** EVENTS *****
 	*****************/
-	
 	/**
 	 * 1. On Plugin enabling
 	 */
@@ -229,7 +226,7 @@ public class MainTM extends JavaPlugin {
 
 		// #0. Don't start the plugin with 1.8 or older versions
 		if(ValuesConverter.KeepDecimalOfMcVersion() < minRequiredVersion) {	
-			laConsole.sendMessage(prefixTM + " " + plBadVersionMsg + "1." + ValuesConverter.KeepDecimalOfMcVersion() + " server.");
+			Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §c" + plBadVersionMsg + "1." + ValuesConverter.KeepDecimalOfMcVersion() + " server.");
 		} else {			
 			// #1. Initiate this main class as the contain of the instance
 			instanceMainClass = this;
@@ -269,7 +266,7 @@ public class MainTM extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		// #0. Don't disable the plugin with 1.8 or older versions
+		// #0. Don't disable the plugin with if not loaded first
 		if(ValuesConverter.KeepDecimalOfMcVersion() < minRequiredVersion) {
 		} else {
 			// Save YAMLs

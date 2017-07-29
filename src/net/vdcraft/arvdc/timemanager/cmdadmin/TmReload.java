@@ -24,7 +24,7 @@ public class TmReload extends MainTM {
 			CfgFileHandler.loadConfig("re");					
 			
 			// Re-synchronize all the worlds based on a server constant point
-			TmResync.cmdResync(MainTM.getInstance().laConsole, "all");
+			TmResync.cmdResync(Bukkit.getServer().getConsoleSender(), "all");
 			// Launch scheduler if is inactive
 	    	if(increaseScheduleIsOn == false) {
 	    		WorldSpeedHandler.WorldIncreaseSpeed();

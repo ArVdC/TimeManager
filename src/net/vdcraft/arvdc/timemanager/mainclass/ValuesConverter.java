@@ -1,5 +1,7 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
@@ -240,15 +242,71 @@ public class ValuesConverter extends MainTM {
 	};
 	
 	/** 
-	 *  Check the minecraft version of the server and return only the decimal part
+	 *  Restore correct case of the locales (xx_XX)
+	 */
+	public static String returnCorrectLocaleCase(String l) {
+		String checkedLocale;
+		if(l.contains("_")) {
+			String[] splitLocale = l.split("_");
+			String xx_XXLocale = splitLocale[0] + "_" + splitLocale[1].toUpperCase();
+			checkedLocale = xx_XXLocale;
+		} else {
+			checkedLocale = l;
+		}
+		return checkedLocale;
+	};
+	
+	/** 
+	 *  Use the first part to reach the nearest lang (en_GB >>> en_ >>> en_US)
+	 */
+	public static String returnNearestLang(String l) {
+		String nearestLocale = serverLang; // If not existing, use the default language value
+		if(l.contains("_")) {
+			String[] splitLocale = l.split("_");
+			String xx_Locale = splitLocale[0] + "_";
+			List<String> existingLangList = LgFileHandler.setAnyListFromLang("languages");
+			for(String lang : existingLangList) {
+				if(lang.contains(xx_Locale)) {
+					nearestLocale = lang;
+				}
+			}
+		}
+		return nearestLocale;
+	};
+		
+	/** 
+	 *  Get the version of the server and return only the type (Bukkit/Spigot)
+	 */
+	public static String KeepTypeOfServer() {
+		String serverType;
+		String completeServerVersion = Bukkit.getVersion();
+		if(completeServerVersion.contains("ukkit") || completeServerVersion.contains("pigot")) {
+			String[] SplitOfCompleteServerVersion = completeServerVersion.split("-");
+			serverType = SplitOfCompleteServerVersion[1];
+		} else { // For others type of servers (less specific format, so it could crash sometimes)
+			serverType = "other";
+		}
+		return serverType;
+	};
+	
+	/** 
+	 *  Get the version of the server and return only the MC decimal part
 	 */
 	public static Double KeepDecimalOfMcVersion() {
+		Double mcVersion;
 		String completeServerVersion = Bukkit.getVersion();
-		String[] split1 = completeServerVersion.split("MC: 1.");
-		String split2 = split1[1];
-		String mcVersionString = split2.substring(0,split2.length()-1);
-		Double mcVersion = Double.parseDouble(mcVersionString);
+		if(completeServerVersion.contains("ukkit") || completeServerVersion.contains("pigot")) {
+			String[] split1 = completeServerVersion.split("MC: 1.");
+			String split2 = split1[1];
+			String mcVersionString = split2.substring(0,split2.length()-1);
+			mcVersion = Double.parseDouble(mcVersionString);
+		} else { // For others type of servers (less specific format, so it could crash sometimes)
+			String[] split1 = completeServerVersion.split("1.");
+			String split2 = split1[2];
+			String mcVersionString = split2.substring(0,split2.length()-1);
+			mcVersion = Double.parseDouble(mcVersionString);
+		}
 		return mcVersion;
 	};
 
-}
+};

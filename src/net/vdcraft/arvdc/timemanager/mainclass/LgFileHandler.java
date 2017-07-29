@@ -48,7 +48,7 @@ public class LgFileHandler extends MainTM {
     	
     	// #A. Restore fixed values
 		MainTM.getInstance().langConf.set("version", versionTM);
-		MainTM.getInstance().langConf.set("languages.default.prefix", prefixTMColor);
+		MainTM.getInstance().langConf.set("languages.default.prefix", defaultPrefix);
 		MainTM.getInstance().langConf.set("languages.default.msg", defaultMsg);
 		MainTM.getInstance().langConf.set("languages.default.noMsg", defaultNoMsg);
     	MainTM.getInstance().langConf.set("languages.default.dayparts.day", defaultDay);
@@ -92,7 +92,7 @@ public class LgFileHandler extends MainTM {
 	    	}
 		  	// Then actualize 'defaultLang' from lang.yml file for checking
 			serverLang = new String(MainTM.getInstance().langConf.getString("defaultLang"));
-			MainTM.getInstance().laConsole.sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§r."); // Console log msg
+			Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§r."); // Console log msg
 			// Check if key 'defaultLang' correspond to an existing language who contains every needed keys
 		    if(!MainTM.getInstance().langConf.getConfigurationSection("languages").getKeys(false).contains(serverLang)) {
 		    	restoreDefLang();    	
@@ -100,7 +100,7 @@ public class LgFileHandler extends MainTM {
 				Set<String> langKeys = MainTM.getInstance().langConf.getConfigurationSection("languages."+serverLang).getKeys(true);
 				if(langKeys.contains("prefix") && langKeys.contains("msg") && langKeys.contains("noMsg") && langKeys.contains("dayparts") && langKeys.contains("dayparts.day") && langKeys.contains("dayparts.dusk") && langKeys.contains("dayparts.night") && langKeys.contains("dayparts.dawn")) {
 				    // If every key exists, keep actual 'defLang'
-				    MainTM.getInstance().laConsole.sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangOkMsg); // Console log msg
+					Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangOkMsg); // Console log msg
 				} else {
 					restoreDefLang();
 				}
@@ -111,10 +111,12 @@ public class LgFileHandler extends MainTM {
 	/** 
 	 * Restore the 'default' translation in lang.yml
 	 */ 
-	private static void restoreDefLang() { 
+	private static void restoreDefLang() {
+		if(ValuesConverter.KeepTypeOfServer().equalsIgnoreCase("bukkit") && ValuesConverter.KeepDecimalOfMcVersion() < 12.0) {
+			Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangResetMsg);	// Console log msg
+		}
 		MainTM.getInstance().langConf.set("defaultLang", "default");
 	    serverLang = new String(MainTM.getInstance().langConf.getString("defaultLang"));
-		MainTM.getInstance().laConsole.sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangResetMsg);	// Console log msg
 	}
 
 	/** 
@@ -140,4 +142,4 @@ public class LgFileHandler extends MainTM {
 		return listedElementsList;
 	};
     
-}
+};
