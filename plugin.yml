@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.0.2
+version: 1.1.0
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdc.serveminecraft.net
@@ -21,32 +21,36 @@ permissions:
           timemanager.now.units:
             default: true
           timemanager.now.worlds:
-            default: true
+            default: false
 commands:
-  timemanager:
+  tm:
     permission: timemanager.admin
     usage: |
-            Here is the complete commands list:
-            /<command> help [cmd]
+            Here is the complete list of commands, subcommands and arguments:
+            /<command> checktimers
+            /<command> checksql
+            /<command> help [cmd] <subCmd>
             /<command> reload [all|config|lang]
             /<command> resync [all|world]
-            /<command> servtime
+            /<command> set debugmode [true|false]
             /<command> set deflang [lg_LG]
             /<command> set multilang [true|false]
             /<command> set refreshrate [tick]
-            /<command> set speed [decimal] [all|world]
+            /<command> set sleep [true|false] [all|world]
+            /<command> set speed [multiplier] [all|world]
             /<command> set start [tick|daypart] [all|world]
+            /<command> set sync [true|false] [all|world]
             /<command> set time [tick|daypart] [all|world]
-            /<command> set sleepUntilDawn [true|false] [all|world]
-            /<command> sqlcheck
-    description: Type /<command> help for complete admins commands descriptions
     aliases:
-      - tm
       - tmanag
+      - timemanag
+      - tmanager
+      - timemanager
+    description: Generic TimeManager Admin Command
   now:
     permission: timemanager.now.cmd
     usage: /<command> <units> <world>
-    description: Display actual time (in mc hours or in ticks) in the chat.
+    description: Display a world actual time (in mc hours or in ticks) in the chat.
     aliases:
       - time
       - hour

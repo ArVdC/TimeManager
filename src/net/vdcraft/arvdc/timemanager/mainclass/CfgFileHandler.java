@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 
-import net.vdcraft.arvdc.timemanager.CreateSentenceCommand;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class CfgFileHandler extends MainTM {
@@ -15,7 +14,7 @@ public class CfgFileHandler extends MainTM {
 	 */
 	public static void loadConfig(String firstOrRe) {
 		
-    	// #1. When it is the server startup // 
+    	// #1. When it is the server startup
     	if(firstOrRe.equalsIgnoreCase("first")) {
 			// #A. Create congig.yml file if missing, force actual version
 		    if(!(MainTM.getInstance().configFileYaml.exists())) {
@@ -28,7 +27,9 @@ public class CfgFileHandler extends MainTM {
 		    MainTM.getInstance().getConfig().options().copyDefaults(true);
 		    // #C. Actualize or create the config.yml file
 		    MainTM.getInstance().saveDefaultConfig();
-		    // #D. Actualize SQL related values
+			// #D. Toggle debugMode on/off
+			DebugModeHandler.debugModeOnOff();
+		    // #E. Actualize SQL related values
 			SqlHandler.initSqlDatas();
     	}
     	
@@ -39,52 +40,60 @@ public class CfgFileHandler extends MainTM {
 	            Bukkit.getLogger().info(prefixTM + " " + cfgFileTryReloadMsg);
 				// #B. Reload values from config.yml file
 				MainTM.getInstance().reloadConfig();
-			    // #C. Check if SQL is needed, in case open connection
+				// #C. Toggle debugMode on/off
+				DebugModeHandler.debugModeOnOff();
+			    // #D. Check if SQL is needed, in case open connection
 				SqlHandler.initSqlDatas();
-			    // #D. Check for ref tick. If SQL is needed, open the connection, else use config.yml
+			    // #E. Check for ref tick. If SQL is needed, open the connection, else use config.yml
 				WorldSyncHandler.refreshRefTickAndTime();
-			    // #E. Reload world list used by the tab completion
-			    CreateSentenceCommand.worldsArgs = setAnyListFromConfig("worldsList");
 		    } else loadConfig("first");
     	}
     	
-    	// #3. In both case //
+    	// #3. In both case:
     	
-		// #A. Set some default values if missing
+		// #A. Set some default values if missing or corrupt
     	if(MainTM.getInstance().getConfig().getKeys(false).contains("defTimeUnits")) {
     		if(MainTM.getInstance().getConfig().getString("defTimeUnits").equals("")) {
     			MainTM.getInstance().getConfig().set("defTimeUnits", defTimeUnits);
     		}
 	    }
     	if(MainTM.getInstance().getConfig().getConfigurationSection("initialTick").getKeys(false).contains("resetOnStartup")) {
-		    if(MainTM.getInstance().getConfig().getString("initialTick.resetOnStartup").equals("")) {
+		    if(!(MainTM.getInstance().getConfig().getString("initialTick.resetOnStartup").equals("false"))) {
 		    	MainTM.getInstance().getConfig().set("initialTick.resetOnStartup", "true");
 		    }
     	}
 		
 	    // #B. Check and complete list of available worlds
 		WorldListHandler.listLoadedWorlds();
-	    
+		
     	// #C. Restrain the refresh rate
     	ValuesConverter.restrainRate();
     	
     	// #D. Restrain the initialTickNb value
     	ValuesConverter.restrainInitTick();
+
+		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + cfgOptionsCheckDebugMsg); // Console debug msg
+		
+		for(String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+			
+			// #E. Restrain the speed modifiers
+	    	ValuesConverter.restrainSpeed(w);
+	    	
+			// #F. Restrain the start times
+	    	ValuesConverter.restrainStart(w);
+	    	
+			// #G. Restrain the sync value
+	    	ValuesConverter.restrainSync(w, 0.1);
+	    	
+			// #H. Restrain the sleep value
+	    	ValuesConverter.restrainSleep(w);
+		}
     	
-		// #E. Restrain the speed modifiers
-    	ValuesConverter.restrainSpeed();
-    	
-		// #F. Restrain the start times
-    	ValuesConverter.restrainStart();
-    	
-		// #G. Restrain the start times
-    	ValuesConverter.restrainSleep();
-    	
-    	// #H. Restore and display version value
+    	// #I. Restore and display version value
 	    MainTM.getInstance().getConfig().set("version", versionTM);
 		Bukkit.getLogger().info(prefixTM + " " + cfgVersionMsg + MainTM.getInstance().getConfig().getString("version") + "."); // Console version msg
 		
-		// #I.Save the changes
+		// #J. Save the changes
 		MainTM.getInstance().saveConfig();
 	};
 
@@ -94,7 +103,7 @@ public class CfgFileHandler extends MainTM {
 	public static List<String> setAnyListFromConfig(String inWichYamlKey) {
 		List<String> listedElementsList = new ArrayList<>();
 		for(String listedElement : MainTM.getInstance().getConfig().getConfigurationSection(inWichYamlKey).getKeys(false)) {
-			listedElementsList.add(listedElement);				
+			listedElementsList.add(listedElement);		
 		}
 		return listedElementsList;
 	};

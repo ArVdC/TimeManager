@@ -8,7 +8,6 @@ import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import net.vdcraft.arvdc.timemanager.CreateSentenceCommand;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class LgFileHandler extends MainTM {
@@ -38,9 +37,7 @@ public class LgFileHandler extends MainTM {
 	    		// Notification
 	            Bukkit.getLogger().info(prefixTM + " " + lgFileTryReloadMsg);
 				// Reload values from lang.yml file
-				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);			    
-			    // Reload languages list used by the tab completion
-			    CreateSentenceCommand.tmDefLangArgsList = setAnyListFromLang("languages");
+				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 		    } else loadLang("first");
     	}
     	
@@ -76,6 +73,7 @@ public class LgFileHandler extends MainTM {
 	    SaveLangYml();
 				
 		// E. Notification
+	    if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + availableTranslationsDebugMsg + " §e" + setAnyListFromLang("languages")); // Console debug msg
         Bukkit.getLogger().info(prefixTM + " " + lgVersionMsg + MainTM.getInstance().langConf.getString("version") + ".");
     };
     
@@ -112,7 +110,7 @@ public class LgFileHandler extends MainTM {
 	 * Restore the 'default' translation in lang.yml
 	 */ 
 	private static void restoreDefLang() {
-		if(ValuesConverter.KeepTypeOfServer().equalsIgnoreCase("bukkit") && ValuesConverter.KeepDecimalOfMcVersion() < 12.0) {
+		if(McVersionHandler.KeepTypeOfServer().equalsIgnoreCase("bukkit") && McVersionHandler.KeepDecimalOfMcVersion() < 12.0) {
 			Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangResetMsg);	// Console log msg
 		}
 		MainTM.getInstance().langConf.set("defaultLang", "default");

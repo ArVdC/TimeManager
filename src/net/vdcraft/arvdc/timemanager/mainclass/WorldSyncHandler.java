@@ -47,7 +47,6 @@ public class WorldSyncHandler extends MainTM {
 		double speedModifNb;		
 		// #A. Re-synchronize all worlds
 		if(wichWorld.equalsIgnoreCase("all")) {
-			DaylightCycleHandler.doDaylightCheck("all");
 			Bukkit.getLogger().info(prefixTM + " " + serverInitTickMsg + " #" +  initialTick + " (" + initialTime + ")."); // Final console msg // Console log msg
 			Bukkit.getLogger().info(prefixTM + " " + serverCurrentTickMsg + " #" + currentServerTick + " (" + currentServerTime + ")."); // Console log msg
 	        for(World w:Bukkit.getServer().getWorlds()) { 		
@@ -57,33 +56,50 @@ public class WorldSyncHandler extends MainTM {
 	        }
 	    // #B. Re-synchronize a single world
 		} else {
-			DaylightCycleHandler.doDaylightCheck(wichWorld);
-			startAtTickNb = (MainTM.getInstance().getConfig().getLong("worldsList."+wichWorld+".start")); // Read config.yml to get the world's 'start' value 
-			speedModifNb = (MainTM.getInstance().getConfig().getDouble("worldsList."+wichWorld+".speed")); // Read config.yml to get the world's 'speed' value   	
-			long newTick;
-			if(speedModifNb == 24) { // if realtime world
-        		newTick = (long) (currentServerTick / 72L) + (startAtTickNb - 6000L);
-        	} else if(speedModifNb == 0) { // if frozen world
-            		newTick = (long) startAtTickNb;
-        	} else {
-        	   newTick = (long) ((((currentServerTick % 24000) - (initialTick % 24000)) * speedModifNb * 72) + startAtTickNb); // Elapsed time * speed modifier + start at #tick
-        	   }
-			newTick = ValuesConverter.returnCorrectTicks(newTick);
-			//Bukkit.getLogger().info(prefixTM + " " + newTick + " = ((" + (currentServerTick % 24000) + " - " + (initialTick % 24000) + ") * " + speedModifNb + " * 72) + " + startAtTickNb);
-        	
-        	Bukkit.getServer().getWorld(wichWorld).setTime(newTick);
-			// Notifications
+			startAtTickNb = (MainTM.getInstance().getConfig().getLong("worldsList."+wichWorld+".start")); // Read config.yml to get the world's 'start' value
+			speedModifNb = (MainTM.getInstance().getConfig().getDouble("worldsList."+wichWorld+".speed")); // Read config.yml to get the world's 'speed' value
+			long newTick = Bukkit.getServer().getWorld(wichWorld).getTime();
+			boolean justShow = false;
+			// Warning notifications when no synchronization is needed
+        	if(MainTM.getInstance().getConfig().getString("worldsList."+wichWorld+".sync").equalsIgnoreCase("true")) {				
+			    Bukkit.getLogger().info(prefixTM + " The world " + wichWorld + " " + worldSyncNoManualSyncChgMsg); // Console warn msg (always)
+			    if(debugMode == false) justShow = true; // The debug mode permit to do an useless resynchronizations only to see the beautiful colored calculations
+        	}
+        	// Doing the synchronization
+        	if(justShow == false) {
+				WorldDayCycleHandler.doDaylightCheck(wichWorld);
+				if(speedModifNb == 24.0) { // if realtime world // Next tick = start at #tick - difference between a real day that starts at 0:00 and a minecraft day that starts at 6:00 + (Current tick / difference between a 24h real day length and a minecraft day that lasts 20min)
+	        		newTick = (long) (startAtTickNb - 6000L + (currentServerTick / 72L));
+	        		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Resync: Calculation of " + actualTimeVar + " for world §e" + wichWorld + "§b:");
+	    			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + adjustedTicksCalculation + " = §8" + currentServerTick + " §b/ §672 §b= §3" + ((currentServerTick / 72L) % 24000)); // Console debug msg
+	    			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + realActualTimeCalculation + " = §e" + startAtTickNb + " §b- §96000 §b+ §3" + ((currentServerTick / 72L) % 24000) + " §b= §c" + (startAtTickNb - 6000L + (currentServerTick / 72L)) % 24000 + " §brestrained to one day = §ctick #" + ValuesConverter.returnCorrectTicks(newTick)); // Console debug msg
+	        	} else if(speedModifNb == 0.0) { // if frozen world // Next tick = (Start at #tick)
+	            	newTick = (long) startAtTickNb;
+	    			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeVar + " = " + worldStartAtVar + " = §e" + startAtTickNb + " §brestrained to one day = §ctick #" + ValuesConverter.returnCorrectTicks(newTick)); // Console debug msg
+	        	} else { // if other speed world // Next tick = Start at #tick + (Elapsed time * speed modifier)        		
+	        		newTick = (long) (startAtTickNb + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick))) * speedModifNb) % 24000));
+	        		if(debugMode == true) {
+            			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Resync: Calculation of " + actualTimeVar + " for world §e" + wichWorld + "§b:");
+       					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + elapsedTimeCalculation + " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b= §d" + ((currentServerTick - initialTick) % 24000) + " §brestrained to one day = §d" + ValuesConverter.returnCorrectTicks(((currentServerTick % 24000) - (initialTick % 24000)))); // Console debug msg
+       					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + adjustedElapsedTimeCalculation + " = §d" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + speedModifNb + " §b= §5" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick) % 24000))) * speedModifNb)))); // Console debug msg
+       					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeCalculation + " = §e" + startAtTickNb + " §b+ §5" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick) % 24000))) * speedModifNb) + " §b= §c" + (startAtTickNb + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick) % 24000))) * speedModifNb)) + " §brestrained to one day = §ctick #" + ValuesConverter.returnCorrectTicks(newTick)); // Console debug msg
+       				}
+	        	}
+				newTick = ValuesConverter.returnCorrectTicks(newTick);
+	        	Bukkit.getServer().getWorld(wichWorld).setTime(newTick);
+        	}
+			// Notifications (in both cases)
     		String listedWorldCurrentTime = ValuesConverter.returnTicksAsTime(newTick);
     		String listedWorldStartTime = ValuesConverter.returnTicksAsTime(startAtTickNb);
     		String formattedUTC = ValuesConverter.formatAsUTC(startAtTickNb);
-    		if(speedModifNb == 24) { // Display realtime messages
-				Bukkit.getLogger().info(prefixTM + " World " + wichWorld + " " + worldCurrentStartMsg + " " + formattedUTC + " (+" + startAtTickNb + " ticks)."); // Final console msg
-				Bukkit.getLogger().info(prefixTM + " World " + wichWorld + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTick + ")."); // Final console msg
-				Bukkit.getLogger().info(prefixTM + " World " + wichWorld + worldCurrentSpeedMsg + " " + worldRealSpeedMsg); // Final console msg
+    		if(speedModifNb == 24.0) { // Display realtime messages
+				Bukkit.getLogger().info(prefixTM + " The world " + wichWorld + " " + worldCurrentStartMsg + " " + formattedUTC + " (+" + startAtTickNb + " ticks)."); // Final console msg
+				Bukkit.getLogger().info(prefixTM + " The world " + wichWorld + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTick + ")."); // Final console msg
+				Bukkit.getLogger().info(prefixTM + " The world " + wichWorld + worldCurrentSpeedMsg + " " + worldRealSpeedMsg); // Final console msg
 			} else { // Display normal messages
-				Bukkit.getLogger().info(prefixTM + " World " + wichWorld + " " + worldCurrentStartMsg + " " + listedWorldStartTime + " (+" + startAtTickNb + " ticks)."); // Final console msg
-				Bukkit.getLogger().info(prefixTM + " World " + wichWorld + worldCurrentTimeMsg + " " +  listedWorldCurrentTime + " (#" +  newTick + ")."); // Final console msg
-				Bukkit.getLogger().info(prefixTM + " World " + wichWorld + worldCurrentSpeedMsg + " " +  speedModifNb + "."); // Final console msg
+				Bukkit.getLogger().info(prefixTM + " The world " + wichWorld + " " + worldCurrentStartMsg + " " + listedWorldStartTime + " (+" + startAtTickNb + " ticks)."); // Final console msg
+				Bukkit.getLogger().info(prefixTM + " The world " + wichWorld + worldCurrentTimeMsg + " " +  listedWorldCurrentTime + " (#" +  newTick + ")."); // Final console msg
+				Bukkit.getLogger().info(prefixTM + " The world " + wichWorld + worldCurrentSpeedMsg + " " +  speedModifNb + "."); // Final console msg
 			}
 		}
     };

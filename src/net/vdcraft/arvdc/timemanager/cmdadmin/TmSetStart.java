@@ -11,40 +11,27 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
 public class TmSetStart extends MainTM {
 
 	/**
-	 * CMD /tm set start [tick] [world]
+	 * CMD /tm set start [tick|daypart] [world]
 	 */ 
 	public static void cmdSetStart(CommandSender sender, Long tickToSet, String worldToSet) {
+		// If using a world name in several parts
+		if(sender instanceof Player) worldToSet = ValuesConverter.restoreSpacesInString(worldToSet);
 		
 		// Modify all worlds
 		if(worldToSet.equalsIgnoreCase("all")) {
+			// Relaunch this for each world
 			for(String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
-				// Adapt wrong values
-				String currentSpeed = MainTM.getInstance().getConfig().getString("worldsList."+listedWorld+".speed");
-				if(currentSpeed.contains("24")) {
-					tickToSet = ValuesConverter.returnCorrectUTC(tickToSet) * 1000;
-				} else {
-					tickToSet = ValuesConverter.returnCorrectTicks(tickToSet);
-				}
-				// Modify and save the start tick in the config.yml
-			    MainTM.getInstance().getConfig().set("worldsList."+listedWorld+".start", tickToSet);
+				cmdSetStart(sender, tickToSet, listedWorld);	
 			}
-			MainTM.getInstance().saveConfig();
-			// Resync all worlds
-		    WorldSyncHandler.WorldSyncRe("all");
-			// Notifications
-	        Bukkit.getLogger().info(prefixTM + " " + allStartChgMsg); // Console final msg (always)
-	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " " + allStartChgMsg); // Player final msg (in case)
-	        }
 		}
     	// Else, if the string argument is a listed world, modify a single world
         else if(MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToSet)) {
 			// Adapt wrong values
-			String currentSpeed = MainTM.getInstance().getConfig().getString("worldsList."+worldToSet+".speed");
-			if(currentSpeed.contains("24")) {
+			Double currentSpeed = MainTM.getInstance().getConfig().getDouble("worldsList."+worldToSet+".speed");
+			if(currentSpeed == 24.00) {
 				tickToSet = ValuesConverter.returnCorrectUTC(tickToSet) * 1000;
 			} else {
-				tickToSet = ValuesConverter.returnCorrectTicks(tickToSet);
+				tickToSet = tickToSet % 24000;
 			}
 			// Modify and save the start tick in the config.yml
 		    MainTM.getInstance().getConfig().set("worldsList."+worldToSet+".start", tickToSet);
@@ -52,9 +39,9 @@ public class TmSetStart extends MainTM {
 			// Resync this world
 		    WorldSyncHandler.WorldSyncRe(worldToSet);
 			// Notifications
-	        Bukkit.getLogger().info(prefixTM + " World " + worldToSet + " " + worldStartChgMsg); // Console final msg (always)
+	        Bukkit.getLogger().info(prefixTM + " " + worldStartChgMsg1 + " " + worldToSet + " " + worldStartChgMsg2); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " World " + worldToSet + " " + worldStartChgMsg); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " " + worldStartChgMsg1 + " §e" + worldToSet + "§r " + worldStartChgMsg2); // Player final msg (in case)
 	        }
         }
 		// Else, return an error and help message

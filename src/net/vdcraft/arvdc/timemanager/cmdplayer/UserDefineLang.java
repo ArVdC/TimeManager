@@ -2,10 +2,12 @@ package net.vdcraft.arvdc.timemanager.cmdplayer;
 
 import java.util.Locale;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class UserDefineLang extends MainTM {
@@ -23,26 +25,34 @@ public class UserDefineLang extends MainTM {
 		// Get player locale and format it
 		String lowerCaseLocale;
 		// Spigot/Bukkit (or other) version 1.12-
-		if(ValuesConverter.KeepDecimalOfMcVersion() < 12.0) {
+		if(McVersionHandler.KeepDecimalOfMcVersion() < 12.0) {
 			// If the server is a Spigot
-			if(ValuesConverter.KeepTypeOfServer().equalsIgnoreCase("spigot")) {
+			if(McVersionHandler.KeepTypeOfServer().equalsIgnoreCase("spigot")) {
 				lowerCaseLocale = ((Player) sender).spigot().getLocale();
+				if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
 			} else {
-				// If the server is a Bukkit (or other)
+				// If the server is a Bukkit or other fork
 				Locale computerLocale = Locale.getDefault();
 				lowerCaseLocale = computerLocale.toString();
+				if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + pcLocaleDebugMsg); // Console debug msg
 			}
 		// Spigot/Bukkit version 1.12+
 		} else {
 			lowerCaseLocale = ((Player) sender).getLocale();
+			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
 		}
 		// Restore the correct case format (xx_XX)
 		String playerLocale = ValuesConverter.returnCorrectLocaleCase(lowerCaseLocale);
 		
+		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + foundLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
+		
 		// If locale is unavailable in the yaml keys, try to use the first part to reach the nearest existing language
 		if(!(MainTM.getInstance().langConf.getConfigurationSection("languages").getKeys(false).contains(playerLocale))) {
 			playerLocale = ValuesConverter.returnNearestLang(playerLocale);
-		} 
+		}
+		
+		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + useLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
+		
 		return playerLocale;
 	};
 	

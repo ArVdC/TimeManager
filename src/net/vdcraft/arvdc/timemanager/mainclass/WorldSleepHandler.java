@@ -9,7 +9,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
-public class SleepUntilDawnHandler implements Listener {
+public class WorldSleepHandler implements Listener {
 	
     /**
      * When a player try to sleep, authorize entering the bed but check if the time need to be spend until the dawn or not
@@ -46,7 +46,7 @@ public class SleepUntilDawnHandler implements Listener {
                 		sleepTicksCount(p, w, speedModifier);
                 	// Change the gamerule doDaylightCycle to true or false
                 	} else {
-                		String isSleepIsPermit = MainTM.getInstance().getConfig().getString("worldsList."+w.getName()+".sleepUntilDawn");
+                		String isSleepIsPermit = MainTM.getInstance().getConfig().getString("worldsList."+w.getName()+".sleep");
                 		// Do something only if the value contradicts the current settings
                 		if ((isSleepIsPermit.equals("false") && speedModifier >= 1.0) || (isSleepIsPermit.equals("true") && speedModifier < 1.0)) {
                 			w.setGameRuleValue("doDaylightCycle", isSleepIsPermit);
@@ -65,7 +65,7 @@ public class SleepUntilDawnHandler implements Listener {
             @Override
             public void run() {
 				// This will check if the doDaylightCycle value needs to be restored
-				DaylightCycleHandler.doDaylightCheck(wn);
+				WorldDayCycleHandler.doDaylightCheck(wn);
             }
         }, 5L);
     };

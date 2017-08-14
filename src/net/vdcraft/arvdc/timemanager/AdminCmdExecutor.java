@@ -4,22 +4,26 @@
 
 package net.vdcraft.arvdc.timemanager;
 
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHelp;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmReload;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmResync;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmServTime;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDebugMode;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTimers;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDefLang;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetMultiLang;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetRefreshRate;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSpeed;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetStart;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleepUntilDawn;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmSqlCheck;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleep;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckSql;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class AdminCmdExecutor implements CommandExecutor {
@@ -29,16 +33,21 @@ public class AdminCmdExecutor implements CommandExecutor {
 	    MainTM.getInstance();
 		// Count # of arguments
 		int argsNumb = args.length;
+		String defaultWorld = "world"; // Create a default world value in case of missing argument
+		if(sender instanceof Player) {
+			World w = ((Player) sender).getWorld();
+			defaultWorld = w.getName();
+		}
 
 		if(argsNumb >= 1) {
 			// Display initial and current server's clock, initial and current server's tick and all worlds initial and current timers.
-			if(args[0].equalsIgnoreCase("servtime")) {
-				TmServTime.cmdServerTime(sender);
+			if(args[0].equalsIgnoreCase("checktimers") || args[0].equalsIgnoreCase("servtime")) { // alias for v1.0 compatibility
+				TmCheckTimers.cmdServerTime(sender);
 				return true;
 			}
-			else if(args[0].equalsIgnoreCase("sqlcheck")) {
+			else if(args[0].equalsIgnoreCase("checksql") || args[0].equalsIgnoreCase("sqlcheck")) { // alias for v1.0 compatibility
 			// Try a connection to provided host and display results
-				TmSqlCheck.cmdSqlcheck(sender);
+				TmCheckSql.cmdSqlcheck(sender);
 				return true;
 			}
 			// If 'set' is use alone
@@ -64,11 +73,15 @@ public class AdminCmdExecutor implements CommandExecutor {
 			// Synchronize all worlds timers based on server initial time
 			else if(args[0].equalsIgnoreCase("resync")) {
 				if(args.length < 2) {
+					if(sender instanceof Player) {
+						TmResync.cmdResync(sender, defaultWorld);
+						return true;
+					}
 					TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "resync"); // Send error and help msg
 					return true;
 				} else {
 					// Concatenate world argument
-					int leftArgsCount = args.length - 2; // Count surplus arguments						
+					int leftArgsCount = args.length - 2; // Count extra arguments						
 					int currentArgNb = args.length - 1; // Stock the highest argument number
 					String concatWorldArgs = args[currentArgNb];
 					while(leftArgsCount-- > 0) { // Loop arguments, beginning with the last one
@@ -82,8 +95,18 @@ public class AdminCmdExecutor implements CommandExecutor {
 		}
 		if(argsNumb >= 2) {
 			if(args[0].equalsIgnoreCase("set")) {
+				// Enable or disable the console colored verbose messages
+				if(args[1].equalsIgnoreCase("debugmode"))	{
+					if(args.length < 3) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set debugmode"); // Send error and help msg
+						return true;
+					} else {
+						TmSetDebugMode.cmdDebugMode(sender, args[2]);
+						return true;
+					}
+				}	
 				// Set the default language to use in case the asked locale doesn't exist
-				if(args[1].equalsIgnoreCase("deflang"))	{
+				else if(args[1].equalsIgnoreCase("deflang"))	{
 					if(args.length < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set deflang"); // Send error and help msg
 						return true;
@@ -120,19 +143,36 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 			}
 		}
-		if(argsNumb >= 3) {
+		String concatWorldArgs = "";
+		if(argsNumb == 3) {
+			if(sender instanceof Player) concatWorldArgs = defaultWorld;
+		}
+		if(argsNumb >= 4) {
 			// Concatenate world argument
-			int leftArgsCount = args.length - 4; // Count surplus arguments						
+			int leftArgsCount = args.length - 4; // Count extra arguments						
 			int currentArgNb = args.length - 1; // Stock the highest argument number
-			String concatWorldArgs = args[currentArgNb];
+			concatWorldArgs = args[currentArgNb];
 			while(leftArgsCount-- > 0) { // Loop arguments, beginning with the last one
 				--currentArgNb;
 				concatWorldArgs = (args[currentArgNb] + " " + concatWorldArgs);
 			}
-			if(args[0].equalsIgnoreCase("set")) {	
+		}
+		if(argsNumb >= 3) {
+			if(args[0].equalsIgnoreCase("set")) {
+				// Set the sleeping possibility for a world
+				if(args[1].equalsIgnoreCase("sleep") || args[1].equalsIgnoreCase("sleepUntilDawn")) { // alias for v1.0 compatibility
+					if(args.length < 3) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set sleep"); // Send error and help msg
+						return true;
+					} else {
+						String sleepOrNo = args[2];
+						TmSetSleep.cmdSetSleep(sender, sleepOrNo, concatWorldArgs);
+						return true;
+					}
+				}
 				// Set the speed modifier for a world
-				if(args[1].equalsIgnoreCase("speed")) {
-					if(args.length < 4) {
+				else if(args[1].equalsIgnoreCase("speed")) {
+					if(args.length < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set speed"); // Send error and help msg
 						return true;
 					} else {
@@ -153,7 +193,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 				// Set the start time for a world
 				else if(args[1].equalsIgnoreCase("start")) {
-					if(args.length < 4) {
+					if(args.length < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set start"); // Send error and help msg
 						return true;
 					} else {
@@ -168,9 +208,20 @@ public class AdminCmdExecutor implements CommandExecutor {
 						}
 					}
 				}
+				// Set the permanent synchronization of a world
+				else if(args[1].equalsIgnoreCase("sync") || args[1].equalsIgnoreCase("synchro")) { // alias for commodity
+					if(args.length < 3) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set sync"); // Send error and help msg
+						return true;
+					} else {
+						String syncOrNo = args[2];	
+						TmSetSync.cmdSetSync(sender, syncOrNo, concatWorldArgs);
+						return true;
+					}
+				}
 				// Set the current time for a world
 				else if(args[1].equalsIgnoreCase("time")) {
-					if(args.length < 4) {
+					if(args.length < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set time"); // Send error and help msg
 						return true;
 					} else {
@@ -185,23 +236,12 @@ public class AdminCmdExecutor implements CommandExecutor {
 						}
 					}
 				}
-				// Set the sleeping possibility for a world
-				else if(args[1].equalsIgnoreCase("sleepUntilDawn")) {
-					if(args.length < 4) {
-						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set sleepUntilDawn"); // Send error and help msg
-						return true;
-					} else {
-						String sleepOrNo = args[2];		
-						TmSetSleepUntilDawn.cmdSetSleepUntilDawn(sender, sleepOrNo, concatWorldArgs);
-						return true;
-					}
-				}
 			}
 			
 		}
 		// Else, display basic help menu and commands
 		TmHelp.cmdHelp(sender, args);
-		return false;
+		return true;
 	};
 	
 }

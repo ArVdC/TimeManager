@@ -21,7 +21,7 @@ public class TmSetDefLang extends MainTM {
 			serverLang = newLang;
 	        Bukkit.getLogger().info(prefixTM + " " + defLangCheckMsg + " " + newLang + "."); // Console final msg (always)
 	        if(sender instanceof Player) {
-	        	sender.sendMessage(prefixTMColor + " " + defLangCheckMsg + " " + newLang + "."); // Player final msg (in case)
+	        	sender.sendMessage(prefixTMColor + " " + defLangCheckMsg + " §e" + newLang + "§r."); // Player final msg (in case)
 	        }
 		}
 		// Else, return an error and help message

@@ -3,6 +3,7 @@
 	<classpathentry excluding="net/vdcraft/arvdc/timemanager/admincmd/" kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry exported="true" kind="lib" path="//SALON-MACHINE/www/lib/mysql-connector-java-5.1.40-bin.jar"/>
-	<classpathentry kind="lib" path="//SALON-MACHINE/www/lib/spigot-api-1.12-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry exported="true" kind="lib" path="//SALON-MACHINE/www/lib/spigot-api-1.12-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="//SALON-MACHINE/www/lib/spigot-api-1.11.2-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
