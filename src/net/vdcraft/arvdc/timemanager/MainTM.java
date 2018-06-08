@@ -35,13 +35,13 @@ public class MainTM extends JavaPlugin {
 	public static MainTM instanceMainClass;
 
 	// Plugin version
-	public static String versionTM = "1.1.0";
+	public static String versionTM() { return instanceMainClass.getDescription().getVersion().toString(); };
 	
 	// Minecraft server minimal required version decimals "x.xx" (without the "1." and eventually with a "x.0x" format - to permit comparisons) 
 	public static Double minRequiredMcVersion = 4.06;
 	
 	// Minecraft server latest version decimals "x.xx" (without the "1." and eventually with a "x.0x" format - to permit comparisons) 
-	public static Double latestMcVersion = 12.01;
+	public static Double latestMcVersion = 12.02;
 	
 	// Enable/Disable debugging
 	public static Boolean debugMode = false; // Final user accessible debug msgs
@@ -247,7 +247,7 @@ public class MainTM extends JavaPlugin {
 	public static String defaultNight = "begin at 7.00 pm or tick #" + nightStart; 
 	public static String defaultDawn = "begin at 4.30 am or tick #" + dawnStart;
 		
-	// Config and Lang files names and targets
+	// Config and Lang files targets
 	public File configFileYaml = new File(this.getDataFolder(), configFileName);
 	public File langFileYaml = new File(this.getDataFolder(), langFileName);
 	public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
@@ -286,14 +286,14 @@ public class MainTM extends JavaPlugin {
 	/*****************
 	***** METHOD *****
 	*****************/
-    
+
 	/** 
 	 * Instantiate the main class 'MainTM'
 	 */
 	public static MainTM getInstance() {
 		return instanceMainClass;
 	};
-
+	
 	/*****************
 	***** EVENTS *****
 	*****************/

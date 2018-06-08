@@ -69,6 +69,6 @@ public class TmSetTime extends MainTM {
 		else {
 			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set time");
 		}
-	};
-
+	}
+	
 }

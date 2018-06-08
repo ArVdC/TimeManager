@@ -38,7 +38,7 @@ public class TmCheckTimers extends MainTM {
 		{
 			Bukkit.getLogger().info(prefixTM + " " + serverCurrentTickMsg + " #" + currentServerTick + " (" + currentServerTime + ")."); // Final console msg
 		}
-        
+		waitTime(500);
 		// Get each world start tick, actual tick, speed and sync param
     	for(String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
     		Long listedWorldStartTick = MainTM.getInstance().getConfig().getLong("worldsList."+listedWorld+".start");
@@ -103,6 +103,6 @@ public class TmCheckTimers extends MainTM {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	};	
+	}
 	
 }

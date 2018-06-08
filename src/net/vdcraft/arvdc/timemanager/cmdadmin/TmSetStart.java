@@ -48,6 +48,6 @@ public class TmSetStart extends MainTM {
 		else {
 			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set start");
 		}
-	};
-
+	}
+	
 }

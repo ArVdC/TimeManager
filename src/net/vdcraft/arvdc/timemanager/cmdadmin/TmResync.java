@@ -46,6 +46,6 @@ public class TmResync extends MainTM {
 		else {	
         	TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "resync");
 		}
-	};
-
+	}
+	
 }

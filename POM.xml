@@ -9,10 +9,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.vdcraft.arvdc</groupId>
 	<artifactId>TimeManager</artifactId>
-	<version>1.1.0</version>
+	<version>1.1.1</version>
 	<packaging>jar</packaging>	
 	<build>
-		<finalName>TimeManager-${project.version}-SNAPSHOT</finalName>
+		<finalName>TimeManager-${project.version}</finalName>
 		<sourceDirectory>src\net\vdcraft\arvdc\timemanager</sourceDirectory>
 		<resources>
 			<resource>
@@ -51,4 +51,8 @@
 		</dependency>
 	</dependencies>
     
+	<issueManagement>
+		<url>https://github.com/ArVdC/TimeManager/issues</url>
+		<system>GitHub</system>
+	</issueManagement>
 </project>

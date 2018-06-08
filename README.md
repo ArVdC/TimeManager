@@ -29,7 +29,7 @@ Four combinations are therefore possible: "/now", "/now \<units>", "/now \<world
 This command doesn't display time of Nether and the End worlds.
 
 
-### ADMIN COMMAND /timemanager or /tm
+### ADMIN COMMAND /tm
 **/tm checktimers** Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and each world current time, start time and speed.
 
 **/tm checksql** Check the availability of the mySql server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.
@@ -94,10 +94,11 @@ This command doesn't display time of Nether and the End worlds.
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
+* v1.1.1: Most CraftBukkit forks from 1.4.6 to 1.12.2
 * v1.1.0: Most CraftBukkit forks from 1.4.6 to 1.12.1
 * v1.0.2: Spigot and Bukkit 1.4.6 to 1.12
 * v1.0.1: Spigot 1.9 to 1.12 and Bukkit 1.12
-* v1.0.0: Spigot and CraftBukkit 1.12
+* v1.0.0: Spigot and Bukkit 1.12
 
 ### TODO
 * Command: Add to '/tm checktimers' an argument [all|world] to display the details for a single world.
