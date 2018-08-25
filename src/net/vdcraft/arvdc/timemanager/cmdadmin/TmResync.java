@@ -1,6 +1,5 @@
 package net.vdcraft.arvdc.timemanager.cmdadmin;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,21 +25,8 @@ public class TmResync extends MainTM {
 		}
     	// Else, if the string argument is a listed world, re-synchronize a single world
         else if(MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToSet)) {
-        	if(MainTM.getInstance().getConfig().getString("worldsList."+worldToSet+".sync").equalsIgnoreCase("true")) {
-				// Warning notifications, no synchronization needed
-		        Bukkit.getLogger().info(prefixTM + " The world " + worldToSet + " " + worldSyncNoManualSyncChgMsg); // Console warn msg (always)
-		        if(sender instanceof Player) {
-		        	sender.sendMessage(prefixTMColor + " The world §e" + worldToSet + "§r " + worldSyncNoManualSyncChgMsg); // Player warn msg (in case)
-		        }
-        	} else {
 				// Do the synchronization
-				WorldSyncHandler.WorldSyncRe(worldToSet);
-		        // Notifications
-		        Bukkit.getLogger().info(prefixTM + " The world " + worldToSet + resyncDoneOneMsg); // Console final msg (always)
-				if(sender instanceof Player) {
-					sender.sendMessage(prefixTMColor + " The world §e" + worldToSet + "§r" + resyncDoneOneMsg); // Player final msg (in case)
-				}
-	        }   
+				WorldSyncHandler.WorldSyncRe(sender, worldToSet);
         }
 		// Else, return an error and help message
 		else {	
@@ -48,4 +34,4 @@ public class TmResync extends MainTM {
 		}
 	}
 	
-}
+};

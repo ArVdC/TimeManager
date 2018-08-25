@@ -23,13 +23,15 @@ public class SqlHandler extends MainTM {
 			    	MainTM.getInstance().getConfig().set("initialTick.useMySql", "false");
 			    }
         	}
+    	} else {
+    		MainTM.getInstance().getConfig().set("initialTick.useMySql", "false");    		
     	}
     	if(MainTM.getInstance().getConfig().getKeys(false).contains("mySql")) {
 	    	if(MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("host")) {
 			    if(MainTM.getInstance().getConfig().getString("mySql.host").equals("")) {
 			    	MainTM.getInstance().getConfig().set("mySql.host", "localhost");
 			    }
-	    	}		
+	    	}	
 	    	if(MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("port")) {
 			    if(MainTM.getInstance().getConfig().getString("mySql.port").equals("")) {
 			    	MainTM.getInstance().getConfig().set("mySql.port", "3306");
@@ -50,10 +52,28 @@ public class SqlHandler extends MainTM {
 			    	MainTM.getInstance().getConfig().set("mySql.table", "refTick");
 			    }
 	    	}
+	    	if(!MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("username")) {
+			    MainTM.getInstance().getConfig().set("mySql.username", "user");
+	    	}
+	    	if(!MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("password")) {
+			    MainTM.getInstance().getConfig().set("mySql.password", "***");
+	    	}
+    	} else {
+    		MainTM.getInstance().getConfig().set("initialTick.useMySql", "false");
+	    	MainTM.getInstance().getConfig().set("mySql.host", "localhost");
+	    	MainTM.getInstance().getConfig().set("mySql.port", "3306");
+	    	MainTM.getInstance().getConfig().set("mySql.ssl", "false");
+	    	MainTM.getInstance().getConfig().set("mySql.database", "timemanager");
+	    	MainTM.getInstance().getConfig().set("mySql.table", "refTick");  
+	    	MainTM.getInstance().getConfig().set("mySql.username", "user");
+	    	MainTM.getInstance().getConfig().set("mySql.password", "***"); 		
     	}
     	host = MainTM.getInstance().getConfig().getString("mySql.host");
     	port = MainTM.getInstance().getConfig().getString("mySql.port");
     	ssl = MainTM.getInstance().getConfig().getString("mySql.ssl");
+    	tableName = MainTM.getInstance().getConfig().getString("mySql.table");
+    	username = MainTM.getInstance().getConfig().getString("mySql.username");
+    	password = MainTM.getInstance().getConfig().getString("mySql.password");
     	dbPrefix = MainTM.getInstance().getConfig().getString("mySql.dbPrefix").replace("_", "");
     	if(!dbPrefix.equals("")) {
     		dbPrefix = dbPrefix + "_";
@@ -64,13 +84,13 @@ public class SqlHandler extends MainTM {
     	tableName = MainTM.getInstance().getConfig().getString("mySql.table");
     	username = MainTM.getInstance().getConfig().getString("mySql.username");
     	password = MainTM.getInstance().getConfig().getString("mySql.password");
-	};
+	}
 	
 	/** 
 	 *  Try to open SQL connection, if not possible, change and use the tick value from config.yml
 	 */	
-	public synchronized static boolean openTheConnectionIfPossible() {
-		if(connectionToHostIsAvailable() == true) { // Try to join the host, if the connection to host is possible, keep it open
+	public synchronized static Boolean openTheConnectionIfPossible(Boolean msgOnOff) {
+		if(connectionToHostIsAvailable(msgOnOff) == true) { // Try to join the host, if the connection to host is possible, keep it open
 			if(connectionToDatabaseIsAvailable() == false) { // Try to connect the database, create it if missing
 				createNewDatabase();
 			}
@@ -83,19 +103,19 @@ public class SqlHandler extends MainTM {
 			MainTM.getInstance().getConfig().set("initialTick.useMySql", "false"); // Force to stop use SQL
 			return false;
 		}
-	};
+	}
 	
 	/** 
 	 *  Check for connection
 	 */	
-	public synchronized static boolean connectionToHostIsAvailable() {
+	public synchronized static boolean connectionToHostIsAvailable(Boolean msgOnOff) {
 		String isSslOn = " without";
 		if(ssl.equalsIgnoreCase("true")) {
 			isSslOn = "";
 		}
 	    try {
 	    	connectionHost = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "?user=" + username + "&password=" + password + "&useSSL=" + ssl);
-	        Bukkit.getLogger().info(prefixTM + " The mySQL host \"" + host + "\" " + connectionOkMsg + port + isSslOn + " using ssl."); // Console log msg
+	        if(msgOnOff.equals(true)) Bukkit.getLogger().info(prefixTM + " The mySQL host \"" + host + "\" " + connectionOkMsg + " #" + port + isSslOn + " using ssl."); // Console log msg
 	        return true;
 	    } catch(Exception e) {
 	    	if(debugMode == true) {
@@ -106,7 +126,7 @@ public class SqlHandler extends MainTM {
 	        closeConnection("Host");
 	        return false;
 	    }
-	};
+	}
 	
 	/** 
 	 *  Check for existing database
@@ -120,7 +140,7 @@ public class SqlHandler extends MainTM {
 	    	if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The database \"" + database + "\" doesn't exist yet."); // Console debug msg
 	        return false;
 	    }
-	};
+	}
 
 	/** 
 	 *  Create the database
@@ -139,7 +159,7 @@ public class SqlHandler extends MainTM {
 	        Bukkit.getLogger().severe(prefixTM + " " + dbCreationFailMsg + " " + checkConfigMsg); // Console error msg
 	        closeConnection("Host");
 		}
-	};
+	}
 	
 	/** 
 	 *  Check for existing table
@@ -159,7 +179,7 @@ public class SqlHandler extends MainTM {
 			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Any table doesn't exist yet."); // Console debug msg
 	        return false;
 		}
-	};
+	}
 	
 	/** 
 	 *  Create a new table
@@ -178,7 +198,7 @@ public class SqlHandler extends MainTM {
             if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + tableCreationFailMsg + " " + checkConfigMsg); // Console error msg
 	        closeConnection("DB");
 	    }
-	};
+	}
     
     /** 
 	 *  Write a new tick value
@@ -198,10 +218,10 @@ public class SqlHandler extends MainTM {
 	        Bukkit.getLogger().severe(prefixTM + " " + datasCreationFailMsg + " " + checkConfigMsg); // Console error msg
 	        closeConnection("DB");
 	    }
-	};
+	}
 
     /** 
-	 *  Update a tick value
+	 *  Update the initialTickNb value in the MySQL database
 	 */	
 	public synchronized static void updateServerTickSQL(Long tick) {
 	    try {
@@ -215,7 +235,7 @@ public class SqlHandler extends MainTM {
 	        Bukkit.getLogger().severe(prefixTM + " " + datasOverridingFailMsg + " " + checkConfigMsg); // Console error msg
 	        closeConnection("DB");
 	    }
-	};    
+	}
 	    
 	/** 
 	 *  Get the tick value
@@ -236,7 +256,7 @@ public class SqlHandler extends MainTM {
     		Bukkit.getLogger().info(prefixTM + " " + tableReachFailMsg + " " + checkConfigMsg); // Console error msg
 	    	return null;
 	    }
-	};
+	}
 
 	/** 
 	 *  Close a connection
@@ -258,6 +278,6 @@ public class SqlHandler extends MainTM {
 	    	}
 	        Bukkit.getLogger().severe(prefixTM + " " + disconnectionFailMsg + " " + checkConfigMsg); // Console error msg
 	    }	
-	};
+	}
 
-}
+};

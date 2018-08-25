@@ -9,7 +9,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class ValuesConverter extends MainTM {
 	
 	/** 
-	 * Check and correct any 'speed' value (returns a double)
+	 *  Check and correct any 'speed' value (returns a double)
 	 */
     public static double returnCorrectSpeed(Double newSpeed) {
     	if(!newSpeed.equals(realtimeSpeed)) { // Don't modify the real time value
@@ -20,10 +20,10 @@ public class ValuesConverter extends MainTM {
 	    	}
     	}
 		return newSpeed;
-	};
+	}
 
 	/** 
-	 * Check and correct the 'refreshrate' value (returns an integer)
+	 *  Check and correct the 'refreshrate' value (returns an integer)
 	 */
     public static Integer returnCorrectRate(Integer newRefreshRate) {
 		if(newRefreshRate > refreshMax) { // Forbid too big numbers    	
@@ -32,10 +32,10 @@ public class ValuesConverter extends MainTM {
 			newRefreshRate = refreshMin; // Forbid too small numbers
 		}
 		return newRefreshRate;
-    };
+    }
 	
 	/** 
-	 * Check and correct any 'start' or 'time' tick value (returns a long)
+	 *  Check and correct any 'start' or 'time' tick value (returns a long)
 	 */
 	public static long returnCorrectTicks(Long newTime) {
 		while(newTime >= 24000) { // Forbid numbers higher than 23999 (= end of the day)
@@ -45,10 +45,10 @@ public class ValuesConverter extends MainTM {
 			newTime += 24000;
 		}
 		return newTime;
-	};
+	}
 	
 	/** 
-	 * Check and correct the 'initialTIckNb' tick value (returns a long)
+	 *  Check and correct the 'initialTIckNb' tick value (returns a long)
 	 */
 	public static long returnCorrectInitTicks(Long newTime) {
 		while(newTime >= 1728000) { // Forbid numbers higher than 727999 (= end of the day)
@@ -58,10 +58,10 @@ public class ValuesConverter extends MainTM {
 			newTime += 1728000;
 		}
 		return newTime;
-	};
+	}
 	
 	/**	
-	 * Convert a tick in its related part of the day (returns a string)
+	 *  Convert a tick in its related part of the day (returns a string)
 	 */
 	public static String SetDayPartToDisplay(long actualTick)
 	{
@@ -78,10 +78,10 @@ public class ValuesConverter extends MainTM {
 			return null;
 		}
 		return wichPart;
-	};
+	}
 	
 	/** 
-	 * Convert a listed string value to a 'start' or 'time' tick value (returns a string)
+	 *  Convert a listed string value to a 'start' or 'time' tick value (returns a string)
 	 */
 	public static String returnTimeFromString(String newTime) {
 		if(newTime.equalsIgnoreCase("day")) {
@@ -103,19 +103,19 @@ public class ValuesConverter extends MainTM {
 			newTime = "22500";
 		}
 		return newTime;
-	};
+	}
     
 	/** 
-	 * Get and convert current milliseconds UTC+0 time to a 1/1728000 tick value (returns a long)
+	 *  Get and convert current milliseconds UTC+0 time to a 1/1728000 tick value (returns a long)
 	 */
     public static Long returnServerTick() {
 		long ticksSinceEpoch = (long) (System.currentTimeMillis() / 50L); // Get the server actual time in milliseconds and convert it into ticks
 		long daillyServerTick = ticksSinceEpoch % 1728000L; // Display a 24h day loop (1728000 ticks = 1 real day)
 		return daillyServerTick;
-	};
+	}
 
 	/** 
-	 * Convert a tick value and return a correct UTC value (returns a long)
+	 *  Convert a tick value and return a correct UTC value (returns a long)
 	 */
     public static long returnCorrectUTC(Long tickValue) {
     	tickValue = (long) Math.floor(tickValue / 1000); // Use the 'start' value as an UTC modifier
@@ -125,10 +125,10 @@ public class ValuesConverter extends MainTM {
 			tickValue = 12 + tickValue;
     	}
 		return tickValue;
-	};
+	}
 
 	/** 
-	 * Format a positive/negative number and return a formatted UTC+/-n value  (returns a string)
+	 *  Format a positive/negative number and return a formatted UTC+/-n value  (returns a string)
 	 */
     public static String formatAsUTC(Long tickValue) {
     	tickValue = returnCorrectUTC(tickValue);
@@ -139,10 +139,10 @@ public class ValuesConverter extends MainTM {
     		formattedUTC = "UTC+" + tickValue + "h";
     	}
 		return formattedUTC;
-	};
+	}
 	
 	/** 
-	 * Get and convert the current millisecond UTC+0 time to HH:mm:ss (returns a string)
+	 *  Get and convert the current millisecond UTC+0 time to HH:mm:ss (returns a string)
 	 */
     public static String returnServerTime() {
     	long seconds = System.currentTimeMillis() / 1000L; // x ms in 1 second
@@ -150,10 +150,10 @@ public class ValuesConverter extends MainTM {
 	    long m = (seconds / 60) % 60;
 	    long H = (seconds / (60 * 60)) % 24;
 	    return String.format("%02d:%02d:%02d", H,m,s) + " UTC";
-    };
+    }
     
 	/** 
-	 * Get and convert a real time tick (1/1728000) to HH:mm:ss (returns a string)
+	 *  Get and convert a real time tick (1/1728000) to HH:mm:ss (returns a string)
 	 */
 	public static String returnTickAsHHmmss(Long ticks) {
 		Long newTicks = ticks / 20L; // x tick in 1 seconds
@@ -161,9 +161,7 @@ public class ValuesConverter extends MainTM {
 		long m = (newTicks / 60) % 60;		
 		long H = (newTicks / (60 * 60)) % 24;
 		return String.format("%02d:%02d:%02d", H,m,s) + " UTC";
-	};
-	
-	// TODO Make a converter from HH:mm:ss to tick for the set time and set start cmds 
+	}
 	
 	/** 
 	 *  Return correct case of the locale (xx_XX) (returns a string)
@@ -178,7 +176,7 @@ public class ValuesConverter extends MainTM {
 			checkedLocale = l;
 		}
 		return checkedLocale;
-	};
+	}
 	
 	/** 
 	 *  Use the first part to reach the nearest lang [en_GB] >>> [en_] >>> [en_US] (returns a string)
@@ -196,7 +194,7 @@ public class ValuesConverter extends MainTM {
 			}
 		}
 		return nearestLocale;
-	};
+	}
 	
 	/** 
 	 *  Replace 'spaces' in a given list (returns a string)
@@ -211,7 +209,7 @@ public class ValuesConverter extends MainTM {
 			}
 		}
 		return l;
-	};
+	}
 	
 	/** 
 	 *  Restore missing 'spaces' in a string (returns a string)
@@ -221,10 +219,10 @@ public class ValuesConverter extends MainTM {
 			s = s.replace("\u02d9", " ");
 		}
 		return s;
-	};
+	}
 	
 	/**
-	 *Get and convert a MC tick (1/2400) to HH:mm:ss (returns a string)
+	 *  Get and convert a MC tick (1/2400) to HH:mm:ss (returns a string)
 	 */
 	public static String returnTicksAsTime(Long ticks) { // add (Long ticks, CommandSender sender) for debug msg		
 
@@ -235,10 +233,12 @@ public class ValuesConverter extends MainTM {
 		Long m = (newTicks / 60) % 60;		
 		Long H = (newTicks / (60 * 60)) % 24;
 		return String.format("%02d:%02d:%02d", H,m,s);
-	};
+	}
+	
+	// TODO Make a converter from HH:mm:ss to tick for the set time and set start cmds 
 
 	/** 
-	 * Restrain refresh rate (modifies the configuration)
+	 *  Restrain refresh rate (modifies the configuration)
 	 */
     public static void restrainRate() {    	
     	try { // Check if value is an integer
@@ -248,14 +248,14 @@ public class ValuesConverter extends MainTM {
 			refreshRateInt = defRefresh;
 		}
 		MainTM.getInstance().getConfig().set("refreshRate", refreshRateInt);
-    };
+    }
 
 	/** 
-	 * Restrain initial tick (modifies the configuration)
+	 *  Restrain initial tick (modifies the configuration)
 	 */
     public static void restrainInitTick() {
 		long newInitialTick; 	
-    	try { // Check if value is an integer
+    	try { // Check if value is a long
     		initialTick = MainTM.getInstance().getConfig().getLong("initialTick.initialTickNb");
     		newInitialTick = returnCorrectInitTicks(initialTick);
 		} catch (NumberFormatException nfe) { // If not a long, use the current time value
@@ -263,10 +263,10 @@ public class ValuesConverter extends MainTM {
 		}
 		initialTick = newInitialTick;
 		MainTM.getInstance().getConfig().set("initialTick.initialTickNb", newInitialTick);
-    };
+    }
 	
 	/** 
-	 * Restrain speed modifiers (modifies the configuration without saving the file)
+	 *  Restrain speed modifiers (modifies the configuration without saving the file)
 	 */
 	public static void restrainSpeed(String worldToSet) {
 		double speedModifier;
@@ -283,10 +283,10 @@ public class ValuesConverter extends MainTM {
 		}
 		MainTM.getInstance().getConfig().set("worldsList."+worldToSet+".speed", speedModifier);
 		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + speedAdjustDebugMsg + " §e" + isSpeedRealtime + "§b to §e" + speedModifier + "§b for the world §e" + worldToSet + "§b."); // Console debug msg
-	};
+	}
 	
 	/** 
-	 * Restrain start timers (modifies the configuration without saving the file)
+	 *  Restrain start timers (modifies the configuration without saving the file)
 	 */
     public static void restrainStart(String worldToSet) {	
 		String timeToSet = MainTM.getInstance().getConfig().getString("worldsList."+worldToSet+".start");
@@ -305,8 +305,8 @@ public class ValuesConverter extends MainTM {
     	}
 		MainTM.getInstance().getConfig().set("worldsList."+worldToSet+".start", tickToSet);
 		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + startAdjustDebugMsg + " §e" + timeToSet + "§b to §e" + tickToSet + "§b for the world §e" + worldToSet + "§b."); // Console debug msg
-    };
-    
+    }
+ 
 	/** 
 	 *  Force 'sync' to true for the 24.0 speed, then false when change to another speed ratio.
 	 *  & force 'sync' to false for the 0.0 speed. (modifies the configuration without saving the file)
@@ -323,7 +323,7 @@ public class ValuesConverter extends MainTM {
 			MainTM.getInstance().getConfig().set("worldsList."+worldToSet+".sync", "false");
 			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 		} // else, don't do anything
-	};
+	}
 	
 	/** 
 	 *  If a world's speed:00. or speed:24.0 force 'sleep' to false (modifies the configuration without saving the file)
@@ -334,6 +334,6 @@ public class ValuesConverter extends MainTM {
 			MainTM.getInstance().getConfig().set("worldsList."+worldToSet+".sleep", "false");
 			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + sleepAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 		}
-	};
+	}
 
 };

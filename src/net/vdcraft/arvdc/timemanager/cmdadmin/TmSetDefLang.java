@@ -28,6 +28,6 @@ public class TmSetDefLang extends MainTM {
 		else {
 			TmHelp.sendErrorMsg(sender, MainTM.wrongLangMsg, "set deflang");
 		}
-	};
+	}
 	
-}
+};

@@ -24,18 +24,18 @@ public class TmCheckSql extends MainTM {
 				}
 				// Start notifications
 				if(sender instanceof Player) {
-					sender.sendMessage(prefixTMColor + " " + tryReachHostMsg + " \"§e" + host + "§r\" on port §e#" + port + "§r" + isSslOn + " using ssl."); // Player final msg (in case)
+					sender.sendMessage(prefixTMColor + " " + tryReachHostMsg + " \"Â§e" + host + "Â§r\" on port Â§e#" + port + "Â§r" + isSslOn + " using ssl."); // Player final msg (in case)
 				}
-				Bukkit.getLogger().info(prefixTM + " " + tryReachHostMsg + " \"" + host + "\" on port " + port + isSslOn + " using ssl."); // Console final msg (always)
+				Bukkit.getLogger().info(prefixTM + " " + tryReachHostMsg + " \"" + host + "\" on port #" + port + isSslOn + " using ssl."); // Console final msg (always)
 				// Test the connection
-				boolean okOrNot = SqlHandler.connectionToHostIsAvailable();
+				boolean okOrNot = SqlHandler.connectionToHostIsAvailable(true);
 				// Notifications
 				if(sender instanceof Player) { // Console messages are displayed by 'SqlHandler.connectionToHostIsAvailable()'
 					if(okOrNot == true) { // If the connection is ok
-						sender.sendMessage(prefixTMColor + " The mySQL host \"§e" + host + "§r\" " + connectionOkMsg + " §e#" + port + "§r" + isSslOn + " using ssl."); // Player final msg (in case)
+						sender.sendMessage(prefixTMColor + " The mySQL host \"Â§e" + host + "Â§r\" " + connectionOkMsg + " Â§e#" + port + "Â§r" + isSslOn + " using ssl."); // Player final msg (in case)
 						SqlHandler.closeConnection("Host"); // Stop the connection
 					} else { // If the connection is not ok
-						sender.sendMessage(prefixTMColor + connectionFailMsg + " \"§e" + host + "§r\". " + checkLogMsg); // Player final msg (in case)
+						sender.sendMessage(prefixTMColor + connectionFailMsg + " \"Â§e" + host + "Â§r\". " + checkLogMsg); // Player final msg (in case)
 					}
 				}
 	        }
@@ -43,5 +43,6 @@ public class TmCheckSql extends MainTM {
 		
 		asyncCmdSqlcheck.runTaskAsynchronously(MainTM.getInstance());	
 		
-	};
-}
+	}
+	
+};

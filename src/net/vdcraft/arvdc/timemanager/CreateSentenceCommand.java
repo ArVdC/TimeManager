@@ -26,13 +26,13 @@ public class CreateSentenceCommand implements TabCompleter {
 	****************/
 
 	// List of admin sub-commands 
-	List<String> tmCmdArgsList = Arrays.asList("checksql", "checktimers", "help", "reload", "resync", "set");
+	List<String> tmCmdArgsList = Arrays.asList("checkconfig", "checksql", "checktime", "help", "reload", "resync", "set");
 	// List of admin sub-commands having a 'help'
-	List<String> tmHelpArgsList = Arrays.asList("checksql", "checktimers", "reload", "resync", "set");
+	List<String> tmHelpArgsList = Arrays.asList("checkconfig", "checksql", "checktime", "reload", "resync", "set");
 	// Arguments list for '/tm reload'
 	List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang");
 	// Arguments list for '/tm set'
-	List<String> tmSetArgsList = Arrays.asList("debugmode", "deflang", "multilang", "refreshrate", "sleep", "speed", "start", "sync", "time");
+	List<String> tmSetArgsList = Arrays.asList("debugmode", "deflang", "initialtick", "multilang", "refreshrate", "sleep", "speed", "start", "sync", "time");
 	// Arguments list for '/tm set deflang
 	List<String> tmDefLangArgsList() {
 		return LgFileHandler.setAnyListFromLang("languages");
@@ -43,9 +43,11 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmTimeArgsList = Arrays.asList("morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
 	// Modifier arguments for '/tm set speed'
 	List<String> tmSpeedArgsList = Arrays.asList("0", "0.5", "1", "1.5", "2", "2.5", "5", "realtime");
+	// 'tick' arguments list for '/tm set initialtick'
+	List<String> tmInitialTickArgsList = Arrays.asList("0", "1200", "72000", "864000");
 	// 'tick' arguments list for '/tm set refreshrate'
 	List<String> tmRefRateArgsList = Arrays.asList("5", "10", "15", "20", "25");
-	// 'world' arguments list for '/tm resync', '/tm set speed', '/tm set start' et '/tm set time' etc.
+	// 'worlds' arguments list for '/tm resync', '/tm set speed', '/tm set start' et '/tm set time' etc.
 	List<String> allArg = Arrays.asList("all");
 	List<String> tmWorldsArgsList(CommandSender sender) {
 		List<String> worldsArgs = CfgFileHandler.setAnyListFromConfig("worldsList");
@@ -53,6 +55,15 @@ public class CreateSentenceCommand implements TabCompleter {
 			worldsArgs = ValuesConverter.replaceSpacesInList(worldsArgs);
 		}
 		return Stream.concat(allArg.stream(), worldsArgs.stream()).collect(Collectors.toList());
+	}
+	// 'worlds' arguments list for '/tm checktime'
+	List<String> allAndServerArg = Arrays.asList("all", "server");
+	List<String> tmWorldsTimeArgsList(CommandSender sender) {
+		List<String> worldsArgs = CfgFileHandler.setAnyListFromConfig("worldsList");
+		if(sender instanceof Player) { // Hack it only for players
+			worldsArgs = ValuesConverter.replaceSpacesInList(worldsArgs);
+		}
+		return Stream.concat(allAndServerArg.stream(), worldsArgs.stream()).collect(Collectors.toList());
 	}
 	
 	// Arguments list for 'units' and 'world' for '/now x x'
@@ -66,6 +77,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	/****************
 	***** EVENT *****
 	****************/
+	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		List<String> outputArgsList = new ArrayList<String>();
@@ -81,13 +93,19 @@ public class CreateSentenceCommand implements TabCompleter {
 					if(verif.toLowerCase().startsWith(args[0].toLowerCase())) outputArgsList.add(verif);
 				}
 			} else if(args.length == 2) {
-				if(args[0].equalsIgnoreCase("help")) // Command '/tm help <...>'
+				if(args[0].equalsIgnoreCase("checktime")) // Command '/tm checktime <...>'
 				{
-					for(String verif : tmHelpArgsList)
+					for(String verif : tmWorldsTimeArgsList(sender))
 					{
 						if(verif.toLowerCase().startsWith(args[1].toLowerCase())) outputArgsList.add(verif);
 					}
-				} else if(args[0].equalsIgnoreCase("reload")) // Command '/tm reload <...>'
+				} else if(args[0].equalsIgnoreCase("help")) // Command '/tm help <...>'
+					{
+						for(String verif : tmHelpArgsList)
+						{
+							if(verif.toLowerCase().startsWith(args[1].toLowerCase())) outputArgsList.add(verif);
+						}
+					} else if(args[0].equalsIgnoreCase("reload")) // Command '/tm reload <...>'
 				{
 					for(String verif : tmReloadArgsList)
 					{
@@ -120,6 +138,12 @@ public class CreateSentenceCommand implements TabCompleter {
 					} else if(args[1].equalsIgnoreCase("debugmode")) // Command '/tm set debugmode <...>'
 					{
 						for(String verif : tmBooleanArgsList)
+						{
+							if(verif.toLowerCase().startsWith(args[2].toLowerCase())) outputArgsList.add(verif);
+						}
+					} else if(args[1].equalsIgnoreCase("initialtick")) // Command '/tm set initialtick <...>'
+					{
+						for(String verif : tmInitialTickArgsList)
 						{
 							if(verif.toLowerCase().startsWith(args[2].toLowerCase())) outputArgsList.add(verif);
 						}
@@ -217,6 +241,6 @@ public class CreateSentenceCommand implements TabCompleter {
 			return null;
 		}
 		return outputArgsList;
-	};
+	}
 
-}
+};

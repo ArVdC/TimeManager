@@ -30,9 +30,12 @@ This command doesn't display time of Nether and the End worlds.
 
 
 ### ADMIN COMMAND /tm
-**/tm checktimers** Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and each world current time, start time and speed.
+
+**/tm checkconfig** Admins and console can display a summary of the config.yml and lang.yml files.
 
 **/tm checksql** Check the availability of the mySql server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.
+
+**/tm checktime \[all|server|world]** Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).
 
 **/tm help \[cmd] <subCmd>** Help provides you the correct usage and a short description of targeted command and subcommand.
 
@@ -43,6 +46,8 @@ This command doesn't display time of Nether and the End worlds.
 **/tm set debugmode [true|false]** Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 
 **/tm set deflang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when _'useMultiLang'_ is false.
+
+**/tm set initialtick \[tick]** Modify the server's initial tick.
 
 **/tm set multilang \[true|false]** Set true or false to use an automatic translation for the _/now_ command.
 
@@ -63,19 +68,21 @@ This command doesn't display time of Nether and the End worlds.
 - For Players:
   - /now \<units> \<world>
 - For Admins:
-  - /tm checktimers
+  - /tm checkconfig
   - /tm checksql
+  - /tm checktime [all|world]
   - /tm help \[cmd]
   - /tm reload \[all|config|lang]
   - /tm resync \[all|world]
   - /tm set deflang \[true|false]
+  - /tm set initialtick [tick]
   - /tm set multilang \[lg_LG]
-  - /tm set refreshrate \[ticks]
+  - /tm set refreshrate \[tick]
   - /tm set sleep \[true|false] \[all|world]
   - /tm set speed \[multiplier] \[all|world]
-  - /tm set start \[ticks|daypart] \[all|world]
+  - /tm set start \[tick|daypart] \[all|world]
   - /tm set sync \[true|false] \[all|world]
-  - /tm set time \[ticks|daypart] \[all|world]
+  - /tm set time \[tick|daypart] \[all|world]
 
 
 ### PERMISSIONS NODES
@@ -94,18 +101,17 @@ This command doesn't display time of Nether and the End worlds.
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-* v1.1.1: Most CraftBukkit forks from 1.4.6 to 1.12.2
+* v1.1.1: Most CraftBukkit forks from 1.4.6 to 1.13
 * v1.1.0: Most CraftBukkit forks from 1.4.6 to 1.12.1
 * v1.0.2: Spigot and Bukkit 1.4.6 to 1.12
 * v1.0.1: Spigot 1.9 to 1.12 and Bukkit 1.12
 * v1.0.0: Spigot and Bukkit 1.12
 
 ### TODO
-* Command: Add to '/tm checktimers' an argument [all|world] to display the details for a single world.
-* Command: Create a '/tm checkconfig' command that can display the summary of the current config (All the rest except the worlds details).
-* Command: Permit 'HH:mm:ss' format for '/ tm set start' and '/ tm set time' first argument.
-* Auto updater: Try to make an automatic updater, probably using the [@Gravity](https://bukkit.org/threads/updater-2-3-easy-safe-and-policy-compliant-auto-updating-for-your-plugins-new.96681/page-8#post-2158575) one. Create some new subcommands like 'checkVersion', 'checkUpdate', 'doUpdate', 'set autoUpdate [true|false]', ...
+* ~~Command: Add to '/tm checktimers' an argument [all|world] to display the details for a single world.~~
+* ~~Command: Create a '/tm checkconfig' command that can display the summary of the current config (All the rest except the worlds details).~~
+* ~~Command: Create a '/tm set initialtick' command.~~
+* Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
-* Speed Handler: A different speed multiplier for the day and the night is still possible, but it will be more difficult than expected because of the new 'sync' option. And perhaps it's pretty useless because the '/ tm set speed' command could be easily started automatically at morning and evening.
+* DayNightSpeedHandler: A different speed multiplier for the day and the night is still possible, but it will be more difficult than expected because of the new 'sync' option. And perhaps it's pretty useless because the '/ tm set speed' command could be easily started automatically at morning and evening.
 * Tab completer: Try to improve the current hack that manages the spaces in worlds name.
-

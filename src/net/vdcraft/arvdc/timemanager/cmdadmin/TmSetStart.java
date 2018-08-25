@@ -37,7 +37,7 @@ public class TmSetStart extends MainTM {
 		    MainTM.getInstance().getConfig().set("worldsList."+worldToSet+".start", tickToSet);
 			MainTM.getInstance().saveConfig();
 			// Resync this world
-		    WorldSyncHandler.WorldSyncRe(worldToSet);
+		    WorldSyncHandler.WorldSyncRe(sender, worldToSet);
 			// Notifications
 	        Bukkit.getLogger().info(prefixTM + " " + worldStartChgMsg1 + " " + worldToSet + " " + worldStartChgMsg2); // Console final msg (always)
 	        if(sender instanceof Player) {
@@ -50,4 +50,4 @@ public class TmSetStart extends MainTM {
 		}
 	}
 	
-}
+};

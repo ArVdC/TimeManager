@@ -72,6 +72,6 @@ public class TmSetSync extends MainTM {
 		else {
 			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set sync");
 		}
-	};
+	}
 
-}
+};

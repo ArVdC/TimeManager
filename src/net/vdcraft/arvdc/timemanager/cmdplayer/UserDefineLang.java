@@ -17,7 +17,7 @@ public class UserDefineLang extends MainTM {
 	 */
 	@SuppressWarnings({ "deprecation" })
 	public static String setLangToUse(CommandSender sender) {
-		
+		Player p = ((Player) sender);
 		// If option is disable, use default language
 		if(MainTM.getInstance().langConf.getString("useMultiLang").equalsIgnoreCase("false")) {
 			return serverLang;
@@ -28,7 +28,7 @@ public class UserDefineLang extends MainTM {
 		if(McVersionHandler.KeepDecimalOfMcVersion() < 12.0) {
 			// If the server is a Spigot
 			if(McVersionHandler.KeepTypeOfServer().equalsIgnoreCase("spigot")) {
-				lowerCaseLocale = ((Player) sender).spigot().getLocale();
+				lowerCaseLocale = p.spigot().getLocale();
 				if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
 			} else {
 				// If the server is a Bukkit or other fork
@@ -38,7 +38,7 @@ public class UserDefineLang extends MainTM {
 			}
 		// Spigot/Bukkit version 1.12+
 		} else {
-			lowerCaseLocale = ((Player) sender).getLocale();
+			lowerCaseLocale = p.getLocale();
 			if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
 		}
 		// Restore the correct case format (xx_XX)
@@ -54,6 +54,6 @@ public class UserDefineLang extends MainTM {
 		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + useLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
 		
 		return playerLocale;
-	};
+	}
 	
 };

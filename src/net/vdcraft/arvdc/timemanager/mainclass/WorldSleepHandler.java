@@ -1,5 +1,6 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
+import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,13 +31,14 @@ public class WorldSleepHandler implements Listener {
 			// Delay the doDaylightCycle gamerule change
 			sleepTicksCount(p, w, speedModifier);
 		}
-	};
+	}
 
 	// # 2. Wait the nearly end of the sleep to adapt gamerule doDaylightCycle to permit or refuse the night spend until the dawn
     public static void sleepTicksCount(Player p, World w, double speedModifier) {
         BukkitScheduler firstSyncSheduler = MainTM.getInstance().getServer().getScheduler();
         firstSyncSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
-            @Override
+            @SuppressWarnings("deprecation")
+			@Override
             public void run() {
             	// Check if the player is actually sleeping
             	if(p.isSleeping() == true) {
@@ -46,17 +48,25 @@ public class WorldSleepHandler implements Listener {
                 		sleepTicksCount(p, w, speedModifier);
                 	// Change the gamerule doDaylightCycle to true or false
                 	} else {
-                		String isSleepIsPermit = MainTM.getInstance().getConfig().getString("worldsList."+w.getName()+".sleep");
+                		Boolean isSleepPermited = true;
+                		if (MainTM.getInstance().getConfig().getString("worldsList."+w.getName()+".sleep").equals("false")) {
+                			isSleepPermited = false;
+                		}
                 		// Do something only if the value contradicts the current settings
-                		if ((isSleepIsPermit.equals("false") && speedModifier >= 1.0) || (isSleepIsPermit.equals("true") && speedModifier < 1.0)) {
-                			w.setGameRuleValue("doDaylightCycle", isSleepIsPermit);
+                		if ((isSleepPermited.equals(false) && speedModifier >= 1.0) || (isSleepPermited.equals(true) && speedModifier < 1.0)) {
+                			
+            	    		if(McVersionHandler.KeepDecimalOfMcVersion() < 13.0) {
+            	    			w.setGameRuleValue("doDaylightCycle", isSleepPermited.toString());
+            	    		} else {
+            	    			w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, isSleepPermited);
+            	    		}                			
                 			restoreDayCycle(p, w.getName());
                 		}
                 	}
                 }
             }
         }, 1L);
-    };
+    }
 
 	// # 3. Restore the doDaylightCycle gamerule to its default value
     public static void restoreDayCycle(Player p, String wn) {
@@ -68,6 +78,6 @@ public class WorldSleepHandler implements Listener {
 				WorldDayCycleHandler.doDaylightCheck(wn);
             }
         }, 5L);
-    };
+    }
 
 };

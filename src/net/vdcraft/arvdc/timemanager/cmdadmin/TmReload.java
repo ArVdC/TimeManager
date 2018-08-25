@@ -56,6 +56,6 @@ public class TmReload extends MainTM {
 		if( argOk == true) {
 			TmHelp.sendErrorMsg(sender, wrongYmlMsg, "reload");
 		}
-	};
+	}
 
-}
+};

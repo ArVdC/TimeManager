@@ -7,8 +7,7 @@ public class NowGetDayPart extends MainTM {
 	/**	
 	 * Define the part of the day
 	 */
-	public static String SetDayPartToDisplay(long actualTick)
-	{
+	public static String SetDayPartToDisplay(long actualTick) {
 		String wichPart = new String();
 		if(actualTick >= dayStart && actualTick < duskStart) {
 			wichPart = "day";	
@@ -22,5 +21,5 @@ public class NowGetDayPart extends MainTM {
 			return null;
 		}
 		return wichPart;
-	};
-}
+	}
+};

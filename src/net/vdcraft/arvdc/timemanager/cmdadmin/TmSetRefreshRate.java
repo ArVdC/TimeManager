@@ -25,6 +25,6 @@ public class TmSetRefreshRate extends MainTM {
         	sender.sendMessage(prefixTMColor + " " + refreshRateMsg + " §e" + refreshRate + " ticks§r."); // Notify the player (in case)
         }
         Bukkit.getLogger().info(prefixTM + " " + refreshRateMsg + " " + refreshRate + " ticks."); // Notify the console (always)
-	};
+	}
 	
-}
+};
