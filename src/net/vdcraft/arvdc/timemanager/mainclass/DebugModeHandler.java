@@ -25,5 +25,6 @@ public class DebugModeHandler extends MainTM {
     		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + disableDebugModeDebugMsg); // Console debug msg
     		debugMode = false;
     	}
-    };
-}
+    }
+
+};

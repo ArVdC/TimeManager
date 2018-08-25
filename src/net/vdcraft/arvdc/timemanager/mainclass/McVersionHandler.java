@@ -37,7 +37,7 @@ public class McVersionHandler extends MainTM {
 		}
 		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverTypeResultDebugMsg + " §e" + serverType + " §bserver.");
 		return serverType;
-	};
+	}
 	
 	/** 
 	 *  Get the version of the server and return only the MC decimal part
@@ -109,6 +109,6 @@ public class McVersionHandler extends MainTM {
 		}		
 		if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverMcVersionResultDebugMsg + " §e1." + split3[0] + " §bMC version.");
 		return mcVersion;
-	};
+	}
 
 };

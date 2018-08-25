@@ -59,7 +59,7 @@ public class WorldSpeedHandler extends MainTM {
             	}
             }
         }, refreshRateLong);
-    };
+    }
 	
 	/** 
 	 * Decrease worlds speed to a custom rate with an auto cancel/repeat capable scheduler
@@ -121,7 +121,7 @@ public class WorldSpeedHandler extends MainTM {
             	}
             }
         }, refreshRateLong);
-    };
+    }
 	
 	/** 
 	 * Modify worlds speed to real time speed with an auto cancel/repeat capable scheduler
@@ -155,6 +155,6 @@ public class WorldSpeedHandler extends MainTM {
             	}
             }
         }, 72L);
-    };
- 
-}
+    }
+
+};

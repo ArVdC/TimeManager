@@ -73,6 +73,6 @@ public class TmSetSpeed extends MainTM {
 		else {	
         	TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set speed");
 		}
-	};
-
-}
+	}
+	
+};

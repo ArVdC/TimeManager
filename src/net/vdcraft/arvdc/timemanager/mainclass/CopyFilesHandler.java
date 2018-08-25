@@ -25,12 +25,13 @@ public class CopyFilesHandler extends MainTM {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    };
+    }
 
 	/** 
 	 * Easy use of the method copy() from any another external class
 	 */ 
 	public static void copyAnyFile(String copyFileName, File copyFileYaml) {
 		copy(MainTM.getInstance().getResource(copyFileName), copyFileYaml);
-	};
-}
+	}
+	
+};

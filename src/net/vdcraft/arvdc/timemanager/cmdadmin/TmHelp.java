@@ -26,6 +26,10 @@ public class TmHelp extends MainTM {
 				if(subCmd.contains("deflang")) {
 					specificCmdMsg = setDefLangHelpMsg; // Help msg (in case of 2 args)
 				}
+				// /tm help set initialtick
+				else if(subCmd.contains("initialtick")) {
+					specificCmdMsg = setInitialTickHelpMsg; // Help msg (in case of 2 args)
+				}
 				// /tm help set multilang
 				else if(subCmd.contains("multilang")) {
 					specificCmdMsg = setMultilangHelpMsg; // Help msg (in case of 2 args)
@@ -65,13 +69,17 @@ public class TmHelp extends MainTM {
 			else if(subCmd.contains("resync")) {
 				specificCmdMsg = resyncHelpMsg; // Help msg (in case of 1 arg)
 			}
-			// /tm help checktimers
-			else if(subCmd.contains("checktimers") || subCmd.contains("servtime")) { // alias for v1.0 compatibility
-				specificCmdMsg = checktimersHelpMsg; // Help msg (in case of 1 arg)
+			// /tm help checktime
+			else if(subCmd.contains("checkconfig")) {
+				specificCmdMsg = checkconfigHelpMsg; // Help msg (in case of 1 arg) TODO
+			}
+			// /tm help checktime
+			else if(subCmd.contains("checktime")) {
+				specificCmdMsg = checktimeHelpMsg; // Help msg (in case of 1 arg)
 			}
 			// /tm help checksql
 			else if(subCmd.contains("checksql") || subCmd.contains("sqlcheck")) { // alias for v1.0 compatibility
-				specificCmdMsg = checkqlHelpMsg; // Help msg (in case of 1 arg)
+				specificCmdMsg = checkSqlHelpMsg; // Help msg (in case of 1 arg)
 			}
 			// /tm help set <null>   
 			else if(subCmd.contains("set")) {
@@ -93,18 +101,18 @@ public class TmHelp extends MainTM {
 		// Else, display basic help msg and the list of cmds from plugin.yml
 		sender.sendMessage(helpHelpMsg); // Final msg (always)
 		return false;
-	};
+	}
 
 	/**
 	 * Display an error and its associated help message
 	 */	
-		public static void sendErrorMsg(CommandSender sender, String msgError, String cmdHelp) {
+	public static void sendErrorMsg(CommandSender sender, String msgError, String cmdHelp) {
 	    MainTM.getInstance();
 	    if(sender instanceof Player) {
 			sender.sendMessage(prefixTMColor + " §c" + msgError); // Player error msg (in case is player)
 	    }
 		Bukkit.getLogger().warning(prefixTM + " " + msgError); // Console error msg (always)
         Bukkit.dispatchCommand(sender, "tm help " + cmdHelp); // Sender help msg (always)
-    };
+    }
  
-}
+};

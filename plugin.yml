@@ -1,5 +1,6 @@
 name: TimeManager
 version: 1.1.1
+api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdc.serveminecraft.net
@@ -27,13 +28,15 @@ commands:
     permission: timemanager.admin
     usage: |
             Here is the complete list of commands, subcommands and arguments:
-            /<command> checktimers
+            /<command> checkconfig
             /<command> checksql
+            /<command> checktime [all|server|world]
             /<command> help [cmd] <subCmd>
             /<command> reload [all|config|lang]
             /<command> resync [all|world]
             /<command> set debugmode [true|false]
             /<command> set deflang [lg_LG]
+            /<command> set initialtick [tick]
             /<command> set multilang [true|false]
             /<command> set refreshrate [tick]
             /<command> set sleep [true|false] [all|world]

@@ -14,8 +14,9 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmHelp;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmReload;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmResync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDebugMode;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTimers;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDefLang;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetInitialTick;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetMultiLang;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetRefreshRate;
@@ -23,6 +24,7 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSpeed;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetStart;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleep;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckConfig;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckSql;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
@@ -40,14 +42,19 @@ public class AdminCmdExecutor implements CommandExecutor {
 		}
 
 		if(argsNumb >= 1) {
-			// Display initial and current server's clock, initial and current server's tick and all worlds initial and current timers.
-			if(args[0].equalsIgnoreCase("checktimers") || args[0].equalsIgnoreCase("servtime")) { // alias for v1.0 compatibility
-				TmCheckTimers.cmdServerTime(sender);
+			// Display a summary of the configuration informations
+			if(args[0].equalsIgnoreCase("checkconfig")) {
+				TmCheckConfig.cmdCheckConfig(sender);
 				return true;
 			}
 			else if(args[0].equalsIgnoreCase("checksql") || args[0].equalsIgnoreCase("sqlcheck")) { // alias for v1.0 compatibility
 			// Try a connection to provided host and display results
 				TmCheckSql.cmdSqlcheck(sender);
+				return true;
+			}
+			// Display initial and current server's clock, initial and current server's tick and all worlds initial and current timers.
+			else if((args[0].equalsIgnoreCase("checktime") && argsNumb == 1) || (args[0].equalsIgnoreCase("checktimers") && argsNumb == 1) ) { // alias for v1.0 compatibility
+				TmCheckTime.cmdCheckTime(sender, "all"); // In case of missing argument, use "all" as default value
 				return true;
 			}
 			// If 'set' is use alone
@@ -94,9 +101,14 @@ public class AdminCmdExecutor implements CommandExecutor {
 			}
 		}
 		if(argsNumb >= 2) {
+			// Display initial and current server's clock, initial and current server's tick and all worlds initial and current timers.
+			if(args[0].equalsIgnoreCase("checktime")) {
+				TmCheckTime.cmdCheckTime(sender, args[1]);
+				return true;
+			}
 			if(args[0].equalsIgnoreCase("set")) {
 				// Enable or disable the console colored verbose messages
-				if(args[1].equalsIgnoreCase("debugmode"))	{
+				if(args[1].equalsIgnoreCase("debugmode")) {
 					if(args.length < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set debugmode"); // Send error and help msg
 						return true;
@@ -106,7 +118,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 					}
 				}	
 				// Set the default language to use in case the asked locale doesn't exist
-				else if(args[1].equalsIgnoreCase("deflang"))	{
+				else if(args[1].equalsIgnoreCase("deflang")) {
 					if(args.length < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set deflang"); // Send error and help msg
 						return true;
@@ -114,7 +126,23 @@ public class AdminCmdExecutor implements CommandExecutor {
 						TmSetDefLang.cmdDefLg(sender, args[2]);
 						return true;
 					}
-				}			
+				}
+				// Modify the initial tick
+				else if(args[1].equalsIgnoreCase("initialtick")) {
+					if(args.length < 3) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set initialtick"); // Send error and help msg
+						return true;
+					} else {
+						try {
+							long newTick = Long.parseLong(args[2]);	
+							TmSetInitialTick.cmdInitTick(sender, newTick);
+							return true;
+						} catch (NumberFormatException nfe) {		
+							TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, "set initialtick"); // Send error and help msg
+							return true;
+						}
+					}
+				}
 				// Set the auto-translation on/off
 				else if(args[1].equalsIgnoreCase("multilang")) {
 					if(args.length < 3) {
@@ -242,6 +270,6 @@ public class AdminCmdExecutor implements CommandExecutor {
 		// Else, display basic help menu and commands
 		TmHelp.cmdHelp(sender, args);
 		return true;
-	};
+	}
 	
-}
+};

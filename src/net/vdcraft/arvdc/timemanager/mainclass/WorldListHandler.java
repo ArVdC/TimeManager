@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTimers;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTime;
 
 public class WorldListHandler extends MainTM {
 
@@ -84,7 +84,7 @@ public class WorldListHandler extends MainTM {
 						eraseWorld = true;
 					}
 			}
-			TmCheckTimers.waitTime(1000);
+			TmCheckTime.waitTime(1000);
 			if(eraseWorld == true) {
 				if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The world §e" + eraseWorld + "§b " + delWorldDebugMsg); // Console debug msg
 				MainTM.getInstance().getConfig().getConfigurationSection("worldsList").set(listedWorld, null);
@@ -94,6 +94,6 @@ public class WorldListHandler extends MainTM {
 		MainTM.getInstance().saveConfig();
 		// #6. Notification
 	    Bukkit.getLogger().info(prefixTM + " " + worldsCheckMsg); // Final console msg
-	};
+	}
 
-}
+};

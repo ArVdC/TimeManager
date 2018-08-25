@@ -42,11 +42,17 @@
       		<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
    		</repository>
 	</repositories>	
-	<dependencies>	
+	<dependencies>
 		<dependency>
            <groupId>org.spigotmc</groupId>
            <artifactId>spigot-api</artifactId>
-           <version>1.11.2-R0.1-SNAPSHOT</version>
+           <version>1.13-R0.1-SNAPSHOT</version>
+           <scope>provided</scope>
+		</dependency>
+		<dependency>
+           <groupId>mysql</groupId>
+           <artifactId>mysql-connector-java</artifactId>
+           <version>5.1.43-bin</version>
            <scope>provided</scope>
 		</dependency>
 	</dependencies>

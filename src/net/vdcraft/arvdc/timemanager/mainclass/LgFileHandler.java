@@ -44,7 +44,7 @@ public class LgFileHandler extends MainTM {
     	// #3. In both case
     	
     	// #A. Restore fixed values
-		MainTM.getInstance().langConf.set("version", versionTM);
+		MainTM.getInstance().langConf.set("version", MainTM.versionTM());
 		MainTM.getInstance().langConf.set("languages.default.prefix", defaultPrefix);
 		MainTM.getInstance().langConf.set("languages.default.msg", defaultMsg);
 		MainTM.getInstance().langConf.set("languages.default.noMsg", defaultNoMsg);
@@ -72,10 +72,13 @@ public class LgFileHandler extends MainTM {
 		// #D. Save the lang.yml file
 	    SaveLangYml();
 				
-		// E. Notification
+		// E. Notifications
 	    if(debugMode == true) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + availableTranslationsDebugMsg + " §e" + setAnyListFromLang("languages")); // Console debug msg
-        Bukkit.getLogger().info(prefixTM + " " + lgVersionMsg + MainTM.getInstance().langConf.getString("version") + ".");
-    };
+	    if(firstOrRe.equalsIgnoreCase("first")) {
+	    	Bukkit.getLogger().info(prefixTM + " " + lgVersionMsg + MainTM.getInstance().langConf.getString("version") + ".");
+	    }
+        
+    }
     
 	/** 
 	 * Check 'defaultLang' integrity in lang.yml
@@ -104,7 +107,7 @@ public class LgFileHandler extends MainTM {
 				}
 			}
 	    }
-	};
+	}
     
 	/** 
 	 * Restore the 'default' translation in lang.yml
@@ -127,7 +130,7 @@ public class LgFileHandler extends MainTM {
 			Bukkit.getLogger().severe(prefixTM + " " + couldNotSaveLang);
 			e.printStackTrace();
 		}
-	};
+	}
 
 	/** 
 	 * Return an array list from everything listed in a specific key from the lang.yml
@@ -138,6 +141,6 @@ public class LgFileHandler extends MainTM {
 			listedElementsList.add(listedElement);
 		}			
 		return listedElementsList;
-	};
-    
+	}
+
 };

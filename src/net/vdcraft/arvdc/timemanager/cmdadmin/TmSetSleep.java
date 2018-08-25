@@ -64,6 +64,6 @@ public class TmSetSleep extends MainTM {
 		else {
 			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set sleep");
 		}
-	};
+	}
 
-}
+};

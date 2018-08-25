@@ -41,7 +41,7 @@ public class MainTM extends JavaPlugin {
 	public static Double minRequiredMcVersion = 4.06;
 	
 	// Minecraft server latest version decimals "x.xx" (without the "1." and eventually with a "x.0x" format - to permit comparisons) 
-	public static Double latestMcVersion = 12.02;
+	public static Double latestMcVersion = 13.00;
 	
 	// Enable/Disable debugging
 	public static Boolean debugMode = false; // Final user accessible debug msgs
@@ -68,9 +68,9 @@ public class MainTM extends JavaPlugin {
 	public static String cfgFileCreaMsg = "The configuration file was created.";
 	public static String lgFileCreaMsg = "The language file was created.";
 	public static String cfgFileExistMsg = "The configuration file already exists.";
-	public static String lgFileExistMsg = "The language file already exists.";	
+	public static String lgFileExistMsg = "The language file already exists.";
 	public static String cfgVersionMsg = "Enabled " + configFileName + " v";
-	public static String lgVersionMsg = "Enabled " + langFileName + " v";	
+	public static String lgVersionMsg = "Enabled " + langFileName + " v";
 	public static String cfgFileTryReloadMsg = "Reloading the configuration file.";
 	public static String cfgFileReloadMsg = "The configuration file was reloaded.";
 	public static String lgFileTryReloadMsg = "Reloading the language file.";
@@ -83,20 +83,25 @@ public class MainTM extends JavaPlugin {
 	public static String defLangResetMsg = "is missing or corrupt, back to the default parameter.";
 	public static String defLangOkMsg = "exists in " + langFileName + ", keep it as default translation.";	
 	public static String resyncIntroMsg = "All worlds will now be syncronized to the server time. If you want to keep them synchronized, set their 'sync' option to true.";
-	// - Cmds resync & checkTimers
-	public static String serverInitTickMsg = "The server's initial tick was";
+	// - Cmds resync & checkTime
+	public static String serverInitTickMsg = "The server's initial tick is";
 	public static String serverCurrentTickMsg = "The server's current tick is";
 	public static String worldCurrentStartMsg = "starts at";
 	public static String worldCurrentTickMsg = "'s current tick is";
 	public static String worldCurrentTimeMsg = "'s current time is";
 	public static String worldCurrentSpeedMsg = "'s current speed is";
-	public static String worldRealSpeedMsg = "set to match real UTC time.";
-	public static String worldCurrentSyncMsg = "synchronized to the server time.";
+	public static String worldRealSpeedMsg = "set to match real UTC time";
+	public static String worldCurrentSyncMsg = "synchronized to the server time";
 	public static String worldCurrentSleepMsg = "'s 'sleep' option is set to";
 	// - Cmd resync
-	public static String resyncDoneOneMsg = " had its time synchronized to the server time.";
+	public static String resyncDoneOneMsg = "had its time re" + worldCurrentSyncMsg;
 	// - Cmd set refreshRate
 	public static String refreshRateMsg = "The time stretch/expand will refresh every";
+	// - Cmd set initial tick
+	public static String initialTickYmlMsg = "The new initial tick will be saved in the config.yml file.";
+	public static String initialTickSqlMsg = "The new initial tick will be saved in the MySQL database.";
+	public static String initialTickGetFromSqlMsg = "The new initial tick was get from the MySQL database.";
+	public static String initialTickNoChgMsg = "The tick you just entered is the same as the current one.";
 	// - Cmd set sleep
 	public static String worldSleepTrueChgMsg = "It is allowed to sleep until the dawn in the world";
 	public static String worldSleepFalseChgMsg = "It is forbidden to sleep until the dawn in the world";
@@ -112,7 +117,8 @@ public class MainTM extends JavaPlugin {
 	public static String worldSyncTrueChgMsg = "The synchronization to the server time is activated for the world";
 	public static String worldSyncFalseChgMsg = "The synchronization to the server time is disabled for the world";
 	public static String worldSyncNoChgMsg = "Impossible to change the 'sync' option cause of the actual speed setting for the world";
-	public static String worldSyncNoManualSyncChgMsg = "is synchronized to the server time and doesn't need to be resynchronized.";	
+	public static String world24hNoSyncChgMsg = "is synchronized to real UTC time and doesn't need to be resynchronized.";	
+	public static String worldFrozenNoSyncChgMsg = "has its speed frozen and doesn't need to be resynchronized.";	
 	public static String worldSyncSleepChgMsg = "'sleep' option was forced to false, cause of its synchronization value.";
 	public static String SleepWorldSyncChgMsg = "'sync' option was forced to false in order to allow players to sleep until the dawn.";	
 	// - Cmd set time
@@ -185,7 +191,7 @@ public class MainTM extends JavaPlugin {
 	public static String adjustedTicksCalculation = adjustedTicksVar + " = " + currentTickVar + " / " + mcTimeRatioVar;
 	public static String realActualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " - " + sixHoursLessVar + " + " + adjustedTicksVar;
 	
-    // mySQL
+	// MySQL
 	public static String host;
 	public static String port;
 	public static String ssl;
@@ -197,6 +203,9 @@ public class MainTM extends JavaPlugin {
 	public static Connection connectionHost;
 	public static Connection connectionDB;
 	public static String connectionOkMsg = "is correctly responding on port";
+	public static Long sqlInitialTickAutoUpdateValue = 2L;
+	public static Boolean mySqlRefreshIsAlreadyOn = false;
+	public static String sqlInitialTickAutoUpdateMsg = "If someone changes the InitialTickNb value in the MySQL database, the change will be reflected on this server within the next " + sqlInitialTickAutoUpdateValue + " minutes.";
 	
 	// mySQL errors messages
 	public static String tryReachHostMsg = "Trying to reach the provided mySQL host";
@@ -221,7 +230,7 @@ public class MainTM extends JavaPlugin {
 	public static Integer refreshMin = 2;
 	public static Integer refreshMax = 20;
 	
-	// Make the current refresh rate public
+	// Handle the current refresh rate 
 	public static Integer refreshRateInt;
 	public static Long refreshRateLong;
 
@@ -257,16 +266,18 @@ public class MainTM extends JavaPlugin {
 	public static String helpHelpMsg = "§6/tm help [cmd] <subCmd>: §rHelp provides you the correct usage and a short description of targeted command or subcommand.";
 	public static String reloadHelpMsg = "§6/tm reload [all|config|lang]: §rThis command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.";
 	public static String resyncHelpMsg = "§6/tm resync [all|world]: §rThis command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.";
-	public static String checkqlHelpMsg = "§6/tm checksql: §rCheck the availability of the mySQL server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.";
-	public static String checktimersHelpMsg = "§6/tm checktimers: §rAdmins and console can display a debug/managing message, who displays the startup server's time, the current server's time and each world current time, start time and speed.";
+	public static String checkconfigHelpMsg = "§6/tm checkconfig: §rAdmins and console can display a summary of the config.yml and lang.yml files.";
+	public static String checkSqlHelpMsg = "§6/tm checksql: §rCheck the availability of the mySQL server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.";
+	public static String checktimeHelpMsg = "§6/tm checktime [all|server|world]: §rAdmins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).";
 	public static String setDebugHelpMsg = "§6/tm set debugmode [true|false]: §rSet true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.";
+	public static String setInitialTickHelpMsg = "§6/tm set multilang [tick]: Modify the server's initial tick.";
 	public static String setMultilangHelpMsg = "§6/tm set multilang [true|false]: §rSet true or false to use an automatic translation for the §o/now §rcommand.";
 	public static String setDefLangHelpMsg = "§6/tm set deflang [lg_LG]: §rChoose the translation to use if player's locale doesn't exist in the lang.yml or when §o'multiLang'§r is false.";
-	public static String setRefreshRateHelpMsg = "§e/tm set refreshrate [ticks]: §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
+	public static String setRefreshRateHelpMsg = "§e/tm set refreshrate [tick]: §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
 	public static String setSleepHelpMsg = "§6/tm set sleep [true|false] [all|world]: §rDefine if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is frozen or in real time who will be necessary false.";
 	public static String setSpeedHelpMsg = "§6/tm set speed [multiplier] [all|world]: §rThe decimal number argument will multiply the world(s) speed. Use §o0.0§r to freeze time, numbers from §o0.1§r to §o0.9§r to slow time, §o1.0§o to get normal speed and numbers from §o1.1§r to " + speedMax + " to speedup time. Set this value to §o24.0§r or §orealtime§r to make the world time match the real speed time.";
-	public static String setStartHelpMsg = "§6/tm set start [ticks|daypart] [all|world]: §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized.";
-	public static String setTimeHelpMsg = "§6/tm set time [ticks|daypart] [all|world]: §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
+	public static String setStartHelpMsg = "§6/tm set start [tick|daypart] [all|world]: §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized.";
+	public static String setTimeHelpMsg = "§6/tm set time [tick|daypart] [all|world]: §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
 	public static String setSyncHelpMsg = "§6/tm set sync [true|false] [all|world]: §rDefine if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";
 	// Help message when 'set' is used without additional argument
 	public static String missingSetArgHelpMsg = "§e/tm help set [deflang|multilang|refreshrate|sleep|speed|start|sync|time]: §rThis command, use with arguments, permit to change plugin parameters.";
@@ -292,7 +303,7 @@ public class MainTM extends JavaPlugin {
 	 */
 	public static MainTM getInstance() {
 		return instanceMainClass;
-	};
+	}
 	
 	/*****************
 	***** EVENTS *****
@@ -303,8 +314,8 @@ public class MainTM extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-		// #0. Don't start the plugin with 1.8 or older versions
-		if(McVersionHandler.KeepDecimalOfMcVersion() < minRequiredMcVersion) {	
+		// #0. Don't start the plugin with too old versions of the game
+		if(McVersionHandler.KeepDecimalOfMcVersion() < minRequiredMcVersion) {
 			Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §c" + plBadVersionMsg + "1." + McVersionHandler.KeepDecimalOfMcVersion() + " server.");
 		} else {			
 			// #1. Initiate this main class as the contain of the instance
@@ -334,15 +345,14 @@ public class MainTM extends JavaPlugin {
 			// #7. Synchronize worlds and create scheduled task for faking the time stretch/expand
 			WorldSyncHandler.WorldSyncFirst();
 			
-			// #9. Confirm activation in console
+			// #8. Confirm activation in console
 			Bukkit.getLogger().info(prefixTM + " " + plEnabledMsg);
 		}
-	};
+	}
 
 	/**
 	 * 2. On Plugin disabling
-	 */
-	
+	 */	
 	@Override
 	public void onDisable() {
 		// #0. Don't disable the plugin with if not loaded first
@@ -359,6 +369,18 @@ public class MainTM extends JavaPlugin {
 			// Confirm disabling in console
 			Bukkit.getLogger().info(prefixTM + " " + plDisabledMsg);
 		}
-	};
+	}
+	
+	/** 
+	 * 3. Custom wait
+	 * 
+	 */ 
+	public static void waitTime(Integer ticksToWait) {
+		try {
+			Thread.sleep(ticksToWait);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	
 };
