@@ -9,22 +9,22 @@ import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class TmSetRefreshRate extends MainTM {
 
-	/** 
-	 * CMD /tm set refreshrate [ticks]
-	 */
-	public static void cmdRefRate(CommandSender sender, Integer refreshRate) {
+    /**
+     * CMD /tm set refreshrate [ticks]
+     */
+    public static void cmdRefRate(CommandSender sender, Integer refreshRate) {
 
-		// Adapt wrong values
-		refreshRate = ValuesConverter.returnCorrectRate(refreshRate);
-		
-		MainTM.getInstance().getConfig().set("refreshRate", refreshRate);
-		MainTM.getInstance().saveConfig();
-		
-		// Notifications
-        if(sender instanceof Player) {
-        	sender.sendMessage(prefixTMColor + " " + refreshRateMsg + " §e" + refreshRate + " ticks§r."); // Notify the player (in case)
-        }
-        Bukkit.getLogger().info(prefixTM + " " + refreshRateMsg + " " + refreshRate + " ticks."); // Notify the console (always)
+	// Adapt wrong values
+	refreshRate = ValuesConverter.returnCorrectRate(refreshRate);
+
+	MainTM.getInstance().getConfig().set("refreshRate", refreshRate);
+	MainTM.getInstance().saveConfig();
+
+	// Notifications
+	if (sender instanceof Player) {
+	    sender.sendMessage(prefixTMColor + " " + refreshRateMsg + " §e" + refreshRate + " ticks§r."); // Notify the player (in case)
 	}
-	
+	Bukkit.getLogger().info(prefixTM + " " + refreshRateMsg + " " + refreshRate + " ticks."); // Notify the console (always)
+    }
+
 };

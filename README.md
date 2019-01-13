@@ -47,7 +47,7 @@ This command doesn't display time of Nether and the End worlds.
 
 **/tm set deflang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when _'useMultiLang'_ is false.
 
-**/tm set initialtick \[tick]** Modify the server's initial tick.
+**/tm set initialtick \[tick|HH:mm:ss]** Modify the server's initial tick.
 
 **/tm set multilang \[true|false]** Set true or false to use an automatic translation for the _/now_ command.
 
@@ -57,11 +57,11 @@ This command doesn't display time of Nether and the End worlds.
 
 **/tm set speed \[multiplier] \[all|world]** The decimal number argument will multiply the world(s) speed. Use _0.0_ to freeze time, numbers from _0.1_ to _0.9_ to slow time, 1.0 to get normal speed and numbers from _1.1_ to _10.0_ to speedup time. Set this value to _24.0_ or _realtime_ to make the world time match the real speed time.
 
-**/tm set start \[ticks|daypart] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
+**/tm set start \[ticks|daypart|HH:mm:ss] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
 
 **/tm set sync [true|false] [all|world]** Define if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.
 
-**/tm set time \[ticks|daypart] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
+**/tm set time \[ticks|daypart|HH:mm:ss] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
 
 
 ### SHORT LIST OF COMMANDS AND ARGS
@@ -75,14 +75,14 @@ This command doesn't display time of Nether and the End worlds.
   - /tm reload \[all|config|lang]
   - /tm resync \[all|world]
   - /tm set deflang \[true|false]
-  - /tm set initialtick [tick]
+  - /tm set initialtick [tick|HH:mm:ss]
   - /tm set multilang \[lg_LG]
   - /tm set refreshrate \[tick]
   - /tm set sleep \[true|false] \[all|world]
   - /tm set speed \[multiplier] \[all|world]
-  - /tm set start \[tick|daypart] \[all|world]
+  - /tm set start \[tick|daypart|HH:mm:ss] \[all|world]
   - /tm set sync \[true|false] \[all|world]
-  - /tm set time \[tick|daypart] \[all|world]
+  - /tm set time \[tick|daypart|HH:mm:ss] \[all|world]
 
 
 ### PERMISSIONS NODES
@@ -101,17 +101,18 @@ This command doesn't display time of Nether and the End worlds.
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-* v1.1.1: Most CraftBukkit forks from 1.4.6 to 1.13
-* v1.1.0: Most CraftBukkit forks from 1.4.6 to 1.12.1
+* v1.1.2: Spigot, Paper and Bukkit from MC 1.4.6 to MC 1.13.2
+* v1.1.1: Spigot, Paper and Bukkit from MC 1.4.6 to MC 1.13
+* v1.1.0: Spigot, Paper and Bukkit from MC 1.4.6 to MC 1.12.1
 * v1.0.2: Spigot and Bukkit 1.4.6 to 1.12
-* v1.0.1: Spigot 1.9 to 1.12 and Bukkit 1.12
-* v1.0.0: Spigot and Bukkit 1.12
+* v1.0.1: Spigot from MC 1.9 to 1.12 and Bukkit MC 1.12
+* v1.0.0: Spigot and Bukkit MC 1.12
 
 ### TODO
 * ~~Command: Add to '/tm checktimers' an argument [all|world] to display the details for a single world.~~
 * ~~Command: Create a '/tm checkconfig' command that can display the summary of the current config (All the rest except the worlds details).~~
 * ~~Command: Create a '/tm set initialtick' command.~~
-* Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.
+*  ~~Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.~~
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
 * DayNightSpeedHandler: A different speed multiplier for the day and the night is still possible, but it will be more difficult than expected because of the new 'sync' option. And perhaps it's pretty useless because the '/ tm set speed' command could be easily started automatically at morning and evening.
 * Tab completer: Try to improve the current hack that manages the spaces in worlds name.

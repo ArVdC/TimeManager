@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.1.1
+version: 1.2.0
 api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -36,14 +36,14 @@ commands:
             /<command> resync [all|world]
             /<command> set debugmode [true|false]
             /<command> set deflang [lg_LG]
-            /<command> set initialtick [tick]
+            /<command> set initialtick [tick|HH:mm]
             /<command> set multilang [true|false]
             /<command> set refreshrate [tick]
             /<command> set sleep [true|false] [all|world]
             /<command> set speed [multiplier] [all|world]
-            /<command> set start [tick|daypart] [all|world]
+            /<command> set start [tick|daypart|HH:mm] [all|world]
             /<command> set sync [true|false] [all|world]
-            /<command> set time [tick|daypart] [all|world]
+            /<command> set time [tick|daypart|HH:mm] [all|world]
     aliases:
       - tmanag
       - timemanag

@@ -14,24 +14,25 @@ public class TmResync extends MainTM {
 	 */
 	public static void cmdResync(CommandSender sender, String worldToSet) {
 		// If using a world name in several parts
-		if(sender instanceof Player) worldToSet = ValuesConverter.restoreSpacesInString(worldToSet);
-		
+		if (sender instanceof Player)
+			worldToSet = ValuesConverter.restoreSpacesInString(worldToSet);
+
 		// Re-synchronize all worlds
-		if(worldToSet.equalsIgnoreCase("all")) {
+		if (worldToSet.equalsIgnoreCase("all")) {
 			// Relaunch this for each world
-			for(String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
-				cmdResync(sender, listedWorld);			
+			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+				cmdResync(sender, listedWorld);
 			}
 		}
-    	// Else, if the string argument is a listed world, re-synchronize a single world
-        else if(MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToSet)) {
-				// Do the synchronization
-				WorldSyncHandler.WorldSyncRe(sender, worldToSet);
-        }
+		// Else, if the string argument is a listed world, re-synchronize a single world
+		else if (MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToSet)) {
+			// Do the synchronization
+			WorldSyncHandler.WorldSyncRe(sender, worldToSet);
+		}
 		// Else, return an error and help message
-		else {	
-        	TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "resync");
+		else {
+			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "resync");
 		}
 	}
-	
+
 };

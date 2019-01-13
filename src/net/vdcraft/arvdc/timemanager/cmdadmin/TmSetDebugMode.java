@@ -8,33 +8,33 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class TmSetDebugMode extends MainTM {
 
-	/** 
-	 * CMD /tm set multilang [true|false]
-	 */
-	public static void cmdDebugMode(CommandSender sender, String onOff) {
+    /**
+     * CMD /tm set multilang [true|false]
+     */
+    public static void cmdDebugMode(CommandSender sender, String onOff) {
 
-		// Check if the argument matches what is expected
-		if(onOff.equalsIgnoreCase("true") || onOff.equalsIgnoreCase("false")) {
-			MainTM.getInstance().getConfig().set("debugMode", onOff);
-			MainTM.getInstance().saveConfig();
-			if(onOff.equalsIgnoreCase("true")) {
-				debugMode = true;
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + enableDebugModeDebugMsg); // Console debug msg (always)
-		        if(sender instanceof Player) {
-		        	sender.sendMessage(prefixDebugMode + " " + enableDebugModeDebugMsg); // Player debug msg (in case)
-		        }
-			} else if(onOff.equalsIgnoreCase("false")) {
-				debugMode = false;
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + disableDebugModeDebugMsg); // Console debug msg (always)
-		        if(sender instanceof Player) {
-		        	sender.sendMessage(prefixDebugMode + " " + disableDebugModeDebugMsg); // Player debug msg (in case)
-		        }
-			}
+	// Check if the argument matches what is expected
+	if (onOff.equalsIgnoreCase("true") || onOff.equalsIgnoreCase("false")) {
+	    MainTM.getInstance().getConfig().set("debugMode", onOff);
+	    MainTM.getInstance().saveConfig();
+	    if (onOff.equalsIgnoreCase("true")) {
+		debugMode = true;
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + enableDebugModeDebugMsg); // Console debug msg (always)
+		if (sender instanceof Player) {
+		    sender.sendMessage(prefixDebugMode + " " + enableDebugModeDebugMsg); // Player debug msg (in case)
 		}
-		// Else, return an error and help message
-		else {
-			TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, "set debugmode");
+	    } else if (onOff.equalsIgnoreCase("false")) {
+		debugMode = false;
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + disableDebugModeDebugMsg); // Console debug msg (always)
+		if (sender instanceof Player) {
+		    sender.sendMessage(prefixDebugMode + " " + disableDebugModeDebugMsg); // Player debug msg (in case)
 		}
+	    }
 	}
+	// Else, return an error and help message
+	else {
+	    TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, "set debugmode");
+	}
+    }
 
 };
