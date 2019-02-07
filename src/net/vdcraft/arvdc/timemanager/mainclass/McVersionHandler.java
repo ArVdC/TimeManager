@@ -47,7 +47,7 @@ public class McVersionHandler extends MainTM {
     public static Double KeepDecimalOfMcVersion() {
 	if (debugMode == true)
 	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverMcVersionQueryDebugMsg); // Console debug msg
-	String splitMarker = "oAoroVodoCo";
+	String splitMarker = "ArVdC";
 	String[] split1;
 	String split2;
 	String[] split3;

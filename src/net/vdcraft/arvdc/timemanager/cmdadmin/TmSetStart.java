@@ -21,21 +21,21 @@ public class TmSetStart extends MainTM {
 	// Modify all worlds
 	if (worldToSet.equalsIgnoreCase("all")) {
 	    // Relaunch this for each world
-	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 		cmdSetStart(sender, tickToSet, listedWorld);
 	    }
 	}
 	// Else, if the string argument is a listed world, modify a single world
-	else if (MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToSet)) {
+	else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(worldToSet)) {
 	    // Adapt wrong values
-	    Double currentSpeed = MainTM.getInstance().getConfig().getDouble("worldsList." + worldToSet + ".speed");
+	    Double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	    if (currentSpeed == 24.00) {
 		tickToSet = ValuesConverter.returnCorrectUTC(tickToSet) * 1000;
 	    } else {
 		tickToSet = tickToSet % 24000;
 	    }
 	    // Modify and save the start tick in the config.yml
-	    MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".start", tickToSet);
+	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_START, tickToSet);
 	    MainTM.getInstance().saveConfig();
 	    // Resync this world
 	    WorldSyncHandler.WorldSyncRe(sender, worldToSet);

@@ -45,6 +45,9 @@
 #    Default database name is 'timemanager' but you could choose anything else to order it correctly.
 #    If you don't handle databases, follow this tutorial to setup an user account: http://www.yourwebskills.com/dbphpmyadminusers.php
 # -----
+# *updateMsgSrc*
+#  Choose a value between 'Bukkit', 'Curse', 'Spigot' or 'Github' to check the update when loading the plugin. Set to 'none', 'false' or '' to avoid verification.
+# -----
 # *debugMode*
 #  Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 # -----
@@ -65,4 +68,5 @@ mySql:
   table: ''
   username: ''
   password: ''
+updateMsgSrc: ''
 debugMode: ''

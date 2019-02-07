@@ -53,14 +53,14 @@ public class WorldSyncHandler extends MainTM {
 	    Bukkit.getLogger().info(prefixTM + " " + serverInitTickMsg + " #" + initialTick + " (" + initialTime + ")."); // Final console msg // Console log msg
 	    Bukkit.getLogger().info(prefixTM + " " + serverCurrentTickMsg + " #" + currentServerTick + " (" + currentServerTime + ")."); // Console log msg
 	    for (World w : Bukkit.getServer().getWorlds()) {
-		if (MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(w.getName())) { // Read config.yml to check if the world's name is listed
+		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(w.getName())) { // Read config.yml to check if the world's name is listed
 		    WorldSyncRe(sender, w.getName());
 		}
 	    }
 	    // #B. Re-synchronize a single world
 	} else {
-	    startAtTickNb = (MainTM.getInstance().getConfig().getLong("worldsList." + wichWorld + ".start")); // Read config.yml to get the world's 'start' value
-	    speedModifNb = (MainTM.getInstance().getConfig().getDouble("worldsList." + wichWorld + ".speed")); // Read config.yml to get the world's 'speed' value
+	    startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + wichWorld + "." + CF_START)); // Read config.yml to get the world's 'start' value
+	    speedModifNb = (MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + wichWorld + "." + CF_SPEED)); // Read config.yml to get the world's 'speed' value
 	    long newTick = Bukkit.getServer().getWorld(wichWorld).getTime();
 	    WorldDayCycleHandler.doDaylightCheck(wichWorld);
 	    if (speedModifNb == 24.0) { // if realtime world
@@ -128,7 +128,7 @@ public class WorldSyncHandler extends MainTM {
 	firstSyncSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 	    @Override
 	    public void run() {
-		if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equals("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("true")) {
 		    getOrSetInitialTickAndTime(false);
 		    refreshInitialTickMySql();
 		} else {
@@ -141,12 +141,12 @@ public class WorldSyncHandler extends MainTM {
     /**
      * Get the reference tick on startup (or set by default if empty)
      */
-    public static void getOrSetInitialTickAndTime(Boolean msgOnOff) {
+    private static void getOrSetInitialTickAndTime(Boolean msgOnOff) {
 	String setOrGet = "null";
 	String ymlOrSql = "null";
-	if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equalsIgnoreCase("true")) { // If mySQL is true
+	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) { // If mySQL is true
 	    if (SqlHandler.openTheConnectionIfPossible(msgOnOff) == true) {
-		if (MainTM.getInstance().getConfig().getString("initialTick.resetOnStartup").equalsIgnoreCase("false")) { // If reset false
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase("false")) { // If reset false
 		    // Try to read database
 		    initialTick = SqlHandler.getServerTickSQL(); // Get existing reference tick from SQL database
 		    if (initialTick == null) { // If db is null, create the initial tick
@@ -154,13 +154,13 @@ public class WorldSyncHandler extends MainTM {
 			SqlHandler.setServerTickSQL(initialTick); // Save tick in SQL database
 		    }
 		    initialTime = ValuesConverter.returnRealTimeFromTickValue(initialTick); // Convert the initial time in HH:mm:ss UTC
-		    MainTM.getInstance().getConfig().set("initialTick.initialTickNb", initialTick); // Save tick in config
+		    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, initialTick); // Save tick in config
 		    setOrGet = "get from";
 		} else { // If reset true
 		    // Define a new reference tick
 		    initialTick = ValuesConverter.returnServerTick(); // Create the initial tick
 		    initialTime = ValuesConverter.returnServerTime(); // Create the initial time in HH:mm:ss UTC
-		    MainTM.getInstance().getConfig().set("initialTick.initialTickNb", initialTick); // Save tick in config
+		    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, initialTick); // Save tick in config
 		    Long testInitialTickSQL = SqlHandler.getServerTickSQL(); // Get existing reference tick from SQL database
 		    if (testInitialTickSQL == null) {
 			SqlHandler.setServerTickSQL(initialTick); // Save tick in SQL database
@@ -173,17 +173,17 @@ public class WorldSyncHandler extends MainTM {
 	    } else { // When a connection fails, the key 'useMySql' is set on false, so this will retry sync but using the config.yml
 		getOrSetInitialTickAndTime(msgOnOff);
 	    }
-	} else if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equalsIgnoreCase("false")) { // When mySQL is false
+	} else if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("false")) { // When mySQL is false
 	    // If reset true OR initialTickNb doesn't exist
-	    if (MainTM.getInstance().getConfig().getString("initialTick.resetOnStartup").equalsIgnoreCase("false") && !MainTM.getInstance().getConfig().getString("initialTick.initialTickNb").equals("")) {
+	    if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase("false") && !MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_INITIALTICKNB).equals("")) {
 		// If reset false AND initialTickNb exists
-		initialTick = MainTM.getInstance().getConfig().getLong("initialTick.initialTickNb"); // Get existing reference tick from config.yml
+		initialTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB); // Get existing reference tick from config.yml
 		initialTime = ValuesConverter.returnRealTimeFromTickValue(initialTick); // Convert the initial time in HH:mm:ss UTC
 		setOrGet = "get from";
 	    } else { // Define a new reference tick
 		initialTick = ValuesConverter.returnServerTick(); // Create the initial tick
 		initialTime = ValuesConverter.returnRealTimeFromTickValue(initialTick); // Convert the initial time in HH:mm:ss UTC
-		MainTM.getInstance().getConfig().set("initialTick.initialTickNb", initialTick); // Save tick in config.yml
+		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, initialTick); // Save tick in config.yml
 		setOrGet = "set in";
 	    }
 	    ymlOrSql = "the config.yml";
@@ -201,7 +201,7 @@ public class WorldSyncHandler extends MainTM {
     public static void updateInitialTickAndTime(Long oldTick) {
 
 	// Get the new initialTickNb from the reloaded config.yml
-	Long newTick = MainTM.getInstance().getConfig().getLong("initialTick.initialTickNb");
+	Long newTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 
 	// Get the previous initialTickNb from the MySQL database
 	Long sqlTick = null;
@@ -210,7 +210,7 @@ public class WorldSyncHandler extends MainTM {
 	}
 
 	// If mySql is false, try to actualize the configuration:
-	if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equalsIgnoreCase("false")) {
+	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("false")) {
 	    // If there are changes in the configuration:
 	    if (!(oldTick.equals(newTick))) {
 		// Actualize the global variables
@@ -224,7 +224,7 @@ public class WorldSyncHandler extends MainTM {
 	    // Don't do nothing
 
 	    // Else, if mySql is true, try to set or get the initialTickNb:
-	} else if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equalsIgnoreCase("true")) {
+	} else if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
 	    // If there are changes in the configuration:
 	    if (!(oldTick.equals(newTick))) {
 		// Actualize the global variables
@@ -250,7 +250,7 @@ public class WorldSyncHandler extends MainTM {
 		// Else, if there are NO changes in the configuration AND if sqlTick isn't null AND if sqlTick is different from the newTick:
 	    } else if (!(sqlTick.equals(newTick))) {
 		// Actualize the configuration
-		MainTM.getInstance().getConfig().set("initialTick.initialTickNb", sqlTick);
+		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, sqlTick);
 		// Actualize the global variables
 		initialTick = sqlTick;
 		initialTime = ValuesConverter.returnRealTimeFromTickValue(initialTick);

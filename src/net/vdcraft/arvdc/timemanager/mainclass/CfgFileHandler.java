@@ -29,7 +29,7 @@ public class CfgFileHandler extends MainTM {
 	}
 
 	// # 2. Get the previous initial tick value (before the reload)
-	Long oldTick = MainTM.getInstance().getConfig().getLong("initialTick.initialTickNb");
+	Long oldTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 
 	// #3. Only when using the admin command /tm reload:
 	if (firstOrRe.equalsIgnoreCase("re")) {
@@ -47,28 +47,28 @@ public class CfgFileHandler extends MainTM {
 
 	// #5. Set some default values if missing or corrupt in the initialTick node
 	// #A. defTimeUnits value
-	if (MainTM.getInstance().getConfig().getKeys(false).contains("defTimeUnits")) {
-	    if (MainTM.getInstance().getConfig().getString("defTimeUnits").equals("")) {
-		MainTM.getInstance().getConfig().set("defTimeUnits", defTimeUnits);
+	if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_DEFTIMEUNITS)) {
+	    if (MainTM.getInstance().getConfig().getString(CF_DEFTIMEUNITS).equals("")) {
+		MainTM.getInstance().getConfig().set(CF_DEFTIMEUNITS, defTimeUnits);
 	    }
 	} else {
-	    MainTM.getInstance().getConfig().set("defTimeUnits", defTimeUnits);
+	    MainTM.getInstance().getConfig().set(CF_DEFTIMEUNITS, defTimeUnits);
 	}
 	// #B. resetOnStartup value
-	if (MainTM.getInstance().getConfig().getConfigurationSection("initialTick").getKeys(false).contains("resetOnStartup")) {
-	    if (!(MainTM.getInstance().getConfig().getString("initialTick.resetOnStartup").equals("false"))) {
-		MainTM.getInstance().getConfig().set("initialTick.resetOnStartup", "true");
+	if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_RESETONSTARTUP)) {
+	    if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equals("false"))) {
+		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, "true");
 	    }
 	} else {
-	    MainTM.getInstance().getConfig().set("initialTick.resetOnStartup", "true");
+	    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, "true");
 	}
 	// #C. useMySql value
-	if (MainTM.getInstance().getConfig().getConfigurationSection("initialTick").getKeys(false).contains("useMySql")) {
-	    if (!(MainTM.getInstance().getConfig().getString("initialTick.useMySql").equals("false"))) {
-		MainTM.getInstance().getConfig().set("initialTick.useMySql", "true");
+	if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_USEMYSQL)) {
+	    if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("false"))) {
+		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "true");
 	    }
 	} else {
-	    MainTM.getInstance().getConfig().set("initialTick.useMySql", "false");
+	    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "false");
 	}
 
 	// #6. Set some default values if missing or corrupt in the mySQL node
@@ -82,9 +82,8 @@ public class CfgFileHandler extends MainTM {
 	if (firstOrRe.equalsIgnoreCase("re")) {
 	    WorldSyncHandler.updateInitialTickAndTime(oldTick);
 	}
-	// #9. Refresh the initialTickNb every (x) minutes - only if a MySQL database is
-	// used and the scheduleSyncDelayedTask is off
-	if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equals("true") && !mySqlRefreshIsAlreadyOn) {
+	// #9. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
+	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("true") && !mySqlRefreshIsAlreadyOn) {
 	    mySqlRefreshIsAlreadyOn = true;
 	    WorldSyncHandler.refreshInitialTickMySql();
 	    Bukkit.getLogger().info(prefixTM + " " + sqlInitialTickAutoUpdateMsg); // Notify the console
@@ -96,7 +95,7 @@ public class CfgFileHandler extends MainTM {
 	WorldListHandler.listLoadedWorlds();
 
 	// #11. For each world
-	for (String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+	for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 
 	    // #A. Restrain the speed modifiers
 	    ValuesConverter.restrainSpeed(w);
@@ -112,7 +111,7 @@ public class CfgFileHandler extends MainTM {
 	}
 
 	// #12. Restore the version value
-	MainTM.getInstance().getConfig().set("version", versionTM());
+	MainTM.getInstance().getConfig().set(CF_VERSION, versionTM());
 
 	// #13. Save the changes
 	MainTM.getInstance().saveConfig();
@@ -125,7 +124,6 @@ public class CfgFileHandler extends MainTM {
 
     /**
      * Return an array list from anything listed in a specific key from the config.yml
-     *
      */
     public static List<String> setAnyListFromConfig(String inWichYamlKey) {
 	List<String> listedElementsList = new ArrayList<>();

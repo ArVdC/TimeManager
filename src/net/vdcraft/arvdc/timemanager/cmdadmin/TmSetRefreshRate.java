@@ -17,7 +17,7 @@ public class TmSetRefreshRate extends MainTM {
 	// Adapt wrong values
 	refreshRate = ValuesConverter.returnCorrectRate(refreshRate);
 
-	MainTM.getInstance().getConfig().set("refreshRate", refreshRate);
+	MainTM.getInstance().getConfig().set(CF_REFRESHRATE, refreshRate);
 	MainTM.getInstance().saveConfig();
 
 	// Notifications

@@ -20,14 +20,14 @@ public class TmSetSleep extends MainTM {
 	// Modify all worlds
 	if (worldToSet.equalsIgnoreCase("all")) {
 	    // Relaunch this for each world
-	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 		cmdSetSleep(sender, sleepOrNo, listedWorld);
 	    }
 	}
 	// Else, if the string argument is a listed world, modify a single world
-	else if (MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToSet)) {
+	else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(worldToSet)) {
 	    // Avoid impossible values
-	    String currentSpeed = MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".speed");
+	    String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	    if ((sleepOrNo.equals("true") && (currentSpeed.equals("0.0") || currentSpeed.equals("24.0")))) {
 		// Notifications
 		Bukkit.getLogger().info(prefixTM + " " + worldSleepNoChgMsg + " " + worldToSet + "."); // Console final msg (always)
@@ -36,10 +36,10 @@ public class TmSetSleep extends MainTM {
 		}
 	    } else {
 		// Modify the value
-		MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".sleep", sleepOrNo);
+		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SLEEP, sleepOrNo);
 		// Avoid to synchronize worlds where players can sleep
-		if (sleepOrNo.equals("true") && MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".sync").equals("true")) {
-		    MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".sync", "false");
+		if (sleepOrNo.equals("true") && MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC).equals("true")) {
+		    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, "false");
 		    Bukkit.getLogger().info(prefixTM + " The world " + worldToSet + " " + SleepWorldSyncChgMsg); // Console warn msg (always)
 		    if (sender instanceof Player) {
 			sender.sendMessage(prefixTMColor + " The world §e" + worldToSet + "§r " + SleepWorldSyncChgMsg); // Player warn msg (in case)

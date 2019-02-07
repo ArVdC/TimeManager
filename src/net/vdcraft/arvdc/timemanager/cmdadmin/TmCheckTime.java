@@ -12,7 +12,6 @@ public class TmCheckTime extends MainTM {
 
     /**
      * CMD /tm checktime [all|server|world]
-     * 
      */
     public static void cmdCheckTime(CommandSender sender, String worldToGet) {
 
@@ -49,32 +48,31 @@ public class TmCheckTime extends MainTM {
 	// param
 	if (worldToGet.equalsIgnoreCase("all")) {
 	    // Relaunch this for each world
-	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 		cmdDisplayTime(sender, listedWorld);
 	    }
 	}
 
 	// Else, if the string argument is a listed world, check a single world
-	else if (MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToGet)) {
+	else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(worldToGet)) {
 	    cmdDisplayTime(sender, worldToGet);
 	}
     }
 
     /**
      * Display a world time message
-     * 
      */
     private static void cmdDisplayTime(CommandSender sender, String worldToSet) {
-	Long listedWorldStartTick = MainTM.getInstance().getConfig().getLong("worldsList." + worldToSet + ".start");
+	Long listedWorldStartTick = MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + worldToSet + "." + CF_START);
 	World thisWorld = Bukkit.getServer().getWorld(worldToSet);
 	Long listedWorldCurrentTick = thisWorld.getTime();
 	String listedWorldStartTime = ValuesConverter.returnTimeFromTickValue(listedWorldStartTick);
 	String formattedUTC = ValuesConverter.formatAsUTC(listedWorldStartTick);
 	String listedWorldCurrentTime = ValuesConverter.returnTimeFromTickValue(listedWorldCurrentTick);
-	String listedWorldSpeed = MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".speed");
+	String listedWorldSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_START);
 	String listedWorldSync = "";
-	String listedWorldSleep = MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".sleep");
-	if (MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".sync").equals("false"))
+	String listedWorldSleep = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SLEEP);
+	if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC).equals("false"))
 	    listedWorldSync = "not ";
 	if (listedWorldSpeed.contains("24")) { // Display realtime messages
 	    if (sender instanceof Player) {

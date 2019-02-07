@@ -11,11 +11,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import net.vdcraft.arvdc.timemanager.cmdplayer.NowFinalMsg;
-import net.vdcraft.arvdc.timemanager.cmdplayer.UserDefineLang;
+import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.cmdplayer.UserMsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class PlayerCmdExecutor implements CommandExecutor {
+
+    /*****************
+     ***** EVENT *****
+     *****************/
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -88,8 +92,7 @@ public class PlayerCmdExecutor implements CommandExecutor {
 
 	// #8. Check if the first arg is 'hours' or 'ticks' to set the time format
 	String timeToDisplay = "tick #" + timeInTicks.toString(); // Format time to display
-	String defUnits = MainTM.getInstance().getConfig().getString("defTimeUnits"); // By default, check the
-	// config.yml
+	String defUnits = MainTM.getInstance().getConfig().getString(MainTM.CF_DEFTIMEUNITS); // By default, check the config.yml
 	if (args.length > 0 && sender.hasPermission("timemanager.now.units")
 		&& (args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks"))) {
 	    defUnits = args[0].toString(); // Else store command argument as actual time units param
@@ -98,9 +101,9 @@ public class PlayerCmdExecutor implements CommandExecutor {
 	    timeToDisplay = ValuesConverter.returnTimeFromTickValue(timeInTicks); // Convert time display format
 	}
 	// #9. Check the player's locale and try to use it
-	String langToUse = UserDefineLang.setLangToUse(sender);
+	String langToUse = UserMsgHandler.setLangToUse(sender);
 
 	// #10. Send final msg to user, who will returns a 'true' value at the end
-	return NowFinalMsg.SendNowMsg(sender, worldNameToDisplay, dayPartToDisplay, timeToDisplay, langToUse);
+	return UserMsgHandler.SendNowMsg(sender, worldNameToDisplay, dayPartToDisplay, timeToDisplay, langToUse);
     };
 }

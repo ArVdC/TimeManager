@@ -15,8 +15,8 @@ public class TmSetDefLang extends MainTM {
     public static void cmdDefLg(CommandSender sender, String newLang) {
 
 	// Check if the argument matches what is expected
-	if (MainTM.getInstance().langConf.getConfigurationSection("languages").getKeys(false).contains(newLang)) {
-	    MainTM.getInstance().langConf.set("defaultLang", newLang);
+	if (MainTM.getInstance().langConf.getConfigurationSection(CF_lANGUAGES).getKeys(false).contains(newLang)) {
+	    MainTM.getInstance().langConf.set(CF_DEFAULTLANG, newLang);
 	    LgFileHandler.SaveLangYml();
 	    serverLang = newLang;
 	    Bukkit.getLogger().info(prefixTM + " " + defLangCheckMsg + " " + newLang + "."); // Console final msg (always)

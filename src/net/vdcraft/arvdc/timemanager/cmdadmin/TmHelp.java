@@ -9,6 +9,29 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class TmHelp extends MainTM {
 
     /**
+     * Help messages (Always copy this content in the README.md)
+     */
+    private static String headerHelp = "§e---------§r Help: " + prefixTMColor + " §e---------";
+    private static String helpHelpMsg = "§6/tm help [cmd] <subCmd>: §rHelp provides you the correct usage and a short description of targeted command or subcommand.";
+    private static String reloadHelpMsg = "§6/tm reload [all|config|lang]: §rThis command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.";
+    private static String resyncHelpMsg = "§6/tm resync [all|world]: §rThis command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.";
+    private static String checkconfigHelpMsg = "§6/tm checkconfig: §rAdmins and console can display a summary of the config.yml and lang.yml files.";
+    private static String checkSqlHelpMsg = "§6/tm checksql: §rCheck the availability of the mySQL server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.";
+    private static String checktimeHelpMsg = "§6/tm checktime [all|server|world]: §rAdmins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).";
+    private static String setDebugHelpMsg = "§6/tm set debugmode [true|false]: §rSet true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.";
+    private static String setInitialTickHelpMsg = "§6/tm set multilang [tick|HH:mm:ss]: Modify the server's initial tick.";
+    private static String setMultilangHelpMsg = "§6/tm set multilang [true|false]: §rSet true or false to use an automatic translation for the §o/now §rcommand.";
+    private static String setDefLangHelpMsg = "§6/tm set deflang [lg_LG]: §rChoose the translation to use if player's locale doesn't exist in the lang.yml or when §o'multiLang'§r is false.";
+    private static String setRefreshRateHelpMsg = "§e/tm set refreshrate [tick]: §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
+    private static String setSleepHelpMsg = "§6/tm set sleep [true|false] [all|world]: §rDefine if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is frozen or in real time who will be necessary false.";
+    private static String setSpeedHelpMsg = "§6/tm set speed [multiplier] [all|world]: §rThe decimal number argument will multiply the world(s) speed. Use §o0.0§r to freeze time, numbers from §o0.1§r to §o0.9§r to slow time, §o1.0§o to get normal speed and numbers from §o1.1§r to " + speedMax + " to speedup time. Set this value to §o24.0§r or §orealtime§r to make the world time match the real speed time.";
+    private static String setStartHelpMsg = "§6/tm set start [tick|daypart|HH:mm:ss] [all|world]: §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized.";
+    private static String setTimeHelpMsg = "§6/tm set time [tick|daypart|HH:mm:ss] [all|world]: §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
+    private static String setSyncHelpMsg = "§6/tm set sync [true|false] [all|world]: §rDefine if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";   
+    // Except this line, used when 'set' is used without additional argument
+    private static String missingSetArgHelpMsg = "§e/tm help set [deflang|multilang|refreshrate|sleep|speed|start|sync|time]: §rThis command, use with arguments, permit to change plugin parameters.";
+
+    /**
      * CMD /tm help [cmd]
      */
     public static boolean cmdHelp(CommandSender sender, String[] args) {

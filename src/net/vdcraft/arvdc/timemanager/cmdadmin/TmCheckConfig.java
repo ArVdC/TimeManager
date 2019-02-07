@@ -14,7 +14,6 @@ public class TmCheckConfig extends MainTM {
 
     /**
      * CMD /tm checkconfig
-     * 
      */
 
     public static void cmdCheckConfig(CommandSender sender) {
@@ -29,37 +28,37 @@ public class TmCheckConfig extends MainTM {
 
 	// Multilanguage
 	String multiLangOnOff = "disabled";
-	if (MainTM.getInstance().langConf.getString("useMultiLang").equalsIgnoreCase("true")) {
+	if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase("true")) {
 	    multiLangOnOff = "enabled";
 	}
 	String multiLangMsg = "Multilanguage is " + multiLangOnOff + ".";
 	String colMultiLangMsg = "Multilanguage is §e" + multiLangOnOff + "§r.";
 
 	// Default language
-	String defLangMsg = "Default language is " + MainTM.getInstance().langConf.getString("defaultLang") + ".";
-	String colDefLangMsg = "Default language is §e" + MainTM.getInstance().langConf.getString("defaultLang") + "§r.";
+	String defLangMsg = "Default language is " + MainTM.getInstance().langConf.getString(CF_DEFAULTLANG) + ".";
+	String colDefLangMsg = "Default language is §e" + MainTM.getInstance().langConf.getString(CF_DEFAULTLANG) + "§r.";
 
 	// Available languages
-	List<String> availableLg = LgFileHandler.setAnyListFromLang("languages");
+	List<String> availableLg = LgFileHandler.setAnyListFromLang(CF_lANGUAGES);
 	String availableLangMsg = "Available languages are : " + availableLg + ".";
 	String colAvailableLangMsg = "Available languages are : §e" + availableLg + "§r.";
 
 	// Default units
-	String defUnitsMsg = "Default time units are " + MainTM.getInstance().getConfig().getString("defTimeUnits") + ".";
-	String colDefUnitsMsg = "Default time units are §e" + MainTM.getInstance().getConfig().getString("defTimeUnits") + "§r.";
+	String defUnitsMsg = "Default time units are " + MainTM.getInstance().getConfig().getString(CF_DEFTIMEUNITS) + ".";
+	String colDefUnitsMsg = "Default time units are §e" + MainTM.getInstance().getConfig().getString(CF_DEFTIMEUNITS) + "§r.";
 
 	// Refresh rate
-	String refRateMsg = refreshRateMsg + " " + MainTM.getInstance().getConfig().getString("refreshRate") + " ticks.";
-	String colRefRateMsg = refreshRateMsg + " §e" + MainTM.getInstance().getConfig().getString("refreshRate") + " ticks§r.";
+	String refRateMsg = refreshRateMsg + " " + MainTM.getInstance().getConfig().getString(CF_REFRESHRATE) + " ticks.";
+	String colRefRateMsg = refreshRateMsg + " §e" + MainTM.getInstance().getConfig().getString(CF_REFRESHRATE) + " ticks§r.";
 
 	// List of the worlds
-	List<String> activeWorlds = CfgFileHandler.setAnyListFromConfig("worldsList");
+	List<String> activeWorlds = CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST);
 	String worldsMsg = "Active world(s) are : " + activeWorlds + ".";
 	String colWorldsMsg = "Active world(s) are : §e" + activeWorlds + "§r.";
 
 	// Initial tick reset status
 	String resetOnOff = " not ";
-	if (MainTM.getInstance().getConfig().getString("initialTick.resetOnStartup").equalsIgnoreCase("true")) {
+	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase("true")) {
 	    resetOnOff = " ";
 	}
 	String resetMsg = "The initial tick will" + resetOnOff + "reset on the next startup.";
@@ -67,7 +66,7 @@ public class TmCheckConfig extends MainTM {
 
 	// MySql
 	String sqlOnOff = "the config.yml file";
-	if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equalsIgnoreCase("true")) {
+	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
 	    sqlOnOff = "a MySql database";
 	}
 	String sqlMsg = "The initial tick is saved in " + sqlOnOff + ".";
@@ -75,7 +74,7 @@ public class TmCheckConfig extends MainTM {
 
 	// Debug
 	String debugOnOff = "disabled";
-	if (MainTM.getInstance().getConfig().getString("debugMode").equalsIgnoreCase("true")) {
+	if (MainTM.getInstance().getConfig().getString(CF_DEBUGMODE).equalsIgnoreCase("true")) {
 	    debugOnOff = "enabled";
 	}
 	String debugMsg = "The debug mode is " + debugOnOff + ".";

@@ -9,21 +9,20 @@ public class WorldSpeedHandler extends MainTM {
 
     /**
      * Increase worlds speed to a custom rate with an auto cancel/repeat capable scheduler
-     *
      */
     public static void WorldIncreaseSpeed() {
 	increaseScheduleIsOn = true;
-	refreshRateLong = MainTM.getInstance().getConfig().getLong("refreshRate");
+	refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
 
 	BukkitScheduler speedSheduler = MainTM.getInstance().getServer().getScheduler();
 	speedSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 	    @Override
 	    public void run() {
 		boolean loopMore = false;
-		for (String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 		    long actualWorldTime = Bukkit.getWorld(w).getTime(); // Get the current time of the world
-		    double speedModifNb = MainTM.getInstance().getConfig().getDouble("worldsList." + w + ".speed"); // Get the current speed of the world
-		    String syncValue = MainTM.getInstance().getConfig().getString("worldsList." + w + ".sync"); // Get the current sync param of the world
+		    double speedModifNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + w + "." + CF_SPEED); // Get the current speed of the world
+		    String syncValue = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + w + "." + CF_SYNC); // Get the current sync param of the world
 		    long newTime = 0L;
 		    if (speedModifNb >= 1.0 && speedModifNb <= speedMax && speedModifNb != 24.00) { // Only treat worlds with normal or increased timers
 			// #A. Synchronized time calculation
@@ -31,7 +30,7 @@ public class WorldSpeedHandler extends MainTM {
 			    loopMore = true;
 			    // Get the current server time
 			    long currentServerTick = ValuesConverter.returnServerTick();
-			    long startAtTickNb = (MainTM.getInstance().getConfig().getLong("worldsList." + w + ".start")); // Read config.yml to get the world's 'start' value
+			    long startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + w + "." + CF_START)); // Read config.yml to get the world's 'start' value
 			    newTime = (long) (startAtTickNb + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick))) * speedModifNb) % 24000));
 			    if (timerMode == true) {
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Calculation of " + actualTimeVar + ":");
@@ -63,30 +62,29 @@ public class WorldSpeedHandler extends MainTM {
     }
 
     /**
-     * Decrease worlds speed to a custom rate with an auto cancel/repeat capable
-     * scheduler
+     * Decrease worlds speed to a custom rate with an auto cancel/repeat capable scheduler
      */
     public static void WorldDecreaseSpeed() {
 	decreaseScheduleIsOn = true;
-	refreshRateLong = MainTM.getInstance().getConfig().getLong("refreshRate");
+	refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
 
 	BukkitScheduler speedSheduler = MainTM.getInstance().getServer().getScheduler();
 	speedSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 	    @Override
 	    public void run() {
 		boolean loopMore = false;
-		for (String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 		    long actualWorldTime = Bukkit.getWorld(w).getTime(); // Get the current time of the world
-		    double speedModifNb = MainTM.getInstance().getConfig().getDouble("worldsList." + w + ".speed");
-		    String isSpeedRealTime = MainTM.getInstance().getConfig().getString("worldsList." + w + ".speed");
+		    double speedModifNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + w + "." + CF_SPEED);
+		    String isSpeedRealTime = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + w + "." + CF_SPEED);
 		    long newTime;
 		    if (speedModifNb > 0.0 && speedModifNb < 1.0 && !(isSpeedRealTime.equals("realTime"))) { // Only treat worlds with decreased timers
 			loopMore = true;
 			// #A. Synchronized time calculation
-			if (MainTM.getInstance().getConfig().getString("worldsList." + w + ".sync").equalsIgnoreCase("true")) {
+			if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + w + "." + CF_SYNC).equalsIgnoreCase("true")) {
 			    // Get the current server time
 			    long currentServerTick = ValuesConverter.returnServerTick();
-			    long startAtTickNb = (MainTM.getInstance().getConfig().getLong("worldsList." + w + ".start")); // Read config.yml to get the world's 'start' value
+			    long startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + w + "." + CF_START)); // Read config.yml to get the world's 'start' value
 			    newTime = (long) (startAtTickNb + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick))) * speedModifNb) % 24000));
 			    if (timerMode == true) {
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Calculation of " + actualTimeVar + ":");
@@ -131,8 +129,7 @@ public class WorldSpeedHandler extends MainTM {
     }
 
     /**
-     * Modify worlds speed to real time speed with an auto cancel/repeat capable
-     * scheduler
+     * Modify worlds speed to real time speed with an auto cancel/repeat capable scheduler
      */
     public static void WorldRealSpeed() {
 	realScheduleIsOn = true;
@@ -142,9 +139,9 @@ public class WorldSpeedHandler extends MainTM {
 	    @Override
 	    public void run() {
 		boolean loopMore = false;
-		for (String w : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
-		    Double isSpeedRealTime = MainTM.getInstance().getConfig().getDouble("worldsList." + w + ".speed");
-		    long worldStartAt = MainTM.getInstance().getConfig().getLong("worldsList." + w + ".start");
+		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
+		    Double isSpeedRealTime = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + w + "." + CF_SPEED);
+		    long worldStartAt = MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + w + "." + CF_START);
 		    if (isSpeedRealTime == 24.00) { // Only treat worlds with a '24.0' timers
 			loopMore = true;
 			// Get the current server tick

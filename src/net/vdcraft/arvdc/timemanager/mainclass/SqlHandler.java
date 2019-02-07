@@ -17,73 +17,74 @@ public class SqlHandler extends MainTM {
      * Manage SQL keys in config.yml
      */
     public static void initSqlDatas() {
-	if (MainTM.getInstance().getConfig().getKeys(false).contains("initialTick")) {
-	    if (MainTM.getInstance().getConfig().getConfigurationSection("initialTick").getKeys(false).contains("useMySql")) {
-		if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equals("")) {
-		    MainTM.getInstance().getConfig().set("initialTick.useMySql", "false");
+	if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_INITIALTICK)) {
+	    if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_USEMYSQL)) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("")) {
+		    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "false");
 		}
 	    }
 	} else {
-	    MainTM.getInstance().getConfig().set("initialTick.useMySql", "false");
+	    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "false");
 	}
-	if (MainTM.getInstance().getConfig().getKeys(false).contains("mySql")) {
-	    if (MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("host")) {
-		if (MainTM.getInstance().getConfig().getString("mySql.host").equals("")) {
-		    MainTM.getInstance().getConfig().set("mySql.host", "localhost");
+	if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_MYSQL)) {
+	    if (MainTM.getInstance().getConfig().getConfigurationSection(CF_MYSQL).getKeys(false).contains(CF_HOST)) {
+		if (MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_HOST).equals("")) {
+		    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_HOST, "localhost");
 		}
 	    }
-	    if (MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("port")) {
-		if (MainTM.getInstance().getConfig().getString("mySql.port").equals("")) {
-		    MainTM.getInstance().getConfig().set("mySql.port", "3306");
+	    if (MainTM.getInstance().getConfig().getConfigurationSection(CF_MYSQL).getKeys(false).contains(CF_PORT)) {
+		if (MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_PORT).equals("")) {
+		    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_PORT, "3306");
 		}
 	    }
-	    if (MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("ssl")) {
+	    if (MainTM.getInstance().getConfig().getConfigurationSection(CF_MYSQL).getKeys(false).contains("ssl")) {
 		if (MainTM.getInstance().getConfig().getString("mySql.ssl").equals("")) {
-		    MainTM.getInstance().getConfig().set("mySql.ssl", "false");
+		    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_SSL, "false");
 		}
 	    }
-	    if (MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("database")) {
+	    if (MainTM.getInstance().getConfig().getConfigurationSection(CF_MYSQL).getKeys(false).contains("database")) {
 		if (MainTM.getInstance().getConfig().getString("mySql.database").equals("")) {
-		    MainTM.getInstance().getConfig().set("mySql.database", "timemanager");
+		    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_DATABASE, "timemanager");
 		}
 	    }
-	    if (MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("table")) {
+	    if (MainTM.getInstance().getConfig().getConfigurationSection(CF_MYSQL).getKeys(false).contains("table")) {
 		if (MainTM.getInstance().getConfig().getString("mySql.table").equals("")) {
-		    MainTM.getInstance().getConfig().set("mySql.table", "refTick");
+		    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_TABLE, "refTick");
 		}
 	    }
-	    if (!MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("username")) {
-		MainTM.getInstance().getConfig().set("mySql.username", "user");
+	    if (!MainTM.getInstance().getConfig().getConfigurationSection(CF_MYSQL).getKeys(false).contains("username")) {
+		MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_USERNAME, "user");
 	    }
-	    if (!MainTM.getInstance().getConfig().getConfigurationSection("mySql").getKeys(false).contains("password")) {
-		MainTM.getInstance().getConfig().set("mySql.password", "***");
+	    if (!MainTM.getInstance().getConfig().getConfigurationSection(CF_MYSQL).getKeys(false).contains("password")) {
+		MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_PASSWORD, "***");
 	    }
 	} else {
-	    MainTM.getInstance().getConfig().set("initialTick.useMySql", "false");
-	    MainTM.getInstance().getConfig().set("mySql.host", "localhost");
-	    MainTM.getInstance().getConfig().set("mySql.port", "3306");
-	    MainTM.getInstance().getConfig().set("mySql.ssl", "false");
-	    MainTM.getInstance().getConfig().set("mySql.database", "timemanager");
-	    MainTM.getInstance().getConfig().set("mySql.table", "refTick");
-	    MainTM.getInstance().getConfig().set("mySql.username", "user");
-	    MainTM.getInstance().getConfig().set("mySql.password", "***");
+	    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "false");
+	    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_HOST, "localhost");
+	    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_PORT, "3306");
+	    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_SSL, "false");
+	    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_DATABASE, "timemanager");
+	    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_TABLE, "refTick");
+	    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_USERNAME, "user");
+	    MainTM.getInstance().getConfig().set(CF_MYSQL + "." + CF_PASSWORD, "***");
 	}
-	host = MainTM.getInstance().getConfig().getString("mySql.host");
-	port = MainTM.getInstance().getConfig().getString("mySql.port");
-	ssl = MainTM.getInstance().getConfig().getString("mySql.ssl");
-	tableName = MainTM.getInstance().getConfig().getString("mySql.table");
-	username = MainTM.getInstance().getConfig().getString("mySql.username");
-	password = MainTM.getInstance().getConfig().getString("mySql.password");
-	dbPrefix = MainTM.getInstance().getConfig().getString("mySql.dbPrefix").replace("_", "");
+	host = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_HOST);
+	port = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_PORT);
+	ssl = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_SSL);
+	tableName = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_TABLE);
+	username = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_USERNAME);
+	password = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_PASSWORD);
+	dbPrefix = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_DBPREFIX).replace("_", "");
 	if (!dbPrefix.equals("")) {
 	    dbPrefix = dbPrefix + "_";
 	}
-	database = dbPrefix + MainTM.getInstance().getConfig().getString("mySql.database").replace("_", "");
-	database = database.replace(".", "");
-	database = database.replace(" ", "");
-	tableName = MainTM.getInstance().getConfig().getString("mySql.table");
-	username = MainTM.getInstance().getConfig().getString("mySql.username");
-	password = MainTM.getInstance().getConfig().getString("mySql.password");
+	database = dbPrefix + MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_DATABASE)
+		.replace("_", "")
+		.replace(".", "")
+		.replace(" ", "");
+	tableName = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_TABLE);
+	username = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_USERNAME);
+	password = MainTM.getInstance().getConfig().getString(CF_MYSQL + "." + CF_PASSWORD);
     }
 
     /**
@@ -101,7 +102,7 @@ public class SqlHandler extends MainTM {
 	    closeConnection("Host"); // Close the "Host" connection, but keep the "DB" connection opened
 	    return true;
 	} else {
-	    MainTM.getInstance().getConfig().set("initialTick.useMySql", "false"); // Force to stop use SQL
+	    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "false"); // Force to stop use SQL
 	    return false;
 	}
     }

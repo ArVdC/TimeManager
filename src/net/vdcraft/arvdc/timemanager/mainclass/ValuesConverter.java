@@ -206,7 +206,7 @@ public class ValuesConverter extends MainTM {
 	if (l.contains("_")) {
 	    String[] splitLocale = l.split("_");
 	    String xx_Locale = splitLocale[0] + "_";
-	    List<String> existingLangList = LgFileHandler.setAnyListFromLang("languages");
+	    List<String> existingLangList = LgFileHandler.setAnyListFromLang(CF_lANGUAGES);
 	    for (String lang : existingLangList) {
 		if (lang.contains(xx_Locale)) {
 		    nearestLocale = lang;
@@ -282,12 +282,12 @@ public class ValuesConverter extends MainTM {
      */
     public static void restrainRate() {
 	try { // Check if value is an integer
-	    refreshRateInt = MainTM.getInstance().getConfig().getInt("refreshRate");
+	    refreshRateInt = MainTM.getInstance().getConfig().getInt(CF_REFRESHRATE);
 	    refreshRateInt = returnCorrectRate(refreshRateInt);
 	} catch (NumberFormatException nfe) { // If not an integer, use the default refresh value
 	    refreshRateInt = defRefresh;
 	}
-	MainTM.getInstance().getConfig().set("refreshRate", refreshRateInt);
+	MainTM.getInstance().getConfig().set(CF_REFRESHRATE, refreshRateInt);
     }
 
     /**
@@ -296,13 +296,13 @@ public class ValuesConverter extends MainTM {
     public static void restrainInitTick() {
 	long newInitialTick;
 	try { // Check if value is a long
-	    initialTick = MainTM.getInstance().getConfig().getLong("initialTick.initialTickNb");
+	    initialTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 	    newInitialTick = returnCorrectInitTicks(initialTick);
 	} catch (NumberFormatException nfe) { // If not a long, use the current time value
 	    newInitialTick = returnServerTick(); // Create the initial tick
 	}
 	initialTick = newInitialTick;
-	MainTM.getInstance().getConfig().set("initialTick.initialTickNb", newInitialTick);
+	MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, newInitialTick);
     }
 
     /**
@@ -310,18 +310,18 @@ public class ValuesConverter extends MainTM {
      */
     public static void restrainSpeed(String worldToSet) {
 	double speedModifier;
-	String isSpeedRealtime = MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".speed");
+	String isSpeedRealtime = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	if (isSpeedRealtime.equalsIgnoreCase("realtime")) {
 	    speedModifier = MainTM.realtimeSpeed;
 	} else {
 	    try { // Check if value is a double
-		speedModifier = MainTM.getInstance().getConfig().getDouble("worldsList." + worldToSet + ".speed");
+		speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 		speedModifier = returnCorrectSpeed(speedModifier);
 	    } catch (NumberFormatException nfe) { // If not a double, use the default refresh value
 		speedModifier = defSpeed;
 	    }
 	}
-	MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".speed", speedModifier);
+	MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED, speedModifier);
 	if (debugMode == true)
 	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + speedAdjustDebugMsg + " §e"
 		    + isSpeedRealtime + "§b to §e" + speedModifier + "§b for the world §e" + worldToSet + "§b."); // Console debug msg
@@ -331,8 +331,8 @@ public class ValuesConverter extends MainTM {
      * Restrain start timers (modifies the configuration without saving the file)
      */
     public static void restrainStart(String worldToSet) {
-	String timeToSet = MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".start");
-	String currentSpeed = MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".speed");
+	String timeToSet = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_START);
+	String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	timeToSet = ValuesConverter.returnTickFromStringValue(timeToSet); // Check if value is a part of the day
 	long tickToSet;
 	try { // Check if value is a long
@@ -345,7 +345,7 @@ public class ValuesConverter extends MainTM {
 	} catch (NumberFormatException nfe) { // If not a long, use the default start value
 	    tickToSet = defStart;
 	}
-	MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".start", tickToSet);
+	MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_START, tickToSet);
 	if (debugMode == true)
 	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + startAdjustDebugMsg + " §e"
 		    + timeToSet + "§b to §e" + tickToSet + "§b for the world §e" + worldToSet + "§b."); // Console debug
@@ -358,23 +358,23 @@ public class ValuesConverter extends MainTM {
      * configuration without saving the file)
      */
     public static void restrainSync(String worldToSet, Double oldSpeed) {
-	Double currentSpeed = MainTM.getInstance().getConfig().getDouble("worldsList." + worldToSet + ".speed");
+	Double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	if (currentSpeed == 24.0) { // new speed is 24
-	    MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".sync", "true");
+	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, "true");
 	    if (debugMode == true)
 		Bukkit.getServer().getConsoleSender()
 			.sendMessage(prefixDebugMode + " " + syncAdjustTrueDebugMsg + " §e" + worldToSet + "§b."); // Console
 	    // debug
 	    // msg
 	} else if (currentSpeed == 0.0) { // new speed is 0
-	    MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".sync", "false");
+	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, "false");
 	    if (debugMode == true)
 		Bukkit.getServer().getConsoleSender()
 			.sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console
 	    // debug
 	    // msg
 	} else if (oldSpeed == 24.0) { // new speed is anything else with previous value 24
-	    MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".sync", "false");
+	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, "false");
 	    if (debugMode == true)
 		Bukkit.getServer().getConsoleSender()
 			.sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console
@@ -388,9 +388,9 @@ public class ValuesConverter extends MainTM {
      * configuration without saving the file)
      */
     public static void restrainSleep(String worldToSet) {
-	String currentSpeed = MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".speed");
+	String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	if (currentSpeed.equals("0.0") || currentSpeed.equals("24.0")) {
-	    MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".sleep", "false");
+	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SLEEP, "false");
 	    if (debugMode == true)
 		Bukkit.getServer().getConsoleSender()
 			.sendMessage(prefixDebugMode + " " + sleepAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console

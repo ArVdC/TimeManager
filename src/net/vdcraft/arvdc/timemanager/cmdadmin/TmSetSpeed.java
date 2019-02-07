@@ -24,16 +24,16 @@ public class TmSetSpeed extends MainTM {
 	// Modify all worlds
 	if (worldToSet.equalsIgnoreCase("all")) {
 	    // Relaunch this for each world
-	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false)) {
+	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 		cmdSetSpeed(sender, speedToSet, listedWorld);
 	    }
 	}
 	// Else, if the string argument is a listed world, modify a single world
-	else if (MainTM.getInstance().getConfig().getConfigurationSection("worldsList").getKeys(false).contains(worldToSet)) {
+	else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(worldToSet)) {
 	    // Get the old speed value of this world
-	    Double oldSpeed = MainTM.getInstance().getConfig().getDouble("worldsList." + worldToSet + ".speed");
+	    Double oldSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	    // Modify the speed in the config
-	    MainTM.getInstance().getConfig().set("worldsList." + worldToSet + ".speed", speedToSet);
+	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED, speedToSet);
 	    // Restrain the sync value
 	    ValuesConverter.restrainSync(worldToSet, oldSpeed);
 	    // Restrain the sleep value

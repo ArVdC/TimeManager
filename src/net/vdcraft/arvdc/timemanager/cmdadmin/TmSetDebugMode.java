@@ -15,7 +15,7 @@ public class TmSetDebugMode extends MainTM {
 
 	// Check if the argument matches what is expected
 	if (onOff.equalsIgnoreCase("true") || onOff.equalsIgnoreCase("false")) {
-	    MainTM.getInstance().getConfig().set("debugMode", onOff);
+	    MainTM.getInstance().getConfig().set(CF_DEBUGMODE, onOff);
 	    MainTM.getInstance().saveConfig();
 	    if (onOff.equalsIgnoreCase("true")) {
 		debugMode = true;

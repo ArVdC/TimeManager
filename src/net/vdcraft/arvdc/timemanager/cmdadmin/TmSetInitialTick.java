@@ -17,10 +17,10 @@ public class TmSetInitialTick extends MainTM {
     public static void cmdInitTick(CommandSender sender, Long newTick) {
 
 	// Get the previous initial tick value
-	Long oldTick = MainTM.getInstance().getConfig().getLong("initialTick.initialTickNb");
+	Long oldTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 	newTick = ValuesConverter.returnCorrectInitTicks(newTick);
 	Long sqlTick = null;
-	if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equals("true")) {
+	if (MainTM.getInstance().getConfig().getString(CF_USEMYSQL).equals("true")) {
 	    if (SqlHandler.openTheConnectionIfPossible(false)) {
 		sqlTick = SqlHandler.getServerTickSQL();
 	    }
@@ -33,14 +33,14 @@ public class TmSetInitialTick extends MainTM {
 	    initialTime = ValuesConverter.returnRealTimeFromTickValue(initialTick);
 
 	    // Save the value in the config.yml
-	    MainTM.getInstance().getConfig().set("initialTick.initialTickNb", initialTick);
+	    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, initialTick);
 	    MainTM.getInstance().saveConfig();
-	    if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equalsIgnoreCase("false")) {
+	    if (MainTM.getInstance().getConfig().getString(CF_USEMYSQL).equalsIgnoreCase("false")) {
 		Bukkit.getLogger().info(prefixTM + " " + initialTickYmlMsg); // Notify the console
 	    }
 	    // Save the value in the yml and if necessary in the MySql database
 	    // Try to use MySQL if needed
-	    if (MainTM.getInstance().getConfig().getString("initialTick.useMySql").equalsIgnoreCase("true")) { // If mySQL is true
+	    if (MainTM.getInstance().getConfig().getString(CF_USEMYSQL).equalsIgnoreCase("true")) { // If mySQL is true
 		if (SqlHandler.openTheConnectionIfPossible(true)) {
 		    SqlHandler.updateServerTickSQL(newTick); // Set the reference tick from the config.yml to the mySQL
 		    // database

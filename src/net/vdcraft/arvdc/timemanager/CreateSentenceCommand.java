@@ -91,7 +91,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> outputArgsList = new ArrayList<String>();
 	MainTM.getInstance();
 
-	if (command.getName().equalsIgnoreCase(MainTM.cmdTm)) {
+	if (command.getName().equalsIgnoreCase(MainTM.CMDTM)) {
 
 	    // Always check argument's length BEFORE calling it
 
@@ -222,7 +222,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	    } else {
 		return null;
 	    }
-	} else if (command.getName().equalsIgnoreCase(MainTM.cmdNow)) {
+	} else if (command.getName().equalsIgnoreCase(MainTM.CMDNOW)) {
 	    if (args.length == 1) { // Command '/now <...>'
 		if (sender.hasPermission("timemanager.now.units")) {
 		    for (String verif : nowUnitsArgsList) {
