@@ -15,12 +15,14 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmReload;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmResync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDebugMode;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTime;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckUpdate;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDefLang;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetInitialTick;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetMultiLang;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetRefreshRate;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetTime;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetUpdateMsgSrc;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSpeed;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetStart;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleep;
@@ -43,34 +45,45 @@ public class AdminCmdExecutor implements CommandExecutor {
 
 	if (argsNumb >= 1) {
 	    // Display a summary of the configuration informations
-	    if (args[0].equalsIgnoreCase("checkconfig")) {
+	    if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKCONFIG)) {
 		TmCheckConfig.cmdCheckConfig(sender);
 		return true;
-	    } else if (args[0].equalsIgnoreCase("checksql") || args[0].equalsIgnoreCase("sqlcheck")) { // alias for v1.0 compatibility
+	    } else if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKSQL) || args[0].equalsIgnoreCase("sqlcheck")) { // alias for v1.0 compatibility
 		// Try a connection to provided host and display results
 		TmCheckSql.cmdSqlcheck(sender);
 		return true;
 	    }
 	    // Display initial and current server's clock, initial and current server's tick
 	    // and all worlds initial and current timers.
-	    else if ((args[0].equalsIgnoreCase("checktime") && argsNumb == 1) || (args[0].equalsIgnoreCase("checktimers") && argsNumb == 1)) { // alias for v1.0 compatibility
+	    else if ((args[0].equalsIgnoreCase(MainTM.CMD_CHECKTIME) && argsNumb == 1) || (args[0].equalsIgnoreCase("checktimers") && argsNumb == 1)) { // alias for v1.0 compatibility
 		TmCheckTime.cmdCheckTime(sender, "all"); // In case of missing argument, use "all" as default value
 		return true;
 	    }
-	    // If 'set' is use alone
-	    else if (args[0].equalsIgnoreCase("set") && argsNumb == 1) {
-		TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set"); // Send error and help msg
+	    // Check for an update on configured server
+	    else if ((args[0].equalsIgnoreCase(MainTM.CMD_CHECKUPDATE)) 
+		    && (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+		if (args.length < 2) {
+		    TmCheckUpdate.cmdCheckUpdate(sender);
+		    return true;
+		} else {
+		    TmCheckUpdate.cmdCheckUpdate(sender, args[1]);
+		    return true;
+		}
+	    }
+	    // If 'set' is used alone
+	    else if (args[0].equalsIgnoreCase(MainTM.CMD_SET) && argsNumb == 1) {
+		TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET); // Send error and help msg
 		return true;
 	    }
 	    // Display details about commands use
-	    else if (args[0].equalsIgnoreCase("help")) {
+	    else if (args[0].equalsIgnoreCase(MainTM.CMD_HELP)) {
 		boolean cmdListOnOff = TmHelp.cmdHelp(sender, args);
 		return cmdListOnOff;
 	    }
 	    // Reload data from yaml file(s)
-	    else if (args[0].equalsIgnoreCase("reload")) {
+	    else if (args[0].equalsIgnoreCase(MainTM.CMD_RELOAD)) {
 		if (args.length < 2) {
-		    TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "reload"); // Send error and help msg
+		    TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_RELOAD); // Send error and help msg
 		    return true;
 		} else {
 		    TmReload.cmdReload(sender, args[1]);
@@ -78,13 +91,13 @@ public class AdminCmdExecutor implements CommandExecutor {
 		}
 	    }
 	    // Synchronize all worlds timers based on server initial time
-	    else if (args[0].equalsIgnoreCase("resync")) {
+	    else if (args[0].equalsIgnoreCase(MainTM.CMD_RESYNC)) {
 		if (args.length < 2) {
 		    if (sender instanceof Player) {
 			TmResync.cmdResync(sender, defaultWorld);
 			return true;
 		    }
-		    TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "resync"); // Send error and help msg
+		    TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_RESYNC); // Send error and help msg
 		    return true;
 		} else {
 		    // Concatenate world argument
@@ -102,35 +115,35 @@ public class AdminCmdExecutor implements CommandExecutor {
 	}
 	if (argsNumb >= 2) {
 	    // Display initial and current server's clock, initial and current server's tick and all worlds initial and current timers.
-	    if (args[0].equalsIgnoreCase("checktime")) {
+	    if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKTIME)) {
 		TmCheckTime.cmdCheckTime(sender, args[1]);
 		return true;
 	    }
-	    if (args[0].equalsIgnoreCase("set")) {
+	    if (args[0].equalsIgnoreCase(MainTM.CMD_SET)) {
 		// Enable or disable the console colored verbose messages
-		if (args[1].equalsIgnoreCase("debugmode")) {
+		if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DEBUG)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set debugmode"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DEBUG); // Send error and help msg
 			return true;
 		    } else {
 			TmSetDebugMode.cmdDebugMode(sender, args[2]);
 			return true;
 		    }
 		}
-		// Set the default language to use in case the asked locale doesn't exist
-		else if (args[1].equalsIgnoreCase("deflang")) {
+		// Define the default language to use, in case the asked locale doesn't exist
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DEFLANG)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set deflang"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DEFLANG); // Send error and help msg
 			return true;
 		    } else {
 			TmSetDefLang.cmdDefLg(sender, args[2]);
 			return true;
 		    }
 		}
-		// Modify the initial tick
-		else if (args[1].equalsIgnoreCase("initialtick")) {
+		// Define the initial tick
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_INITIALTICK)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set initialtick"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_INITIALTICK); // Send error and help msg
 			return true;
 		    } else {
 			String tickString = args[2];
@@ -145,25 +158,25 @@ public class AdminCmdExecutor implements CommandExecutor {
 			    TmSetInitialTick.cmdInitTick(sender, tickToSet);
 			    return true;
 			} catch (NumberFormatException nfe) {
-			    TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, "set initialtick"); // Send error and help msg
+			    TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_INITIALTICK); // Send error and help msg
 			    return true;
 			}
 		    }
 		}
-		// Set the auto-translation on/off
-		else if (args[1].equalsIgnoreCase("multilang")) {
+		// Define the auto-translation on/off
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_MULTILANG)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set multilang"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_MULTILANG); // Send error and help msg
 			return true;
 		    } else {
 			TmSetMultiLang.cmdMultiLg(sender, args[2]);
 			return true;
 		    }
 		}
-		// Set the refresh rate
-		else if (args[1].equalsIgnoreCase("refreshrate")) {
+		// Define the refresh rate
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_REFRESHRATE)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set refreshrate"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_REFRESHRATE); // Send error and help msg
 			return true;
 		    } else {
 			try {
@@ -171,10 +184,18 @@ public class AdminCmdExecutor implements CommandExecutor {
 			    TmSetRefreshRate.cmdRefRate(sender, refRate);
 			    return true;
 			} catch (NumberFormatException nfe) {
-			    TmHelp.sendErrorMsg(sender, MainTM.rateNotNbMsg, "set refreshrate"); // Send error and help msg
+			    TmHelp.sendErrorMsg(sender, MainTM.rateNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_REFRESHRATE); // Send error and help msg
 			    return true;
 			}
 		    }
+		}
+		// Define the source server of the update message
+		else if ((args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE))
+		    && (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+		    String source = "false";
+		    if (args.length >= 3) source = args[2];		
+		    TmSetUpdateMsgSrc.cmdSetUpdateSrc(sender, source);
+		    return true;
 		}
 	    }
 	}
@@ -194,11 +215,11 @@ public class AdminCmdExecutor implements CommandExecutor {
 	    }
 	}
 	if (argsNumb >= 3) {
-	    if (args[0].equalsIgnoreCase("set")) {
-		// Set the sleeping possibility for a world
-		if (args[1].equalsIgnoreCase("sleep") || args[1].equalsIgnoreCase("sleepUntilDawn")) { // alias for v1.0 compatibility
+	    if (args[0].equalsIgnoreCase(MainTM.CMD_SET)) {
+		// Define the sleeping possibility for a world
+		if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) || args[1].equalsIgnoreCase("sleepUntilDawn")) { // alias for v1.0 compatibility
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set sleep"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SLEEP); // Send error and help msg
 			return true;
 		    } else {
 			String sleepOrNo = args[2];
@@ -206,10 +227,10 @@ public class AdminCmdExecutor implements CommandExecutor {
 			return true;
 		    }
 		}
-		// Set the speed modifier for a world
-		else if (args[1].equalsIgnoreCase("speed")) {
+		// Define the speed modifier for a world
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set speed"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SPEED); // Send error and help msg
 			return true;
 		    } else {
 			double speedModif;
@@ -223,15 +244,15 @@ public class AdminCmdExecutor implements CommandExecutor {
 				TmSetSpeed.cmdSetSpeed(sender, speedModif, concatWorldArgs);
 				return true;
 			    } catch (NumberFormatException nfe) {
-				TmHelp.sendErrorMsg(sender, MainTM.speedNotNbMsg, "set speed"); // Send error and help msg
+				TmHelp.sendErrorMsg(sender, MainTM.speedNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SPEED); // Send error and help msg
 				return true;
 			    }
 		    }
 		}
-		// Set the start time for a world
-		else if (args[1].equalsIgnoreCase("start")) {
+		// Define the start time for a world
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_START)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set start"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_START); // Send error and help msg
 			return true;
 		    } else {
 			String tickString = args[2];
@@ -246,15 +267,15 @@ public class AdminCmdExecutor implements CommandExecutor {
 			    TmSetStart.cmdSetStart(sender, tickToSet, concatWorldArgs);
 			    return true;
 			} catch (NumberFormatException nfe) {
-			    TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, "set start"); // Send error and help msg
+			    TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_START); // Send error and help msg
 			    return true;
 			}
 		    }
 		}
-		// Set the permanent synchronization of a world
-		else if (args[1].equalsIgnoreCase("sync") || args[1].equalsIgnoreCase("synchro")) { // alias for commodity
+		// Define the permanent synchronization of a world
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set sync"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SYNC); // Send error and help msg
 			return true;
 		    } else {
 			String syncOrNo = args[2];
@@ -262,10 +283,10 @@ public class AdminCmdExecutor implements CommandExecutor {
 			return true;
 		    }
 		}
-		// Set the current time for a world
-		else if (args[1].equalsIgnoreCase("time")) {
+		// Define the current time for a world
+		else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)) {
 		    if (args.length < 3) {
-			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, "set time"); // Send error and help msg
+			TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME); // Send error and help msg
 			return true;
 		    } else {
 			String tickString = args[2];
@@ -280,7 +301,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 			    TmSetTime.cmdSetTime(sender, tickToSet, concatWorldArgs);
 			    return true;
 			} catch (NumberFormatException nfe) {
-			    TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, "set time"); // Send error and help msg
+			    TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME); // Send error and help msg
 			    return true;
 			}
 		    }

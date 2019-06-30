@@ -27,7 +27,7 @@ public class WorldListHandler extends MainTM {
 	    String loadedWorld = w.getName();
 	    // Check if the old 'sleepUntilDawn' option still exists, if yes update it to the new 'sleep'
 	    if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(loadedWorld)) {
-		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + loadedWorld).getKeys(false).contains("sleepUntilDawn")) {
+		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + loadedWorld).getKeys(false).contains("sleepUntilDawn")) { //TODO
 		    if (debugMode == true)
 			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " sleepUntilDawn still exists for the world " + loadedWorld + ", copy it to 'sleep' and erase it.");
 		    String sleepParam = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + loadedWorld + ".sleepUntilDawn");

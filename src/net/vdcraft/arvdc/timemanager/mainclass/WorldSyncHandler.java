@@ -71,12 +71,11 @@ public class WorldSyncHandler extends MainTM {
 		if (sender instanceof Player) {
 		    sender.sendMessage(prefixTMColor + " The world §e" + wichWorld + " §r" + world24hNoSyncChgMsg); // Player final msg (in case)
 		}
-		if (debugMode == true)
+		if (debugMode) {
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Resync: Calculation of " + actualTimeVar + " for world §e" + wichWorld + "§b:");
-		if (debugMode == true)
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + adjustedTicksCalculation + " = §8" + currentServerTick + " §b/ §672 §b= §3" + ((currentServerTick / 72L) % 24000)); // Console debug msg
-		if (debugMode == true)
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + realActualTimeCalculation + " = §e" + startAtTickNb + " §b- §96000 §b+ §3" + ((currentServerTick / 72L) % 24000) + " §b= §c" + (startAtTickNb - 6000L + (currentServerTick / 72L)) % 24000 + " §brestrained to one day = §ctick #" + ValuesConverter.returnCorrectTicks(newTick)); // Console debug msg
+		}
 	    } else if (speedModifNb == 0.0) { // if frozen world
 		// Next tick = (Start at #tick)
 		newTick = startAtTickNb;
@@ -85,8 +84,7 @@ public class WorldSyncHandler extends MainTM {
 		if (sender instanceof Player) {
 		    sender.sendMessage(prefixTMColor + " The world §e" + wichWorld + " §r" + worldFrozenNoSyncChgMsg); // Player final msg (in case)
 		}
-		if (debugMode == true)
-		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeVar + " = " + worldStartAtVar + " = §e" + startAtTickNb + " §brestrained to one day = §ctick #" + ValuesConverter.returnCorrectTicks(newTick)); // Console debug msg
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeVar + " = " + worldStartAtVar + " = §e" + startAtTickNb + " §brestrained to one day = §ctick #" + ValuesConverter.returnCorrectTicks(newTick)); // Console debug msg
 	    } else { // if other speed world // Next tick = Start at #tick + (Elapsed time * speed modifier)
 		newTick = (long) (startAtTickNb + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick))) * speedModifNb) % 24000));
 		// Notifications
@@ -94,7 +92,7 @@ public class WorldSyncHandler extends MainTM {
 		if (sender instanceof Player) {
 		    sender.sendMessage(prefixTMColor + " The world §e" + wichWorld + " §r" + resyncDoneOneMsg); // Player final msg (in case)
 		}
-		if (debugMode == true) {
+		if (debugMode) {
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Resync: Calculation of " + actualTimeVar + " for world §e" + wichWorld + "§b:");
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + elapsedTimeCalculation + " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b= §d" + ((currentServerTick - initialTick) % 24000) + " §brestrained to one day = §d" + ValuesConverter.returnCorrectTicks(((currentServerTick % 24000) - (initialTick % 24000)))); // Console debug msg
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + adjustedElapsedTimeCalculation + " = §d" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + speedModifNb + " §b= §5" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick) % 24000))) * speedModifNb)))); // Console debug msg
@@ -128,7 +126,7 @@ public class WorldSyncHandler extends MainTM {
 	firstSyncSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 	    @Override
 	    public void run() {
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
 		    getOrSetInitialTickAndTime(false);
 		    refreshInitialTickMySql();
 		} else {
@@ -205,8 +203,10 @@ public class WorldSyncHandler extends MainTM {
 
 	// Get the previous initialTickNb from the MySQL database
 	Long sqlTick = null;
-	if (SqlHandler.openTheConnectionIfPossible(true)) {
-	    sqlTick = SqlHandler.getServerTickSQL();
+	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
+	    if (SqlHandler.openTheConnectionIfPossible(true)) {
+		sqlTick = SqlHandler.getServerTickSQL();
+	    }
 	}
 
 	// If mySql is false, try to actualize the configuration:

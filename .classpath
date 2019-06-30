@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="//SALON-MACHINE/www/lib/spigot-api-1.13.2-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="//SALON-MACHINE/www/lib/spigot-api-1.14.3-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry exported="true" kind="lib" path="//SALON-MACHINE/www/lib/mysql-connector-java-5.1.43-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

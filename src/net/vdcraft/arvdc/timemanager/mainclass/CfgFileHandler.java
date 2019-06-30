@@ -46,7 +46,7 @@ public class CfgFileHandler extends MainTM {
 	DebugModeHandler.debugModeOnOff();
 
 	// #5. Set some default values if missing or corrupt in the initialTick node
-	// #A. defTimeUnits value
+	// #5.a. defTimeUnits value
 	if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_DEFTIMEUNITS)) {
 	    if (MainTM.getInstance().getConfig().getString(CF_DEFTIMEUNITS).equals("")) {
 		MainTM.getInstance().getConfig().set(CF_DEFTIMEUNITS, defTimeUnits);
@@ -54,7 +54,7 @@ public class CfgFileHandler extends MainTM {
 	} else {
 	    MainTM.getInstance().getConfig().set(CF_DEFTIMEUNITS, defTimeUnits);
 	}
-	// #B. resetOnStartup value
+	// #5.b. resetOnStartup value
 	if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_RESETONSTARTUP)) {
 	    if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equals("false"))) {
 		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, "true");
@@ -62,7 +62,7 @@ public class CfgFileHandler extends MainTM {
 	} else {
 	    MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, "true");
 	}
-	// #C. useMySql value
+	// #5.c. useMySql value
 	if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_USEMYSQL)) {
 	    if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("false"))) {
 		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "true");
@@ -76,12 +76,10 @@ public class CfgFileHandler extends MainTM {
 
 	// #7. Restrain the refresh rate
 	ValuesConverter.restrainRate();
-
-	// #8. Only when using the admin command /tm reload: Update the initialTickNb
-	// value
+	// #8. Only when using the admin command /tm reload: Update the initialTickNb value
 	if (firstOrRe.equalsIgnoreCase("re")) {
 	    WorldSyncHandler.updateInitialTickAndTime(oldTick);
-	}
+	}	
 	// #9. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
 	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("true") && !mySqlRefreshIsAlreadyOn) {
 	    mySqlRefreshIsAlreadyOn = true;
@@ -89,24 +87,23 @@ public class CfgFileHandler extends MainTM {
 	    Bukkit.getLogger().info(prefixTM + " " + sqlInitialTickAutoUpdateMsg); // Notify the console
 	}
 
-	// #1. Check and complete list of available worlds
-	if (debugMode == true)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + cfgOptionsCheckDebugMsg); // Console debug msg
+	// #10. Check and complete list of available worlds
+	if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + cfgOptionsCheckDebugMsg); // Console debug msg
 	WorldListHandler.listLoadedWorlds();
 
 	// #11. For each world
 	for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 
-	    // #A. Restrain the speed modifiers
+	    // #11.a. Restrain the speed modifiers
 	    ValuesConverter.restrainSpeed(w);
 
-	    // #B. Restrain the start times
+	    // #11.b. Restrain the start times
 	    ValuesConverter.restrainStart(w);
 
-	    // #C. Restrain the sync value
+	    // #11.c. Restrain the sync value
 	    ValuesConverter.restrainSync(w, 0.1);
 
-	    // #D. Restrain the sleep value
+	    // #11.d. Restrain the sleep value
 	    ValuesConverter.restrainSleep(w);
 	}
 

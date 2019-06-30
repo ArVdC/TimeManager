@@ -11,20 +11,19 @@ package net.vdcraft.arvdc.timemanager;
 import java.io.File;
 import java.sql.Connection;
 
-import org.bukkit.plugin.java.JavaPlugin;
-
-import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldSleepHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.WorldSleepHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
 
 public class MainTM extends JavaPlugin {
 
@@ -33,16 +32,17 @@ public class MainTM extends JavaPlugin {
      *****************/
 
     // Main class
-    public static MainTM instanceMainClass;
+    protected static MainTM instanceMainClass;
 
     // Plugin version
-    public static String versionTM() {
+    protected static String versionTM() {
 	return instanceMainClass.getDescription().getVersion().toString();
-    };
+    }
 
     // Minecraft server minimal required version decimals "x.xx" (without the "1."
     // and eventually with a "x.0x" format - to permit comparisons)
-    public static Double minRequiredMcVersion = 4.06;
+    protected static Double minRequiredMcVersion = 4.06;
+    protected static Double requiredMcVersionForUpdate = 8.09;
 
     // Current Minecraft server version decimals "x.xx" (without the "1." and eventually with a "x.0x" format - to permit comparisons)
     public static Double decimalOfMcVersion;
@@ -53,12 +53,35 @@ public class MainTM extends JavaPlugin {
     public static Boolean timerMode = false; // Displays all timers calculations (= ultra-verbose mode)
 
     // Commands names
-    public static final String CMDTM = "tm";
-    public static final String CMDNOW = "now";
+    protected static final String CMD_TM = "tm";
+    protected static final String CMD_NOW = "now";
+
+    // /tm sub-commands names
+    protected static final String CMD_CHECKCONFIG = "checkconfig";
+    protected static final String CMD_CHECKSQL = "checksql";
+    protected static final String CMD_CHECKTIME = "checktime";
+    protected static final String CMD_CHECKUPDATE = "checkupdate";
+    protected static final String CMD_HELP = "help";
+    protected static final String CMD_RELOAD = "reload";
+    protected static final String CMD_RESYNC = "resync";
+    protected static final String CMD_SET = "set";
+
+    // /tm sub-commands names
+    protected static final String CMD_SET_DEBUG = "debugmode";
+    protected static final String CMD_SET_DEFLANG = "deflang";
+    protected static final String CMD_SET_INITIALTICK = "initialtick";
+    protected static final String CMD_SET_MULTILANG = "multilang";
+    protected static final String CMD_SET_REFRESHRATE = "refreshrate";
+    protected static final String CMD_SET_SLEEP= "sleep";
+    protected static final String CMD_SET_SPEED = "speed";
+    protected static final String CMD_SET_START = "start";
+    protected static final String CMD_SET_SYNC = "sync";
+    protected static final String CMD_SET_TIME = "time";
+    protected static final String CMD_SET_UPDATE = "update";
 
     // Files names
-    public static final String CONFIGFILENAME = "config.yml";
-    public static final String lANGFILENAME = "lang.yml";
+    protected static final String CONFIGFILENAME = "config.yml";
+    protected static final String lANGFILENAME = "lang.yml";
 
     // Config and Lang files targets
     public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
@@ -66,246 +89,274 @@ public class MainTM extends JavaPlugin {
     public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
 
     // Admin and Console messages
-    // - Prefixes
-    public static String prefixTM = "[TimeManager]";
-    public static String prefixTMColor = "§8§l[§6§lTimeManager§8§l]§r";
-    public static String prefixDebugMode = "§8§l[§e§lTimeManager§8§l]§b";
-    // - Plugin enable & reload messages
-    public static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
-    public static String plBadVersionMsg = "§cThe plugin is not compatible with versions under 1." + minRequiredMcVersion + " and you are running a ";
-    public static String plDisabledMsg = "The plugin is now disabled.";
-    public static String cfgFileCreaMsg = "The configuration file was created.";
-    public static String lgFileCreaMsg = "The language file was created.";
-    public static String cfgFileExistMsg = "The configuration file already exists.";
-    public static String lgFileExistMsg = "The language file already exists.";
-    public static String cfgVersionMsg = "Enabled " + CONFIGFILENAME + " v";
-    public static String lgVersionMsg = "Enabled " + lANGFILENAME + " v";
-    public static String cfgFileTryReloadMsg = "Reloading the configuration file.";
-    public static String cfgFileReloadMsg = "The configuration file was reloaded.";
-    public static String lgFileTryReloadMsg = "Reloading the language file.";
-    public static String lgFileReloadMsg = "The language file was reloaded.";
-    public static String worldsCheckMsg = "The worlds list was actualized.";
-    public static String multiLangIsOnMsg = "Multilanguage support is enable.";
-    public static String multiLangIsOffMsg = "Multilanguage support is disable.";
-    public static String multiLangDoesntWork = "Multilanguage is not supported by CraftBukkit under the 1.12 version. Upgrade or try with Spigot.";
-    public static String defLangCheckMsg = "Default translation is actually set to";
-    public static String defLangResetMsg = "is missing or corrupt, back to the default parameter.";
-    public static String defLangOkMsg = "exists in " + lANGFILENAME + ", keep it as default translation.";
-    public static String resyncIntroMsg = "All worlds will now be syncronized to the server time. If you want to keep them synchronized, set their 'sync' option to true.";
-    // - Cmds resync & checkTime
-    public static String serverInitTickMsg = "The server's initial tick is";
-    public static String serverCurrentTickMsg = "The server's current tick is";
-    public static String worldCurrentStartMsg = "starts at";
-    public static String worldCurrentTickMsg = "'s current tick is";
-    public static String worldCurrentTimeMsg = "'s current time is";
-    public static String worldCurrentSpeedMsg = "'s current speed is";
-    public static String worldRealSpeedMsg = "set to match real UTC time";
-    public static String worldCurrentSyncMsg = "synchronized to the server time";
-    public static String worldCurrentSleepMsg = "'s 'sleep' option is set to";
-    // - Cmd resync
-    public static String resyncDoneOneMsg = "had its time re" + worldCurrentSyncMsg;
-    // - Cmd set refreshRate
-    public static String refreshRateMsg = "The time stretch/expand will refresh every";
-    // - Cmd set initial tick
-    public static String initialTickYmlMsg = "The new initial tick will be saved in the config.yml file.";
-    public static String initialTickSqlMsg = "The new initial tick will be saved in the MySQL database.";
-    public static String initialTickGetFromSqlMsg = "The new initial tick was get from the MySQL database.";
-    public static String initialTickNoChgMsg = "The tick you just entered is the same as the current one.";
-    // - Cmd set sleep
-    public static String worldSleepTrueChgMsg = "It is allowed to sleep until the dawn in the world";
-    public static String worldSleepFalseChgMsg = "It is forbidden to sleep until the dawn in the world";
-    public static String worldSleepNoChgMsg = "Impossible to change the 'sleep' option cause of the actual speed setting for the world";
-    // - Cmd set speed
-    public static String worldSpeedChgIntro = "The speed of the world";
-    public static String worldSpeedChgMsg = "is now multiplied by";
-    public static String worldRealSpeedChgMsg = "will now match the real time, the 'start' value will defines the time zone.";
-    // - Cmd set start
-    public static String worldStartChgMsg1 = "The time of the world";
-    public static String worldStartChgMsg2 = "was resynchronized using its new 'start' value.";
-    // - Cmd set sync
-    public static String worldSyncTrueChgMsg = "The synchronization to the server time is activated for the world";
-    public static String worldSyncFalseChgMsg = "The synchronization to the server time is disabled for the world";
-    public static String worldSyncNoChgMsg = "Impossible to change the 'sync' option cause of the actual speed setting for the world";
-    public static String world24hNoSyncChgMsg = "is synchronized to real UTC time and doesn't need to be resynchronized.";
-    public static String worldFrozenNoSyncChgMsg = "has its speed frozen and doesn't need to be resynchronized.";
-    public static String worldSyncSleepChgMsg = "'sleep' option was forced to false, cause of its synchronization value.";
-    public static String SleepWorldSyncChgMsg = "'sync' option was forced to false in order to allow players to sleep until the dawn.";
-    // - Cmd set time
-    public static String worldTimeChgMsg1 = "The current time of the world";
-    public static String worldTimeChgMsg2 = "is now set to";
-    public static String worldSyncTimeChgMsg = "is synchronized to the server time, its 'start' value will be changed to modify its current time.";
-    public static String worldRealSyncTimeChgMsg = "will always match real UTC minutes and seconds, a new rounded 'start' value will be calculated.";
+    // Prefixes
+    protected static String prefixTM = "[TimeManager]";
+    protected static String prefixTMColor = "§8§l[§6§lTimeManager§8§l]§r";
+    protected static String prefixDebugMode = "§8§l[§e§lTimeManager§8§l]§b";
+
+    // Plugin enable & reload messages
+    protected static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
+    protected static String plBadVersionMsg = "§cThe plugin is not compatible with versions under 1." + minRequiredMcVersion + " and you are running a ";
+    protected static String plDisabledMsg = "The plugin is now disabled.";
+    protected static String cfgFileCreaMsg = "The configuration file was created.";
+    protected static String lgFileCreaMsg = "The language file was created.";
+    protected static String cfgFileExistMsg = "The configuration file already exists.";
+    protected static String lgFileExistMsg = "The language file already exists.";
+    protected static String cfgVersionMsg = "Enabled " + CONFIGFILENAME + " v";
+    protected static String lgVersionMsg = "Enabled " + lANGFILENAME + " v";
+    protected static String cfgFileTryReloadMsg = "Reloading the configuration file.";
+    protected static String cfgFileReloadMsg = "The configuration file was reloaded.";
+    protected static String lgFileTryReloadMsg = "Reloading the language file.";
+    protected static String lgFileReloadMsg = "The language file was reloaded.";
+    protected static String worldsCheckMsg = "The worlds list was actualized.";
+    protected static String multiLangIsOnMsg = "Multilanguage support is enable.";
+    protected static String multiLangIsOffMsg = "Multilanguage support is disable.";
+    protected static String multiLangDoesntWork = "Multilanguage is not supported by CraftBukkit under the 1.12 version. Upgrade or try with Spigot.";
+    protected static String defLangCheckMsg = "Default translation is actually set to";
+    protected static String defLangResetMsg = "is missing or corrupt, back to the default parameter.";
+    protected static String defLangOkMsg = "exists in " + lANGFILENAME + ", keep it as default translation.";
+    protected static String resyncIntroMsg = "All worlds will now be syncronized to the server time. If you want to keep them synchronized, set their 'sync' option to true.";
+
+    // Cmds resync & checkTime
+    protected static String serverInitTickMsg = "The server's initial tick is";
+    protected static String serverCurrentTickMsg = "The server's current tick is";
+    protected static String worldCurrentStartMsg = "starts at";
+    protected static String worldCurrentTickMsg = "'s current tick is";
+    protected static String worldCurrentTimeMsg = "'s current time is";
+    protected static String worldCurrentSpeedMsg = "'s current speed is";
+    protected static String worldRealSpeedMsg = "set to match real UTC time";
+    protected static String worldCurrentSyncMsg = "synchronized to the server time";
+    protected static String worldCurrentSleepMsg = "'s 'sleep' option is set to";
+
+    // Cmd resync
+    protected static String resyncDoneOneMsg = "had its time re" + worldCurrentSyncMsg;
+
+    // Cmd set refreshRate
+    protected static String refreshRateMsg = "The time stretch/expand will refresh every";
+
+    // Cmd set initial tick
+    protected static String initialTickYmlMsg = "The new initial tick will be saved in the config.yml file.";
+    protected static String initialTickSqlMsg = "The new initial tick will be saved in the MySQL database.";
+    protected static String initialTickGetFromSqlMsg = "The new initial tick was get from the MySQL database.";
+    protected static String initialTickNoChgMsg = "The tick you just entered is the same as the current one.";
+
+    // Cmd set sleep
+    protected static String worldSleepTrueChgMsg = "It is allowed to sleep until the dawn in the world";
+    protected static String worldSleepFalseChgMsg = "It is forbidden to sleep until the dawn in the world";
+    protected static String worldSleepNoChgMsg = "Impossible to change the 'sleep' option cause of the actual speed setting for the world";
+
+    // Cmd set speed
+    protected static String worldSpeedChgIntro = "The speed of the world";
+    protected static String worldSpeedChgMsg = "is now multiplied by";
+    protected static String worldRealSpeedChgMsg = "will now match the real time, the 'start' value will defines the time zone.";
+
+    // Cmd set start
+    protected static String worldStartChgMsg1 = "The time of the world";
+    protected static String worldStartChgMsg2 = "was resynchronized using its new 'start' value.";
+
+    // Cmd set sync
+    protected static String worldSyncTrueChgMsg = "The synchronization to the server time is activated for the world";
+    protected static String worldSyncFalseChgMsg = "The synchronization to the server time is disabled for the world";
+    protected static String worldSyncNoChgMsg = "Impossible to change the 'sync' option cause of the actual speed setting for the world";
+    protected static String world24hNoSyncChgMsg = "is synchronized to real UTC time and doesn't need to be resynchronized.";
+    protected static String worldFrozenNoSyncChgMsg = "has its speed frozen and doesn't need to be resynchronized.";
+    protected static String worldSyncSleepChgMsg = "'sleep' option was forced to false, cause of its synchronization value.";
+    protected static String SleepWorldSyncChgMsg = "'sync' option was forced to false in order to allow players to sleep until the dawn.";
+
+    // Cmd set time
+    protected static String worldTimeChgMsg1 = "The current time of the world";
+    protected static String worldTimeChgMsg2 = "is now set to";
+    protected static String worldSyncTimeChgMsg = "is synchronized to the server time, its 'start' value will be changed to modify its current time.";
+    protected static String worldRealSyncTimeChgMsg = "will always match real UTC minutes and seconds, a new rounded 'start' value will be calculated.";
+
+    // Cmd set update
+    protected static String updateEnableCheckMsg = "The plugin update message at server start will use";
+    protected static String updateDisableCheckMsg = "The plugin update message at server start is now";
+    protected static String updateCommandsDisabledMsg = "The update functions are disabled under MC v1.";
+    protected static String noUpdateMsg = "No update was found, you are running the latest version.";
+    protected static String urlFailMsg = "No update was found, the provided URL was not recognized.";
+    protected static String serverFailMsg = "No update was found, the server could not be reached.";
 
     // Errors messages
-    public static String rateNotNbMsg = "Refresh rate must be an integer number.";
-    public static String tickNotNbMsg = "Tick must be an integer number, a listed part of the day, or to be HH:mm:ss formated.";
-    public static String speedNotNbMsg = "Speed multiplier must be a number (integer or decimal) or the string \"realtime\".";
-    public static String wrongWorldMsg = "The name of the world you just typed does not exist.";
-    public static String wrongLangMsg = "The language you just typed does not exist in lang.yml file.";
-    public static String wrongYmlMsg = "The name of the yaml file you just typed does not exist.";
-    public static String missingArgMsg = "This command requires one or more additional argument(s).";
-    public static String isNotBooleanMsg = "This command requires a boolean argument, true or false.";
-    public static String couldNotSaveLang = "File " + lANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
-    public static String checkLogMsg = "Please check the console or log file.";
-    public static String unknowVersionMsg = "Impossible to determine properly the MC version of your server, the plugin will consider it is an old one.";
+    protected static String rateNotNbMsg = "Refresh rate must be an integer number.";
+    protected static String tickNotNbMsg = "Tick must be an integer number, a listed part of the day, or to be HH:mm:ss formated.";
+    protected static String speedNotNbMsg = "Speed multiplier must be a number (integer or decimal) or the string \"realtime\".";
+    protected static String wrongWorldMsg = "The name of the world you just typed does not exist.";
+    protected static String wrongLangMsg = "The language you just typed does not exist in lang.yml file.";
+    protected static String wrongYmlMsg = "The name of the yaml file you just typed does not exist.";
+    protected static String missingArgMsg = "This command requires one or more additional argument(s).";
+    protected static String isNotBooleanMsg = "This command requires a boolean argument, true or false.";
+    protected static String couldNotSaveLang = "File " + lANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
+    protected static String checkLogMsg = "Please check the console or log file.";
+    protected static String unknowVersionMsg = "Impossible to determine properly the MC version of your server, the plugin will consider it is an old one.";
+
 
     // Debug messages (with colors)
-    public static String enableDebugModeDebugMsg = "The debug mode is §aenabled§b.";
-    public static String disableDebugModeDebugMsg = "The debug mode is §cdisabled§b.";
-    public static String cfgOptionsCheckDebugMsg = "The options will be now checked for each world.";
-    public static String refrehWorldsListDebugMsg = "Refreshing the §e'worldsList'§b keys in config.yml.";
-    public static String worldsRawListDebugMsg = "Raw list of all loaded worlds:";
-    public static String worldsFormatListDebugMsg = "Raw list of all loaded worlds:";
-    public static String worldsCfgListDebugMsg = "Worlds list from the config.yml:";
-    public static String delWorldDebugMsg = "was deleted from the config list.";
-    public static String speedAdjustDebugMsg = "The §e'speed'§b option value was converted from";
-    public static String startAdjustDebugMsg = "The §e'start'§b option value was converted from";
-    public static String syncAdjustTrueDebugMsg = "The §e'sync'§b option is forced to §atrue §bfor the world";
-    public static String syncAdjustFalseDebugMsg = "The §e'sync'§b option is forced to §cfalse §bfor the world";
-    public static String sleepAdjustFalseDebugMsg = "The §e'sleep'§b option is forced to §cfalse §bfor the world";
-    public static String availableTranslationsDebugMsg = "Available translations are:";
-    public static String daylightTrueDebugMsg = "The gamerule §e'doDaylightCycle'§b is now set to §atrue§b for the world";
-    public static String daylightFalseDebugMsg = "The gamerule §e'doDaylightCycle'§b is now set to §cfalse§b for the world";
-    public static String mcLocaleDebugMsg = "The locale will be determined by the Minecraft client.";
-    public static String pcLocaleDebugMsg = "The locale will be determined by the computer and §onot §bby the Minecraft client.";
-    public static String foundLocaleDebugMsg = "The locale found for the player";
-    public static String useLocaleDebugMsg = "The locale that will be used for the player";
-    public static String launchSchedulerDebugMsg = "If off, launch the scheduler corresponding to the asked speed value.";
-    public static String serverTypeQueryDebugMsg = "Try to get the server's type.";
-    public static String serverTypeResultDebugMsg = "You are running a";
-    public static String serverMcVersionQueryDebugMsg = "Try to get the server's Minecraft version.";
-    public static String serverMcVersionResultDebugMsg = "You are using a";
-    public static String completeVersionDebugMsg = "Complete version details:";
-    public static String noVersionNumberDebugMsg = "No MC version number could be recognized in";
-    public static String wrongVersionNumberDebugMsg = "Your MC version doesn't correspond to any decimal number:";
+    protected static String enableDebugModeDebugMsg = "The debug mode is §aenabled§b.";
+    protected static String disableDebugModeDebugMsg = "The debug mode is §cdisabled§b.";
+    protected static String cfgOptionsCheckDebugMsg = "The options will be now checked for each world.";
+    protected static String refrehWorldsListDebugMsg = "Refreshing the §e'worldsList'§b keys in config.yml.";
+    protected static String worldsRawListDebugMsg = "Raw list of all loaded worlds:";
+    protected static String worldsFormatListDebugMsg = "Raw list of all loaded worlds:";
+    protected static String worldsCfgListDebugMsg = "Worlds list from the config.yml:";
+    protected static String delWorldDebugMsg = "was deleted from the config list.";
+    protected static String speedAdjustDebugMsg = "The §e'speed'§b option value was converted from";
+    protected static String startAdjustDebugMsg = "The §e'start'§b option value was converted from";
+    protected static String syncAdjustTrueDebugMsg = "The §e'sync'§b option is forced to §atrue §bfor the world";
+    protected static String syncAdjustFalseDebugMsg = "The §e'sync'§b option is forced to §cfalse §bfor the world";
+    protected static String sleepAdjustFalseDebugMsg = "The §e'sleep'§b option is forced to §cfalse §bfor the world";
+    protected static String availableTranslationsDebugMsg = "Available translations are:";
+    protected static String daylightTrueDebugMsg = "The gamerule §e'doDaylightCycle'§b is now set to §atrue§b for the world";
+    protected static String daylightFalseDebugMsg = "The gamerule §e'doDaylightCycle'§b is now set to §cfalse§b for the world";
+    protected static String mcLocaleDebugMsg = "The locale will be determined by the Minecraft client.";
+    protected static String pcLocaleDebugMsg = "The locale will be determined by the computer and §onot §bby the Minecraft client.";
+    protected static String foundLocaleDebugMsg = "The locale found for the player";
+    protected static String useLocaleDebugMsg = "The locale that will be used for the player";
+    protected static String launchSchedulerDebugMsg = "If off, launch the scheduler corresponding to the asked speed value.";
+    protected static String serverTypeQueryDebugMsg = "Try to get the server's type.";
+    protected static String serverTypeResultDebugMsg = "You are running a";
+    protected static String serverMcVersionQueryDebugMsg = "Try to get the server's Minecraft version.";
+    protected static String serverMcVersionResultDebugMsg = "You are using a";
+    protected static String completeVersionDebugMsg = "Complete version details:";
+    protected static String noVersionNumberDebugMsg = "No MC version number could be recognized in";
+    protected static String wrongVersionNumberDebugMsg = "Your MC version doesn't correspond to any decimal number:";
+    protected static String LatestVersionPart1DebugMsg = "Last version on";
+    protected static String LatestVersionPart2DebugMsg = "and you are running the";
+
     // Debug Calculation for timer synchronization
-    public static String actualTimeVar = "§c[actualTime]§b";
-    public static String adjustedElapsedTimeVar = "§5[adjustedElapsedTime]§b";
-    public static String adjustedTicksVar = "§3[adjustedTick]§b";
-    public static String askedTimeVar = "§8[askedTime]§b";
-    public static String currentTickVar = "§8[currentTick]§b";
-    public static String currentServerTickVar = "§8[currentServerTick]§b";
-    public static String elapsedTimeVar = "§d[elapsedTime]§b";
-    public static String initialTickVar = "§7[initialTick]§b";
-    public static String mcTimeRatioVar = "§6[mcTimeRatio]§b";
-    public static String sixHoursLessVar = "§9[sixHoursLess]§b";
-    public static String speedModifierVar = "§a[speedModifier]§b";
-    public static String ticksInOneDayVar = "§6[ticksInOneDay]§b";
-    public static String worldStartAtVar = "§e[worldStartAt]§b";
-    public static String oldWorldStartAtVar = "§3[oldWorldStartAt]§b";
-    public static String actualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " + " + adjustedElapsedTimeVar;
-    public static String elapsedTimeCalculation = elapsedTimeVar + " = (" + currentServerTickVar + " - " + initialTickVar + ") % " + ticksInOneDayVar;
-    public static String adjustedElapsedTimeCalculation = adjustedElapsedTimeVar + " = " + elapsedTimeVar + " * " + speedModifierVar;
-    public static String worldStartAtCalculation = worldStartAtVar + " = " + oldWorldStartAtVar + " + " + askedTimeVar + " - " + actualTimeVar;
-    public static String adjustedTicksCalculation = adjustedTicksVar + " = " + currentTickVar + " / " + mcTimeRatioVar;
-    public static String realActualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " - " + sixHoursLessVar + " + " + adjustedTicksVar;
+    protected static String actualTimeVar = "§c[actualTime]§b";
+    protected static String adjustedElapsedTimeVar = "§5[adjustedElapsedTime]§b";
+    protected static String adjustedTicksVar = "§3[adjustedTick]§b";
+    protected static String askedTimeVar = "§8[askedTime]§b";
+    protected static String currentTickVar = "§8[currentTick]§b";
+    protected static String currentServerTickVar = "§8[currentServerTick]§b";
+    protected static String elapsedTimeVar = "§d[elapsedTime]§b";
+    protected static String initialTickVar = "§7[initialTick]§b";
+    protected static String mcTimeRatioVar = "§6[mcTimeRatio]§b";
+    protected static String sixHoursLessVar = "§9[sixHoursLess]§b";
+    protected static String speedModifierVar = "§a[speedModifier]§b";
+    protected static String ticksInOneDayVar = "§6[ticksInOneDay]§b";
+    protected static String worldStartAtVar = "§e[worldStartAt]§b";
+    protected static String oldWorldStartAtVar = "§3[oldWorldStartAt]§b";
+    protected static String actualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " + " + adjustedElapsedTimeVar;
+    protected static String elapsedTimeCalculation = elapsedTimeVar + " = (" + currentServerTickVar + " - " + initialTickVar + ") % " + ticksInOneDayVar;
+    protected static String adjustedElapsedTimeCalculation = adjustedElapsedTimeVar + " = " + elapsedTimeVar + " * " + speedModifierVar;
+    protected static String worldStartAtCalculation = worldStartAtVar + " = " + oldWorldStartAtVar + " + " + askedTimeVar + " - " + actualTimeVar;
+    protected static String adjustedTicksCalculation = adjustedTicksVar + " = " + currentTickVar + " / " + mcTimeRatioVar;
+    protected static String realActualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " - " + sixHoursLessVar + " + " + adjustedTicksVar;
 
     // MySQL
-    public static String host;
-    public static String port;
-    public static String ssl;
-    public static String dbPrefix;
-    public static String database;
-    public static String tableName;
-    public static String username;
-    public static String password;
-    public static Connection connectionHost;
-    public static Connection connectionDB;
-    public static String connectionOkMsg = "is correctly responding on port";
-    public static Long sqlInitialTickAutoUpdateValue = 2L;
-    public static Boolean mySqlRefreshIsAlreadyOn = false;
-    public static String sqlInitialTickAutoUpdateMsg = "If someone changes the InitialTickNb value in the MySQL database, the change will be reflected on this server within the next " + sqlInitialTickAutoUpdateValue + " minutes.";
+    protected static String host;
+    protected static String port;
+    protected static String ssl;
+    protected static String dbPrefix;
+    protected static String database;
+    protected static String tableName;
+    protected static String username;
+    protected static String password;
+    protected static Connection connectionHost;
+    protected static Connection connectionDB;
+    protected static String connectionOkMsg = "is correctly responding on port";
+    protected static Long sqlInitialTickAutoUpdateValue = 2L;
+    protected static Boolean mySqlRefreshIsAlreadyOn = false;
+    protected static String sqlInitialTickAutoUpdateMsg = "If someone changes the InitialTickNb value in the MySQL database, the change will be reflected on this server within the next " + sqlInitialTickAutoUpdateValue + " minutes.";
 
     // mySQL errors messages
-    public static String tryReachHostMsg = "Trying to reach the provided mySQL host";
-    public static String checkConfigMsg = "Please check the " + CONFIGFILENAME + " file and set the debugMode to true to see error details.";
-    public static String connectionFailMsg = "Something prevented to establish a connection with provided host";
-    public static String dbCreationFailMsg = "Something prevented the database creation.";
-    public static String tableCreationFailMsg = "Something prevented the table creation.";
-    public static String datasCreationFailMsg = "Something preventeds datas from being written.";
-    public static String datasOverridingFailMsg = "Something keeps the datas from being updated.";
-    public static String tableReachFailMsg = "The table where the reference tick should be stocked is unreachable.";
-    public static String disconnectionFailMsg = "Something prevented the mySQL disconnection.";
+    protected static String tryReachHostMsg = "Trying to reach the provided mySQL host";
+    protected static String checkConfigMsg = "Please check the " + CONFIGFILENAME + " file and set the debugMode to true to see error details.";
+    protected static String connectionFailMsg = "Something prevented to establish a connection with provided host";
+    protected static String dbCreationFailMsg = "Something prevented the database creation.";
+    protected static String tableCreationFailMsg = "Something prevented the table creation.";
+    protected static String datasCreationFailMsg = "Something preventeds datas from being written.";
+    protected static String datasOverridingFailMsg = "Something keeps the datas from being updated.";
+    protected static String tableReachFailMsg = "The table where the reference tick should be stocked is unreachable.";
+    protected static String disconnectionFailMsg = "Something prevented the mySQL disconnection.";
 
     // Default config files values
-    public static String defTimeUnits = "hours";
-    public static Long defStart = 0L;
-    public static Integer defRefresh = 10;
-    public static Double defSpeed = 1.0;
-    public static String defSleep = "true";
-    public static String defSync = "false";
+    protected static String defTimeUnits = "hours";
+    protected static Long defStart = 0L;
+    protected static Integer defRefresh = 10;
+    protected static Double defSpeed = 1.0;
+    protected static String defSleep = "true";
+    protected static String defSync = "false";
 
     // Min and Max refresh parameters in ticks
-    public static Integer refreshMin = 2;
-    public static Integer refreshMax = 20;
+    protected static Integer refreshMin = 2;
+    protected static Integer refreshMax = 20;
 
     // Handle the current refresh rate
-    public static Integer refreshRateInt;
-    public static Long refreshRateLong;
+    protected static Integer refreshRateInt;
+    protected static Long refreshRateLong;
 
     // Max speed modifier (Min need to be 0)
-    public static Double speedMax = 10.0;
+    protected static Double speedMax = 10.0;
 
     // Number who make time turn real
-    public static Double realtimeSpeed = 24.0;
+    protected static Double realtimeSpeed = 24.0;
 
     // DayParts in ticks
-    public static Integer dayStart = 0;
-    public static Integer duskStart = 11500;
-    public static Integer nightStart = 13000;
-    public static Integer dawnStart = 22500;
-    public static Integer dayEnd = 24000;
+    protected static Integer dayStart = 0;
+    protected static Integer duskStart = 11500;
+    protected static Integer nightStart = 13000;
+    protected static Integer dawnStart = 22500;
+    protected static Integer dayEnd = 24000;
 
     // Check if schedule is already active
-    public static Boolean increaseScheduleIsOn = false;
-    public static Boolean decreaseScheduleIsOn = false;
-    public static Boolean realScheduleIsOn = false;
+    protected static Boolean increaseScheduleIsOn = false;
+    protected static Boolean decreaseScheduleIsOn = false;
+    protected static Boolean realScheduleIsOn = false;
 
     // Initialize server tick
-    public static Long initialTick;
-    public static String initialTime;
+    protected static Long initialTick;
+    protected static String initialTime;
 
     // Language to use if locale doesn't exist in the lang.yml = 'defaultLang'
-    public static String serverLang;
+    protected static String serverLang;
 
     // Config file keys
-    public static final String CF_VERSION = "version";
-    public static final String CF_DEFTIMEUNITS = "defTimeUnits";
-    public static final String CF_REFRESHRATE = "refreshRate";
+    protected static final String CF_VERSION = "version";
+    protected static final String CF_DEFTIMEUNITS = "defTimeUnits";
+    protected static final String CF_REFRESHRATE = "refreshRate";
     public static final String CF_WORLDSLIST = "worldsList";
-    public static final String CF_START = "start";
+    protected static final String CF_START = "start";
     public static final String CF_SPEED = "speed";
     public static final String CF_SLEEP = "sleep";
-    public static final String CF_SYNC = "sync";
-    public static final String CF_INITIALTICK = "initialTick";
-    public static final String CF_INITIALTICKNB = "initialTickNb";
-    public static final String CF_RESETONSTARTUP = "resetOnStartup";
-    public static final String CF_USEMYSQL = "useMySql";
-    public static final String CF_MYSQL = "mySql";
-    public static final String CF_HOST = "host";
-    public static final String CF_PORT = "port";
-    public static final String CF_SSL = "ssl";
-    public static final String CF_DBPREFIX = "dbPrefix";
-    public static final String CF_DATABASE = "database";
-    public static final String CF_TABLE = "table";
-    public static final String CF_USERNAME = "username";
-    public static final String CF_PASSWORD = "password";
-    public static final String CF_UPDATEMSGSRC = "updateMsgSrc";
-    public static final String CF_DEBUGMODE = "debugMode";
+    protected static final String CF_SYNC = "sync";
+    protected static final String CF_INITIALTICK = "initialTick";
+    protected static final String CF_INITIALTICKNB = "initialTickNb";
+    protected static final String CF_RESETONSTARTUP = "resetOnStartup";
+    protected static final String CF_USEMYSQL = "useMySql";
+    protected static final String CF_MYSQL = "mySql";
+    protected static final String CF_HOST = "host";
+    protected static final String CF_PORT = "port";
+    protected static final String CF_SSL = "ssl";
+    protected static final String CF_DBPREFIX = "dbPrefix";
+    protected static final String CF_DATABASE = "database";
+    protected static final String CF_TABLE = "table";
+    protected static final String CF_USERNAME = "username";
+    protected static final String CF_PASSWORD = "password";
+    protected static final String CF_UPDATEMSGSRC = "updateMsgSrc";
+    protected static final String CF_DEBUGMODE = "debugMode";
+    protected static final String CF_BUKKIT = "bukkit";
+    protected static final String CF_CURSE = "curse";
+    protected static final String CF_TWITCH = "twitch";
+    protected static final String CF_SPIGOT = "spigot";
+    protected static final String CF_PAPER = "paper";
+    protected static final String CF_GITHUB = "github";
 
     // Lang file keys
-    public static final String CF_USEMULTILANG = "useMultiLang";
-    public static final String CF_DEFAULTLANG = "defaultLang";
-    public static final String CF_lANGUAGES = "languages";
-    public static final String CF_DEFAULT = "default";
-    public static final String CF_PREFIX = "prefix";
-    public static final String CF_MSG = "msg";
-    public static final String CF_NOMSG = "noMsg";
-    public static final String CF_DAYPARTS = "dayparts";
-    public static final String CF_DAY = "day";
-    public static final String CF_DUSK = "dusk";
-    public static final String CF_NIGHT = "night";
-    public static final String CF_DAWN = "dawn";
+    protected static final String CF_USEMULTILANG = "useMultiLang";
+    protected static final String CF_DEFAULTLANG = "defaultLang";
+    protected static final String CF_lANGUAGES = "languages";
+    protected static final String CF_DEFAULT = "default";
+    protected static final String CF_PREFIX = "prefix";
+    protected static final String CF_MSG = "msg";
+    protected static final String CF_NOMSG = "noMsg";
+    protected static final String CF_DAYPARTS = "dayparts";
+    protected static final String CF_DAY = "day";
+    protected static final String CF_DUSK = "dusk";
+    protected static final String CF_NIGHT = "night";
+    protected static final String CF_DAWN = "dawn";
 
     /******************
      ***** METHOD *****
@@ -344,15 +395,15 @@ public class MainTM extends JavaPlugin {
 
 	    // #4. Activate the class with admins commands
 	    CommandExecutor timemanagerExecutor = new AdminCmdExecutor();
-	    getCommand(CMDTM).setExecutor(timemanagerExecutor);
+	    getCommand(CMD_TM).setExecutor(timemanagerExecutor);
 	    // Activate tab completion for admins commands
-	    getCommand(CMDTM).setTabCompleter(new CreateSentenceCommand());
+	    getCommand(CMD_TM).setTabCompleter(new CreateSentenceCommand());
 
 	    // #5. Activate the class with players commands
 	    CommandExecutor nowExecutor = new PlayerCmdExecutor();
-	    getCommand(CMDNOW).setExecutor(nowExecutor);
+	    getCommand(CMD_NOW).setExecutor(nowExecutor);
 	    // Activate tab completion for players commands
-	    getCommand(CMDNOW).setTabCompleter(new CreateSentenceCommand());
+	    getCommand(CMD_NOW).setTabCompleter(new CreateSentenceCommand());
 
 	    // #6. Listen to sleep events
 	    getServer().getPluginManager().registerEvents(new WorldSleepHandler(), this);
@@ -365,7 +416,9 @@ public class MainTM extends JavaPlugin {
 	    Bukkit.getLogger().info(prefixTM + " " + plEnabledMsg);
 
 	    // Check for an update
-	    UpdateHandler.checkForUpdate();
+	    if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)
+		UpdateHandler.delayCheckForUpdate();
+	    else Bukkit.getLogger().warning(prefixTM + " " + updateCommandsDisabledMsg + requiredMcVersionForUpdate.toString().replace(".0", "."));
 	}
     }
 
@@ -393,7 +446,7 @@ public class MainTM extends JavaPlugin {
     /**
      * 3. Custom wait
      */
-    public static void waitTime(Integer ticksToWait) {
+    protected static void waitTime(Integer ticksToWait) {
 	try {
 	    Thread.sleep(ticksToWait);
 	} catch (InterruptedException e) {

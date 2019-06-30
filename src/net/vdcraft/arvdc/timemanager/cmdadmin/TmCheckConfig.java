@@ -72,6 +72,18 @@ public class TmCheckConfig extends MainTM {
 	String sqlMsg = "The initial tick is saved in " + sqlOnOff + ".";
 	String colSqlMsg = "The initial tick is saved in §e" + sqlOnOff + "§r.";
 
+	// Update
+	String updateMsg = "The update message source can not be checked.";
+	String colUpdateMsg = "The update message source §ecan not be checked§r.";
+	if (!MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC).equals("")) {
+	    String updateSrc = "s" + MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC);
+	    updateMsg = "The update message will check on " + updateSrc + " server to find a new version.";
+	    colUpdateMsg = "The update message will check on §e" + updateSrc + "§r server to find a new version.";
+	} else {
+	    updateMsg = "The update message is disabled.";
+	    colUpdateMsg = "The update message is §edisabled§r.";
+	}
+
 	// Debug
 	String debugOnOff = "disabled";
 	if (MainTM.getInstance().getConfig().getString(CF_DEBUGMODE).equalsIgnoreCase("true")) {
@@ -112,9 +124,11 @@ public class TmCheckConfig extends MainTM {
 	    // Display the MySql status
 	    sender.sendMessage(prefixTMColor + " " + colSqlMsg);
 	    waitTime(1000);
-	    // Display the debugmode status
-	    sender.sendMessage(prefixTMColor + " " + colDebugMsg);
+	    // Display the update source status
+	    sender.sendMessage(prefixTMColor + " " + colUpdateMsg);
 	    waitTime(1000);
+	    // Display the debug mode status
+	    sender.sendMessage(prefixTMColor + " " + colDebugMsg);
 	} else {
 	    // Display the version of the plugin
 	    Bukkit.getLogger().info(prefixTM + " " + versionMsg);
@@ -134,7 +148,9 @@ public class TmCheckConfig extends MainTM {
 	    Bukkit.getLogger().info(prefixTM + " " + resetMsg);
 	    // Display the MySql status
 	    Bukkit.getLogger().info(prefixTM + " " + sqlMsg);
-	    // Display the debugmode status
+	    // Display the update source status
+	    Bukkit.getLogger().info(prefixTM + " " + updateMsg);
+	    // Display the debug mode status
 	    Bukkit.getLogger().info(prefixTM + " " + debugMsg);
 	}
 
