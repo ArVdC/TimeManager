@@ -20,7 +20,7 @@ public class TmSetInitialTick extends MainTM {
 	Long oldTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 	newTick = ValuesConverter.returnCorrectInitTicks(newTick);
 	Long sqlTick = null;
-	if (MainTM.getInstance().getConfig().getString(CF_USEMYSQL).equals("true")) {
+	if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("true")) {
 	    if (SqlHandler.openTheConnectionIfPossible(false)) {
 		sqlTick = SqlHandler.getServerTickSQL();
 	    }

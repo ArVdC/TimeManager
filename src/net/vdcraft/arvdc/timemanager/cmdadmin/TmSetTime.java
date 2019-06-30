@@ -38,8 +38,7 @@ public class TmSetTime extends MainTM {
 		Long startTickToSet = (ValuesConverter.returnCorrectTicks(oldStartNb + tickToSet - currentTime));
 		if (debugMode == true) {
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " SetTime >>> SetStart: Calculation of " + worldStartAtVar + " for world §e" + worldToSet + "§b:");
-		    Bukkit.getServer().getConsoleSender()
-			    .sendMessage(prefixDebugMode + " " + worldStartAtCalculation + " = §3" + oldStartNb + "§b + §8" + tickToSet + "§b - §c" + currentTime + "§b = §e" + (oldStartNb + tickToSet - currentTime) + "§b restrained to one day = §etick #" + startTickToSet);
+		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + worldStartAtCalculation + " = §3" + oldStartNb + "§b + §8" + tickToSet + "§b - §c" + currentTime + "§b = §e" + (oldStartNb + tickToSet - currentTime) + "§b restrained to one day = §etick #" + startTickToSet);
 		}
 		// Warning notifications, config.yml will be changed
 		if (MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + ".speed").contains("24")) {

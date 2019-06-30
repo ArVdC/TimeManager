@@ -10,9 +10,8 @@ public class McVersionHandler extends MainTM {
      * Get the version of the server and return only the type (Bukkit/Spigot/Paper)
      */
     public static String KeepTypeOfServer() {
-	if (debugMode == true)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverTypeQueryDebugMsg); // Console debug msg
-	String splitMarker = "ArVdC";
+	if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverTypeQueryDebugMsg); // Console debug msg
+	String splitMarker = "XxX";
 	String[] split1;
 	String split2;
 	String[] split3;
@@ -21,7 +20,7 @@ public class McVersionHandler extends MainTM {
 	if (completeServerVersion.contains("git-")) { // If the syntax is normal
 	    completeServerVersion = completeServerVersion.replace("git-", splitMarker);
 	    split1 = completeServerVersion.split(splitMarker);
-	    if (devMode == true) { // Dev msg start
+	    if (devMode) { // Dev msg start
 		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Version string was split into: §e" + split1.length + "§b part(s)."); // Console dev msg
 		Integer count = 0;
 		for (String split : split1) {
@@ -36,8 +35,7 @@ public class McVersionHandler extends MainTM {
 	} else { // In case 'git' string doesn't exist
 	    serverType = "other type of";
 	}
-	if (debugMode == true)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverTypeResultDebugMsg + " §e" + serverType + " §bserver.");
+	if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverTypeResultDebugMsg + " §e" + serverType + " §bserver.");
 	return serverType;
     }
 
@@ -45,9 +43,8 @@ public class McVersionHandler extends MainTM {
      * Get the version of the server and return only the MC decimal part
      */
     public static Double KeepDecimalOfMcVersion() {
-	if (debugMode == true)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverMcVersionQueryDebugMsg); // Console debug msg
-	String splitMarker = "ArVdC";
+	if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverMcVersionQueryDebugMsg); // Console debug msg
+	String splitMarker = "XxX";
 	String[] split1;
 	String split2;
 	String[] split3;

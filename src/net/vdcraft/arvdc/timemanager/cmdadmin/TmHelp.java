@@ -18,6 +18,8 @@ public class TmHelp extends MainTM {
     private static String checkconfigHelpMsg = "§6/tm checkconfig: §rAdmins and console can display a summary of the config.yml and lang.yml files.";
     private static String checkSqlHelpMsg = "§6/tm checksql: §rCheck the availability of the mySQL server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.";
     private static String checktimeHelpMsg = "§6/tm checktime [all|server|world]: §rAdmins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).";
+    private static String checkupdateHelpMsg = "§6/tm checkupdate [bukkit|spigot|github]: §rSearch if a newer version of the plugin exists on the chosen server. (MC 1.18.9+ only)";
+    private static String setupdateSrcHelpMsg = "§6/tm set updatesrc [bukkit|spigot|github]: §rDefine the source server for the update search. (MC 1.18.9+ only)";
     private static String setDebugHelpMsg = "§6/tm set debugmode [true|false]: §rSet true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.";
     private static String setInitialTickHelpMsg = "§6/tm set multilang [tick|HH:mm:ss]: Modify the server's initial tick.";
     private static String setMultilangHelpMsg = "§6/tm set multilang [true|false]: §rSet true or false to use an automatic translation for the §o/now §rcommand.";
@@ -39,80 +41,90 @@ public class TmHelp extends MainTM {
 	String specificCmdMsg = "";
 	// /tm help set [arg]
 	if (argsNb >= 3) {
-	    if (args[1].equalsIgnoreCase("set")) {
+	    if (args[1].equalsIgnoreCase(CMD_SET)) {
 		String subCmd = args[2].toLowerCase();
 		// /tm help set debugMode
-		if (subCmd.contains("debug")) {
+		if (subCmd.contains(CMD_SET_DEBUG)) {
 		    specificCmdMsg = setDebugHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set deflang
-		if (subCmd.contains("deflang")) {
+		if (subCmd.contains(CMD_SET_DEFLANG)) {
 		    specificCmdMsg = setDefLangHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set initialtick
-		else if (subCmd.contains("initialtick")) {
+		else if (subCmd.contains(CMD_SET_INITIALTICK)) {
 		    specificCmdMsg = setInitialTickHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set multilang
-		else if (subCmd.contains("multilang")) {
+		else if (subCmd.contains(CMD_SET_MULTILANG)) {
 		    specificCmdMsg = setMultilangHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set refreshrate
-		else if (subCmd.contains("refreshrate")) {
+		else if (subCmd.contains(CMD_SET_REFRESHRATE)) {
 		    specificCmdMsg = setRefreshRateHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set sleep
-		else if (subCmd.contains("sleep") || args[2].equalsIgnoreCase("sleepUntilDawn")) { // alias for v1.0 compatibility
+		else if (subCmd.contains(CMD_SET_SLEEP) || args[2].equalsIgnoreCase("sleepUntilDawn")) { // alias for v1.0 compatibility
 		    specificCmdMsg = setSleepHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set speed
-		else if (subCmd.contains("speed")) {
+		else if (subCmd.contains(CMD_SET_SPEED)) {
 		    specificCmdMsg = setSpeedHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set start
-		else if (subCmd.contains("start")) {
+		else if (subCmd.contains(CMD_SET_START)) {
 		    specificCmdMsg = setStartHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set sync
-		else if (subCmd.contains("sync") || args[2].contains("synchro")) {// alias for commodity
+		else if (subCmd.contains(CMD_SET_SYNC) || args[2].contains("synchro")) {// alias for commodity
 		    specificCmdMsg = setSyncHelpMsg; // Help msg (in case of 2 args)
 		}
 		// /tm help set time
-		else if (subCmd.contains("time")) {
+		else if (subCmd.contains(CMD_SET_TIME)) {
 		    specificCmdMsg = setTimeHelpMsg; // Help msg (in case of 2 args)
+		}
+		// /tm help set updateMsgSrc
+		else if ((subCmd.contains(CMD_SET_UPDATE))
+			&& (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+		    specificCmdMsg = setupdateSrcHelpMsg; // Help msg (in case of 2 args)
 		}
 	    }
 	} else if (argsNb >= 2) {
 	    String subCmd = args[1].toLowerCase();
+	    // /tm help checkconfig
+	    if (subCmd.contains(CMD_CHECKCONFIG)) {
+		specificCmdMsg = checkconfigHelpMsg; // Help msg (in case of 1 arg)
+	    }
+	    // /tm help checksql
+	    else if (subCmd.contains(CMD_CHECKSQL) || subCmd.contains("sqlcheck")) { // alias for v1.0 compatibility
+		specificCmdMsg = checkSqlHelpMsg; // Help msg (in case of 1 arg)
+	    }
+	    // /tm help checktime
+	    else if (subCmd.contains(CMD_CHECKTIME)) {
+		specificCmdMsg = checktimeHelpMsg; // Help msg (in case of 1 arg)
+	    }
+	    // /tm help checkupdate
+	    else if ((subCmd.contains(CMD_CHECKUPDATE))
+		    && (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+		specificCmdMsg = checkupdateHelpMsg; // Help msg (in case of 1 arg)
+	    }
 	    // /tm help reload
-	    if (subCmd.contains("reload")) {
+	    else if (subCmd.contains(CMD_RELOAD)) {
 		specificCmdMsg = reloadHelpMsg; // Help msg (in case of 1 arg)
 	    }
 	    // /tm help resync
-	    else if (subCmd.contains("resync")) {
+	    else if (subCmd.contains(CMD_RESYNC)) {
 		specificCmdMsg = resyncHelpMsg; // Help msg (in case of 1 arg)
 	    }
-	    // /tm help checktime
-	    else if (subCmd.contains("checkconfig")) {
-		specificCmdMsg = checkconfigHelpMsg; // Help msg (in case of 1 arg)
-	    }
-	    // /tm help checktime
-	    else if (subCmd.contains("checktime")) {
-		specificCmdMsg = checktimeHelpMsg; // Help msg (in case of 1 arg)
-	    }
-	    // /tm help checksql
-	    else if (subCmd.contains("checksql") || subCmd.contains("sqlcheck")) { // alias for v1.0 compatibility
-		specificCmdMsg = checkSqlHelpMsg; // Help msg (in case of 1 arg)
-	    }
 	    // /tm help set <null>
-	    else if (subCmd.contains("set")) {
+	    else if (subCmd.contains(CMD_SET)) {
 		specificCmdMsg = missingSetArgHelpMsg; // Help msg (in case of 1 arg)
 	    }
 	    // Maybe someone could forget the 'set' part, so think of its place
-	    else if (subCmd.contains("debug") || subCmd.contains("deflang") || subCmd.contains("multilang")
-		    || subCmd.contains("refreshrate") || subCmd.contains("sleep") || subCmd.contains("speed")
-		    || subCmd.contains("start") || subCmd.contains("sync") || subCmd.contains("time")) {
-		Bukkit.dispatchCommand(sender, "tm help set " + subCmd); // retry with correct arguments
+	    else if (subCmd.contains(CMD_SET_DEBUG) || subCmd.contains(CMD_SET_DEFLANG) || subCmd.contains(CMD_SET_MULTILANG)
+		    || subCmd.contains(CMD_SET_REFRESHRATE) || subCmd.contains(CMD_SET_SLEEP) || subCmd.contains(CMD_SET_SPEED)
+		    || subCmd.contains(CMD_SET_START) || subCmd.contains(CMD_SET_SYNC) || subCmd.contains(CMD_SET_TIME) || subCmd.contains(CMD_SET_UPDATE)) {
+		Bukkit.dispatchCommand(sender, CMD_TM + " " + CMD_HELP + " " + CMD_SET + " " + subCmd); // retry with correct arguments
 		return true;
 	    }
 	}

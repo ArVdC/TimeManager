@@ -9,7 +9,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class TmSetDebugMode extends MainTM {
 
     /**
-     * CMD /tm set multilang [true|false]
+     * CMD /tm set debugmode [true|false]
      */
     public static void cmdDebugMode(CommandSender sender, String onOff) {
 

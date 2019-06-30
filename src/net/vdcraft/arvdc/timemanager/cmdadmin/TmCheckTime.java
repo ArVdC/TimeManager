@@ -69,7 +69,7 @@ public class TmCheckTime extends MainTM {
 	String listedWorldStartTime = ValuesConverter.returnTimeFromTickValue(listedWorldStartTick);
 	String formattedUTC = ValuesConverter.formatAsUTC(listedWorldStartTick);
 	String listedWorldCurrentTime = ValuesConverter.returnTimeFromTickValue(listedWorldCurrentTick);
-	String listedWorldSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_START);
+	String listedWorldSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	String listedWorldSync = "";
 	String listedWorldSleep = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SLEEP);
 	if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC).equals("false"))

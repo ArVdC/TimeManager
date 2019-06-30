@@ -11,7 +11,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class UserMsgHandler extends MainTM {
-    
+
     /**
      * Define the language to use, in regards to the locale and parameters
      */

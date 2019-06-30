@@ -220,7 +220,7 @@ public class ValuesConverter extends MainTM {
      * Replace 'spaces' in a given list (returns a string)
      */
     public static List<String> replaceSpacesInList(List<String> l) {
-    // TODO Find a more appropriate solution for world names with spaces
+	// TODO Find a more appropriate solution for world names with spaces
 	for (String nameWithSpaces : l) {
 	    if (nameWithSpaces.contains(" ")) {
 		l.remove(nameWithSpaces);
@@ -245,7 +245,6 @@ public class ValuesConverter extends MainTM {
     /**
      * Get and convert a MC tick (1/2400) to HH:mm:ss (returns a string)
      */
-    // TODO add (Long ticks, CommandSender sender) to create a specific debug msg
     public static String returnTimeFromTickValue(Long ticks) {
 	Long newTicks = (ticks + 6000L) * 72L; // Adjust offset and go real time
 	newTicks = returnCorrectInitTicks(newTicks);
@@ -253,7 +252,9 @@ public class ValuesConverter extends MainTM {
 	Long s = newTicks % 60;
 	Long m = (newTicks / 60) % 60;
 	Long H = (newTicks / (60 * 60)) % 24;
-	return String.format("%02d:%02d:%02d", H, m, s);
+	String output = String.format("%02d:%02d:%02d", H, m, s);
+	if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(MainTM.prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output+ "§b\".");
+	return output;
     }
 
     /**
@@ -322,9 +323,7 @@ public class ValuesConverter extends MainTM {
 	    }
 	}
 	MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED, speedModifier);
-	if (debugMode == true)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + speedAdjustDebugMsg + " §e"
-		    + isSpeedRealtime + "§b to §e" + speedModifier + "§b for the world §e" + worldToSet + "§b."); // Console debug msg
+	if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + speedAdjustDebugMsg + " §e" + isSpeedRealtime + "§b to §e" + speedModifier + "§b for the world §e" + worldToSet + "§b."); // Console debug msg
     }
 
     /**
@@ -346,10 +345,7 @@ public class ValuesConverter extends MainTM {
 	    tickToSet = defStart;
 	}
 	MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_START, tickToSet);
-	if (debugMode == true)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + startAdjustDebugMsg + " §e"
-		    + timeToSet + "§b to §e" + tickToSet + "§b for the world §e" + worldToSet + "§b."); // Console debug
-	// msg
+	if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + startAdjustDebugMsg + " §e" + timeToSet + "§b to §e" + tickToSet + "§b for the world §e" + worldToSet + "§b."); // Console debug msg
     }
 
     /**
@@ -361,25 +357,13 @@ public class ValuesConverter extends MainTM {
 	Double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	if (currentSpeed == 24.0) { // new speed is 24
 	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, "true");
-	    if (debugMode == true)
-		Bukkit.getServer().getConsoleSender()
-			.sendMessage(prefixDebugMode + " " + syncAdjustTrueDebugMsg + " §e" + worldToSet + "§b."); // Console
-	    // debug
-	    // msg
+	    if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustTrueDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 	} else if (currentSpeed == 0.0) { // new speed is 0
 	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, "false");
-	    if (debugMode == true)
-		Bukkit.getServer().getConsoleSender()
-			.sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console
-	    // debug
-	    // msg
+	    if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 	} else if (oldSpeed == 24.0) { // new speed is anything else with previous value 24
 	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, "false");
-	    if (debugMode == true)
-		Bukkit.getServer().getConsoleSender()
-			.sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console
-	    // debug
-	    // msg
+	    if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 	} // else, don't do anything
     }
 
@@ -391,11 +375,7 @@ public class ValuesConverter extends MainTM {
 	String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
 	if (currentSpeed.equals("0.0") || currentSpeed.equals("24.0")) {
 	    MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SLEEP, "false");
-	    if (debugMode == true)
-		Bukkit.getServer().getConsoleSender()
-			.sendMessage(prefixDebugMode + " " + sleepAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console
-	    // debug
-	    // msg
+	    if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + sleepAdjustFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 	}
     }
 

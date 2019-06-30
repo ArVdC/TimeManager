@@ -26,14 +26,24 @@ public class CreateSentenceCommand implements TabCompleter {
      *****************/
 
     // List of admin sub-commands
-    List<String> tmCmdArgsList = Arrays.asList("checkconfig", "checksql", "checktime", "help", "reload", "resync", "set");
+    List<String> tmCmdArgsList() {
+	if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
+	else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
+    }
     // List of admin sub-commands having a 'help'
-    List<String> tmHelpArgsList = Arrays.asList("checkconfig", "checksql", "checktime", "reload", "resync", "set");
+    List<String> tmHelpArgsList() {
+	if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
+	else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
+    }    
+    // Arguments list for '/tm checkupdate'
+    List<String> tmCheckupdateArgsList = Arrays.asList(MainTM.CF_BUKKIT, MainTM.CF_CURSE, MainTM.CF_SPIGOT, MainTM.CF_GITHUB);
     // Arguments list for '/tm reload'
     List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang");
     // Arguments list for '/tm set'
-    List<String> tmSetArgsList = Arrays.asList("debugmode", "deflang", "initialtick", "multilang", "refreshrate", "sleep", "speed", "start", "sync", "time");
-
+    List<String> tmSetArgsList() {
+	if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE);
+	else return Arrays.asList(MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME);
+    }
     // Arguments list for '/tm set deflang
     List<String> tmDefLangArgsList() {
 	return LgFileHandler.setAnyListFromLang("languages");
@@ -91,43 +101,49 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> outputArgsList = new ArrayList<String>();
 	MainTM.getInstance();
 
-	if (command.getName().equalsIgnoreCase(MainTM.CMDTM)) {
+	if (command.getName().equalsIgnoreCase(MainTM.CMD_TM)) {
 
 	    // Always check argument's length BEFORE calling it
 
 	    if (args.length == 1) { // Command '/tm <...>'
-		for (String verif : tmCmdArgsList) {
+		for (String verif : tmCmdArgsList()) {
 		    if (verif.toLowerCase().startsWith(args[0].toLowerCase()))
 			outputArgsList.add(verif);
 		}
 	    } else if (args.length == 2) {
-		if (args[0].equalsIgnoreCase("checktime")) // Command '/tm checktime <...>'
+		if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKTIME)) // Command '/tm checktime <...>'
 		{
 		    for (String verif : tmWorldsTimeArgsList(sender)) {
 			if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
 			    outputArgsList.add(verif);
 		    }
-		} else if (args[0].equalsIgnoreCase("help")) // Command '/tm help <...>'
+		} else if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKUPDATE) && MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) // Command '/tm checkupdate <...>'
 		{
-		    for (String verif : tmHelpArgsList) {
+		    for (String verif : tmCheckupdateArgsList) {
 			if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
 			    outputArgsList.add(verif);
 		    }
-		} else if (args[0].equalsIgnoreCase("reload")) // Command '/tm reload <...>'
+		} else if (args[0].equalsIgnoreCase(MainTM.CMD_HELP)) // Command '/tm help <...>'
+		{
+		    for (String verif : tmHelpArgsList()) {
+			if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
+			    outputArgsList.add(verif);
+		    }
+		} else if (args[0].equalsIgnoreCase(MainTM.CMD_RELOAD)) // Command '/tm reload <...>'
 		{
 		    for (String verif : tmReloadArgsList) {
 			if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
 			    outputArgsList.add(verif);
 		    }
-		} else if (args[0].equalsIgnoreCase("resync")) // Command '/tm resync <...>'
+		} else if (args[0].equalsIgnoreCase(MainTM.CMD_RESYNC)) // Command '/tm resync <...>'
 		{
 		    for (String verif : tmWorldsArgsList(sender)) {
 			if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
 			    outputArgsList.add(verif);
 		    }
-		} else if (args[0].equalsIgnoreCase("set")) // Command '/tm set <...>'
+		} else if (args[0].equalsIgnoreCase(MainTM.CMD_SET)) // Command '/tm set <...>'
 		{
-		    for (String verif : tmSetArgsList) {
+		    for (String verif : tmSetArgsList()) {
 			if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
 			    outputArgsList.add(verif);
 		    }
@@ -135,72 +151,78 @@ public class CreateSentenceCommand implements TabCompleter {
 		    return null;
 		}
 	    } else if (args.length == 3) {
-		if (args[0].equalsIgnoreCase("set")) // Command /tm set <...> <...>
+		if (args[0].equalsIgnoreCase(MainTM.CMD_SET)) // Command /tm set <...> <...>
 		{
-		    if (args[1].equalsIgnoreCase("deflang")) // Command '/tm set deflang <...>'
+		    if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DEFLANG)) // Command '/tm set deflang <...>'
 		    {
 			for (String verif : tmDefLangArgsList()) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("debugmode")) // Command '/tm set debugmode <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DEBUG)) // Command '/tm set debugmode <...>'
 		    {
 			for (String verif : tmBooleanArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("initialtick")) // Command '/tm set initialtick <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_INITIALTICK)) // Command '/tm set initialtick <...>'
 		    {
 			for (String verif : tmInitialTickArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("multilang")) // Command '/tm set multilang <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_MULTILANG)) // Command '/tm set multilang <...>'
 		    {
 			for (String verif : tmBooleanArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("refreshrate")) // Command '/tm set refreshrate <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_REFRESHRATE)) // Command '/tm set refreshrate <...>'
 		    {
 			for (String verif : tmRefRateArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("sleep")) // Command '/tm set sleep <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)) // Command '/tm set sleep <...>'
 		    {
 			for (String verif : tmBooleanArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("speed")) // Command '/tm set speed <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)) // Command '/tm set speed <...>'
 		    {
 			for (String verif : tmSpeedArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("start")) // Command '/tm set start <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_START)) // Command '/tm set start <...>'
 		    {
 			for (String verif : tmTimeArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("sync")) // Command '/tm set sync <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)) // Command '/tm set sync <...>'
 		    {
 			for (String verif : tmBooleanArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
-		    } else if (args[1].equalsIgnoreCase("time")) // Command '/tm set time <...>'
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)) // Command '/tm set time <...>'
 		    {
 			for (String verif : tmTimeArgsList) {
 			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 				outputArgsList.add(verif);
 			}
+		    } else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE) && MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) // Command '/tm set update <...>'
+		    {
+			for (String verif : tmCheckupdateArgsList) {
+			    if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
+				outputArgsList.add(verif);
+			}
 		    }
-		} else if (args[0].equalsIgnoreCase("help") && args[1].equalsIgnoreCase("set")) // Command '/tm help set <...>'
+		} else if (args[0].equalsIgnoreCase(MainTM.CMD_HELP) && args[1].equalsIgnoreCase(MainTM.CMD_SET)) // Command '/tm help set <...>'
 		{
-		    for (String verif : tmSetArgsList) {
+		    for (String verif : tmSetArgsList()) {
 			if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 			    outputArgsList.add(verif);
 		    }
@@ -208,9 +230,9 @@ public class CreateSentenceCommand implements TabCompleter {
 		    return null;
 		}
 	    } else if (args.length == 4) {
-		if ((args[0].equalsIgnoreCase("set")) && (args[1].equalsIgnoreCase("speed")
-			|| args[1].equalsIgnoreCase("start") || args[1].equalsIgnoreCase("time")
-			|| args[1].equalsIgnoreCase("sleep") || args[1].equalsIgnoreCase("sync"))) // Command '/tm set <...> <...> <...>'
+		if ((args[0].equalsIgnoreCase(MainTM.CMD_SET)) && (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
+			|| args[1].equalsIgnoreCase(MainTM.CMD_SET_START) || args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)
+			|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) || args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC))) // Command '/tm set <...> <...> <...>'
 		{
 		    for (String verif : tmWorldsArgsList(sender)) {
 			if (verif.toLowerCase().startsWith(args[3].toLowerCase()))
@@ -222,7 +244,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	    } else {
 		return null;
 	    }
-	} else if (command.getName().equalsIgnoreCase(MainTM.CMDNOW)) {
+	} else if (command.getName().equalsIgnoreCase(MainTM.CMD_NOW)) {
 	    if (args.length == 1) { // Command '/now <...>'
 		if (sender.hasPermission("timemanager.now.units")) {
 		    for (String verif : nowUnitsArgsList) {

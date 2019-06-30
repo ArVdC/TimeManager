@@ -55,7 +55,7 @@ public class LgFileHandler extends MainTM {
 
 	// #3. In both case
 
-	// #A. Restore fixed values
+	// #A. Restore default values
 	MainTM.getInstance().langConf.set(CF_VERSION, MainTM.versionTM());
 	MainTM.getInstance().langConf.set(CF_lANGUAGES + "." + CF_DEFAULT + "." + CF_PREFIX, defaultPrefix);
 	MainTM.getInstance().langConf.set(CF_lANGUAGES + "." + CF_DEFAULT + "." + CF_MSG, defaultMsg);
@@ -85,8 +85,6 @@ public class LgFileHandler extends MainTM {
 	SaveLangYml();
 
 	// E. Notifications
-	if (debugMode == true)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + availableTranslationsDebugMsg + " §e" + setAnyListFromLang("languages")); // Console debug msg
 	if (firstOrRe.equalsIgnoreCase("first")) {
 	    Bukkit.getLogger().info(prefixTM + " " + lgVersionMsg + MainTM.getInstance().langConf.getString("version") + ".");
 	}
@@ -96,8 +94,7 @@ public class LgFileHandler extends MainTM {
     /**
      * Check 'defaultLang' integrity in lang.yml
      */
-    // Check if 'defaultLang' key exists in yaml, if not create it and set it to
-    // default
+    // Check if 'defaultLang' key exists in yaml, if not create it and set it to default
     private static void checkDefLang() {
 	if (!MainTM.getInstance().langConf.getKeys(false).contains(CF_DEFAULTLANG)) {
 	    restoreDefLang();
@@ -105,23 +102,31 @@ public class LgFileHandler extends MainTM {
 	    if (MainTM.getInstance().langConf.getString(CF_DEFAULTLANG).equals("")) {
 		MainTM.getInstance().langConf.set(CF_DEFAULTLANG, CF_DEFAULT);
 	    }
-	    // Then actualize 'defaultLang' from lang.yml file for checking
+	    // Then actualize the 'defaultLang' key from lang.yml file
 	    serverLang = new String(MainTM.getInstance().langConf.getString(CF_DEFAULTLANG));
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§r."); // Console log msg
-	    // Check if key 'defaultLang' correspond to an existing language who contains
-	    // every needed keys
+	    Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§b."); // Console log msg
+	    // Check if the 'defaultLang' value correspond to an existing language who contains every needed keys
+	    if (debugMode) {
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + availableTranslationsDebugMsg + " §e" + setAnyListFromLang(CF_lANGUAGES)); // Console debug msg
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Does it contain the choosen language \"§e" + serverLang + "§b\" ?"); // Console debug msg
+	    }
 	    if (!MainTM.getInstance().langConf.getConfigurationSection(CF_lANGUAGES).getKeys(false).contains(serverLang)) {
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " No, §b\"§e" + serverLang + "§b\" wasn't found. The §edefaultLang §bvalue will be reseted."); // Console debug msg
 		restoreDefLang();
 	    } else {
 		Set<String> langKeys = MainTM.getInstance().langConf.getConfigurationSection(CF_lANGUAGES + "." + serverLang).getKeys(true);
-		if (langKeys.contains(CF_PREFIX)
-			&& langKeys.contains(CF_MSG)
-			&& langKeys.contains(CF_NOMSG) && langKeys.contains(CF_DAYPARTS)
-			&& langKeys.contains(CF_DAY) && langKeys.contains(CF_DUSK)
-			&& langKeys.contains(CF_NIGHT) && langKeys.contains(CF_DAWN)) {
-		    // If every key exists, keep actual 'defLang'
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Yes, \"§e" + serverLang + "§b\" was found, now let's check for the subkeys :"); // Console debug msg
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Does §b\"§e" + langKeys + "§b\" contain every needed keys ?"); // Console debug msg
+		if ((langKeys.contains(CF_PREFIX))
+			&& (langKeys.contains(CF_MSG))
+			&& (langKeys.contains(CF_NOMSG)) && (langKeys.contains(CF_DAYPARTS))
+			&& (langKeys.contains(CF_DAYPARTS + "." + CF_DAY)) && (langKeys.contains(CF_DAYPARTS + "." + CF_DUSK))
+			&& (langKeys.contains(CF_DAYPARTS + "." + CF_NIGHT)) && (langKeys.contains(CF_DAYPARTS + "." + CF_DAWN))) {
+		    // If every key exists, keep actual 'defaultLang'
+		    if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Yes, all the subkeys where founded."); // Console debug msg
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangOkMsg); // Console log msg
 		} else {
+		    if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " No, some subkeys are missing."); // Console debug msg
 		    restoreDefLang();
 		}
 	    }
@@ -132,9 +137,7 @@ public class LgFileHandler extends MainTM {
      * Restore the 'default' translation in lang.yml
      */
     private static void restoreDefLang() {
-	if (McVersionHandler.KeepTypeOfServer().equalsIgnoreCase("bukkit") && decimalOfMcVersion < 12.0) {
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangResetMsg); // Console log msg
-	}
+	Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §e" + serverLang + "§r " + defLangResetMsg); // Console log msg
 	MainTM.getInstance().langConf.set(CF_DEFAULTLANG, CF_DEFAULT);
 	serverLang = new String(MainTM.getInstance().langConf.getString(CF_DEFAULTLANG));
     }

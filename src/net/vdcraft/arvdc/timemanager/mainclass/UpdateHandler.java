@@ -9,21 +9,17 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class UpdateHandler extends MainTM {
-
-    private static final String BUKKIT = "bukkit";
-    private static final String CURSE = "curse";
-    private static final String TWITCH = "twitch";
-    private static final String SPIGOT = "spigot";
-    private static final String PAPER = "paper";
-    private static final String GITHUB = "github";
 
     private static int bukkitProjectID = 272762;
     private static String bukkitURL = "https://servermods.forgesvc.net/servermods/files?projectIds=" + bukkitProjectID;
@@ -38,10 +34,6 @@ public class UpdateHandler extends MainTM {
     private static String githubURL = "https://api.github.com/repos/ArVdC/TimeManager/releases/latest";
     private static String githubDownloadURL = "https://github.com/ArVdC/TimeManager/releases";
 
-    private static String noUpdateMsg = "No update was found, you are running the latest version.";
-    private static String urlFailMsg = "No update was found, the provided URL was not recognized.";
-    private static String serverFailMsg = "No update was found, the server could not be reached.";
-
     private static String currentVersion = versionTM();
     private static String latestVersion = null;
     private static URL checkURL = null;
@@ -50,56 +42,76 @@ public class UpdateHandler extends MainTM {
     /**
      * Delayed update check on startup
      */
-    public static void checkForUpdate() {
+    public static void delayCheckForUpdate() {
 	BukkitScheduler firstSyncSheduler = MainTM.getInstance().getServer().getScheduler();
 	firstSyncSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 	    @Override
 	    public void run() {
+		CommandSender sender = Bukkit.getServer().getConsoleSender(); 
 		String updateSource = MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC).toLowerCase();
-		if (updateSource.equals(BUKKIT)) {
-		    if (getURL(bukkitURL)) {
-			downloadURL = bukkitDownloadURL;
-			checkUpdateOnBukkit();
-		    }
-		} else if (updateSource.equals(CURSE) || updateSource.equals(TWITCH)) {
-		    if (getURL(bukkitURL)) {
-			downloadURL = curseDownloadURL;
-			checkUpdateOnBukkit();
-		    }
-		} else if (updateSource.equals(SPIGOT) || updateSource.equals(PAPER)) {
-		    if (getURL(spigotURL)) {
-			downloadURL = spigotDownloadURL;
-			checkUpdateOnSpigot();
-		    }
-		} else if (updateSource.equals(GITHUB)) {
-		    if (getURL(githubURL)) {
-			downloadURL = githubDownloadURL;
-			checkUpdateOnGithub();
-		    }
-		} else {
-		    MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, "");
-		}
-		if (latestVersion != null) {
-		    MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, updateSource.replaceFirst(".", (updateSource.charAt(0) + "").toUpperCase()));
-		    latestVersion = replaceChars(latestVersion);
-		    currentVersion = replaceChars(currentVersion);
-		    if (latestVersion != null) {
-			displayUpdateMsg();
-		    }
-		}
-		MainTM.getInstance().saveConfig();
+		checkForUpdate(sender, updateSource, true);
 	    }
 	}, 80L);
     }
 
     /**
-     * Send the update message to the console
+     * Update check
      */
-    private static void displayUpdateMsg() {
+    public static void checkForUpdate(CommandSender sender, String updateSource, Boolean saveSource) {
+	if (updateSource.equals(CF_BUKKIT)) {
+	    if (getURL(bukkitURL)) {
+		downloadURL = bukkitDownloadURL;
+		checkUpdateOnBukkit();
+	    }
+	} else if (updateSource.equals(CF_CURSE) || updateSource.equals(CF_TWITCH)) {
+	    if (getURL(bukkitURL)) {
+		updateSource = CF_CURSE;
+		downloadURL = curseDownloadURL;
+		checkUpdateOnBukkit();
+	    }
+	} else if (updateSource.equals(CF_SPIGOT) || updateSource.equals(CF_PAPER)) {
+	    if (getURL(spigotURL)) {
+		updateSource = CF_SPIGOT;
+		downloadURL = spigotDownloadURL;
+		checkUpdateOnSpigot();
+	    }
+	} else if (updateSource.equals(CF_GITHUB)) {
+	    if (getURL(githubURL)) {
+		downloadURL = githubDownloadURL;
+		checkUpdateOnGithub();
+	    }
+	} else { // On reload, clear the configuration value if the updateSource is void or unknown, then save it to config.yml
+	    MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, "");
+	    MainTM.getInstance().saveConfig();
+	}
+	if (latestVersion != null) {
+	    latestVersion = replaceChars(latestVersion);
+	    currentVersion = replaceChars(currentVersion);
+	    displayUpdateMsg(sender);
+	}
+	if (saveSource == true) { // Format the configuration value, then save it to config.yml
+	    MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, updateSource.replaceFirst(".", (updateSource.charAt(0) + "").toUpperCase()));
+	    MainTM.getInstance().saveConfig(); 
+	}
+    }
+
+    /**
+     * Send the update message to the command sender
+     */
+    private static void displayUpdateMsg(CommandSender sender) {
 	if (compareVersions()) {
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Console log msg
-	} else
-	    Bukkit.getLogger().info(prefixTM + " " + noUpdateMsg); // Console log msg
+	    if (sender instanceof Player) {
+		sender.sendMessage(prefixTMColor + " An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Final player msg
+	    } else {
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Console log msg
+	    }
+	} else {
+	    if (sender instanceof Player) {
+		sender.sendMessage(prefixTMColor + " " + noUpdateMsg); // Final player msg
+	    } else {
+		Bukkit.getLogger().info(prefixTM + " " + noUpdateMsg); // Console log msg
+	    }
+	}
     }
 
     /**
@@ -155,15 +167,15 @@ public class UpdateHandler extends MainTM {
      */
     private static String replaceChars(String version) {
 	version = version.replace("dev", "d")
-	.replace("alpha", "a")
-	.replace("beta", "b")
-	.replace("d", "-0.")
-	.replace("a", "-1.")
-	.replace("b", "-2.")
-	.replace("rc", "-3.")
-	.replace("--", ".")
-	.replace("-", ".")
-	.replace("..", ".");
+		.replace("alpha", "a")
+		.replace("beta", "b")
+		.replace("d", "-0.")
+		.replace("a", "-1.")
+		.replace("b", "-2.")
+		.replace("rc", "-3.")
+		.replace("--", ".")
+		.replace("-", ".")
+		.replace("..", ".");
 	try {
 	    String versionIntTest = version.replace(".", "");
 	    Integer.parseInt(versionIntTest); // Prevent all other parse errors
@@ -179,22 +191,20 @@ public class UpdateHandler extends MainTM {
     private static void checkUpdateOnBukkit() {
 	URLConnection connec = null;
 	String response = null;
+	String splitMarker = "XxX";
 	try {
 	    connec = (URLConnection) checkURL.openConnection();
-	    // The response will be in a JSON format, so only reading one line is necessary.
 	    final BufferedReader reader = new BufferedReader(new InputStreamReader(connec.getInputStream()));
-	    response = reader.readLine();
+	    String[] list = reader.readLine().replace("]", "").replace("[", "").replace("},{", "}," + splitMarker + "{").split(splitMarker);
+	    response = list[list.length - 1];
+	    reader.close();
+	    JsonObject o = (JsonObject) new JsonParser().parse(response);
+	    JsonElement e = (JsonElement) o.get("name");
+	    latestVersion = e.toString().replaceFirst("TimeManager v", "").replace("\"", "");
+	    if (debugMode)
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + LatestVersionPart1DebugMsg + " " + CF_BUKKIT + "/" + CF_CURSE + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
 	} catch (IOException e) {
-	    Bukkit.getLogger().warning(prefixTM + " " + serverFailMsg); // Console warning msg
-	    return;
-	}
-	JSONArray array = (JSONArray) JSONValue.parse(response);
-	if (array.size() > 0) {
-	    JSONObject latest = (JSONObject) array.get(array.size() - 1); // Get the newest file's details
-	    String versionName = (String) latest.get("name");
-	    latestVersion = versionName.replace("TimeManager v", "");
-	    //if (debugMode)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Last version on Bukkit/Curseforge is " + latestVersion + " and you are running the " + versionTM()); // Console debug msg
+	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverFailMsg); // Console warning msg
 	}
     }
 
@@ -204,9 +214,9 @@ public class UpdateHandler extends MainTM {
     private static void checkUpdateOnSpigot() {
 	try {
 	    HttpURLConnection con = (HttpURLConnection) checkURL.openConnection();
-	    latestVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
+	    latestVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine().replace("\"", "");
 	    if (debugMode)
-		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Last version on Spigot is " + latestVersion + " and you are running the " + versionTM()); // Console debug msg
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + LatestVersionPart1DebugMsg + " " + CF_SPIGOT + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
 	} catch (Exception e) {
 	    Bukkit.getLogger().warning(prefixTM + " " + serverFailMsg); // Console warning msg
 	}
@@ -220,19 +230,17 @@ public class UpdateHandler extends MainTM {
 	String response = null;
 	try {
 	    connec = (URLConnection) checkURL.openConnection();
-	    // The response will be in a JSON format, so only reading one line is necessary.
 	    final BufferedReader reader = new BufferedReader(new InputStreamReader(connec.getInputStream()));
 	    response = reader.readLine();
+	    reader.close();
+	    JsonObject o = (JsonObject) new JsonParser().parse(response);
+	    JsonElement e = (JsonElement) o.get("tag_name");
+	    latestVersion = e.toString().replaceFirst("v", "").replace("\"", "");
+	    if (debugMode)
+		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + LatestVersionPart1DebugMsg + " " + CF_GITHUB + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
 	} catch (IOException e) {
 	    Bukkit.getLogger().warning(prefixTM + " " + serverFailMsg); // Console warning msg
-	    return;
 	}
-	JSONObject latest = (JSONObject) JSONValue.parse(response);
-	; // Get the newest file's details
-	String versionName = (String) latest.get("tag_name");
-	latestVersion = versionName.replaceFirst("v", "");
-	if (debugMode)
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Last version on Github is " + latestVersion + " and you are running the " + versionTM()); // Console debug msg
     }
 
     /**
