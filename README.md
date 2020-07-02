@@ -108,6 +108,7 @@ This command doesn't display time of Nether and the End worlds.
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
+* v1.2.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.1
 * v1.2.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.14.3
 * v1.1.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.13
 * v1.1.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.12.1

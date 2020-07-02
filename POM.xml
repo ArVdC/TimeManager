@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.vdcraft.arvdc</groupId>
 	<artifactId>TimeManager</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1-beta</version>
 	<packaging>jar</packaging>	
 	<build>
 		<finalName>TimeManager-${project.version}</finalName>
@@ -46,15 +46,20 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.14.3-R0.1-SNAPSHOT</version>
+			<version>1.16.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.43</version>
+			<version>8.0.16</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+    		<groupId>com.google.http-client</groupId>
+    		<artifactId>google-http-client-gson</artifactId>
+    		<version>1.23.0</version>
 		</dependency>
 	</dependencies>    
 	<issueManagement>

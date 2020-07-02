@@ -15,7 +15,6 @@ public class UserMsgHandler extends MainTM {
     /**
      * Define the language to use, in regards to the locale and parameters
      */
-    @SuppressWarnings({ "deprecation" })
     public static String setLangToUse(CommandSender sender) {
 	Player p = ((Player) sender);
 	// If option is disable, use default language
@@ -28,7 +27,7 @@ public class UserMsgHandler extends MainTM {
 	if (decimalOfMcVersion < 12.0) {
 	    // If the server is a Spigot
 	    if (McVersionHandler.KeepTypeOfServer().equalsIgnoreCase("spigot")) {
-		lowerCaseLocale = p.spigot().getLocale();
+		lowerCaseLocale = ((Player) p.spigot()).getLocale();
 		if (debugMode == true)
 		    Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
 	    } else {

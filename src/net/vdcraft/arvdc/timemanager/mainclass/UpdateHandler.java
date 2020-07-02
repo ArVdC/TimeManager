@@ -89,9 +89,10 @@ public class UpdateHandler extends MainTM {
 	    currentVersion = replaceChars(currentVersion);
 	    displayUpdateMsg(sender);
 	}
-	if (saveSource == true) { // Format the configuration value, then save it to config.yml
-	    MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, updateSource.replaceFirst(".", (updateSource.charAt(0) + "").toUpperCase()));
-	    MainTM.getInstance().saveConfig(); 
+	if ((saveSource == true) && (updateSource.length() > 0)) { // Format the configuration value, then save it to config.yml
+	    String newSource = updateSource.replaceFirst(".", (updateSource.charAt(0) + "").toUpperCase());
+	    MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, newSource);
+	    MainTM.getInstance().saveConfig();
 	}
     }
 

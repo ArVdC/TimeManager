@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 import org.bukkit.Bukkit;
 
-import com.mysql.jdbc.PreparedStatement;
+import java.sql.PreparedStatement;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
