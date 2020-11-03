@@ -1,6 +1,7 @@
 package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -13,44 +14,46 @@ public class TmSetSync extends MainTM {
     /**
      * CMD /tm set sync [boolean] [world]
      */
-    public static void cmdSetSync(CommandSender sender, String syncOrNo, String worldToSet) {
+    public static void cmdSetSync(CommandSender sender, String syncOrNo, String world) {
 	// If using a world name in several parts
 	if (sender instanceof Player) {
-	    worldToSet = ValuesConverter.restoreSpacesInString(worldToSet);
+	    world = ValuesConverter.restoreSpacesInString(world);
 	}
 
 	// Modify all worlds
-	if (worldToSet.equalsIgnoreCase("all")) {
+	if (world.equalsIgnoreCase("all")) {
 	    // Relaunch this for each world
 	    for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 		cmdSetSync(sender, syncOrNo, listedWorld);
 	    }
 	}
 	// Else, if the string argument is a listed world, modify a single world
-	else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(worldToSet)) {
+	else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 	    // Avoid impossible values
-	    String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SPEED);
-	    if ((syncOrNo.equals("true") && currentSpeed.equals("0.0")) || (syncOrNo.equals("false") && currentSpeed.equals("24.0"))) {
+	    World w = Bukkit.getWorld(world); //TODO ???
+	    long t = w.getTime(); //TODO ???
+	    String speed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t)); //TODO ???
+	    if ((syncOrNo.equals("true") && speed.equals("0.0")) || (syncOrNo.equals("false") && speed.equals("24.0"))) {
 		// Notifications
-		Bukkit.getLogger().info(prefixTM + " " + worldSyncNoChgMsg + " " + worldToSet + "."); // Console final msg (always)
+		Bukkit.getLogger().info(prefixTM + " " + worldSyncNoChgMsg + " " + world + "."); // Console final msg (always)
 		if (sender instanceof Player) {
-		    sender.sendMessage(prefixTMColor + " " + worldSyncNoChgMsg + " §e" + worldToSet + "§r."); // Player final msg (in case)
+		    sender.sendMessage(prefixTMColor + " " + worldSyncNoChgMsg + " §e" + world + "§r."); // Player final msg (in case)
 		}
 	    } else {
 		// Modify the value
-		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC, syncOrNo);
+		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, syncOrNo);
 		// If sync is true, make some changes
 		if (syncOrNo.equals("true")) {
 		    // Start synchronize 1.0 speed worlds
-		    if (currentSpeed.equals("1.0") && increaseScheduleIsOn == false) {
+		    if (speed.equals("1.0") && increaseScheduleIsOn == false) {
 			WorldSpeedHandler.WorldIncreaseSpeed();
 		    }
 		    // Avoid players to sleep in a synchronized world
-		    if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SLEEP).equals("true")) {
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + worldToSet + "." + CF_SLEEP, "false");
-			Bukkit.getLogger().info(prefixTM + " The world " + worldToSet + " " + worldSyncSleepChgMsg); // Console warn msg (always)
+		    if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SLEEP).equals("true")) {
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, "false");
+			Bukkit.getLogger().info(prefixTM + " The world " + world + " " + worldSyncSleepChgMsg); // Console warn msg (always)
 			if (sender instanceof Player) {
-			    sender.sendMessage(prefixTMColor + " The world §e" + worldToSet + "§r " + worldSyncSleepChgMsg); // Player warn msg (in case)
+			    sender.sendMessage(prefixTMColor + " The world §e" + world + "§r " + worldSyncSleepChgMsg); // Player warn msg (in case)
 			}
 		    }
 		}
@@ -58,14 +61,14 @@ public class TmSetSync extends MainTM {
 		MainTM.getInstance().saveConfig();
 		// Notifications
 		if (syncOrNo.equals("true")) {
-		    Bukkit.getLogger().info(prefixTM + " " + worldSyncTrueChgMsg + " " + worldToSet + "."); // Console final msg (always)
+		    Bukkit.getLogger().info(prefixTM + " " + worldSyncTrueChgMsg + " " + world + "."); // Console final msg (always)
 		    if (sender instanceof Player) {
-			sender.sendMessage(prefixTMColor + " " + worldSyncTrueChgMsg + " §e" + worldToSet + "§r."); // Player final msg (in case)
+			sender.sendMessage(prefixTMColor + " " + worldSyncTrueChgMsg + " §e" + world + "§r."); // Player final msg (in case)
 		    }
 		} else if (syncOrNo.equals("false")) {
-		    Bukkit.getLogger().info(prefixTM + " " + worldSyncFalseChgMsg + " " + worldToSet + "."); // Console final msg (always)
+		    Bukkit.getLogger().info(prefixTM + " " + worldSyncFalseChgMsg + " " + world + "."); // Console final msg (always)
 		    if (sender instanceof Player) {
-			sender.sendMessage(prefixTMColor + " " + worldSyncFalseChgMsg + " §e" + worldToSet + "§r."); // Player final msg (in case)
+			sender.sendMessage(prefixTMColor + " " + worldSyncFalseChgMsg + " §e" + world + "§r."); // Player final msg (in case)
 		    }
 		}
 	    }
