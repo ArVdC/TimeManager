@@ -1,6 +1,6 @@
 name: TimeManager
-version: 1.2.1
-api-version: 1.14
+version: 1.3.0
+api-version: 1.16
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdc.serveminecraft.net
@@ -42,6 +42,8 @@ commands:
             /<command> set refreshrate [tick]
             /<command> set sleep [true|false] [all|world]
             /<command> set speed [multiplier] [all|world]
+            /<command> set speedDay [multiplier] [all|world]
+            /<command> set speedNight [multiplier] [all|world]
             /<command> set start [tick|daypart|HH:mm] [all|world]
             /<command> set sync [true|false] [all|world]
             /<command> set time [tick|daypart|HH:mm] [all|world]

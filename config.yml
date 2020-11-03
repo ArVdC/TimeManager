@@ -16,10 +16,11 @@
 #  The list of available worlds will be refreshed on server startup. Nether and Ender worlds will be erased if present.
 #   *start*
 #    Define the time at server startup for the specified world. By default, all worlds will start at tick #0/24000. The tab completion also provides presets like "day", "night", etc. 
-#   *speed*
+#   *daySpeed & nightSpeed*
 #    Define if the time will be locked, accelerated, decelerated or normally spend for the specified world.
 #    Use 0.0 to freeze time, numbers from 0.1 to 0.9 to slow time, 1.0 to get normal speed and numbers from 1.1 to 10.0 to speedup time.
 #    Set this value to '24.0' or 'realtime' to make the world time match the real speed time.
+#    From 0.0 to 10.0, the values of daySpeed and nightSpeed can be different from each other.
 #   *sleep*
 #    Since sleeping at night make important time changes, it is a priority setting to handle if you want keep sync between maps. Turning this 'false' will cancel sleeping events but still allows the player to enter in a bed and save his position.
 #   *sync*

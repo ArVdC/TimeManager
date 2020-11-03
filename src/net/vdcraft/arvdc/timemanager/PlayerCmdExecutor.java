@@ -88,7 +88,7 @@ public class PlayerCmdExecutor implements CommandExecutor {
 	Long timeInTicks = worldToDisplay.getTime();
 
 	// #7. Define the part of the days in regard of the tick value
-	String dayPartToDisplay = ValuesConverter.SetDayPartToDisplay(timeInTicks);
+	String dayPartToDisplay = ValuesConverter.getDayPartToDisplay(timeInTicks);
 
 	// #8. Check if the first arg is 'hours' or 'ticks' to set the time format
 	String timeToDisplay = "tick #" + timeInTicks.toString(); // Format time to display
