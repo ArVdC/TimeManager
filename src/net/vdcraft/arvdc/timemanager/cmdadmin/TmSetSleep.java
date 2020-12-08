@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 
 public class TmSetSleep extends MainTM {
 
@@ -31,7 +30,7 @@ public class TmSetSleep extends MainTM {
 			// Avoid impossible values
 			World w = Bukkit.getWorld(world);
 			long t = w.getTime();
-			String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t)); // TODO ???
+			String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 			if ((sleepOrNo.equals("true") && (currentSpeed.equals("0.0") || currentSpeed.equals("24.0")))) {
 				// Notifications
 				Bukkit.getLogger().info(prefixTM + " " + worldSleepNoChgMsg + " " + world + "."); // Console final msg (always)

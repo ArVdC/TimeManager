@@ -24,7 +24,7 @@ public class WorldSleepHandler implements Listener {
 		World w = e.getBed().getWorld();
 		String world = w.getName();
 		long t = w.getTime();
-		double speedModifier = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t)); //TODO ???
+		double speedModifier = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 		// Ignore: Nether and Ender worlds AND worlds with a fixed time (speed 0 or 24)
 		if (!(world.contains("_nether")) && !(world.contains("_the_end")) && !(speedModifier == 24.00) && !(speedModifier == 0)) {
 			// Delay the doDaylightCycle gamerule change
@@ -53,12 +53,8 @@ public class WorldSleepHandler implements Listener {
 						}
 						// Do something only if the value contradicts the current settings
 						if ((isSleepPermited.equals(false) && speedModifier >= 1.0) || (isSleepPermited.equals(true) && speedModifier < 1.0)) {
-
-							if (MainTM.decimalOfMcVersion < 13.0) {
-								w.setGameRuleValue("doDaylightCycle", isSleepPermited.toString());
-							} else {
-								w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, isSleepPermited);
-							}
+							if (MainTM.decimalOfMcVersion < 13.0) w.setGameRuleValue("doDaylightCycle", isSleepPermited.toString());
+							else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, isSleepPermited);
 							restoreDayCycle(p, w.getName());
 						}
 					}

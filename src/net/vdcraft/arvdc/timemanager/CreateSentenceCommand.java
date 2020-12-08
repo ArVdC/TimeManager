@@ -189,7 +189,7 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED) ||args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED) ||args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)) // Commands '/tm set speed <...>' '/tm set speedDay <...>' '/tm set speedNight <...>'
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)) // Commands '/tm set speed <...>' '/tm set speedDay <...>' '/tm set speedNight <...>'
 					{
 						for (String verif : tmSpeedArgsList) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
