@@ -34,9 +34,9 @@ public class TmSetSpeed extends MainTM {
 		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 			// Get the old speed value of this world to correctly resynchronize 24h worlds
 			long t = Bukkit.getWorld(world).getTime();
-			Double oldSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t));
+			Double oldSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 			// Modify the speed in the config    
-			if (when.equalsIgnoreCase(CMD_SET_SPEED)) {
+			if (when.equalsIgnoreCase(CMD_SET_SPEED) || speed == 24.0) {
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);
 			} else if (when.equalsIgnoreCase(CMD_SET_D_SPEED)) {
@@ -57,15 +57,15 @@ public class TmSetSpeed extends MainTM {
 			// Launch the good scheduler if is inactive
 			if (speed == realtimeSpeed) {
 				if (realScheduleIsOn == false) {
-					WorldSpeedHandler.WorldRealSpeed();
+					WorldSpeedHandler.worldRealSpeed();
 				}
 			} else if (speed >= 1.0 && speed <= speedMax) {
 				if (increaseScheduleIsOn == false) {
-					WorldSpeedHandler.WorldIncreaseSpeed();
+					WorldSpeedHandler.worldIncreaseSpeed();
 				}
 			} else if (speed > 0.0 && speed < 1.0) {
 				if (decreaseScheduleIsOn == false) {
-					WorldSpeedHandler.WorldDecreaseSpeed();
+					WorldSpeedHandler.worldDecreaseSpeed();
 				}
 			}
 			// Notifications

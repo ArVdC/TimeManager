@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
 
 public class TmSetStart extends MainTM {
@@ -28,9 +27,9 @@ public class TmSetStart extends MainTM {
 		// Else, if the string argument is a listed world, modify a single world
 		} else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 			// Adapt wrong values
-			World w = Bukkit.getWorld(world); //TODO ???
-			long t = w.getTime(); //TODO ???
-			Double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t)); //TODO ???
+			World w = Bukkit.getWorld(world);
+			long t = w.getTime();
+			double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 			if (currentSpeed == 24.00) {
 				tick = ValuesConverter.returnCorrectUTC(tick) * 1000;
 			} else {
@@ -40,7 +39,7 @@ public class TmSetStart extends MainTM {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, tick);
 			MainTM.getInstance().saveConfig();
 			// Resync this world
-			WorldSyncHandler.WorldSyncRe(sender, world);
+			WorldSyncHandler.worldResync(sender, world);
 			// Notifications
 			Bukkit.getLogger().info(prefixTM + " " + worldStartChgMsg1 + " " + world + " " + worldStartChgMsg2); // Console final msg (always)
 			if (sender instanceof Player) {

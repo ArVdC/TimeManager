@@ -65,14 +65,14 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String getDayPartToDisplay(long tick) {
 		String wichPart = new String();
-		if (tick >= dayStart && tick < duskStart) {
+		if (tick >= dawnStart && tick < dayStart) {
+			wichPart = "dawn";
+		} else if (tick >= dayStart && tick < duskStart) {
 			wichPart = "day";
 		} else if (tick >= duskStart && tick < nightStart) {
 			wichPart = "dusk";
-		} else if (tick >= nightStart && tick < dawnStart) {
+		} else if (tick >= nightStart && tick < mcDayEnd) {
 			wichPart = "night";
-		} else if (tick >= dawnStart && tick < dayEnd) {
-			wichPart = "dawn";
 		} else {
 			return null;
 		}
@@ -85,17 +85,17 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String returnTickFromStringValue(String tick) {
 		if (tick.equalsIgnoreCase("day")) {
-			tick = "0";
+			tick = "1000";
 		} else if (tick.equalsIgnoreCase("midday") || tick.equalsIgnoreCase("noon")) {
 			tick = "6000";
 		} else if (tick.equalsIgnoreCase("dusk") || tick.equalsIgnoreCase("sunset") || tick.equalsIgnoreCase("evening")) {
-			tick = "11500";
+			tick = "1200";
 		} else if (tick.equalsIgnoreCase("night")) {
 			tick = "13000";
 		} else if (tick.equalsIgnoreCase("midnight")) {
 			tick = "18000";
 		} else if (tick.equalsIgnoreCase("dawn") || tick.equalsIgnoreCase("sunrise") || tick.equalsIgnoreCase("morning")) {
-			tick = "22500";
+			tick = "23000";
 		}
 		return tick;
 	}
@@ -279,6 +279,19 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
+	 *  Get the correct speed value's name (daySpeed or nightSpeed) for a given tick (returns a string)
+	 */
+	public static String wichSpeedParam(long tick) {
+		String speedParam;
+		if (ValuesConverter.getDayPartToDisplay(tick).equalsIgnoreCase("day") || ValuesConverter.getDayPartToDisplay(tick).equalsIgnoreCase("dusk")) {	    
+			speedParam = CF_D_SPEED;	
+		} else {
+			speedParam = CF_N_SPEED;
+		}
+		return speedParam;
+	}
+
+	/**
 	 * Restrain refresh rate (modifies the configuration)
 	 */
 	public static void restrainRate() {
@@ -312,7 +325,7 @@ public class ValuesConverter extends MainTM {
 	public static void restrainStart(String world) {
 		long t = Bukkit.getWorld(world).getTime();
 		String time = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_START);
-		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t));
+		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
 		time = ValuesConverter.returnTickFromStringValue(time); // Check if value is a part of the day
 		long tick;
 		try { // Check if value is a long
@@ -382,7 +395,7 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static void restrainSync(String world, Double oldSpeed) {
 		long t = Bukkit.getWorld(world).getTime();
-		Double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t));
+		Double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
 		if (currentSpeed == 24.0) { // new speed is 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "true");
 			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustTrueDebugMsg + " §e" + world + "§b."); // Console debug msg
@@ -401,7 +414,7 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static void restrainSleep(String world) {
 		long t = Bukkit.getWorld(world).getTime();
-		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t));
+		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
 		if (currentSpeed.equalsIgnoreCase("0.0") || currentSpeed.contains("24")) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, "false");
 			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
