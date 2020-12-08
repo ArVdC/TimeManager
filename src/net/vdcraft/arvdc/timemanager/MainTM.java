@@ -48,8 +48,8 @@ public class MainTM extends JavaPlugin {
 	public static Double decimalOfMcVersion;
 
 	// Enable/Disable debugging
-	public static Boolean debugMode = false; // Final user accessible debug msgs
-	public static Boolean devMode = false; // Displays more verbose debug msgs
+	public static Boolean debugMode = true; // Displays user accessible debug msgs
+	public static Boolean devMode = true; // Displays more verbose debug msgs
 	public static Boolean timerMode = false; // Displays all timers calculations (= ultra-verbose mode)
 
 	// Commands names
@@ -307,11 +307,11 @@ public class MainTM extends JavaPlugin {
 	protected static Double realtimeSpeed = 24.0;
 
 	// DayParts in ticks
-	protected static Integer dayStart = 0;
-	protected static Integer duskStart = 11500;
+	protected static Integer dawnStart = 0;
+	protected static Integer dayStart = 1000;
+	protected static Integer duskStart = 12000;
 	protected static Integer nightStart = 13000;
-	protected static Integer dawnStart = 22500;
-	protected static Integer dayEnd = 24000;
+	protected static Integer mcDayEnd = 24000;
 
 	// Check if schedule is already active
 	protected static Boolean increaseScheduleIsOn = false;
@@ -426,7 +426,7 @@ public class MainTM extends JavaPlugin {
 
 			// #8. Synchronize worlds and create scheduled task for faking the time
 			// stretch/expand
-			WorldSyncHandler.WorldSyncFirst();
+			WorldSyncHandler.firstSync();
 
 			// #9. Confirm activation in console
 			Bukkit.getLogger().info(prefixTM + " " + plEnabledMsg);

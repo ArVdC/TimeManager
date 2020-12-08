@@ -18,10 +18,10 @@ public class LgFileHandler extends MainTM {
     private static String defaultPrefix = "&8&l[&6&lTime Manager&8&l]";
     private static String defaultMsg = "Please ask an admin to properly define the default language in the lang.yml file then reload this plugin.";
     private static String defaultNoMsg = "There is no day-night cycle in the Nether and the End dimensions.";
-    private static String defaultDay = "begin at 6.00 am or tick #" + dayStart;
-    private static String defaultDusk = "begin at 5.30 pm or tick #" + duskStart;
+    private static String defaultDay = "begin at 7.00 am or tick #" + dayStart;
+    private static String defaultDusk = "begin at 6.00 pm or tick #" + duskStart;
     private static String defaultNight = "begin at 7.00 pm or tick #" + nightStart;
-    private static String defaultDawn = "begin at 4.30 am or tick #" + dawnStart;
+    private static String defaultDawn = "begin at 6.00 am or tick #" + dawnStart;
 
     /**
      * Activate or reload the language file
@@ -104,7 +104,7 @@ public class LgFileHandler extends MainTM {
 	    }
 	    // Then actualize the 'defaultLang' key from lang.yml file
 	    serverLang = new String(MainTM.getInstance().langConf.getString(CF_DEFAULTLANG));
-	    Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§b."); // Console log msg
+	    Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " " + defLangCheckMsg + " §e" + serverLang + "§r."); // Console log msg
 	    // Check if the 'defaultLang' value correspond to an existing language who contains every needed keys
 	    if (debugMode) {
 		Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + availableTranslationsDebugMsg + " §e" + setAnyListFromLang(CF_lANGUAGES)); // Console debug msg

@@ -23,7 +23,7 @@ public class WorldDoDaylightCycleHandler extends MainTM {
 		} else {
 			World w = Bukkit.getWorld(worldToSet);
 			long t = w.getTime();
-			double speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST +"." + worldToSet + "." + WorldSpeedHandler.wichSpeedParam(t)); //TODO ???
+			double speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST +"." + worldToSet + "." + ValuesConverter.wichSpeedParam(t));
 			if (speedModifier == realtimeSpeed || speedModifier < 1.0) {
 				if (decimalOfMcVersion < 13.0) {
 					w.setGameRuleValue("doDaylightCycle", "false");

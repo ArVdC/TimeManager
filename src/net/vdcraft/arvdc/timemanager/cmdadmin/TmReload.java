@@ -27,13 +27,13 @@ public class TmReload extends MainTM {
 			TmResync.cmdResync(Bukkit.getServer().getConsoleSender(), "all");
 			// Launch scheduler if is inactive
 			if (increaseScheduleIsOn == false) {
-				WorldSpeedHandler.WorldIncreaseSpeed();
+				WorldSpeedHandler.worldIncreaseSpeed();
 			}
 			if (decreaseScheduleIsOn == false) {
-				WorldSpeedHandler.WorldDecreaseSpeed();
+				WorldSpeedHandler.worldDecreaseSpeed();
 			}
 			if (realScheduleIsOn == false) {
-				WorldSpeedHandler.WorldIncreaseSpeed();
+				WorldSpeedHandler.worldIncreaseSpeed();
 			}
 			// 'config.yml is reloaded' notification
 			if (sender instanceof Player) {

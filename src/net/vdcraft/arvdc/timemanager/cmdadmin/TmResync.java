@@ -27,7 +27,7 @@ public class TmResync extends MainTM {
 		// Else, if the string argument is a listed world, re-synchronize a single world
 		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(worldToSet)) {
 			// Do the synchronization
-			WorldSyncHandler.WorldSyncRe(sender, worldToSet);
+			WorldSyncHandler.worldResync(sender, worldToSet);
 		}
 		// Else, return an error and display help message
 		else {

@@ -25,10 +25,10 @@ languages:
     msg: Please ask an admin to properly define the default language in the lang.yml file then reload the plugin.
     noMsg: There is no day-night cycle in the Nether and the End dimensions.
     dayparts:
-      day: begin at 6.00 am or tick #0
-      dusk: begin at 5.30 pm or tick #11500
+      dawn: begin at 6.00 am or tick #0
+      day: begin at 7.00 am or tick #1000
+      dusk: begin at 6.00 pm or tick #12000
       night: begin at 7.00 pm or tick #13000
-      dawn: begin at 4.30 am or tick #22500
   de_DE:
     prefix: '&e&l[Stunde]'
     msg: Es &e{time}&r in der welt {targetWorld}, das ist {dayPart}.

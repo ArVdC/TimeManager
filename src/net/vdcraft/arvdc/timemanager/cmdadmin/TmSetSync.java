@@ -30,9 +30,9 @@ public class TmSetSync extends MainTM {
 	// Else, if the string argument is a listed world, modify a single world
 	else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 	    // Avoid impossible values
-	    World w = Bukkit.getWorld(world); //TODO ???
-	    long t = w.getTime(); //TODO ???
-	    String speed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + WorldSpeedHandler.wichSpeedParam(t)); //TODO ???
+	    World w = Bukkit.getWorld(world);
+	    long t = w.getTime();
+	    String speed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 	    if ((syncOrNo.equals("true") && speed.equals("0.0")) || (syncOrNo.equals("false") && speed.equals("24.0"))) {
 		// Notifications
 		Bukkit.getLogger().info(prefixTM + " " + worldSyncNoChgMsg + " " + world + "."); // Console final msg (always)
@@ -46,7 +46,7 @@ public class TmSetSync extends MainTM {
 		if (syncOrNo.equals("true")) {
 		    // Start synchronize 1.0 speed worlds
 		    if (speed.equals("1.0") && increaseScheduleIsOn == false) {
-			WorldSpeedHandler.WorldIncreaseSpeed();
+			WorldSpeedHandler.worldIncreaseSpeed();
 		    }
 		    // Avoid players to sleep in a synchronized world
 		    if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SLEEP).equals("true")) {

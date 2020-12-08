@@ -113,6 +113,7 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
+* v1.3.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
 * v1.3.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
 * v1.2.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.1
 * v1.2.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.14.3
@@ -128,6 +129,8 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 * ~~Command: Create a '/tm set initialtick' command.~~
 * ~~Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.~~
 * ~~Command: Make an update message and associated commands.~~
-* ~~Day & Night : A different speed multiplier for the day and the night is still possible, but it will be more difficult than expected because of the 'sync' option. And perhaps it's pretty useless because the '/ tm set speed' command could be easily started automatically at morning and evening.~~
+* ~~Day & Night : Make a different speed multiplier for the day and the night.~~
+* Sleep: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
+* Schedule: Create a schedule allowing commands to be executed at specific times. 
 * Tab completer: Try to improve the current hack that manages the spaces in worlds name.
