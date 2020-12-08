@@ -48,8 +48,8 @@ public class MainTM extends JavaPlugin {
 	public static Double decimalOfMcVersion;
 
 	// Enable/Disable debugging
-	public static Boolean debugMode = true; // Displays user accessible debug msgs
-	public static Boolean devMode = true; // Displays more verbose debug msgs
+	public static Boolean debugMode = false; // Displays user accessible debug msgs
+	public static Boolean devMode = false; // Displays more verbose debug msgs
 	public static Boolean timerMode = false; // Displays all timers calculations (= ultra-verbose mode)
 
 	// Commands names
