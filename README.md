@@ -57,10 +57,9 @@ This command doesn't display time of Nether and the End worlds.
 
 **/tm set sleep \[true|false] \[all|world]** Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is frozen or in real time who will be necessary false.
 
-**/tm set speed \[multiplier] \[always|day|night] \[all|world]** The decimal number argument will multiply the world(s) speed. Use _0.0_ to freeze time, numbers from _0.1_ to _0.9_ to slow time, 1.0 to get normal speed and numbers from _1.1_ to _10.0_ to speed up time. Set this value to _24.0_ or _realtime_ to make the world time match the real speed time.
+**/tm set speed \[multiplier] \[all|world]** The decimal number argument will multiply the world(s) speed. Use _0.0_ to freeze time, numbers from _0.1_ to _0.9_ to slow time, 1.0 to get normal speed and numbers from _1.1_ to _10.0_ to speed up time. Set this value to _24.0_ or _realtime_ to make the world time match the real speed time.
 
-**/tm set speedDay \[multiplier] \[all|world]** 
-**/tm set speedNight \[multiplier] \[all|world]** 
+**/tm set speedDay \[multiplier] \[all|world] & /tm set speedNight \[multiplier] \[all|world]** 
 From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different from each other.
 
 **/tm set start \[ticks|daypart|HH:mm:ss] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
