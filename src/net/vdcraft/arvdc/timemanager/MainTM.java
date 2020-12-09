@@ -117,7 +117,7 @@ public class MainTM extends JavaPlugin {
 	protected static String defLangCheckMsg = "Default translation is actually set to";
 	protected static String defLangResetMsg = "is missing or corrupt, back to the default parameter.";
 	protected static String defLangOkMsg = "exists in " + lANGFILENAME + ", keep it as default translation.";
-	protected static String resyncIntroMsg = "All worlds will now be syncronized to the server time. If you want to keep them synchronized, set their 'sync' option to true.";
+	protected static String resyncIntroMsg = "All worlds have been syncronized to the server time. If you want to keep them synchronized, set their 'sync' option to true.";
 
 	// Cmds resync & checkTime
 	protected static String serverInitTickMsg = "The server's initial tick is";

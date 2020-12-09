@@ -153,13 +153,13 @@ public class WorldSyncHandler extends MainTM {
 				}
 			}
 
-			// #B.6.
+			// #B.6. Apply modifications
 			newTime = ValuesConverter.returnCorrectTicks(newTime);
 			Bukkit.getServer().getWorld(world).setTime(newTime);
 
 			// #B.7. Extra notifications (for each cases)
-			String listedWorldCurrentTime = ValuesConverter.returnTimeFromTickValue(newTime);
 			String listedWorldStartTime = ValuesConverter.returnTimeFromTickValue(startAtTickNb);
+			String listedWorldCurrentTime = ValuesConverter.returnTimeFromTickValue(newTime);
 			String formattedUTC = ValuesConverter.formatAsUTC(startAtTickNb);
 			if (speed == realtimeSpeed) { // Display realtime message (speed is equal to 24.00)
 				Bukkit.getLogger().info(prefixTM + " The world " + world + " " + worldCurrentStartMsg + " " + formattedUTC + " (+" + startAtTickNb + " ticks)."); // Final console msg
@@ -195,13 +195,13 @@ public class WorldSyncHandler extends MainTM {
 			firstSpeed = nightSpeed;	
 			secondSpeed = daySpeed;
 			secondCycleDuration = worldDayTimeInServerTicks;
-			halfDaylightCycle = 24000; 
+			halfDaylightCycle = 24000;
 		}
 		// Use a clone of elapsedTime to subtract the number of ticks remaining
 		long serverRemainingTime = elapsedServerTime;
 		long newTime;
-		// #1. If elapsed time is smaller than an half day minus the startTime (= no day/night change) ...
-		if ((elapsedServerTime * firstSpeed) < (12000 - startAtTickNb)) {
+		// #1. If elapsed time is smaller than the difference between an half day minus and the startTime (= no day/night change) ...
+		if ((elapsedServerTime * firstSpeed) < (12000 - (startAtTickNb % 12000))) {
 			// #1.A. Use the classic easy formula
 			newTime = (long) (startAtTickNb + (elapsedServerTime * firstSpeed));
 			// #1.B. Debug Msg
@@ -211,7 +211,7 @@ public class WorldSyncHandler extends MainTM {
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + adjustedElapsedTimeCalculation + " = §d" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + firstSpeed + " §b= §5" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed)))); // Console debug msg
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeCalculation + " = §e" + startAtTickNb + " §b+ §5" + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed) + " §b= §c" + (startAtTickNb + ((ValuesConverter.returnCorrectTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed)) + " §brestrained to one day = §ctick #" + ValuesConverter.returnCorrectTicks(newTime)); // Console debug msg
 			}
-			// #2. ... or if elapsed time is bigger than an half-day (= a least one day/night change)
+		// #2. ... or if elapsed time is bigger than an half-day (= a least one day/night change)
 		} else {
 			// #2.A. Count the 1st cycle (<= half-day)
 			newTime = halfDaylightCycle; // (+) 1st cycle
@@ -232,11 +232,13 @@ public class WorldSyncHandler extends MainTM {
 			} else {
 				newTime = (long) (newTime + serverRemainingTime * secondSpeed); // (+) last partial cycle
 			}
+			// Restrain too big and too small values
+			newTime = ValuesConverter.returnCorrectTicks(newTime); // TODO
 			// #2.D. Debug Msg
 			if (debugMode && displayMsg) {
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverRemainingTimeVar + " = (" + elapsedTimeVar + " - ((" + halfDaylightCycleVar + " - " + worldStartAtVar + ") / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + "))) % ((§f12000 §b/ " + daySpeedModifierVar + ") + (§f12000 §b/ " + nightSpeedModifierVar + "))) - (§f0 §b|| §f12000§b) / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §5" + serverRemainingTime); // Console debug msg
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeVar + " = " + halfDaylightCycleVar + " + §b|(§f0 §b|| §f12000§b) + (" + serverRemainingTimeVar + " * (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §c" + "§ctick #" + newTime); // Console debug msg
+				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeVar + " = " + halfDaylightCycleVar + " + §b(§f0 §b|| §f12000§b) + (" + serverRemainingTimeVar + " * (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §c" + "§ctick #" + newTime); // Console debug msg
 			}
 		} 
 		return newTime;
