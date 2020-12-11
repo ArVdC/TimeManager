@@ -314,9 +314,9 @@ public class MainTM extends JavaPlugin {
 	protected static Integer mcDayEnd = 24000;
 
 	// Check if schedule is already active
-	protected static Boolean increaseScheduleIsOn = false;
-	protected static Boolean decreaseScheduleIsOn = false;
-	protected static Boolean realScheduleIsOn = false;
+	public static Boolean increaseScheduleIsOn = false;
+	public static Boolean decreaseScheduleIsOn = false;
+	public static Boolean realScheduleIsOn = false;
 
 	// Initialize server tick
 	protected static Long initialTick;
@@ -330,12 +330,12 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_DEFTIMEUNITS = "defTimeUnits";
 	protected static final String CF_REFRESHRATE = "refreshRate";
 	public static final String CF_WORLDSLIST = "worldsList";
-	protected static final String CF_START = "start";
+	public static final String CF_START = "start";
 	public static final String CF_SPEED = "speed";
 	public static final String CF_D_SPEED = "daySpeed";
 	public static final String CF_N_SPEED = "nightSpeed";
 	public static final String CF_SLEEP = "sleep";
-	protected static final String CF_SYNC = "sync";
+	public static final String CF_SYNC = "sync";
 	protected static final String CF_INITIALTICK = "initialTick";
 	protected static final String CF_INITIALTICKNB = "initialTickNb";
 	protected static final String CF_RESETONSTARTUP = "resetOnStartup";

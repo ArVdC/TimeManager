@@ -80,8 +80,8 @@ public class WorldSpeedHandler extends MainTM {
 						// If any world is concerned, launch the loop again
 						if ((newSpeed > 1.0) || (newSpeed == 1 && sync.equalsIgnoreCase("true"))) loopAgain = true;
 						// Change the doDaylightCycle gamerule if it is needed				
-						if (newSpeed < 1.0) WorldDoDaylightCycleHandler.doDaylightSet(world);
-						// Activate the decrease schedule if it is needed and not already activated
+						if (newSpeed < 1.0) WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+						// Activate the decrease schedule if it is needed and not already activateds
 						if (decreaseScheduleIsOn == false && (newSpeed < 1.0 && newSpeed > 0.0)) worldDecreaseSpeed();
 					}
 				}
@@ -177,11 +177,13 @@ public class WorldSpeedHandler extends MainTM {
 						// Change world's timer
 						Bukkit.getWorld(world).setTime(newTime);
 						// Check if there is a new 'speed' value
-						double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));						
+						double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 						// If any world is concerned, launch the loop again
 						if (newSpeed > 0.0 && newSpeed < 1.0) loopAgain = true;
 						// Change the doDaylightCycle gamerule if it is needed
-						if (newSpeed >= 1.0) WorldDoDaylightCycleHandler.doDaylightSet(world);
+						if (newSpeed >= 1.0) {
+							WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+						}
 						// Activate the increase schedule if it is needed and not already activated
 						if (increaseScheduleIsOn == false && ((MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase("true") && newSpeed == 1.0) || newSpeed > 1.0)) {
 							worldIncreaseSpeed();

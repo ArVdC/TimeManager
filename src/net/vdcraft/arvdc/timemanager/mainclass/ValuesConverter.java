@@ -80,6 +80,19 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
+	 *  Get the correct speed value's name (daySpeed or nightSpeed) for a given tick (returns a string)
+	 */
+	public static String wichSpeedParam(long tick) {
+		String speedParam;
+		if (getDayPartToDisplay(tick).equalsIgnoreCase("day") || getDayPartToDisplay(tick).equalsIgnoreCase("dusk")) {	    
+			speedParam = CF_D_SPEED;	
+		} else {
+			speedParam = CF_N_SPEED;
+		}
+		return speedParam;
+	}
+
+	/**
 	 * Convert a listed string value to a 'start' or 'time' tick value (returns a
 	 * string)
 	 */
@@ -89,7 +102,7 @@ public class ValuesConverter extends MainTM {
 		} else if (tick.equalsIgnoreCase("midday") || tick.equalsIgnoreCase("noon")) {
 			tick = "6000";
 		} else if (tick.equalsIgnoreCase("dusk") || tick.equalsIgnoreCase("sunset") || tick.equalsIgnoreCase("evening")) {
-			tick = "1200";
+			tick = "12000";
 		} else if (tick.equalsIgnoreCase("night")) {
 			tick = "13000";
 		} else if (tick.equalsIgnoreCase("midnight")) {
@@ -276,19 +289,6 @@ public class ValuesConverter extends MainTM {
 		} catch (NumberFormatException nfe) {
 			return time;
 		}
-	}
-
-	/**
-	 *  Get the correct speed value's name (daySpeed or nightSpeed) for a given tick (returns a string)
-	 */
-	public static String wichSpeedParam(long tick) {
-		String speedParam;
-		if (ValuesConverter.getDayPartToDisplay(tick).equalsIgnoreCase("day") || ValuesConverter.getDayPartToDisplay(tick).equalsIgnoreCase("dusk")) {	    
-			speedParam = CF_D_SPEED;	
-		} else {
-			speedParam = CF_N_SPEED;
-		}
-		return speedParam;
 	}
 
 	/**

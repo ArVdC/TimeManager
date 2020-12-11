@@ -39,7 +39,7 @@ public class TmSetStart extends MainTM {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, tick);
 			MainTM.getInstance().saveConfig();
 			// Resync this world
-			WorldSyncHandler.worldResync(sender, world);
+			WorldSyncHandler.worldSync(sender, world);
 			// Notifications
 			Bukkit.getLogger().info(prefixTM + " " + worldStartChgMsg1 + " " + world + " " + worldStartChgMsg2); // Console final msg (always)
 			if (sender instanceof Player) {

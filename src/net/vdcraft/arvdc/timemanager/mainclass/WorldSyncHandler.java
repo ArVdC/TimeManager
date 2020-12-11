@@ -24,6 +24,7 @@ public class WorldSyncHandler extends MainTM {
 				// #B. Synchronize the worlds, based on a server constant point
 				WorldSync(Bukkit.getServer().getConsoleSender(), "all", "start");
 				// #C. Launch the good scheduler if it is inactive
+				waitTime(10);
 				if (increaseScheduleIsOn == false) WorldSpeedHandler.worldIncreaseSpeed();
 				if (decreaseScheduleIsOn == false) WorldSpeedHandler.worldDecreaseSpeed();
 				if (realScheduleIsOn == false) WorldSpeedHandler.worldRealSpeed();
@@ -36,7 +37,7 @@ public class WorldSyncHandler extends MainTM {
 	/**
 	 * Sync method, adding the default third argument "time"
 	 */
-	public static void worldResync(CommandSender sender, String world) {
+	public static void worldSync(CommandSender sender, String world) {
 		WorldSync(sender, world, "time");
 	}
 
@@ -78,7 +79,6 @@ public class WorldSyncHandler extends MainTM {
 			daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED); // Get the world's 'daySpeed' value
 			nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED); // Get the world's 'nightSpeed' value
 			long newTime = Bukkit.getServer().getWorld(world).getTime();
-			WorldDoDaylightCycleHandler.doDaylightSet(world);
 
 			// #B.1. If it is a realtime world ...
 			if (speed == 24.0) {
@@ -156,8 +156,11 @@ public class WorldSyncHandler extends MainTM {
 			// #B.6. Apply modifications
 			newTime = ValuesConverter.returnCorrectTicks(newTime);
 			Bukkit.getServer().getWorld(world).setTime(newTime);
+			
+			// #B.7. Adjust DaylightCycle value
+			WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 
-			// #B.7. Extra notifications (for each cases)
+			// #B.8. Extra notifications (for each cases)
 			String listedWorldStartTime = ValuesConverter.returnTimeFromTickValue(startAtTickNb);
 			String listedWorldCurrentTime = ValuesConverter.returnTimeFromTickValue(newTime);
 			String formattedUTC = ValuesConverter.formatAsUTC(startAtTickNb);
@@ -233,7 +236,7 @@ public class WorldSyncHandler extends MainTM {
 				newTime = (long) (newTime + serverRemainingTime * secondSpeed); // (+) last partial cycle
 			}
 			// Restrain too big and too small values
-			newTime = ValuesConverter.returnCorrectTicks(newTime); // TODO
+			newTime = ValuesConverter.returnCorrectTicks(newTime);
 			// #2.D. Debug Msg
 			if (debugMode && displayMsg) {
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");

@@ -55,7 +55,7 @@ public class WorldSleepHandler implements Listener {
 						if ((isSleepPermited.equals(false) && speedModifier >= 1.0) || (isSleepPermited.equals(true) && speedModifier < 1.0)) {
 							if (MainTM.decimalOfMcVersion < 13.0) w.setGameRuleValue("doDaylightCycle", isSleepPermited.toString());
 							else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, isSleepPermited);
-							restoreDayCycle(p, w.getName());
+							delayedDaylightCycle(w.getName());
 						}
 					}
 				}
@@ -63,16 +63,24 @@ public class WorldSleepHandler implements Listener {
 		}, 1L);
 	}
 
-	// # 3. Restore the doDaylightCycle gamerule to its default value
-	public static void restoreDayCycle(Player p, String wn) {
+	// # 3. Adjust the doDaylightCycle gamerule and relaunch the speed schedules
+	public static void delayedDaylightCycle(String world) {
 		BukkitScheduler firstSyncSheduler = MainTM.getInstance().getServer().getScheduler();
 		firstSyncSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				// This will check if the doDaylightCycle value needs to be restored
-				WorldDoDaylightCycleHandler.doDaylightSet(wn);
+				// This will change the doDaylightCycle value if it needs to be
+				WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+				// Get the world daySpeed
+				double speed = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_D_SPEED);
+				// Activate the increase schedule if it is needed and not already activated
+				if (MainTM.increaseScheduleIsOn == false && ((MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SYNC).equalsIgnoreCase("true") && speed == 1.0) || speed > 1.0))
+					WorldSpeedHandler.worldIncreaseSpeed();
+				// Activate the decrease schedule if it is needed and not already activated
+				if (MainTM.decreaseScheduleIsOn == false && (speed < 1.0 && speed > 0.0))
+					WorldSpeedHandler.worldDecreaseSpeed();
 			}
-		}, 5L);
+		}, 10L);
 	}
 
 };

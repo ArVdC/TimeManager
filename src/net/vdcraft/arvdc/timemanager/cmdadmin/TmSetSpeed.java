@@ -48,8 +48,8 @@ public class TmSetSpeed extends MainTM {
 			ValuesConverter.restrainSync(world, oldSpeed);
 			// Restrain the sleep value
 			ValuesConverter.restrainSleep(world);
-			// Check if daylightCycle effects is needed
-			WorldDoDaylightCycleHandler.doDaylightSet(world);
+			// Do daylightCycle change if needed
+			WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 			// Save the config
 			MainTM.getInstance().saveConfig();
 			if (debugMode == true)

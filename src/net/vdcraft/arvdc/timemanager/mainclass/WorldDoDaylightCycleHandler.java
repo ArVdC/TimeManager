@@ -13,11 +13,11 @@ public class WorldDoDaylightCycleHandler extends MainTM {
 	 * Configure the gamerule doDaylightCycle in targeted world(s), based on actual speed
 	 */
 	@SuppressWarnings("deprecation")
-	public static void doDaylightSet(String worldToSet) {
+	public static void adjustDaylightCycle(String worldToSet) {
 		// For all listed worlds
 		if (worldToSet.equalsIgnoreCase("all")) {
 			for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
-				doDaylightSet(w);
+				adjustDaylightCycle(w);
 			}
 			// For a single world
 		} else {

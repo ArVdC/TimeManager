@@ -48,7 +48,7 @@ public class TmSetInitialTick extends MainTM {
 		}
 	    }
 	    // Resynchronization
-	    WorldSyncHandler.worldResync(sender, "all");
+	    WorldSyncHandler.worldSync(sender, "all");
 
 	} else {
 
