@@ -157,7 +157,7 @@ public class WorldSyncHandler extends MainTM {
 			newTime = ValuesConverter.returnCorrectTicks(newTime);
 			Bukkit.getServer().getWorld(world).setTime(newTime);
 			
-			// #B.7. Adjust DaylightCycle value
+			// #B.7. Adjust doDaylightCycle value
 			WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 
 			// #B.8. Extra notifications (for each cases)
