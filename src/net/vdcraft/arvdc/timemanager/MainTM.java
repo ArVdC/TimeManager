@@ -329,6 +329,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_VERSION = "version";
 	protected static final String CF_DEFTIMEUNITS = "defTimeUnits";
 	protected static final String CF_REFRESHRATE = "refreshRate";
+	public static final String CF_WAKEUPTICK = "wakeUpTick";
 	public static final String CF_WORLDSLIST = "worldsList";
 	public static final String CF_START = "start";
 	public static final String CF_SPEED = "speed";

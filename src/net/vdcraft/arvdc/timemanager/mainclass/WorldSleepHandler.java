@@ -11,11 +11,12 @@ import org.bukkit.scheduler.BukkitScheduler;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class WorldSleepHandler implements Listener {
-
+	
+	private static double waitingCount = 0;
+	
 	/**
 	 * When a player try to sleep, authorize entering the bed but check if the time need to be spend until the dawn or not
 	 */
-
 	// # 1. Listen to PlayerBedEnterEvent in relevant worlds
 	@EventHandler
 	public void whenPlayerTryToSleep(PlayerBedEnterEvent e) throws InterruptedException {
@@ -43,7 +44,7 @@ public class WorldSleepHandler implements Listener {
 				if (p.isSleeping() == true) {
 					int st = p.getSleepTicks();
 					// Relaunch the correct settings after sleeping
-					if (st == 1) delayedNewSettings(w);
+					if (st == 1) afterSleepingTime(w);
 					// Wait just before the end of the sleep (= 100 ticks)
 					if (st <= 99) {
 						sleepTicksCount(p, w, speedModifier);
@@ -64,28 +65,52 @@ public class WorldSleepHandler implements Listener {
 		}, 1L);
 	}
 
-	// # 3. Adjust the time at 7:00 am, the doDaylightCycle gamerule and relaunch the speed schedules
-	public static void delayedNewSettings(World w) {
+	// # 3. Wait during sleeping time before to check if a new day is starting or not
+	public static void afterSleepingTime(World w) {
+		BukkitScheduler newSettingsSheduler = MainTM.getInstance().getServer().getScheduler();
+		newSettingsSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				watingForTheDay(w);
+			}
+		}, 100L);
+	}
+
+	// # 4. After sleeping, check if a new day is starting or not
+	public static void watingForTheDay(World w) {
 		BukkitScheduler newSettingsSheduler = MainTM.getInstance().getServer().getScheduler();
 		newSettingsSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				String world = w.getName();
-				// If sleeping was complete, start at 7:00 am before make any changes
-				if (w.getTime() >= 500 && w.getTime() < 13000 && MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + w.getName() + "." + MainTM.CF_SLEEP).equals("true"))
-					w.setTime(1000);
-				// Get the world daySpeed
-				double speed = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_D_SPEED);
-				// Activate the increase schedule if it is needed and not already activated
-				if (MainTM.increaseScheduleIsOn == false && ((MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SYNC).equalsIgnoreCase("true") && speed == 1.0) || speed > 1.0))
-					WorldSpeedHandler.worldIncreaseSpeed();
-				// Activate the decrease schedule if it is needed and not already activated
-				if (MainTM.decreaseScheduleIsOn == false && (speed > 0.0 && speed < 1.0))
-					WorldSpeedHandler.worldDecreaseSpeed();
-				// This will change the doDaylightCycle value if it needs to be
-				WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+				Long time = w.getTime();
+				// Check if the sun is already rising
+				if (time >= 0 && time < 6000 && MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals("true")) {	
+					afterSleepingSettings(w); //
+				} else if (waitingCount < 500) { // If not, try more, until 500 ticks later
+					waitingCount += waitingCount;
+					watingForTheDay(w);
+				}
 			}
-		}, 105L);
+		}, 1L);
+	}
+
+	// # 5. Adjust the time from 6:00 to 12:00 am, the doDaylightCycle gamerule and relaunch the speed schedules
+	public static void afterSleepingSettings(World w) {
+		String world = w.getName();
+		Long wakeUpTick = MainTM.getInstance().getConfig().getLong(MainTM.CF_WAKEUPTICK);
+		// If sleeping was complete, waking up at a custom hour
+		w.setTime(wakeUpTick);
+		// Get the world daySpeed
+		double speed = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_D_SPEED);
+		// Activate the increase schedule if it is needed and not already activated
+		if (MainTM.increaseScheduleIsOn == false && ((MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SYNC).equalsIgnoreCase("true") && speed == 1.0) || speed > 1.0))
+			WorldSpeedHandler.worldIncreaseSpeed();
+		// Activate the decrease schedule if it is needed and not already activated
+		if (MainTM.decreaseScheduleIsOn == false && (speed > 0.0 && speed < 1.0))
+			WorldSpeedHandler.worldDecreaseSpeed();
+		// Change the doDaylightCycle value if it needs to be
+		WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 	}
 
 };

@@ -38,10 +38,10 @@ public class ValuesConverter extends MainTM {
 	 * Check and correct any 'start' or 'time' tick value (returns a long)
 	 */
 	public static long returnCorrectTicks(Long time) {
-		while (time >= 24000) { // Forbid numbers higher than 23999 (= end of the day)
+		while (time >= 24000) { // Forbid numbers higher than 23999 (= end of the MC day)
 			time -= 24000;
 		}
-		while (time < 0) { // Forbid numbers smaller than 0 (= start of the day)
+		while (time < 0) { // Forbid numbers smaller than 0 (= start of the MC day)
 			time += 24000;
 		}
 		return time;
@@ -51,12 +51,21 @@ public class ValuesConverter extends MainTM {
 	 * Check and correct the 'initialTIckNb' tick value (returns a long)
 	 */
 	public static long returnCorrectInitTicks(Long time) {
-		while (time >= 1728000) { // Forbid numbers higher than 727999 (= end of the day)
+		while (time >= 1728000) { // Forbid numbers higher than 727999 (= end of the real day)
 			time -= 1728000;
 		}
-		while (time < 0) { // Forbid numbers smaller than 0 (= start of the day)
+		while (time < 0) { // Forbid numbers smaller than 0 (= start of the real day)
 			time += 1728000;
 		}
+		return time;
+	}
+
+	/**
+	 * Check and correct the 'wakeUpTick' tick value (returns a long)
+	 */
+	public static long returnCorrectwakeUpTick(Long time) {
+		if (time > 6000) time = 6000L;// Forbid numbers higher than 6000
+		if (time < 0) time = 0L; // Forbid numbers smaller than 0
 		return time;
 	}
 
@@ -292,7 +301,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrain refresh rate (modifies the configuration)
+	 * Restrain refresh rate (modifies the configuration without saving the file)
 	 */
 	public static void restrainRate() {
 		try { // Check if value is an integer
@@ -305,7 +314,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrain initial tick (modifies the configuration)
+	 * Restrain initial tick (modifies the configuration without saving the file)
 	 */
 	public static void restrainInitTick() {
 		long newInitialTick;
@@ -317,6 +326,18 @@ public class ValuesConverter extends MainTM {
 		}
 		initialTick = newInitialTick;
 		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, newInitialTick);
+	}
+
+	/**
+	 * Restrain wakeUpTick tick (modifies the configuration without saving the file)
+	 */
+	public static void restrainWakeUpTick() {
+		Long newWakeUpTick = 0L;
+		try { // Check if value is a long
+			newWakeUpTick = MainTM.getInstance().getConfig().getLong(CF_WAKEUPTICK);
+			newWakeUpTick = returnCorrectwakeUpTick(newWakeUpTick);
+		} catch (NumberFormatException nfe) {} // If not a long, use the default value
+		MainTM.getInstance().getConfig().set(CF_WAKEUPTICK, newWakeUpTick);
 	}
 
 	/**
@@ -407,7 +428,7 @@ public class ValuesConverter extends MainTM {
 			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} // else, don't do anything
 	}
-
+	
 	/**
 	 * If a world's speed:00. or speed:24.0 force 'sleep' to false (modifies the
 	 * configuration without saving the file)

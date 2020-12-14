@@ -12,6 +12,9 @@
 #  Must be an integer between 2 and 20.
 #  Default value is 10 ticks, a too small value can cause server lags, depends on the server resources and the number of maps using a 'speed' modifier.
 # -----
+# *wakeUpTick
+# It is possible to wake up later than 6:00 am. Possible values are ticks from #0 to #6000.
+# -----
 # *worldsList*
 #  The list of available worlds will be refreshed on server startup. Nether and Ender worlds will be erased if present.
 #   *start*
@@ -55,6 +58,7 @@
 version: ''
 defTimeUnits: ''
 refreshRate: ''
+wakeUpTick: ''
 worldsList: ''
 initialTick:
   initialTickNb: ''
