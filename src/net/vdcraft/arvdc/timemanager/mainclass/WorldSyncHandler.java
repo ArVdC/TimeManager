@@ -186,25 +186,25 @@ public class WorldSyncHandler extends MainTM {
 	 */
 	public static long differentSpeedsNewTime(String world, long startAtTickNb, long elapsedServerTime, long currentServerTick, double speedAtStart, double daySpeed, double nightSpeed, boolean displayMsg) {
 		// Get the required server time for spending a day or a night or both in the target world
-		long worldDayTimeInServerTicks = (long) (12000 / daySpeed);
-		long worldNightTimeInServerTicks = (long) (12000 / nightSpeed);
+		long worldDayTimeInServerTicks = (long) (13000 / daySpeed);
+		long worldNightTimeInServerTicks = (long) (11000 / nightSpeed);
 		long worldFullTimeInServerTicks = worldDayTimeInServerTicks + worldNightTimeInServerTicks;
 		// Use two variables for speed, depending of day/night starting time
 		double firstSpeed = daySpeed; // day
 		double secondSpeed = nightSpeed;
 		long secondCycleDuration = worldNightTimeInServerTicks;
-		long halfDaylightCycle = 12000;
+		long halfDaylightCycle = 13000;
 		if (speedAtStart == nightSpeed) { // night
 			firstSpeed = nightSpeed;	
 			secondSpeed = daySpeed;
 			secondCycleDuration = worldDayTimeInServerTicks;
-			halfDaylightCycle = 24000;
+			halfDaylightCycle = 11000;
 		}
 		// Use a clone of elapsedTime to subtract the number of ticks remaining
 		long serverRemainingTime = elapsedServerTime;
 		long newTime;
 		// #1. If elapsed time is smaller than the difference between an half day minus and the startTime (= no day/night change) ...
-		if ((elapsedServerTime * firstSpeed) < (12000 - (startAtTickNb % 12000))) {
+		if ((elapsedServerTime * firstSpeed) < (halfDaylightCycle - (startAtTickNb % halfDaylightCycle))) {
 			// #1.A. Use the classic easy formula
 			newTime = (long) (startAtTickNb + (elapsedServerTime * firstSpeed));
 			// #1.B. Debug Msg
@@ -225,7 +225,7 @@ public class WorldSyncHandler extends MainTM {
 			}
 			// #2.C. Count an eventual complete day or night cycle ...
 			if (serverRemainingTime > secondCycleDuration) {
-				newTime = (long) (newTime + 12000); // (+) a complete day or night cycle
+				newTime = (long) (newTime + halfDaylightCycle); // (+) a complete day or night cycle
 				serverRemainingTime = serverRemainingTime - secondCycleDuration; // (-) a complete day or night cycle
 
 				// #2.C.1. ... and finally count the rest of the last day or night cycle
@@ -240,8 +240,8 @@ public class WorldSyncHandler extends MainTM {
 			// #2.D. Debug Msg
 			if (debugMode && displayMsg) {
 				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverRemainingTimeVar + " = (" + elapsedTimeVar + " - ((" + halfDaylightCycleVar + " - " + worldStartAtVar + ") / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + "))) % ((§f12000 §b/ " + daySpeedModifierVar + ") + (§f12000 §b/ " + nightSpeedModifierVar + "))) - (§f0 §b|| §f12000§b) / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §5" + serverRemainingTime); // Console debug msg
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeVar + " = " + halfDaylightCycleVar + " + §b(§f0 §b|| §f12000§b) + (" + serverRemainingTimeVar + " * (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §c" + "§ctick #" + newTime); // Console debug msg
+				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + serverRemainingTimeVar + " = (" + elapsedTimeVar + " - ((" + halfDaylightCycleVar + " - " + worldStartAtVar + ") / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + "))) % ((§" + halfDaylightCycle + " §b/ " + daySpeedModifierVar + ") + (§f12000 §b/ " + nightSpeedModifierVar + "))) - (§f0 §b|| §f" + halfDaylightCycle + "§b) / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §5" + serverRemainingTime); // Console debug msg
+				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + actualTimeVar + " = " + halfDaylightCycleVar + " + §b(§f0 §b|| §f" + halfDaylightCycle + "§b) + (" + serverRemainingTimeVar + " * (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §c" + "§ctick #" + newTime); // Console debug msg
 			}
 		} 
 		return newTime;

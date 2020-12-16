@@ -94,7 +94,7 @@ public class MainTM extends JavaPlugin {
 	// Prefixes
 	protected static String prefixTM = "[TimeManager]";
 	protected static String prefixTMColor = "§8§l[§6§lTimeManager§8§l]§r";
-	protected static String prefixDebugMode = "§8§l[§e§lTimeManager§8§l]§b";
+	public static String prefixDebugMode = "§8§l[§e§lTimeManager§8§l]§b";
 
 	// Plugin enable & reload messages
 	protected static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
@@ -202,20 +202,20 @@ public class MainTM extends JavaPlugin {
 	protected static String enableDebugModeDebugMsg = "The debug mode is §aenabled§b.";
 	protected static String disableDebugModeDebugMsg = "The debug mode is §cdisabled§b.";
 	protected static String cfgOptionsCheckDebugMsg = "The options will be now checked for each world.";
-	protected static String refrehWorldsListDebugMsg = "Refreshing the §e'worldsList'§b keys in config.yml.";
+	protected static String refrehWorldsListDebugMsg = "Refreshing the §eworldsList§b keys in config.yml.";
 	protected static String worldsRawListDebugMsg = "Raw list of all loaded worlds:";
 	protected static String worldsFormatListDebugMsg = "Name's list of all loaded worlds:";
 	protected static String worldsCfgListDebugMsg = "Worlds list from the config.yml:";
 	protected static String delWorldDebugMsg = "was deleted from the config list.";
-	protected static String daySpeedAdjustDebugMsg = "The §e'daySpeed'§b option value was converted from";
-	protected static String nightSpeedAdjustDebugMsg = "The §e'nightSpeed'§b option value was converted from";
-	protected static String startAdjustDebugMsg = "The §e'start'§b option value was converted from";
-	protected static String syncAdjustTrueDebugMsg = "The §e'sync'§b option is forced to §atrue §bfor the world";
-	protected static String syncAdjustFalseDebugMsg = "The §e'sync'§b option is forced to §cfalse §bfor the world";
-	protected static String sleepAdjustFalseDebugMsg = "The §e'sleep'§b option is forced to §cfalse §bfor the world";
+	protected static String daySpeedAdjustDebugMsg = "The §edaySpeed§b option value was converted from";
+	protected static String nightSpeedAdjustDebugMsg = "The §enightSpeed§b option value was converted from";
+	protected static String startAdjustDebugMsg = "The §estart§b option value was converted from";
+	protected static String syncAdjustTrueDebugMsg = "The §esync§b option is forced to §atrue §bfor the world";
+	protected static String syncAdjustFalseDebugMsg = "The §esync§b option is forced to §cfalse §bfor the world";
+	protected static String sleepAdjustFalseDebugMsg = "The §esleep§b option is forced to §cfalse §bfor the world";
 	protected static String availableTranslationsDebugMsg = "Available translations are:";
-	protected static String daylightTrueDebugMsg = "The gamerule §e'doDaylightCycle'§b is now set to §atrue§b for the world";
-	protected static String daylightFalseDebugMsg = "The gamerule §e'doDaylightCycle'§b is now set to §cfalse§b for the world";
+	protected static String daylightTrueDebugMsg = "The gamerule §edoDaylightCycle§b is now set to §atrue§b for the world";
+	protected static String daylightFalseDebugMsg = "The gamerule §edoDaylightCycle§b is now set to §cfalse§b for the world";
 	protected static String mcLocaleDebugMsg = "The locale will be determined by the Minecraft client.";
 	protected static String pcLocaleDebugMsg = "The locale will be determined by the computer and §onot §bby the Minecraft client.";
 	protected static String foundLocaleDebugMsg = "The locale found for the player";

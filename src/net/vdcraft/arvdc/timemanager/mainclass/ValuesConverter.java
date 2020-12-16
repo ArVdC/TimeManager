@@ -93,10 +93,10 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String wichSpeedParam(long tick) {
 		String speedParam;
-		if (getDayPartToDisplay(tick).equalsIgnoreCase("day") || getDayPartToDisplay(tick).equalsIgnoreCase("dusk")) {	    
-			speedParam = CF_D_SPEED;	
+		if (getDayPartToDisplay(tick).equalsIgnoreCase("night")) {	    
+			speedParam = CF_N_SPEED;	
 		} else {
-			speedParam = CF_N_SPEED;
+			speedParam = CF_D_SPEED;
 		}
 		return speedParam;
 	}
@@ -117,7 +117,7 @@ public class ValuesConverter extends MainTM {
 		} else if (tick.equalsIgnoreCase("midnight")) {
 			tick = "18000";
 		} else if (tick.equalsIgnoreCase("dawn") || tick.equalsIgnoreCase("sunrise") || tick.equalsIgnoreCase("morning")) {
-			tick = "23000";
+			tick = "0";
 		}
 		return tick;
 	}
