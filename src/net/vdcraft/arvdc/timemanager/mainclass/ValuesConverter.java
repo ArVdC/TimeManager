@@ -72,7 +72,7 @@ public class ValuesConverter extends MainTM {
 	/**
 	 * Convert a tick in its related part of the day (returns a string)
 	 */
-	public static String getDayPartToDisplay(long tick) {
+	public static String getDayPartToDisplay(Long tick) {
 		String wichPart = new String();
 		if (tick >= dawnStart && tick < dayStart) {
 			wichPart = "dawn";
@@ -91,7 +91,7 @@ public class ValuesConverter extends MainTM {
 	/**
 	 *  Get the correct speed value's name (daySpeed or nightSpeed) for a given tick (returns a string)
 	 */
-	public static String wichSpeedParam(long tick) {
+	public static String wichSpeedParam(Long tick) {
 		String speedParam;
 		if (getDayPartToDisplay(tick).equalsIgnoreCase("night")) {	    
 			speedParam = CF_N_SPEED;	

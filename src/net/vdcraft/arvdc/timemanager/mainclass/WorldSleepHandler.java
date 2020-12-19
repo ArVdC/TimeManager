@@ -14,7 +14,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class WorldSleepHandler implements Listener {
 
 	// Define a max waiting count for the sleeping time
-	private static Long waitingCount = 500L;
+	private static Long waitingCount = 500L; // TODO >>> Add this in the configuration file >>> Force day to come after this timer (?)
 	// Create an active/inactive variable
 	public static Boolean watingForTheDay = false;
 
@@ -51,7 +51,7 @@ public class WorldSleepHandler implements Listener {
 						if (MainTM.debugMode) Bukkit.getServer().getConsoleSender().sendMessage(MainTM.prefixDebugMode + " Player §e" + p.getName() + "§b is sleeping now (1/100 ticks)."); // Console debug msg					
 					}
 					// Wait just before the end of the sleep (= 100 ticks)
-					if (st <= 99) {
+					if (st <= 99) { // TODO >>> Add this in the configuration file
 						sleepTicksCount(p, w, speedModifier, st);
 					} else {
 						String world = w.getName();
@@ -59,8 +59,8 @@ public class WorldSleepHandler implements Listener {
 						// Relaunch the correct settings after sleeping
 						if (MainTM.debugMode) Bukkit.getServer().getConsoleSender().sendMessage(MainTM.prefixDebugMode + " Sleep time is almost reached (99/100 ticks)."); // Console debug msg
 						if (watingForTheDay == false && MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals("true")) {
-							if (MainTM.debugMode) Bukkit.getServer().getConsoleSender().sendMessage(MainTM.prefixDebugMode + " Achieved ! (100/100 ticks) Now waiting for the morning."); // Console debug msg
 							watingForTheDay(w, world);
+							if (MainTM.debugMode) Bukkit.getServer().getConsoleSender().sendMessage(MainTM.prefixDebugMode + " Achieved ! (100/100 ticks) Now waiting for the morning."); // Console debug msg
 							// Check if sleep is permitted in this world
 						} else if (MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals("false")) {
 							isSleepPermited = false;
