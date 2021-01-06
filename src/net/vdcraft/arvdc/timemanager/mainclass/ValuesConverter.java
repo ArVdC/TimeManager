@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class ValuesConverter extends MainTM {
-	
+
 	/**
 	 * Check and correct any 'speed' value (returns a double)
 	 */
@@ -38,12 +38,7 @@ public class ValuesConverter extends MainTM {
 	 * Check and correct any 'start' or 'time' tick value (returns a long)
 	 */
 	public static long returnCorrectTicks(Long time) {
-		while (time >= 24000) { // Forbid numbers higher than 23999 (= end of the MC day)
-			time -= 24000;
-		}
-		while (time < 0) { // Forbid numbers smaller than 0 (= start of the MC day)
-			time += 24000;
-		}
+		time = (time % 24000); // Forbid numbers lower than 0 and higher than 23999 (= end of the MC day)
 		return time;
 	}
 
@@ -51,12 +46,7 @@ public class ValuesConverter extends MainTM {
 	 * Check and correct the 'initialTIckNb' tick value (returns a long)
 	 */
 	public static long returnCorrectInitTicks(Long time) {
-		while (time >= 1728000) { // Forbid numbers higher than 727999 (= end of the real day)
-			time -= 1728000;
-		}
-		while (time < 0) { // Forbid numbers smaller than 0 (= start of the real day)
-			time += 1728000;
-		}
+		time = (time % 1728000); // Forbid numbers lower than 0 and higher than 727999 (= end of the real day)
 		return time;
 	}
 
@@ -138,12 +128,7 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static long returnCorrectUTC(Long tick) {
 		tick = (long) Math.floor(tick / 1000); // Use the 'start' value as an UTC modifier
-		if (tick > 12) { // Forbid too big numbers
-			tick = 12 - tick;
-		} else if (tick < -12) { // Forbid too small numbers
-			tick = 12 + tick;
-		}
-		return tick;
+		return tick % 12;
 	}
 
 	/**
@@ -301,6 +286,50 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
+	 * Get and convert a number of days to a date part [dd] or [mm] or [yy] or [yyyy] (returns a string) // TODO 1.4.0
+	 */
+	public static String returnDateFromDays(Long daysNb, String datePart) {
+		// #1. Years
+		if (datePart.contains("yy")) {
+			Long years = (1 + (long) Math.floor(daysNb / 365));
+			if (datePart.equalsIgnoreCase("yyyy")) {
+				return String.format("%04d", years);
+
+			} else {
+				return String.format("%02d", years);
+			}
+		}
+		// #2. Months
+		Long dayOfYear = 1 + (daysNb % 365); // Check what day of the year it is today to set the correct month length
+		Long dayOfMonth = 0L;
+		Integer month = 0;
+		if (dayOfYear >=1 && dayOfYear <=31) { month = 1; dayOfMonth = dayOfYear; // January 
+		} else if (dayOfYear >=32 && dayOfYear <=59) { month = 2; dayOfMonth = dayOfYear - 31; // February 
+		} else if (dayOfYear >=60 && dayOfYear <=90) { month = 3; dayOfMonth = dayOfYear - 59; // March 
+		} else if (dayOfYear >=91 && dayOfYear <=120) { month = 4; dayOfMonth = dayOfYear - 90; // April 
+		} else if (dayOfYear >=121 && dayOfYear <=151) { month = 5; dayOfMonth = dayOfYear - 120; // May 
+		} else if (dayOfYear >=152 && dayOfYear <=181) { month = 6; dayOfMonth = dayOfYear - 181; // June
+		} else if (dayOfYear >=182 && dayOfYear <=212) { month = 7; dayOfMonth = dayOfYear - 181; // July
+		} else if (dayOfYear >=213 && dayOfYear <=243) { month = 8; dayOfMonth = dayOfYear - 212; // August 
+		} else if (dayOfYear >=244 && dayOfYear <=273) { month = 9; dayOfMonth = dayOfYear - 243; // September
+		} else if (dayOfYear >=274 && dayOfYear <=304) { month = 10; dayOfMonth = dayOfYear - 273; // October
+		} else if (dayOfYear >=305 && dayOfYear <=334) { month = 11; dayOfMonth = dayOfYear - 304; // November
+		} else if (dayOfYear >=335 && dayOfYear <=365) { month = 12; dayOfMonth = dayOfYear - 334; // December
+		}
+		if (datePart.equalsIgnoreCase("mm")) {
+			String mm = String.format("%02d", month);
+			return mm;
+		}
+		// #3. Days
+		if (datePart.equalsIgnoreCase("dd")) {
+			Long days = dayOfMonth;
+			String dd = String.format("%02d", days);
+			return dd;
+		}
+		return null;
+	}
+
+	/**
 	 * Restrain refresh rate (modifies the configuration without saving the file)
 	 */
 	public static void restrainRate() {
@@ -351,7 +380,7 @@ public class ValuesConverter extends MainTM {
 		long tick;
 		try { // Check if value is a long
 			tick = Long.parseLong(time);
-			if (currentSpeed.contains("24") || currentSpeed.equalsIgnoreCase("realtime")) { // First if speed is 'realtime', use UTC
+			if (currentSpeed.contains(realtimeSpeed.toString()) || currentSpeed.equalsIgnoreCase("realtime")) { // First if speed is 'realtime', use UTC
 				tick = returnCorrectUTC(tick) * 1000;
 			} else {
 				tick = returnCorrectTicks(tick); // else, use ticks
@@ -428,7 +457,7 @@ public class ValuesConverter extends MainTM {
 			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} // else, don't do anything
 	}
-	
+
 	/**
 	 * If a world's speed:00. or speed:24.0 force 'sleep' to false (modifies the
 	 * configuration without saving the file)

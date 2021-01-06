@@ -50,6 +50,10 @@ public class TmCheckConfig extends MainTM {
 	// Refresh rate
 	String refRateMsg = refreshRateMsg + " " + MainTM.getInstance().getConfig().getString(CF_REFRESHRATE) + " ticks.";
 	String colRefRateMsg = refreshRateMsg + " §e" + MainTM.getInstance().getConfig().getString(CF_REFRESHRATE) + " ticks§r.";
+	
+	// Wake up tick
+	String wakeUpTickMsg = "Players will wake up at #" + MainTM.getInstance().getConfig().getString(CF_WAKEUPTICK) + ".";
+	String colwakeUpTickMsg = "Players will wake up at §e#" + MainTM.getInstance().getConfig().getString(CF_WAKEUPTICK) + "§r.";	
 
 	// List of the worlds
 	List<String> activeWorlds = CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST);
@@ -115,6 +119,9 @@ public class TmCheckConfig extends MainTM {
 	    // Display the refresh rate
 	    sender.sendMessage(prefixTMColor + " " + colRefRateMsg);
 	    waitTime(1000);
+	    // Wake up tick
+	    Bukkit.getLogger().info(prefixTM + " " + colwakeUpTickMsg);
+	    waitTime(1000);
 	    // Display the world's list
 	    sender.sendMessage(prefixTMColor + " " + colWorldsMsg);
 	    waitTime(1000);
@@ -142,6 +149,8 @@ public class TmCheckConfig extends MainTM {
 	    Bukkit.getLogger().info(prefixTM + " " + defUnitsMsg);
 	    // Display the refresh rate
 	    Bukkit.getLogger().info(prefixTM + " " + refRateMsg);
+	    // Wake up tick
+	    Bukkit.getLogger().info(prefixTM + " " + wakeUpTickMsg);
 	    // Display the world's list
 	    Bukkit.getLogger().info(prefixTM + " " + worldsMsg);
 	    // Display the initial tick reset status

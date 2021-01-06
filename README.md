@@ -16,11 +16,11 @@ This plugin override the vanilla "/time" command. The command to change a single
 
 
 ### PLAYER COMMAND /now <units> <world>
-A single player command is used to display time (in ticks or hours) for any available world.
+A single command is used to display the time (in ticks or hours), the date and/or the number of elapsed days for any world.
 
 Chat messages support multi-language and could automatically be accorded to any player's locale available in the lang.yml file.
 
-This message is configurable and provide the following placeholders: {time}, {dayPart}, {targetWorld} and {player}.
+This message is configurable and provide the following placeholders: {time}, {dayPart}, {targetWorld}, {player}, {elapsedDays}, {dd}, {mm}, {yy} and {yyyy}.
 
 Using the permissions, you can permit players to choose units and/or world arguments or neither of the two.
 
@@ -48,6 +48,8 @@ This command doesn't display time of Nether and the End worlds.
 **/tm set debugmode [true|false]** Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 
 **/tm set deflang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when _'useMultiLang'_ is false.
+
+**/tm set elapsedDays \[today|0 → ∞] \[all|world]** §rSets current fullTime for the specified world (or all of them). Could be _today_ or an integer between _0_ and _infinity_ (or almost). A year always lasts 365 days.
 
 **/tm set initialtick \[tick|HH:mm:ss]** Modify the server's initial tick.
 
@@ -84,6 +86,7 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
   - /tm resync \[all|world]
   - /tm set debugmode \[true|false]
   - /tm set deflang \[true|false]
+  - /tm set elapsedDays \[today|0 → ∞] \[all|world]
   - /tm set initialtick [tick|HH:mm:ss]
   - /tm set multilang \[lg_LG]
   - /tm set refreshrate \[tick]
@@ -113,6 +116,7 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
+* v1.4.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
 * v1.3.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
 * v1.3.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
 * v1.2.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.1
@@ -130,6 +134,7 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 * ~~Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.~~
 * ~~Command: Make an update message and associated commands.~~
 * ~~Day & Night : Make a different speed multiplier for the day and the night.~~
+* ~~Calendar: Create new placeholders to display a count of elapsed days and the date in yyyy-mm-dd format.~~
 * Sleep: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
 * Schedule: Create a schedule allowing commands to be executed at specific times. 

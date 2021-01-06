@@ -13,7 +13,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 public class TmSetTime extends MainTM {
 
 	/**
-	 * CMD /tm set start [tick|daypart|HH:mm:ss] [world]
+	 * CMD /tm set time [tick|daypart|HH:mm:ss] [world]
 	 */
 	public static void cmdSetTime(CommandSender sender, Long tickToSet, String worldToSet) {
 		// If using a world name in several parts
@@ -43,7 +43,7 @@ public class TmSetTime extends MainTM {
 					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + worldStartAtCalculation + " = §3" + oldStartNb + "§b + §8" + tickToSet + "§b - §c" + currentTime + "§b = §e" + (oldStartNb + tickToSet - currentTime) + "§b restrained to one day = §etick #" + startTickToSet);
 				}
 				// Warning notifications, config.yml will be changed
-				if (MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + "." + ValuesConverter.wichSpeedParam(currentTime)).contains("24")) {
+				if (MainTM.getInstance().getConfig().getString("worldsList." + worldToSet + "." + ValuesConverter.wichSpeedParam(tickToSet)).contains("24")) {
 					Bukkit.getLogger().info(prefixTM + " The time of the world " + worldToSet + " " + worldRealSyncTimeChgMsg); // Console warn msg (always)
 					if (sender instanceof Player) {
 						sender.sendMessage(prefixTMColor + " The time of the world " + worldToSet + " " + worldRealSyncTimeChgMsg); // Player warn msg (in case)

@@ -14,7 +14,9 @@
 #  Don't try to override the 'default' language's params, those keys are reseted on every loading.
 #  Provide multi-language support by adding new translation to this lang.yml file.
 #  [WARN]' Languages names are case sensitive, use only Minecraft locale codes from : http://minecraft.gamepedia.com/Language#Available_languages.
-#  Possible placeholders are: {time}, {dayPart}, {targetWorld} and {player}.
+#  Possible placeholders are: {time}, {dayPart}, {targetWorld}, {player}, {elapsedDays}, {currentDay}, {dd}, {mm}, {yy} and {yyyy}.
+# -----
+# >>> /now command aliases are editable in the plugin.yml file, inside the jar file. <<<
 # -----
 version: ''
 useMultiLang: ''

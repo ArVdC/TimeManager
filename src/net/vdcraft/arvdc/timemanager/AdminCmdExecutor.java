@@ -4,6 +4,8 @@
 
 package net.vdcraft.arvdc.timemanager;
 
+import java.util.Calendar;
+
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,23 +13,24 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHelp;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckConfig;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckSql;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTime;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckUpdate;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmReload;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmResync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDebugMode;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTime;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckUpdate;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDefLang;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetInitialTick;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetMultiLang;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetRefreshRate;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetTime;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetUpdateMsgSrc;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetFullTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSpeed;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetStart;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleep;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckConfig;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckSql;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSync;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetTime;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetUpdateMsgSrc;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class AdminCmdExecutor implements CommandExecutor {
@@ -303,6 +306,31 @@ public class AdminCmdExecutor implements CommandExecutor {
 							return true;
 						} catch (NumberFormatException nfe) {
 							TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME); // Send error and help msg
+							return true;
+						}
+					}
+				}
+				// Define the current fulltime in days for a world // TODO 1.4
+				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) {
+					if (args.length < 3) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg
+						return true;
+					} else {
+						String dayString = args[2];
+						Long elapsedDays;
+						if (dayString.equalsIgnoreCase("today")) {
+							int year = Calendar.getInstance().get(Calendar.YEAR);
+							int day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+							elapsedDays = (long) (((year - 1) * 365) + (day - 1));
+							TmSetFullTime.cmdSetDay(sender, elapsedDays, concatWorldArgs);
+							return true;
+						}
+						try {
+							elapsedDays = Long.parseLong(dayString);
+							TmSetFullTime.cmdSetDay(sender, elapsedDays, concatWorldArgs);
+							return true;
+						} catch (NumberFormatException nfe) {
+							TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg
 							return true;
 						}
 					}

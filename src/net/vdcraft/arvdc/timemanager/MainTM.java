@@ -79,6 +79,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_START = "start";
 	protected static final String CMD_SET_SYNC = "sync";
 	protected static final String CMD_SET_TIME = "time";
+	protected static final String CMD_SET_E_DAYS = "elapsedDays";
 	protected static final String CMD_SET_UPDATE = "update";
 
 	// Files names
@@ -122,6 +123,7 @@ public class MainTM extends JavaPlugin {
 	// Cmds resync & checkTime
 	protected static String serverInitTickMsg = "The server's initial tick is";
 	protected static String serverCurrentTickMsg = "The server's current tick is";
+	protected static String worldCurrentElapsedDaysMsg = "is running since"; // TODO 1.4.0
 	protected static String worldCurrentStartMsg = "starts at";
 	protected static String worldCurrentTickMsg = "'s current tick is";
 	protected static String worldCurrentTimeMsg = "'s current time is";
@@ -131,6 +133,9 @@ public class MainTM extends JavaPlugin {
 	protected static String worldRealSpeedMsg = "set to match real UTC time";
 	protected static String worldCurrentSyncMsg = "synchronized to the server time";
 	protected static String worldCurrentSleepMsg = "'s 'sleep' option is set to";
+
+	// Cmd set elapsedDays
+	protected static String worldFullTimeChgMsg = "Total elapsed days in world"; // TODO 1.4.0
 
 	// Cmd resync
 	protected static String resyncDoneMsg = "had its time re" + worldCurrentSyncMsg;
