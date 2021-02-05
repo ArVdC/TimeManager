@@ -10,7 +10,9 @@ Time could be stretched/extended up to x10 or match real UTC time, with a per wo
 
 Worlds list is actualized and timers are synchronized on each server startup and reload. Most values are automatically checked and corrected depending on the case.
 
-Timers and speeds can be modified or re-synchronize with in-game commands or reloading after manually changes. Switching sync/async permit some useful original combinations for rpg or minigames.
+Timers and speeds can be modified or re-synchronize with in-game commands or reloading after manually changes.
+
+Day and night can be set to different speed values, which can be great for RPG or some mini-games.
 
 This plugin override the vanilla "/time" command. The command to change a single world timer is "/tm set time \[ticks|daypart] \[world]".
 
@@ -20,7 +22,7 @@ A single command is used to display the time (in ticks or hours), the date and/o
 
 Chat messages support multi-language and could automatically be accorded to any player's locale available in the lang.yml file.
 
-This message is configurable and provide the following placeholders: {time}, {dayPart}, {targetWorld}, {player}, {elapsedDays}, {dd}, {mm}, {yy} and {yyyy}.
+This message is configurable and provide the following placeholders: {player}, {world}, {currentDay}, {dayPart}, {elapsedDays}, {monthName}, {time}, {yearWeek}, {dd}, {mm}, {yy} and {yyyy}.
 
 Using the permissions, you can permit players to choose units and/or world arguments or neither of the two.
 
@@ -111,6 +113,13 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 **timemanager.admin:** provide or deny access to /tm subcommands with all arguments.
 
 **timemanager.now:** provide or deny access to /now subcommands with or without restrain available arguments.
+
+### DEPEDENCIES
+Since v1.4.0, TimeManager can display its placeholders through PlaceholderAPI and MVdWPlaceholderAPI. The available placeholders are as follows :
+####PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) :
+%tm_currentday%, %tm_daypart%, %tm_elapseddays%, %tm_monthname%, %tm_time%, %tm_yearweek%, %tm_dd%, %tm_mm%, %tm_yy% and %tm_yyyy%.
+####MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) :
+{tm_currentday}, {tm_daypart}, {tm_elapseddays}, {tm_monthname}, {tm_time}, {tm_yearweek}, {tm_dd}, {tm_mm}, {tm_yy} and {tm_yyyy}.
 
 ### TUTORIALS
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)

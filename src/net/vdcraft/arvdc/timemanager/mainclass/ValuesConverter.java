@@ -11,8 +11,8 @@ public class ValuesConverter extends MainTM {
 	/**
 	 * Check and correct any 'speed' value (returns a double)
 	 */
-	public static double returnCorrectSpeed(Double speed) {
-		if (!speed.equals(realtimeSpeed)) { // Don't modify the real time value
+	public static double correctSpeed(double speed) {
+		if (speed != realtimeSpeed) { // Don't modify the real time value
 			if (speed > speedMax) { // Forbid too big numbers
 				speed = speedMax;
 			} else if (speed < 0) { // Forbid too small numbers
@@ -23,9 +23,9 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Check and correct the 'refreshrate' value (returns an integer)
+	 * Check and correct the 'refreshRate' value (returns an integer)
 	 */
-	public static Integer returnCorrectRate(Integer newRefreshRate) {
+	public static Integer correctRefreshRate(int newRefreshRate) {
 		if (newRefreshRate > refreshMax) { // Forbid too big numbers
 			newRefreshRate = refreshMax;
 		} else if (newRefreshRate < refreshMin) {
@@ -35,34 +35,91 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
+	 * Convert a decimal to a fraction, to produce the speed change with the ratio between the time to add and the refresh rate
+	 */
+	public static Long fractionFromDecimal(Double currentSpeed, String value) {
+		Long modifTime = 0L;
+		Long refreshRate = 0L;
+		if (currentSpeed >= 0.9) {
+			modifTime = 10L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.8) {
+			modifTime = 5L;
+			refreshRate = 6L;
+		} else if (currentSpeed >= 0.7) {
+			modifTime = 5L;
+			refreshRate = 7L;
+		} else if (currentSpeed >= 0.65) {
+			modifTime = 2L;
+			refreshRate = 3L;
+		} else if (currentSpeed >= 0.6) {
+			modifTime = 5L;
+			refreshRate = 8L;
+		} else if (currentSpeed >= 0.55) {
+			modifTime = 5L;
+			refreshRate = 9L;
+		} else if (currentSpeed >= 0.5) {
+			modifTime = 4L;
+			refreshRate = 8L;
+		} else if (currentSpeed >= 0.45) {
+			modifTime = 5L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.4) {
+			modifTime = 2L;
+			refreshRate = 5L;
+		} else if (currentSpeed >= 0.3) {
+			modifTime = 2L;
+			refreshRate = 6L;
+		} else if (currentSpeed >= 0.25) {
+			modifTime = 2L;
+			refreshRate = 8L;
+		} else if (currentSpeed >= 0.2) {
+			modifTime = 2L;
+			refreshRate = 10L;
+		} else if (currentSpeed >= 0.1) {
+			modifTime = 1L;
+			refreshRate = 10L;
+		} else if (currentSpeed > 0.05) {
+			modifTime = 1L;
+			refreshRate = 15L;
+		} else if (currentSpeed <= 0.05) {
+			modifTime = 1L;
+			refreshRate = 20L;
+		}
+		if (value.equalsIgnoreCase("modifTime")) return modifTime;
+		else if (value.equalsIgnoreCase("refreshRate")) return refreshRate;
+		else return null;
+	}
+
+	/**
 	 * Check and correct any 'start' or 'time' tick value (returns a long)
 	 */
-	public static long returnCorrectTicks(Long time) {
-		time = (time % 24000); // Forbid numbers lower than 0 and higher than 23999 (= end of the MC day)
+	public static long correctDailyTicks(long time) {
+		time = ((time % 24000) + 24000) % 24000; // Forbid numbers lower than 0 and higher than 23999 (= end of the MC day)
 		return time;
 	}
 
 	/**
 	 * Check and correct the 'initialTIckNb' tick value (returns a long)
 	 */
-	public static long returnCorrectInitTicks(Long time) {
-		time = (time % 1728000); // Forbid numbers lower than 0 and higher than 727999 (= end of the real day)
+	public static long correctInitTicks(long time) {
+		time = ((time % 1728000) + 1728000) % 1728000; // Forbid numbers lower than 0 and higher than 727999 (= end of the real day)
 		return time;
 	}
 
 	/**
 	 * Check and correct the 'wakeUpTick' tick value (returns a long)
 	 */
-	public static long returnCorrectwakeUpTick(Long time) {
+	public static long correctwakeUpTick(long time) {
 		if (time > 6000) time = 6000L;// Forbid numbers higher than 6000
 		if (time < 0) time = 0L; // Forbid numbers smaller than 0
 		return time;
 	}
 
 	/**
-	 * Convert a tick in its related part of the day (returns a string)
+	 * Convert a tick in its related part of the day (returns a String)
 	 */
-	public static String getDayPartToDisplay(Long tick) {
+	public static String getDayPart(long tick) {
 		String wichPart = new String();
 		if (tick >= dawnStart && tick < dayStart) {
 			wichPart = "dawn";
@@ -79,12 +136,12 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 *  Get the correct speed value's name (daySpeed or nightSpeed) for a given tick (returns a string)
+	 *  Get the correct speed value's name (daySpeed or nightSpeed) for a given tick (returns a String)
 	 */
-	public static String wichSpeedParam(Long tick) {
+	public static String wichSpeedParam(long tick) {
 		String speedParam;
-		if (getDayPartToDisplay(tick).equalsIgnoreCase("night")) {	    
-			speedParam = CF_N_SPEED;	
+		if (getDayPart(tick).equalsIgnoreCase("night")) {	    
+			speedParam = CF_N_SPEED;
 		} else {
 			speedParam = CF_D_SPEED;
 		}
@@ -92,10 +149,10 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Convert a listed string value to a 'start' or 'time' tick value (returns a
-	 * string)
+	 * Convert a listed String value to a 'start' or 'time' tick value (returns a
+	 * String)
 	 */
-	public static String returnTickFromStringValue(String tick) {
+	public static String tickFromString(String tick) {
 		if (tick.equalsIgnoreCase("day")) {
 			tick = "1000";
 		} else if (tick.equalsIgnoreCase("midday") || tick.equalsIgnoreCase("noon")) {
@@ -116,7 +173,7 @@ public class ValuesConverter extends MainTM {
 	 * Get and convert current milliseconds UTC+0 time to a 1/1728000 tick value
 	 * (returns a long)
 	 */
-	public static Long returnServerTick() {
+	public static long getServerTick() {
 		long ticksSinceEpoch = System.currentTimeMillis() / 50L; // Get the server actual time in milliseconds and
 		// convert it into ticks
 		long daillyServerTick = ticksSinceEpoch % 1728000L; // Display a 24h day loop (1728000 ticks = 1 real day)
@@ -126,17 +183,16 @@ public class ValuesConverter extends MainTM {
 	/**
 	 * Convert a tick value and return a correct UTC value (returns a long)
 	 */
-	public static long returnCorrectUTC(Long tick) {
+	public static long formattedUTCFromTick(long tick) {
 		tick = (long) Math.floor(tick / 1000); // Use the 'start' value as an UTC modifier
-		return tick % 12;
+		return (((tick % 12) + 12) % 12);
 	}
 
 	/**
-	 * Format a positive/negative number and return a formatted UTC+/-n value
-	 * (returns a string)
+	 * Format a positive/negative number and return a formatted UTC+/-n value (returns a String)
 	 */
-	public static String formatAsUTC(Long tick) {
-		tick = returnCorrectUTC(tick);
+	public static String formatAsUTC(long tick) {
+		tick = formattedUTCFromTick(tick);
 		String formattedUTC;
 		if (tick < 0) {
 			formattedUTC = "UTC" + tick + "h";
@@ -148,9 +204,9 @@ public class ValuesConverter extends MainTM {
 
 	/**
 	 * Get and convert the current millisecond UTC+0 time to HH:mm:ss (returns a
-	 * string)
+	 * String)
 	 */
-	public static String returnServerTime() {
+	public static String getServerTime() {
 		long seconds = System.currentTimeMillis() / 1000L; // x ms in 1 second
 		long s = seconds % 60;
 		long m = (seconds / 60) % 60;
@@ -159,10 +215,10 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert a real time tick (1/1728000) to HH:mm:ss (returns a string)
+	 * Get and convert a real time tick (1/1728000) to HH:mm:ss (returns a String)
 	 */
-	public static String returnRealTimeFromTickValue(Long tick) {
-		Long newTick = tick / 20L; // x tick in 1 seconds
+	public static String realTimeFromTick(long tick) {
+		long newTick = tick / 20L; // x tick in 1 seconds
 		long s = newTick % 60;
 		long m = (newTick / 60) % 60;
 		long H = (newTick / (60 * 60)) % 24;
@@ -170,14 +226,14 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert HH:mm[:ss] to a tick nb (1/1728000) (returns a string)
+	 * Get and convert HH:mm[:ss] to a tick nb (1/1728000) (returns a String)
 	 */
-	public static String returnTickFromServerTimeValue(String time) {
+	public static String tickFromServerTime(String time) {
 		String[] splitedHms = time.split(":");
 		try {
-			Long H = Long.parseLong(splitedHms[0]) % 24;
-			Long m = 0L;
-			Long s = 0L;
+			long H = Long.parseLong(splitedHms[0]) % 24;
+			long m = 0L;
+			long s = 0L;
 			if (splitedHms.length >= 2)
 				m = Long.parseLong(splitedHms[1]) % 60;
 			if (splitedHms.length >= 3)
@@ -190,9 +246,9 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Return correct case of the locale (xx_XX) (returns a string)
+	 * Return correct case of the locale (xx_XX) (returns a String)
 	 */
-	public static String returnCorrectLocaleCase(String l) {
+	public static String getCorrectLocaleCase(String l) {
 		String checkedLocale;
 		if (l.contains("_")) {
 			String[] splitLocale = l.split("_");
@@ -206,14 +262,14 @@ public class ValuesConverter extends MainTM {
 
 	/**
 	 * Use the first part to reach the nearest lang [en_GB] >>> [en_] >>> [en_US]
-	 * (returns a string)
+	 * (returns a String)
 	 */
-	public static String returnNearestLang(String l) {
+	public static String findNearestLang(String l) {
 		String nearestLocale = serverLang; // If not existing, use the default language value
 		if (l.contains("_")) {
 			String[] splitLocale = l.split("_");
 			String xx_Locale = splitLocale[0] + "_";
-			List<String> existingLangList = LgFileHandler.setAnyListFromLang(CF_lANGUAGES);
+			List<String> existingLangList = LgFileHandler.setAnyListFromLang(CF_LANGUAGES);
 			for (String lang : existingLangList) {
 				if (lang.contains(xx_Locale)) {
 					nearestLocale = lang;
@@ -224,7 +280,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Replace 'spaces' in a given list (returns a string)
+	 * Replace 'spaces' in a given list (returns a String)
 	 */
 	public static List<String> replaceSpacesInList(List<String> l) {
 		// TODO >>> Find a more appropriate solution for world names with spaces
@@ -240,7 +296,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restore missing 'spaces' in a string (returns a string)
+	 * Restore missing 'spaces' in a String (returns a String)
 	 */
 	public static String restoreSpacesInString(String s) {
 		if (s.contains("\u02d9")) {
@@ -250,29 +306,29 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert a MC tick (1/2400) to HH:mm:ss (returns a string)
+	 * Get and convert a MC tick (1/2400) to HH:mm:ss (returns a String)
 	 */
-	public static String returnTimeFromTickValue(Long ticks) {
-		Long newTicks = (ticks + 6000L) * 72L; // Adjust offset and go real time
-		newTicks = returnCorrectInitTicks(newTicks);
+	public static String formattedTimeFromTick(long ticks) {
+		long newTicks = (ticks + 6000L) * 72L; // Adjust offset and go real time
+		newTicks = correctInitTicks(newTicks);
 		newTicks = newTicks / 20L; // x tick in 1 seconds
-		Long s = newTicks % 60;
-		Long m = (newTicks / 60) % 60;
-		Long H = (newTicks / (60 * 60)) % 24;
+		long s = newTicks % 60;
+		long m = (newTicks / 60) % 60;
+		long H = (newTicks / (60 * 60)) % 24;
 		String output = String.format("%02d:%02d:%02d", H, m, s);
 		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(MainTM.prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output+ "§b\".");
 		return output;
 	}
 
 	/**
-	 * Get and convert [HH:mm:ss] to a tick nb (1/24000) (returns a string)
+	 * Get and convert [HH:mm:ss] to a tick nb (1/24000) (returns a String)
 	 */
-	public static String returnTickFromTimeValue(String time) {
+	public static String tickFromFormattedTime(String time) {
 		String[] splitedHms = time.split(":");
 		try {
-			Long H = Long.parseLong(splitedHms[0]) % 24;
-			Long m = 0L;
-			Long s = 0L;
+			long H = Long.parseLong(splitedHms[0]) % 24;
+			long m = 0L;
+			long s = 0L;
 			if (splitedHms.length >= 2)
 				m = Long.parseLong(splitedHms[1]) % 60;
 			if (splitedHms.length >= 3)
@@ -286,22 +342,41 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert a number of days to a date part [dd] or [mm] or [yy] or [yyyy] (returns a string) // TODO 1.4.0
+	 * Get and convert a tick (current Fulltime) to a number of elapsed days (returns a Long)
 	 */
-	public static String returnDateFromDays(Long daysNb, String datePart) {
+	public static Long elapsedDaysFromTick(long fulltime) {
+		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")
+				|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("18000")) {
+			if (fulltime < 18000) return 0L;
+			return (1L + ((fulltime - 18000) / 24000));
+		} else {
+			return (1L + ((fulltime) / 24000));	
+		}
+	}
+
+	/**
+	 * Get and convert a tick (current Fulltime) to the number of the week in the year (returns a Long)
+	 */
+	public static Long yearWeekFromTick(long fulltime) {
+		long daysNb = elapsedDaysFromTick(fulltime) % 365;
+		return 1 + (daysNb / 7);
+	}
+
+	/**
+	 * Get and convert a number of days to a date part [dd] or [mm] or [yy] or [yyyy] (returns a String)
+	 */
+	public static String dateFromElapsedDays(long daysNb, String datePart) {
 		// #1. Years
 		if (datePart.contains("yy")) {
-			Long years = (1 + (long) Math.floor(daysNb / 365));
-			if (datePart.equalsIgnoreCase("yyyy")) {
+			long years = (1 + (long) Math.floor(daysNb / 365)) % 10000;
+			if (datePart.equalsIgnoreCase("yyyy"))
 				return String.format("%04d", years);
-
-			} else {
+			else
 				return String.format("%02d", years);
-			}
 		}
 		// #2. Months
-		Long dayOfYear = 1 + (daysNb % 365); // Check what day of the year it is today to set the correct month length
-		Long dayOfMonth = 0L;
+		long dayOfYear = 1 + (daysNb % 365); // Check what day of the year it is today to set the correct month length
+		long dayOfMonth = 0L;
 		Integer month = 0;
 		if (dayOfYear >=1 && dayOfYear <=31) { month = 1; dayOfMonth = dayOfYear; // January 
 		} else if (dayOfYear >=32 && dayOfYear <=59) { month = 2; dayOfMonth = dayOfYear - 31; // February 
@@ -322,11 +397,70 @@ public class ValuesConverter extends MainTM {
 		}
 		// #3. Days
 		if (datePart.equalsIgnoreCase("dd")) {
-			Long days = dayOfMonth;
+			long days = dayOfMonth;
 			String dd = String.format("%02d", days);
 			return dd;
 		}
 		return null;
+	}
+
+	/**
+	 * Compare two TimeManager versions, return "true" if edgeVersion is bigger than the current one (returns a boolean)
+	 */
+	public static boolean tmVersionIsOk(String srcFile, int edgeMajor, int edgeMinor, int edgePatch, int edgeRelease, int edgeDev) {
+		String currentVersion = null;
+		int currentMajor = 0;
+		int currentMinor = 0;
+		int currentPatch = 0;
+		int currentRelease = 4;
+		int currentDev = 0;
+		// Check current version
+		if (srcFile.equalsIgnoreCase("lg"))
+			currentVersion = MainTM.getInstance().langConf.getString(CF_VERSION);
+		else
+			currentVersion = versionTM();    	
+		currentVersion = replaceChars(currentVersion);    	
+		// Split version numbers
+		String[] currentVersionNb = currentVersion.split("[.]");
+		if (currentVersionNb.length >= 2) {
+			currentMajor = Integer.parseInt(currentVersionNb[0]);
+			currentMinor = Integer.parseInt(currentVersionNb[1]);
+		}
+		if (currentVersionNb.length >= 3) currentPatch = Integer.parseInt(currentVersionNb[2]);
+		if (currentVersionNb.length >= 4) currentRelease = Integer.parseInt(currentVersionNb[3]);
+		if (currentVersionNb.length >= 5) currentDev = Integer.parseInt(currentVersionNb[4]);    	
+		// Compare versions
+		if ((edgeMajor > currentMajor) 
+				|| (edgeMajor == currentMajor && edgeMinor > currentMinor)
+				|| (edgeMajor == currentMajor && edgeMinor == currentMinor && edgePatch > currentPatch)
+				|| (edgeMajor == currentMajor && edgeMinor == currentMinor && edgePatch == currentPatch && edgeRelease > currentRelease)
+				|| (edgeMajor == currentMajor && edgeMinor == currentMinor && edgePatch == currentPatch && edgeRelease == currentRelease && edgeDev > currentDev)) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Replace characters before splitting version String into integers
+	 */
+	public static String replaceChars(String version) {
+		version = version.replace("dev", "d")
+				.replace("alpha", "a")
+				.replace("beta", "b")
+				.replace("d", "-0.")
+				.replace("a", "-1.")
+				.replace("b", "-2.")
+				.replace("rc", "-3.")
+				.replace("--", ".")
+				.replace("-", ".")
+				.replace("..", ".");
+		try {
+			String versionIntTest = version.replace(".", "");
+			Integer.parseInt(versionIntTest); // Prevent all other parse errors
+		} catch (NumberFormatException e) {
+			return null;
+		}
+		return version;
 	}
 
 	/**
@@ -335,7 +469,7 @@ public class ValuesConverter extends MainTM {
 	public static void restrainRate() {
 		try { // Check if value is an integer
 			refreshRateInt = MainTM.getInstance().getConfig().getInt(CF_REFRESHRATE);
-			refreshRateInt = returnCorrectRate(refreshRateInt);
+			refreshRateInt = correctRefreshRate(refreshRateInt);
 		} catch (NumberFormatException nfe) { // If not an integer, use the default refresh value
 			refreshRateInt = defRefresh;
 		}
@@ -349,9 +483,9 @@ public class ValuesConverter extends MainTM {
 		long newInitialTick;
 		try { // Check if value is a long
 			initialTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
-			newInitialTick = returnCorrectInitTicks(initialTick);
+			newInitialTick = correctInitTicks(initialTick);
 		} catch (NumberFormatException nfe) { // If not a long, use the current time value
-			newInitialTick = returnServerTick(); // Create the initial tick
+			newInitialTick = getServerTick(); // Create the initial tick
 		}
 		initialTick = newInitialTick;
 		MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, newInitialTick);
@@ -361,10 +495,10 @@ public class ValuesConverter extends MainTM {
 	 * Restrain wakeUpTick tick (modifies the configuration without saving the file)
 	 */
 	public static void restrainWakeUpTick() {
-		Long newWakeUpTick = 0L;
+		long newWakeUpTick = 0L;
 		try { // Check if value is a long
 			newWakeUpTick = MainTM.getInstance().getConfig().getLong(CF_WAKEUPTICK);
-			newWakeUpTick = returnCorrectwakeUpTick(newWakeUpTick);
+			newWakeUpTick = correctwakeUpTick(newWakeUpTick);
 		} catch (NumberFormatException nfe) {} // If not a long, use the default value
 		MainTM.getInstance().getConfig().set(CF_WAKEUPTICK, newWakeUpTick);
 	}
@@ -376,20 +510,20 @@ public class ValuesConverter extends MainTM {
 		long t = Bukkit.getWorld(world).getTime();
 		String time = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_START);
 		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
-		time = ValuesConverter.returnTickFromStringValue(time); // Check if value is a part of the day
+		time = ValuesConverter.tickFromString(time); // Check if value is a part of the day
 		long tick;
 		try { // Check if value is a long
 			tick = Long.parseLong(time);
 			if (currentSpeed.contains(realtimeSpeed.toString()) || currentSpeed.equalsIgnoreCase("realtime")) { // First if speed is 'realtime', use UTC
-				tick = returnCorrectUTC(tick) * 1000;
+				tick = formattedUTCFromTick(tick) * 1000;
 			} else {
-				tick = returnCorrectTicks(tick); // else, use ticks
+				tick = correctDailyTicks(tick); // else, use ticks
 			}
 		} catch (NumberFormatException nfe) { // If not a long, use the default start value
 			tick = defStart;
 		}
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, tick);
-		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + startAdjustDebugMsg + " §e" + time + "§b to §e" + tick + "§b for the world §e" + world + "§b."); // Console debug msg
+		MsgHandler.debugMsg(startAdjustDebugMsg + " §e" + time + "§b to §e" + tick + "§b for the world §e" + world + "§b."); // Console debug msg
 	}
 
 	/**
@@ -418,24 +552,21 @@ public class ValuesConverter extends MainTM {
 		} else {
 			try { // Check if day value is a double
 				daySpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
-				daySpeedNb = returnCorrectSpeed(daySpeedNb);
+				daySpeedNb = correctSpeed(daySpeedNb);
 			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
 				daySpeedNb = defSpeed;
 			}
 			try { // Check if night value is a double
 				nightSpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
-				nightSpeedNb = returnCorrectSpeed(nightSpeedNb);
+				nightSpeedNb = correctSpeed(nightSpeedNb);
 			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
 				nightSpeedNb = defSpeed;
 			} 
 		}
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, daySpeedNb);
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, nightSpeedNb);
-		// Debug msg
-		if (debugMode) {
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + daySpeedAdjustDebugMsg + " §e" + daySpeed + "§b to §e" + daySpeedNb + "§b for the world §e" + world + "§b."); // Console debug msg
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + nightSpeedAdjustDebugMsg + " §e" + nightSpeed + "§b to §e" + nightSpeedNb + "§b for the world §e" + world + "§b."); // Console debug msg
-		}
+		MsgHandler.debugMsg(daySpeedAdjustDebugMsg + " §e" + daySpeed + "§b to §e" + daySpeedNb + "§b for the world §e" + world + "§b."); // Console debug msg
+		MsgHandler.debugMsg(nightSpeedAdjustDebugMsg + " §e" + nightSpeed + "§b to §e" + nightSpeedNb + "§b for the world §e" + world + "§b."); // Console debug msg
 	}
 
 	/**
@@ -443,18 +574,18 @@ public class ValuesConverter extends MainTM {
 	 * speed ratio. & force 'sync' to false for the 0.0 speed. (modifies the
 	 * configuration without saving the file)
 	 */
-	public static void restrainSync(String world, Double oldSpeed) {
+	public static void restrainSync(String world, double oldSpeed) {
 		long t = Bukkit.getWorld(world).getTime();
-		Double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
+		double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
 		if (currentSpeed == 24.0) { // new speed is 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "true");
-			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustTrueDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(syncAdjustTrueDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} else if (currentSpeed == 0.0) { // new speed is 0
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "false");
-			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} else if (oldSpeed == 24.0) { // new speed is anything else with previous value 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "false");
-			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} // else, don't do anything
 	}
 
@@ -467,7 +598,7 @@ public class ValuesConverter extends MainTM {
 		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
 		if (currentSpeed.equalsIgnoreCase("0.0") || currentSpeed.contains("24")) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, "false");
-			if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		}
 	}
 

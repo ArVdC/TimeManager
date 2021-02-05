@@ -3,8 +3,6 @@ package net.vdcraft.arvdc.timemanager.mainclass;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
-
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class CfgFileHandler extends MainTM {
@@ -19,9 +17,9 @@ public class CfgFileHandler extends MainTM {
 
 			// #1.a. Create congig.yml file if missing, force actual version
 			if (!(MainTM.getInstance().configFileYaml.exists())) {
-				Bukkit.getLogger().info(prefixTM + " " + cfgFileCreaMsg); // Console missing file msg
+				MsgHandler.infoMsg(cfgFileCreateMsg); // Console missing file msg
 			} else {
-				Bukkit.getLogger().info(prefixTM + " " + cfgFileExistMsg); // Console existing file msg
+				MsgHandler.infoMsg(cfgFileExistMsg); // Console existing file msg
 			}
 
 			// #1.b. Assure to recreate missing key in config.yml file
@@ -32,13 +30,13 @@ public class CfgFileHandler extends MainTM {
 		}
 
 		// # 2. Get the previous initial tick value (before the reload)
-		Long oldTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
+		long oldTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 
 		// #3. Only when using the admin command /tm reload:
 		if (firstOrRe.equalsIgnoreCase("re")) {
 			if (MainTM.getInstance().configFileYaml.exists()) {
 				// #A. Notification
-				Bukkit.getLogger().info(prefixTM + " " + cfgFileTryReloadMsg);
+				MsgHandler.infoMsg(cfgFileTryReloadMsg);
 				// #B. Reload values from config.yml file
 				MainTM.getInstance().reloadConfig();
 			} else
@@ -87,54 +85,79 @@ public class CfgFileHandler extends MainTM {
 			MainTM.getInstance().getConfig().set(CF_REFRESHRATE, defRefresh);
 		}
 
-		// #8. Set the default value if missing or corrupt for the wakeUpTick key //TODO
+		// #8. Set the default value if missing or corrupt for the wakeUpTick key
 		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_WAKEUPTICK)) {
 			ValuesConverter.restrainWakeUpTick();
 		} else {
 			MainTM.getInstance().getConfig().set(CF_WAKEUPTICK, 0L);
 		}
 
-		// #9. Only when using the admin command /tm reload: Update the initialTickNb value
+		// #9. Set the default value if missing or corrupt for the newDayAt key
+		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_NEWDAYAT)) {
+			if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("18000")) {
+				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, "midnight");
+			} else if (!MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")) {
+				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, "dawn");
+			}
+		} else {
+			MainTM.getInstance().getConfig().set(CF_NEWDAYAT, "dawn");
+		}
+
+		// #10. Set the default value if missing or corrupt for the placeholder keys
+		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase("true")) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, "false");
+		} else {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, "true");
+		}
+		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase("true")) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, "false");
+		} else {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, "true");
+		}
+
+		// #11. Only when using the admin command /tm reload: Update the initialTickNb value
 		if (firstOrRe.equalsIgnoreCase("re")) {
 			WorldSyncHandler.updateInitialTickAndTime(oldTick);
 		}
 
-		// #10. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
+		// #12. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
 		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("true") && !mySqlRefreshIsAlreadyOn) {
 			mySqlRefreshIsAlreadyOn = true;
 			WorldSyncHandler.refreshInitialTickMySql();
-			Bukkit.getLogger().info(prefixTM + " " + sqlInitialTickAutoUpdateMsg); // Notify the console
+			MsgHandler.infoMsg(sqlInitialTickAutoUpdateMsg); // Notify the console
 		}
 
-		// #11. Check and complete list of available worlds
-		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + cfgOptionsCheckDebugMsg); // Console debug msg
+		// #13. Check and complete list of available worlds
+		MsgHandler.debugMsg(cfgOptionsCheckDebugMsg); // Console debug msg
 		WorldListHandler.listLoadedWorlds();
 
-		// #12. For each world
+		// #14. For each world
 		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 
-			// #12.a. Restrain the start times
+			// #14.a. Restrain the start times
 			ValuesConverter.restrainStart(w);
 
-			// #12.b. Restrain the speed modifiers
+			// #14.b. Restrain the speed modifiers
 			ValuesConverter.restrainSpeed(w);
 
-			// #12.c. Restrain the sync value
+			// #14.c. Restrain the sync value
 			ValuesConverter.restrainSync(w, 0.1);
 
-			// #12.d. Restrain the sleep value
+			// #14.d. Restrain the sleep value
 			ValuesConverter.restrainSleep(w);
 		}
 
-		// #13. Restore the version value
+		// #15. Restore the version value
 		MainTM.getInstance().getConfig().set(CF_VERSION, versionTM());
 
-		// #14. Save the changes
+		// #16. Save the changes
 		MainTM.getInstance().saveConfig();
 
-		// #15. Notifications
+		// #17. Notifications
 		if (firstOrRe.equalsIgnoreCase("first")) {
-			Bukkit.getLogger().info(prefixTM + " " + cfgVersionMsg + versionTM() + "."); // Notify the console
+			MsgHandler.infoMsg(cfgVersionMsg + versionTM() + "."); // Notify the console
 		}
 	}
 

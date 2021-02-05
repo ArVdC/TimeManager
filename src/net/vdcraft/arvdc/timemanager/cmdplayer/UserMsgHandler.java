@@ -28,34 +28,29 @@ public class UserMsgHandler extends MainTM {
 			// If the server is a Spigot
 			if (McVersionHandler.KeepTypeOfServer().equalsIgnoreCase("spigot")) {
 				lowerCaseLocale = ((Player) p.spigot()).getLocale();
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
+				if (devMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
 			} else {
 				// If the server is a Bukkit or other fork
 				Locale computerLocale = Locale.getDefault();
 				lowerCaseLocale = computerLocale.toString();
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + pcLocaleDebugMsg); // Console debug msg
+				if (devMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + pcLocaleDebugMsg); // Console debug msg
 			}
 			// Spigot/Bukkit version 1.12+
 		} else {
 			lowerCaseLocale = p.getLocale();
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
+			if (devMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + mcLocaleDebugMsg); // Console debug msg
 		}
 		// Restore the correct case format (xx_XX)
-		String playerLocale = ValuesConverter.returnCorrectLocaleCase(lowerCaseLocale);
+		String playerLocale = ValuesConverter.getCorrectLocaleCase(lowerCaseLocale);
 
-		if (debugMode == true)
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + foundLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
+		if (devMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + foundLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
 
 		// If locale is unavailable in the yaml keys, try to use the first part to reach the nearest existing language
-		if (!(MainTM.getInstance().langConf.getConfigurationSection(CF_lANGUAGES).getKeys(false).contains(playerLocale))) {
-			playerLocale = ValuesConverter.returnNearestLang(playerLocale);
+		if (!(MainTM.getInstance().langConf.getConfigurationSection(CF_LANGUAGES).getKeys(false).contains(playerLocale))) {
+			playerLocale = ValuesConverter.findNearestLang(playerLocale);
 		}
 
-		if (debugMode == true)
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + useLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + useLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
 
 		return playerLocale;
 	}
@@ -63,14 +58,15 @@ public class UserMsgHandler extends MainTM {
 	/**
 	 * Send final msg to user
 	 */
-	public static boolean SendNowMsg(CommandSender sender, String finalWorld, String finaldayPart, String finalTime, String finalLang, String elapsedDays, String currentDay, String dd, String mm, String yy, String yyyy) {
+	public static boolean SendNowMsg(CommandSender sender, String finalWorld, String finaldayPart, String finalTime, String finalLang, String elapsedDays, String currentDay, String yearWeek, String dd, String mm, String yy, String yyyy) {
 		// #1. Start loading variables from the lang.yml file
-		String msgPrefix = MainTM.getInstance().langConf.getString(CF_lANGUAGES + "." + finalLang + "." + CF_PREFIX);
-		String msgDayPart = MainTM.getInstance().langConf.getString(CF_lANGUAGES + "." + finalLang + "." + CF_DAYPARTS + "." + finaldayPart);
-		String msgNow = MainTM.getInstance().langConf.getString(CF_lANGUAGES + "." + finalLang + "." + CF_MSG);
+		String msgPrefix = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + finalLang + "." + CF_PREFIX);
+		String dayPart = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + finalLang + "." + CF_DAYPARTS + "." + finaldayPart);
+		String msgNow = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + finalLang + "." + CF_MSG);
+		String monthName = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + finalLang + "." + CF_MONTHS + ".m" + mm);
 		// #2. Avoid showing actual time if player is in a nether or the_end world
 		if (finalWorld.contains("_nether") || finalWorld.contains("_the_end")) {
-			msgNow = MainTM.getInstance().langConf.getString(CF_lANGUAGES + "." + finalLang + "." + CF_NOMSG);
+			msgNow = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + finalLang + "." + CF_NOMSG);
 			// #3. If the noMsg in lang.yml file is empty, nothing will be send to the player
 			if (msgNow.equalsIgnoreCase("")) {
 				return true;
@@ -81,14 +77,16 @@ public class UserMsgHandler extends MainTM {
 		msgNow = msgNow.replace("&", "§");
 		msgNow = msgNow.replace("{player}", sender.getName());
 		msgNow = msgNow.replace("{time}", finalTime);
-		msgNow = msgNow.replace("{targetWorld}", finalWorld);
-		msgNow = msgNow.replace("{dayPart}", msgDayPart);
-		msgNow = msgNow.replace("{dayCount}", elapsedDays); // TODO 1.4.0
-		msgNow = msgNow.replace("{currentDay}", currentDay); // TODO 1.4.0
-		msgNow = msgNow.replace("{dd}", dd); // TODO 1.4.0
-		msgNow = msgNow.replace("{mm}", mm); // TODO 1.4.0
-		msgNow = msgNow.replace("{yy}", yy); // TODO 1.4.0
-		msgNow = msgNow.replace("{yyyy}", yyyy); // TODO 1.4.0
+		msgNow = msgNow.replace("{world}", finalWorld);
+		msgNow = msgNow.replace("{dayPart}", dayPart);
+		msgNow = msgNow.replace("{elapsedDays}", elapsedDays);
+		msgNow = msgNow.replace("{currentDay}", currentDay);
+		msgNow = msgNow.replace("{monthName}", monthName);
+		msgNow = msgNow.replace("{yearWeek}", yearWeek);
+		msgNow = msgNow.replace("{dd}", dd);
+		msgNow = msgNow.replace("{mm}", mm);
+		msgNow = msgNow.replace("{yy}", yy);
+		msgNow = msgNow.replace("{yyyy}", yyyy);
 		// #5. Send the message
 		sender.sendMessage(msgPrefix + "§r " + msgNow);
 		return true;

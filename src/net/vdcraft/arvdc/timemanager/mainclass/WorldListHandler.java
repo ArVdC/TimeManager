@@ -28,8 +28,8 @@ public class WorldListHandler extends MainTM {
 			if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) && !(world.contains("_nether")) && !(world.contains("_the_end"))) {
 				// If not, add it in the list with default parameters
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, defStart);
-				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, defSpeed); // TODO ???
-				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, defSpeed); // TODO ???
+				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, defSpeed);
+				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, defSpeed);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, defSleep);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, defSync);
 			} // If a world already exists, check its 'start', 'daySpeed', 'nightSpeed', 'sleep' and 'sync' keys
@@ -40,11 +40,11 @@ public class WorldListHandler extends MainTM {
 				}
 				// Check if 'DaySpeed' exists
 				if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_D_SPEED))) { // If not, add it in the list with default parameters
-					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, defSpeed); // TODO ???
+					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, defSpeed);
 				}
 				// Check if 'nightSpeed' exists
 				if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_N_SPEED))) { // If not, add it in the list with default parameters
-					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, defSpeed); // TODO ???
+					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, defSpeed);
 				}
 				// Check if 'sleep' exists
 				if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_SLEEP))) { // If not, add it in the list with default parameters
@@ -58,18 +58,14 @@ public class WorldListHandler extends MainTM {
 		}
 		// #4. Remove 'Example' + 'nether' + 'ender' + inexistent worlds if they are present in the config list
 		List<World> loadedWorlds = Bukkit.getServer().getWorlds();
-		if (debugMode == true)
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + refrehWorldsListDebugMsg); // Console debug msg
-		if (debugMode == true)
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + worldsRawListDebugMsg + " §e" + loadedWorlds); // Console debug msg
+		MsgHandler.debugMsg(refrehWorldsListDebugMsg); // Console debug msg
+		MsgHandler.debugMsg(worldsRawListDebugMsg + " §e" + loadedWorlds); // Console debug msg
 		String loadedWorldsNames = "" + loadedWorlds;
 		loadedWorldsNames = loadedWorldsNames.replace("},", ",").replace("CraftWorld{name=", "");
 		loadedWorldsNames = loadedWorldsNames.substring(0, loadedWorldsNames.length() - 2);
 		loadedWorldsNames = loadedWorldsNames.substring(1, loadedWorldsNames.length());
-		if (debugMode == true)
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + worldsFormatListDebugMsg + " [" + loadedWorldsNames + "]"); // Console debug msg
-		if (debugMode == true)
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + worldsCfgListDebugMsg + " " + CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST)); // Console debug msg
+		MsgHandler.debugMsg(worldsFormatListDebugMsg + " [" + loadedWorldsNames + "]"); // Console debug msg
+		MsgHandler.debugMsg(worldsCfgListDebugMsg + " " + CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST)); // Console debug msg
 		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 			Boolean eraseWorld = false;
 			if (w.equals("Example") || w.contains("_the_end") || w.contains("_nether")) {
@@ -79,17 +75,16 @@ public class WorldListHandler extends MainTM {
 					eraseWorld = true;
 				}
 			}
-			MainTM.waitTime(1000);
+			MainTM.waitTime(500);
 			if (eraseWorld == true) {
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The world §e" + eraseWorld + "§b " + delWorldDebugMsg); // Console debug msg
+				MsgHandler.debugMsg("The world §e" + eraseWorld + "§b " + delWorldDebugMsg); // Console debug msg
 				MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).set(w, null);
 			}
 		}
 		// #5. Save the file
 		MainTM.getInstance().saveConfig();
 		// #6. Notification
-		Bukkit.getLogger().info(prefixTM + " " + worldsCheckMsg); // Final console msg
+		MsgHandler.infoMsg(worldsCheckMsg); // Final console msg
 	}
 
 };

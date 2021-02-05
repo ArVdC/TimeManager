@@ -54,7 +54,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	// First 'tick' arguments for '/tm set start' et '/tm set time'
 	List<String> tmTimeArgsList = Arrays.asList("morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
 	// Number of days arguments for '/tm set elapsedDays'
-	List<String> tmSetDaysArgsList = Arrays.asList("today", "000", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365"); // TODO 1.4
+	List<String> tmSetDaysArgsList = Arrays.asList("today", "000", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365");
 	// Modifier arguments for '/tm set speed'
 	List<String> tmSpeedArgsList = Arrays.asList("0.0", "0.5", "1.0", "1.5", "2.0", "2.5", "5.0", "realtime");
 	// 'tick' arguments list for '/tm set initialtick'
@@ -214,7 +214,7 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) // Command '/tm set elapsedDays <...>' TODO
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) // Command '/tm set elapsedDays <...>' TODO 1.4.0
 					{
 						for (String verif : tmSetDaysArgsList) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
@@ -240,7 +240,7 @@ public class CreateSentenceCommand implements TabCompleter {
 				if ((args[0].equalsIgnoreCase(MainTM.CMD_SET)) && (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_START) || args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS) || args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) // TODO
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS) || args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) // TODO 1.4.0
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC))) // Command '/tm set <...> <...> <...>'
 				{
 					for (String verif : tmWorldsArgsList(sender)) {

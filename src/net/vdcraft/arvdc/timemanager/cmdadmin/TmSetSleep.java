@@ -6,6 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class TmSetSleep extends MainTM {
@@ -33,34 +34,26 @@ public class TmSetSleep extends MainTM {
 			String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 			if ((sleepOrNo.equals("true") && (currentSpeed.equals("0.0") || currentSpeed.equals("24.0")))) {
 				// Notifications
-				Bukkit.getLogger().info(prefixTM + " " + worldSleepNoChgMsg + " " + world + "."); // Console final msg (always)
-				if (sender instanceof Player) {
-					sender.sendMessage(prefixTMColor + " " + worldSleepNoChgMsg + " §e" + world + "§r."); // Player final msg (in case)
-				}
+				MsgHandler.infoMsg(worldSleepNoChgMsg + " " + world + "."); // Console final msg (always)
+				MsgHandler.playerMsg(sender, worldSleepNoChgMsg + " §e" + world + "§r."); // Player final msg (in case)
 			} else {
 				// Modify the value
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, sleepOrNo);
 				// Avoid to synchronize worlds where players can sleep
 				if (sleepOrNo.equals("true") && MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equals("true")) {
 					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "false");
-					Bukkit.getLogger().info(prefixTM + " The world " + world + " " + sleepWorldSyncChgMsg); // Console warn msg (always)
-					if (sender instanceof Player) {
-						sender.sendMessage(prefixTMColor + " The world §e" + world + "§r " + sleepWorldSyncChgMsg); // Player warn msg (in case)
-					}
+					MsgHandler.infoMsg("The world " + world + " " + sleepWorldSyncChgMsg); // Console warn msg (always)
+					MsgHandler.playerMsg(sender, "The world §e" + world + "§r " + sleepWorldSyncChgMsg); // Player warn msg (in case)
 				}
 				// Save the value(s) in the config.yml
 				MainTM.getInstance().saveConfig();
 				// Notifications
 				if (sleepOrNo.equals("true")) {
-					Bukkit.getLogger().info(prefixTM + " " + worldSleepTrueChgMsg + " " + world + "."); // Console final msg (always)
-					if (sender instanceof Player) {
-						sender.sendMessage(prefixTMColor + " " + worldSleepTrueChgMsg + " §e" + world + "§r."); // Player final msg (in case)
-					}
+					MsgHandler.infoMsg(worldSleepTrueChgMsg + " " + world + "."); // Console final msg (always)
+					MsgHandler.playerMsg(sender, worldSleepTrueChgMsg + " §e" + world + "§r."); // Player final msg (in case)
 				} else if (sleepOrNo.equals("false")) {
-					Bukkit.getLogger().info(prefixTM + " " + worldSleepFalseChgMsg + " " + world + "."); // Console final msg (always)
-					if (sender instanceof Player) {
-						sender.sendMessage(prefixTMColor + " " + worldSleepFalseChgMsg + " §e" + world + "§r."); // Player final msg (in case)
-					}
+					MsgHandler.infoMsg(worldSleepFalseChgMsg + " " + world + "."); // Console final msg (always)
+					MsgHandler.playerMsg(sender, worldSleepFalseChgMsg + " §e" + world + "§r."); // Player final msg (in case)
 				}
 			}
 		}

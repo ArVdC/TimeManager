@@ -12,8 +12,11 @@
 #  Must be an integer between 2 and 20.
 #  Default value is 10 ticks, a too small value can cause server lags, depends on the server resources and the number of maps using a 'speed' modifier.
 # -----
-# *wakeUpTick
+# *wakeUpTick*
 #  Players can wake up later than 6:00 am. Possible values are ticks from #0 to #6000.
+# -----
+# *newDayAt*
+#  midnight (#18000) or dawn (#0) // TODO
 # -----
 # *worldsList*
 #  The list of available worlds will be refreshed on server startup. Nether and Ender worlds will be erased if present.
@@ -55,10 +58,19 @@
 # *debugMode*
 #  Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 # -----
+# *placeholders*
+#  It is possible to use TimeManager placeholders in other plugins. To do this, set the value to 'true' and place the third-party API in your 'plugins' folder.
+#  The available placeholders are as follows :
+#  PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) :
+#  %tm_currentday%, %tm_daypart%, %tm_elapseddays%, %tm_monthname%, %tm_time%, %tm_yearweek%, %tm_dd%, %tm_mm%, %tm_yy% and %tm_yyyy%.
+#  MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) :
+#  {tm_currentday}, {tm_daypart}, {tm_elapseddays}, {tm_monthname}, {tm_time}, {tm_yearweek}, {tm_dd}, {tm_mm}, {tm_yy} and {tm_yyyy}.
+# -----
 version: ''
 defTimeUnits: ''
 refreshRate: ''
 wakeUpTick: ''
+newDayAt: ''
 worldsList: ''
 initialTick:
   initialTickNb: ''
@@ -75,3 +87,6 @@ mySql:
   password: ''
 updateMsgSrc: ''
 debugMode: ''
+placeholders:
+  PlaceholderAPI: ''
+  MVdWPlaceholderAPI: ''

@@ -1,22 +1,30 @@
-# [TimeManager]' by ArVdC
+# [TimeManager] by ArVdC
 # lang.yml
 # -----
 # *version*
 #  This field is automatically checked and refreshed, don't modify it manually.
 # -----
 # *useMultiLang*
-#  Set true or false to use automatic translation for the /now command.
+#  Set true or false to use automatic translation for the "/now" command.
 # -----
 # *defaultLang*
 #  Choose the translation to use if player's locale doesn't exist in the lang.yml or when useMultiLang is false.
 # -----
 # *languages*
-#  Don't try to override the 'default' language's params, those keys are reseted on every loading.
 #  Provide multi-language support by adding new translation to this lang.yml file.
-#  [WARN]' Languages names are case sensitive, use only Minecraft locale codes from : http://minecraft.gamepedia.com/Language#Available_languages.
-#  Possible placeholders are: {time}, {dayPart}, {targetWorld}, {player}, {elapsedDays}, {currentDay}, {dd}, {mm}, {yy} and {yyyy}.
+#  Languages names are case sensitive, use only Minecraft locale codes from : http://minecraft.gamepedia.com/Language#Available_languages.
+#  Don't try to override the "default" language's parameters, those keys are reseted on every loading.
+#   *prefix*
+#    The message's prefix displayed by the "/now" command is fully customizable in each of the languages.
+#   *msg*
+#    In the message it's possible to use some placeholders :
+#    {time}, {dayPart}, {world}, {player}, {elapsedDays}, {currentDay}, {yearWeek}, {monthName}, {dd}, {mm}, {yy} and {yyyy}.
+#   *noMsg*
+#    Since in the Nether and the End time does not exist, this message will be useful.
+#   *dayparts* and *months*
+#    These specific parts of the translation will appear in their corresponding placeholder.
 # -----
-# >>> /now command aliases are editable in the plugin.yml file, inside the jar file. <<<
+# >>> Aliases of the "/now" command are editable in the plugin.yml file, inside the jar file. <<<
 # -----
 version: ''
 useMultiLang: ''
@@ -31,6 +39,19 @@ languages:
       day: begin at 7.00 am or tick #1000
       dusk: begin at 6.00 pm or tick #12000
       night: begin at 7.00 pm or tick #13000
+    months:
+      m01: begin at #0 elapsedDays
+      m02: begin at #31 elapsedDays
+      m03: begin at #59 elapsedDays
+      m04: begin at #90 elapsedDays
+      m05: begin at #120 elapsedDays
+      m06: begin at #151 elapsedDays
+      m07: begin at #181 elapsedDays
+      m08: begin at #212 elapsedDays
+      m09: begin at #243 elapsedDays
+      m10: begin at #273 elapsedDays
+      m11: begin at #304 elapsedDays
+      m12: begin at #334 elapsedDays
   de_DE:
     prefix: '&e&l[Stunde]'
     msg: Es &e{time}&r in der welt {targetWorld}, das ist {dayPart}.
@@ -40,6 +61,19 @@ languages:
       dusk: die dämmerung
       night: die nacht
       dawn: die morgendämmerung
+    months:
+       m01: Januar
+       m02: Februar
+       m03: März
+       m04: April
+       m05: Mai
+       m06: Juni
+       m07: Juli
+       m08: August
+       m09: September
+       m10: Oktober
+       m11: November
+       m12: Dezember
   en_US:
     prefix: '&e&l[Time]'
     msg: It's &e{time}&r in world {targetWorld}, this is {dayPart}.
@@ -49,6 +83,19 @@ languages:
       dusk: the sunset
       night: the night
       dawn: the sunrise
+    months:
+       m01: January
+       m02: February
+       m03: March
+       m04: April
+       m05: May
+       m06: June
+       m07: July
+       m08: August
+       m09: September
+       m10: October
+       m11: November
+       m12: December
   es_ES:
     prefix: '&e&l[Hora]'
     msg: Son las &e{time}&r en el mundo {targetWorld}, es {dayPart}.
@@ -58,6 +105,19 @@ languages:
       dusk: el crepúsculo
       night: de noche
       dawn: el amanecer
+    months:
+       m01: enero
+       m02: febrero
+       m03: marzo
+       m04: abril
+       m05: mayo
+       m06: junio
+       m07: julio
+       m08: agosto
+       m09: septiembre
+       m10: octubre
+       m11: noviembre
+       m12: diciembre
   fr_FR:
     prefix: '&e&l[Heure]'
     msg: Il est &e{time}&r dans le monde {targetWorld}, c'est {dayPart}.
@@ -67,6 +127,19 @@ languages:
       dusk: le crépuscule
       night: la nuit
       dawn: l'aurore
+    months:
+      m01: janvier
+      m02: février
+      m03: mars
+      m04: avril
+      m05: mai
+      m06: juin
+      m07: juillet
+      m08: août
+      m09: septembre
+      m10: octobre
+      m11: novembre
+      m12: décembre
   it_IT:
     prefix: '&e&l[Ora]'
     msg: È &e{time}&r in del monde {targetWorld}, è {dayPart}.
@@ -76,6 +149,19 @@ languages:
       dusk: il tramonto
       night: la notte
       dawn: l'aurora
+    months:
+       m01: gennaio
+       m02: febbraio
+       m03: marzo
+       m04: aprile
+       m05: maggio
+       m06: giugno
+       m07: luglio
+       m08: agosto
+       m09: settembre
+       m10: ottobre
+       m11: novembre
+       m12: dicembre
   nl_NL:
     prefix: '&e&l[Uur]'
     msg: Het is &e{time}&r in wereld {targetWorld}, dit is {dayPart} nu.
@@ -85,6 +171,19 @@ languages:
       dusk: de schemering
       night: de avond
       dawn: de dageraad
+    months:
+       m01: januari
+       m02: februari
+       m03: maart
+       m04: april
+       m05: mei
+       m06: juni
+       m07: juli
+       m08: augustus
+       m09: september
+       m10: oktober
+       m11: november
+       m12: december
   pt_PT:
     prefix: '&e&l[Hora]'
     msg: É &e{time}&r do mundo {targetWorld}, é {dayPart}.
@@ -94,3 +193,16 @@ languages:
       dusk: o crepúsculo
       night: a noite
       dawn: o amanhecer
+    months:
+       m01: janeiro
+       m02: fevereiro
+       m03: março
+       m04: abril
+       m05: maio
+       m06: junho
+       m07: julho
+       m08: agosto
+       m09: setembro
+       m10: outubro
+       m11: novembro
+       m12: dezembro

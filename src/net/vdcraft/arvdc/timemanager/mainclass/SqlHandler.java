@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.bukkit.Bukkit;
-
 import java.sql.PreparedStatement;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
@@ -118,14 +116,14 @@ public class SqlHandler extends MainTM {
 		try {
 			connectionHost = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "?user=" + username + "&password=" + password + "&useSSL=" + ssl);
 			if (msgOnOff.equals(true))
-				Bukkit.getLogger().info(prefixTM + " The mySQL host \"" + host + "\" " + connectionOkMsg + " #" + port + isSslOn + " using ssl."); // Console log msg
+				MsgHandler.infoMsg("The mySQL host \"" + host + "\" " + connectionOkMsg + " #" + port + isSslOn + " using ssl."); // Console log msg
 			return true;
 		} catch (Exception e) {
 			if (debugMode == true) {
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Connection opening failure details:");
+				MsgHandler.debugMsg("Connection opening failure details:");
 				e.printStackTrace();
 			}
-			Bukkit.getLogger().severe(prefixTM + " " + connectionFailMsg + " \"" + host + "\". " + checkConfigMsg); // Console error msg
+			MsgHandler.errorMsg(connectionFailMsg + " \"" + host + "\". " + checkConfigMsg); // Console error msg
 			closeConnection("Host");
 			return false;
 		}
@@ -137,12 +135,10 @@ public class SqlHandler extends MainTM {
 	public synchronized static boolean connectionToDatabaseIsAvailable() {
 		try {
 			connectionDB = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password + "&useSSL=" + ssl);
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The database \"" + database + "\" already exists."); // Console debug msg
+			MsgHandler.debugMsg("The database \"" + database + "\" already exists."); // Console debug msg
 			return true;
 		} catch (Exception e) {
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The database \"" + database + "\" doesn't exist yet."); // Console debug msg
+			MsgHandler.debugMsg("The database \"" + database + "\" doesn't exist yet."); // Console debug msg
 			return false;
 		}
 	}
@@ -155,14 +151,13 @@ public class SqlHandler extends MainTM {
 		try {
 			Statement sqlTable = connectionHost.createStatement();
 			sqlTable.executeUpdate(createDB);
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The database \"" + database + "\" was created."); // Console debug msg
+			MsgHandler.debugMsg("The database \"" + database + "\" was created."); // Console debug msg
 		} catch (Exception e) {
 			if (debugMode == true) {
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " New database creating failure details:");
+				MsgHandler.debugMsg("New database creating failure details:");
 				e.printStackTrace();
 			}
-			Bukkit.getLogger().severe(prefixTM + " " + dbCreationFailMsg + " " + checkConfigMsg); // Console error msg
+			MsgHandler.errorMsg(dbCreationFailMsg + " " + checkConfigMsg); // Console error msg
 			closeConnection("Host");
 		}
 	}
@@ -175,17 +170,14 @@ public class SqlHandler extends MainTM {
 			ResultSet checkForThisTable = connectionDB.getMetaData().getTables(null, null, tableName, null);
 			boolean cftt = checkForThisTable.next();
 			if (cftt == true) {
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The table \"" + tableName + "\" already exists."); // Console debug msg
+				MsgHandler.debugMsg("The table \"" + tableName + "\" already exists."); // Console debug msg
 				return true;
 			} else {
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The table \"" + tableName + "\" doesn't exist yet."); // Console debug msg
+				MsgHandler.debugMsg("The table \"" + tableName + "\" doesn't exist yet."); // Console debug msg
 				return false;
 			}
 		} catch (SQLException e) {
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Any table doesn't exist yet."); // Console debug msg
+			MsgHandler.debugMsg("Any table doesn't exist yet."); // Console debug msg
 			return false;
 		}
 	}
@@ -198,15 +190,13 @@ public class SqlHandler extends MainTM {
 		try {
 			PreparedStatement sqlTable = (PreparedStatement) connectionDB.prepareStatement(createTable);
 			sqlTable.executeUpdate();
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The table \"" + tableName + "\" was correctly created in database " + database + "."); // Console debug msg
+			MsgHandler.debugMsg("The table \"" + tableName + "\" was correctly created in database " + database + "."); // Console debug msg
 		} catch (Exception e) {
 			if (debugMode == true) {
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " New table creating failure details:");
+				MsgHandler.debugMsg("New table creating failure details:");
 				e.printStackTrace();
 			}
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + tableCreationFailMsg + " " + checkConfigMsg); // Console error msg
+			MsgHandler.debugMsg(tableCreationFailMsg + " " + checkConfigMsg); // Console error msg
 			closeConnection("DB");
 		}
 	}
@@ -214,20 +204,19 @@ public class SqlHandler extends MainTM {
 	/**
 	 * Write a new tick value
 	 */
-	public synchronized static void setServerTickSQL(Long tick) {
+	public synchronized static void setServerTickSQL(long tick) {
 		try {
 			PreparedStatement sqlTick = (PreparedStatement) connectionDB.prepareStatement("INSERT INTO " + tableName + " (id, initialTickNb) VALUES (?,?)");
 			sqlTick.setInt(1, 1);
 			sqlTick.setLong(2, tick);
 			sqlTick.executeUpdate();
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + "The reference initial tick was created in mySQL database."); // Console debug msg
+			MsgHandler.debugMsg("The reference initial tick was created in mySQL database."); // Console debug msg
 		} catch (Exception e) {
 			if (debugMode == true) {
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " New data writing failure details:");
+				MsgHandler.debugMsg("New data writing failure details:");
 				e.printStackTrace();
 			}
-			Bukkit.getLogger().severe(prefixTM + " " + datasCreationFailMsg + " " + checkConfigMsg); // Console error msg
+			MsgHandler.errorMsg(datasCreationFailMsg + " " + checkConfigMsg); // Console error msg
 			closeConnection("DB");
 		}
 	}
@@ -235,17 +224,16 @@ public class SqlHandler extends MainTM {
 	/**
 	 * Update the initialTickNb value in the MySQL database
 	 */
-	public synchronized static void updateServerTickSQL(Long tick) {
+	public synchronized static void updateServerTickSQL(long tick) {
 		try {
 			connectionDB.createStatement().executeUpdate("UPDATE " + tableName + " SET initialTickNb=" + tick + " WHERE id=1");
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + "The reference initial tick was updated in mySQL database."); // Console debug msg
+			MsgHandler.debugMsg("The reference initial tick was updated in mySQL database."); // Console debug msg
 		} catch (Exception e) {
 			if (debugMode == true) {
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Data writing failure details:");
+				MsgHandler.debugMsg("Data writing failure details:");
 				e.printStackTrace();
 			}
-			Bukkit.getLogger().severe(prefixTM + " " + datasOverridingFailMsg + " " + checkConfigMsg); // Console error msg
+			MsgHandler.errorMsg(datasOverridingFailMsg + " " + checkConfigMsg); // Console error msg
 			closeConnection("DB");
 		}
 	}
@@ -262,12 +250,11 @@ public class SqlHandler extends MainTM {
 				tickIs = rs.getLong("initialTickNb");
 			}
 			if (tickIs == null) {
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The initialTickNb value is empty, creating a new one."); // Console debug msg
+				MsgHandler.debugMsg("The initialTickNb value is empty, creating a new one."); // Console debug msg
 			}
 			return tickIs;
 		} catch (Exception e) {
-			Bukkit.getLogger().info(prefixTM + " " + tableReachFailMsg + " " + checkConfigMsg); // Console error msg
+			MsgHandler.infoMsg(tableReachFailMsg + " " + checkConfigMsg); // Console error msg
 			return null;
 		}
 	}
@@ -279,20 +266,18 @@ public class SqlHandler extends MainTM {
 		try {
 			if (hostOrDB.equalsIgnoreCase("Host") && connectionHost != null && !connectionHost.isClosed()) {
 				connectionHost.close();
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The mySQL connection with the host is closed."); // Console debug msg
+				MsgHandler.debugMsg("The mySQL connection with the host is closed."); // Console debug msg
 			}
 			if (hostOrDB.equalsIgnoreCase("DB") && connectionDB != null && !connectionDB.isClosed()) {
 				connectionDB.close();
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " The mySQL connection with the database is closed."); // Console debug msg
+				MsgHandler.debugMsg("The mySQL connection with the database is closed."); // Console debug msg
 			}
 		} catch (SQLException e) {
 			if (debugMode == true) {
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Connection closing failure details:");
+				MsgHandler.debugMsg("Connection closing failure details:");
 				e.printStackTrace();
 			}
-			Bukkit.getLogger().severe(prefixTM + " " + disconnectionFailMsg + " " + checkConfigMsg); // Console error msg
+			MsgHandler.errorMsg(disconnectionFailMsg + " " + checkConfigMsg); // Console error msg
 		}
 	}
 

@@ -84,17 +84,20 @@ public class PlayerCmdExecutor implements CommandExecutor {
 		// #6. Get the actual tick in regard of the world value
 		Long timeInTicks = worldToDisplay.getTime();
 
-		// #7. Get the calendar data (the total count of elapsed days and the date) // TODO 1.4.0
-		Long dayCount = worldToDisplay.getFullTime() / 24000;
-		String elapsedDays = dayCount.toString();
-		String currentDay = (++dayCount).toString();
-		String dd = ValuesConverter.returnDateFromDays(dayCount, "dd");
-		String mm = ValuesConverter.returnDateFromDays(dayCount, "mm");
-		String yyyy = ValuesConverter.returnDateFromDays(dayCount, "yyyy");
-		String yy = ValuesConverter.returnDateFromDays(dayCount, "yy");
+		// #7. Get the calendar data (the total count of elapsed days and the date)
+		Long ed = ValuesConverter.elapsedDaysFromTick(worldToDisplay.getFullTime());
+		Long cd = ed + 1;
+		Long week = ValuesConverter.yearWeekFromTick(worldToDisplay.getFullTime());
+		String elapsedDays = ed.toString();
+		String currentDay = (cd).toString();
+		String yearWeek = week.toString();
+		String dd = ValuesConverter.dateFromElapsedDays(ed, "dd");
+		String mm = ValuesConverter.dateFromElapsedDays(ed, "mm");
+		String yyyy = ValuesConverter.dateFromElapsedDays(ed, "yyyy");
+		String yy = ValuesConverter.dateFromElapsedDays(ed, "yy");
 
 		// #8. Define the part of the days in regard of the tick value
-		String dayPartToDisplay = ValuesConverter.getDayPartToDisplay(timeInTicks);
+		String dayPartToDisplay = ValuesConverter.getDayPart(timeInTicks);
 
 		// #9. Check if the first arg is 'hours' or 'ticks' to set the time format
 		String timeToDisplay = "tick #" + timeInTicks.toString(); // Format time to display
@@ -104,12 +107,12 @@ public class PlayerCmdExecutor implements CommandExecutor {
 			defUnits = args[0].toString(); // Else store command argument as actual time units param
 		}
 		if (defUnits.equalsIgnoreCase("hours")) {
-			timeToDisplay = ValuesConverter.returnTimeFromTickValue(timeInTicks); // Convert time display format
+			timeToDisplay = ValuesConverter.formattedTimeFromTick(timeInTicks); // Convert time display format
 		} // TODO >>> add an 12-24 key in config.yml to display am/pm or 24h msg
 		// #10. Check the player's locale and try to use it
 		String langToUse = UserMsgHandler.setLangToUse(sender);
 
 		// #11. Send final msg to user, who will returns a 'true' value at the end
-		return UserMsgHandler.SendNowMsg(sender, worldNameToDisplay, dayPartToDisplay, timeToDisplay, langToUse, elapsedDays, currentDay, dd, mm, yy, yyyy);
+		return UserMsgHandler.SendNowMsg(sender, worldNameToDisplay, dayPartToDisplay, timeToDisplay, langToUse, elapsedDays, currentDay, yearWeek, dd, mm, yy, yyyy);
 	};
 }

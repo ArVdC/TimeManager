@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 
 public class TmHelp extends MainTM {
 
@@ -30,7 +31,7 @@ public class TmHelp extends MainTM {
 	private static String setSpeed_D_N_HelpMsg = "§6/tm set speedDay §ror §6/tm set speedNight [multiplier] [all|world]: §rFrom §o0.0§r to §o10.0§r, the values of daySpeed and nightSpeed can be different from each other.";
 	private static String setStartHelpMsg = "§6/tm set start [tick|daypart|HH:mm:ss] [all|world]: §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized.";
 	private static String setTimeHelpMsg = "§6/tm set time [tick|daypart|HH:mm:ss] [all|world]: §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
-	private static String setE_DaysHelpMsg = "§6/tm set elapsedDays [today|0 → ∞] [all|world]: §rSets current fullTime for the specified world (or all of them). Could be §otoday§r or an integer between §o0§r and §oinfinity§r (or almost). A year always lasts 365 days."; // TODO 1.4.0
+	private static String setE_DaysHelpMsg = "§6/tm set elapsedDays [today|0 → ∞] [all|world]: §rSets current fullTime for the specified world (or all of them). Could be §otoday§r or an integer between §o0§r and §oinfinity§r (or almost). A year always lasts 365 days.";
 	private static String setSyncHelpMsg = "§6/tm set sync [true|false] [all|world]: §rDefine if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";   
 	// Except this line, used when 'set' is used without additional argument
 	private static String missingSetArgHelpMsg = "§e/tm help set [deflang|multilang|refreshrate|sleep|speed|start|sync|time]: §rThis command, use with arguments, permit to change plugin parameters.";
@@ -55,7 +56,7 @@ public class TmHelp extends MainTM {
 				}
 				// /tm help set elapsedDays
 				else if (subCmd.contains(CMD_SET_E_DAYS)) {
-					specificCmdMsg = setE_DaysHelpMsg; // Help msg (in case of 2 args) // TODO 1.4.0
+					specificCmdMsg = setE_DaysHelpMsg; // Help msg (in case of 2 args)
 				}
 				// /tm help set initialtick
 				else if (subCmd.contains(CMD_SET_INITIALTICK)) {
@@ -130,7 +131,7 @@ public class TmHelp extends MainTM {
 			else if (subCmd.contains(CMD_SET)) {
 				specificCmdMsg = missingSetArgHelpMsg; // Help msg (in case of 1 arg)
 			}
-			// Maybe someone could forget the 'set' part, so think of its place // TODO
+			// Maybe someone could forget the 'set' part, so think of its place
 			else if (subCmd.contains(CMD_SET_DEBUG) || subCmd.contains(CMD_SET_DEFLANG)
 					|| subCmd.contains(CMD_SET_E_DAYS) || subCmd.contains(CMD_SET_INITIALTICK)
 					|| subCmd.contains(CMD_SET_MULTILANG) || subCmd.contains(CMD_SET_REFRESHRATE)
@@ -162,7 +163,7 @@ public class TmHelp extends MainTM {
 		if (sender instanceof Player) {
 			sender.sendMessage(prefixTMColor + " §c" + msgError); // Player error msg (in case is player)
 		}
-		Bukkit.getLogger().warning(prefixTM + " " + msgError); // Console error msg (always)
+		MsgHandler.warnMsg(msgError); // Console error msg (always)
 		Bukkit.dispatchCommand(sender, "tm help " + cmdHelp); // Sender help msg (always)
 	}
 

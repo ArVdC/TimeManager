@@ -51,14 +51,13 @@ public class AdminCmdExecutor implements CommandExecutor {
 			if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKCONFIG)) {
 				TmCheckConfig.cmdCheckConfig(sender);
 				return true;
-			} else if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKSQL) || args[0].equalsIgnoreCase("sqlcheck")) { // alias for v1.0 compatibility
+			} else if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKSQL)) {
 				// Try a connection to provided host and display results
 				TmCheckSql.cmdSqlcheck(sender);
 				return true;
 			}
-			// Display initial and current server's clock, initial and current server's tick
-			// and all worlds initial and current timers.
-			else if ((args[0].equalsIgnoreCase(MainTM.CMD_CHECKTIME) && argsNumb == 1) || (args[0].equalsIgnoreCase("checktimers") && argsNumb == 1)) { // alias for v1.0 compatibility
+			// Display initial and current server's clock, initial and current server's tick and all worlds initial and current timers.
+			else if ((args[0].equalsIgnoreCase(MainTM.CMD_CHECKTIME) && argsNumb == 1)) {
 				TmCheckTime.cmdCheckTime(sender, "all"); // In case of missing argument, use "all" as default value
 				return true;
 			}
@@ -150,11 +149,11 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					} else {
 						String tickString = args[2];
-						Long tickToSet;
+						long tickToSet;
 						if (!args[2].contains(":")) {
-							tickString = ValuesConverter.returnTickFromStringValue(tickString); // Check if the value is a part of the day
+							tickString = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
 						} else {
-							tickString = ValuesConverter.returnTickFromServerTimeValue(tickString); // Check if the value have an HH:mm:ss format
+							tickString = ValuesConverter.tickFromServerTime(tickString); // Check if the value have an HH:mm:ss format
 						}
 						try {
 							tickToSet = Long.parseLong(tickString);
@@ -260,11 +259,11 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					} else {
 						String tickString = args[2];
-						Long tickToSet;
+						long tickToSet;
 						if (!args[2].contains(":")) {
-							tickString = ValuesConverter.returnTickFromStringValue(tickString); // Check if the value is a part of the day
+							tickString = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
 						} else {
-							tickString = ValuesConverter.returnTickFromTimeValue(tickString); // Check if the value have an HH:mm:ss format
+							tickString = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
 						}
 						try {
 							tickToSet = Long.parseLong(tickString);
@@ -294,11 +293,11 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					} else {
 						String tickString = args[2];
-						Long tickToSet;
+						long tickToSet;
 						if (!args[2].contains(":")) {
-							tickString = ValuesConverter.returnTickFromStringValue(tickString); // Check if the value is a part of the day
+							tickString = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
 						} else {
-							tickString = ValuesConverter.returnTickFromTimeValue(tickString); // Check if the value have an HH:mm:ss format
+							tickString = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
 						}
 						try {
 							tickToSet = Long.parseLong(tickString);
@@ -310,7 +309,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 						}
 					}
 				}
-				// Define the current fulltime in days for a world // TODO 1.4
+				// Define the current Fulltime in days for a world // TODO 1.4
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) {
 					if (args.length < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg

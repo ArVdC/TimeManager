@@ -30,16 +30,14 @@ public class WorldDoDaylightCycleHandler extends MainTM {
 				} else {
 					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 				}
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
+				MsgHandler.debugMsg(daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			} else {
 				if (decimalOfMcVersion < 13.0) {
 					w.setGameRuleValue("doDaylightCycle", "true");
 				} else {
 					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
 				}
-				if (debugMode == true)
-					Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + daylightTrueDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
+				MsgHandler.debugMsg(daylightTrueDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			}
 		}
 	}

@@ -10,6 +10,8 @@ package net.vdcraft.arvdc.timemanager;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -20,10 +22,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldSleepHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldSyncHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.MVdWPAPIHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.PAPIHandler;
 
 public class MainTM extends JavaPlugin {
 
@@ -84,12 +89,17 @@ public class MainTM extends JavaPlugin {
 
 	// Files names
 	protected static final String CONFIGFILENAME = "config.yml";
-	protected static final String lANGFILENAME = "lang.yml";
+	protected static final String LANGFILENAME = "lang.yml";
 
 	// Config and Lang files targets
 	public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
-	public File langFileYaml = new File(this.getDataFolder(), lANGFILENAME);
+	public File langFileYaml = new File(this.getDataFolder(), LANGFILENAME);
 	public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
+
+	// Use a lang_backup file
+	protected final static String LANGBCKPFILENAME = "lang_backup.yml";
+	public File langBckpFileYaml = new File(this.getDataFolder(), LANGBCKPFILENAME);
+	public FileConfiguration langBckpConf = YamlConfiguration.loadConfiguration(langBckpFileYaml);
 
 	// Admin and Console messages
 	// Prefixes
@@ -101,12 +111,12 @@ public class MainTM extends JavaPlugin {
 	protected static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
 	protected static String plBadVersionMsg = "§cThe plugin is not compatible with versions under 1." + minRequiredMcVersion + " and you are running a ";
 	protected static String plDisabledMsg = "The plugin is now disabled.";
-	protected static String cfgFileCreaMsg = "The configuration file was created.";
+	protected static String cfgFileCreateMsg = "The configuration file was created.";
 	protected static String lgFileCreaMsg = "The language file was created.";
 	protected static String cfgFileExistMsg = "The configuration file already exists.";
 	protected static String lgFileExistMsg = "The language file already exists.";
 	protected static String cfgVersionMsg = "Enabled " + CONFIGFILENAME + " v";
-	protected static String lgVersionMsg = "Enabled " + lANGFILENAME + " v";
+	protected static String lgVersionMsg = "Enabled " + LANGFILENAME + " v";
 	protected static String cfgFileTryReloadMsg = "Reloading the configuration file.";
 	protected static String cfgFileReloadMsg = "The configuration file was reloaded.";
 	protected static String lgFileTryReloadMsg = "Reloading the language file.";
@@ -117,13 +127,16 @@ public class MainTM extends JavaPlugin {
 	protected static String multiLangDoesntWork = "Multilanguage is not supported by CraftBukkit under the 1.12 version. Upgrade or try with Spigot.";
 	protected static String defLangCheckMsg = "Default translation is actually set to";
 	protected static String defLangResetMsg = "is missing or corrupt, back to the default parameter.";
-	protected static String defLangOkMsg = "exists in " + lANGFILENAME + ", keep it as default translation.";
+	protected static String defLangOkMsg = "exists in " + LANGFILENAME + ", keep it as default translation.";
+	protected static String defLangNonOkMsg = "Your " + LANGFILENAME + " is partially corrupt. You should make a backup of your file by renaming it, then reload the lang file with the command.";
+	protected static String LangFileNonOkMsg = "Your " + LANGFILENAME + " couldn't be updated. You should make a backup of your file by renaming it, then reload the lang file with the command.";
+	protected static String langFileUpdateMsg = "Your " + LANGFILENAME + " was renamed " + LANGBCKPFILENAME + ". A new file was created and automatically completed with your old data.";
 	protected static String resyncIntroMsg = "All worlds have been syncronized to the server time. If you want to keep them synchronized, set their 'sync' option to true.";
 
 	// Cmds resync & checkTime
 	protected static String serverInitTickMsg = "The server's initial tick is";
 	protected static String serverCurrentTickMsg = "The server's current tick is";
-	protected static String worldCurrentElapsedDaysMsg = "is running since"; // TODO 1.4.0
+	protected static String worldCurrentElapsedDaysMsg = "is running since";
 	protected static String worldCurrentStartMsg = "starts at";
 	protected static String worldCurrentTickMsg = "'s current tick is";
 	protected static String worldCurrentTimeMsg = "'s current time is";
@@ -135,7 +148,10 @@ public class MainTM extends JavaPlugin {
 	protected static String worldCurrentSleepMsg = "'s 'sleep' option is set to";
 
 	// Cmd set elapsedDays
-	protected static String worldFullTimeChgMsg = "Total elapsed days in world"; // TODO 1.4.0
+	protected static String worldFullTimeChgMsg = "Total elapsed days in world";
+	protected static String tooLateForDayZeroMsg1 = "It is too late (";
+	protected static String tooLateForDayZeroMsg2 = ") to return to the first day. First use \"/tm set time\" to set a value between 6am and 11.59pm.";
+	
 
 	// Cmd resync
 	protected static String resyncDoneMsg = "had its time re" + worldCurrentSyncMsg;
@@ -198,7 +214,7 @@ public class MainTM extends JavaPlugin {
 	protected static String wrongYmlMsg = "The name of the yaml file you just typed does not exist.";
 	protected static String missingArgMsg = "This command requires one or more additional argument(s).";
 	protected static String isNotBooleanMsg = "This command requires a boolean argument, true or false.";
-	protected static String couldNotSaveLang = "File " + lANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
+	protected static String couldNotSaveLang = "File " + LANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
 	protected static String checkLogMsg = "Please check the console or log file.";
 	protected static String unknowVersionMsg = "Impossible to determine properly the MC version of your server, the plugin will consider it is an old one.";
 
@@ -225,7 +241,7 @@ public class MainTM extends JavaPlugin {
 	protected static String pcLocaleDebugMsg = "The locale will be determined by the computer and §onot §bby the Minecraft client.";
 	protected static String foundLocaleDebugMsg = "The locale found for the player";
 	protected static String useLocaleDebugMsg = "The locale that will be used for the player";
-	protected static String launchSchedulerDebugMsg = "If off, launch the scheduler corresponding to the asked speed value.";
+	protected static String launchSchedulerDebugMsg = "If necessary, launch the scheduler corresponding to the asked speed value.";
 	protected static String serverTypeQueryDebugMsg = "Try to get the server's type.";
 	protected static String serverTypeResultDebugMsg = "You are running a";
 	protected static String serverMcVersionQueryDebugMsg = "Try to get the server's Minecraft version.";
@@ -274,7 +290,7 @@ public class MainTM extends JavaPlugin {
 	protected static Connection connectionHost;
 	protected static Connection connectionDB;
 	protected static String connectionOkMsg = "is correctly responding on port";
-	protected static Long sqlInitialTickAutoUpdateValue = 2L;
+	protected static long sqlInitialTickAutoUpdateValue = 2L;
 	protected static Boolean mySqlRefreshIsAlreadyOn = false;
 	protected static String sqlInitialTickAutoUpdateMsg = "If someone changes the InitialTickNb value in the MySQL database, the change will be reflected on this server within the next " + sqlInitialTickAutoUpdateValue + " minutes.";
 
@@ -291,7 +307,7 @@ public class MainTM extends JavaPlugin {
 
 	// Default config files values
 	protected static String defTimeUnits = "hours";
-	protected static Long defStart = 0L;
+	protected static long defStart = 0L;
 	protected static Integer defRefresh = 10;
 	protected static Double defSpeed = 1.0;
 	protected static String defSleep = "true";
@@ -312,16 +328,17 @@ public class MainTM extends JavaPlugin {
 	protected static Double realtimeSpeed = 24.0;
 
 	// DayParts in ticks
-	protected static Integer dawnStart = 0;
-	protected static Integer dayStart = 1000;
-	protected static Integer duskStart = 12000;
-	protected static Integer nightStart = 13000;
-	protected static Integer mcDayEnd = 24000;
+	protected static Long dawnStart = 0L;
+	protected static Long dayStart = 1000L;
+	protected static Long duskStart = 12000L;
+	protected static Long nightStart = 13000L;
+	protected static Long mcDayEnd = 24000L;
 
 	// Check if schedule is already active
-	public static Boolean increaseScheduleIsOn = false;
-	public static Boolean decreaseScheduleIsOn = false;
-	public static Boolean realScheduleIsOn = false;
+	public static List<String> realSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> syncSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> asyncIncreaseSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> asyncDecreaseSpeedSchedulerIsActive = new ArrayList<String>();
 
 	// Initialize server tick
 	protected static Long initialTick;
@@ -335,6 +352,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_DEFTIMEUNITS = "defTimeUnits";
 	protected static final String CF_REFRESHRATE = "refreshRate";
 	public static final String CF_WAKEUPTICK = "wakeUpTick";
+	public static final String CF_NEWDAYAT = "newDayAt";
 	public static final String CF_WORLDSLIST = "worldsList";
 	public static final String CF_START = "start";
 	public static final String CF_SPEED = "speed";
@@ -356,27 +374,42 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_USERNAME = "username";
 	protected static final String CF_PASSWORD = "password";
 	protected static final String CF_UPDATEMSGSRC = "updateMsgSrc";
-	protected static final String CF_DEBUGMODE = "debugMode";
 	protected static final String CF_BUKKIT = "bukkit";
 	protected static final String CF_CURSE = "curse";
 	protected static final String CF_TWITCH = "twitch";
 	protected static final String CF_SPIGOT = "spigot";
 	protected static final String CF_PAPER = "paper";
 	protected static final String CF_GITHUB = "github";
-
+	protected static final String CF_DEBUGMODE = "debugMode";
+	protected static final String CF_PLACEHOLDER = "placeholders";
+	protected static final String CF_PLACEHOLDER_PAPI = "PlaceholderAPI";
+	protected static final String CF_PLACEHOLDER_MVDWPAPI = "MVdWPlaceholderAPI";
 	// Lang file keys
 	protected static final String CF_USEMULTILANG = "useMultiLang";
 	protected static final String CF_DEFAULTLANG = "defaultLang";
-	protected static final String CF_lANGUAGES = "languages";
+	public static final String CF_LANGUAGES = "languages";
 	protected static final String CF_DEFAULT = "default";
 	protected static final String CF_PREFIX = "prefix";
 	protected static final String CF_MSG = "msg";
 	protected static final String CF_NOMSG = "noMsg";
-	protected static final String CF_DAYPARTS = "dayparts";
+	public static final String CF_DAYPARTS = "dayparts";
 	protected static final String CF_DAY = "day";
 	protected static final String CF_DUSK = "dusk";
 	protected static final String CF_NIGHT = "night";
 	protected static final String CF_DAWN = "dawn";
+	public static final String CF_MONTHS = "months";
+	protected static final String CF_MONTH_01 = "m01";
+	protected static final String CF_MONTH_02 = "m02";
+	protected static final String CF_MONTH_03 = "m03";
+	protected static final String CF_MONTH_04 = "m04";
+	protected static final String CF_MONTH_05 = "m05";
+	protected static final String CF_MONTH_06 = "m06";
+	protected static final String CF_MONTH_07 = "m07";
+	protected static final String CF_MONTH_08 = "m08";
+	protected static final String CF_MONTH_09 = "m09";
+	protected static final String CF_MONTH_10 = "m10";
+	protected static final String CF_MONTH_11 = "m11";
+	protected static final String CF_MONTH_12 = "m12";
 
 	/******************
 	 ***** METHOD *****
@@ -402,7 +435,7 @@ public class MainTM extends JavaPlugin {
 		// #0. Don't start the plugin with too old versions of the game
 		decimalOfMcVersion = McVersionHandler.KeepDecimalOfMcVersion();
 		if (decimalOfMcVersion < minRequiredMcVersion) {
-			Bukkit.getServer().getConsoleSender().sendMessage(prefixTM + " §c" + plBadVersionMsg + "1." + decimalOfMcVersion + " server.");
+			MsgHandler.colorMsg("§c" + plBadVersionMsg + "1." + decimalOfMcVersion + " server.");
 		} else {
 
 			// #1. Initiate this main class as the contain of the instance
@@ -430,17 +463,28 @@ public class MainTM extends JavaPlugin {
 			// #7. Listen to sleep events
 			getServer().getPluginManager().registerEvents(new WorldSleepHandler(), this);
 
-			// #8. Synchronize worlds and create scheduled task for faking the time
-			// stretch/expand
+			// #8. Synchronize worlds and create scheduled task for faking the time stretch/expand
 			WorldSyncHandler.firstSync();
 
-			// #9. Confirm activation in console
-			Bukkit.getLogger().info(prefixTM + " " + plEnabledMsg);
+			// #9. Activate (or not) the placeholder APIs
+			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase("true")
+					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
+				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
+				new PAPIHandler(this).register();
+			}
+			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase("true")
+					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_MVDWPAPI) != null) {
+				MsgHandler.debugMsg(CF_PLACEHOLDER_MVDWPAPI + " detected.");
+				MVdWPAPIHandler.loadMVdWPlaceholderAPI();
+			}
 
-			// #10. Check for an update
-			if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)
+		// #10. Confirm activation in console
+			MsgHandler.infoMsg(plEnabledMsg);
+			
+			// #11. Check for an update
+			if (decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)
 				UpdateHandler.delayCheckForUpdate();
-			else Bukkit.getLogger().warning(prefixTM + " " + updateCommandsDisabledMsg + requiredMcVersionForUpdate.toString().replace(".0", "."));
+			else MsgHandler.warnMsg(updateCommandsDisabledMsg + requiredMcVersionForUpdate.toString().replace(".0", "."));
 		}
 	}
 
@@ -462,16 +506,16 @@ public class MainTM extends JavaPlugin {
 			SqlHandler.closeConnection("DB");
 
 			// #3. Confirm disabling in console
-			Bukkit.getLogger().info(prefixTM + " " + plDisabledMsg);
+			MsgHandler.infoMsg(plDisabledMsg);
 		}
 	}
-
+	
 	/**
 	 * 3. Custom wait
 	 */
-	protected static void waitTime(Integer ticksToWait) {
+	protected static void waitTime(Integer msToWait) {
 		try {
-			Thread.sleep(ticksToWait);
+			Thread.sleep(msToWait);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

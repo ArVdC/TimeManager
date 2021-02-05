@@ -1,12 +1,12 @@
 name: TimeManager
 version: 1.4.0-b
-api-version: 1.16
+api-version: 1.14
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdc.serveminecraft.net
 description: Display actual time (in mc hours or in ticks) in the chat, define the speed and the start time then synchronize worlds timers.
 load: POSTWORLD
-softdepend: [Multiverse-Core, Multiworld]
+softdepend: [Multiverse-Core, Multiworld, MVdWPlaceholderAPI, PlaceholderAPI]
 database: false
 permissions:
   timemanager.*:
@@ -40,7 +40,7 @@ commands:
             /<command> set elapsedDays [today|0 → ∞] [all|world]
             /<command> set initialtick [tick|HH:mm]
             /<command> set multilang [true|false]
-            /<command> set refreshrate [tick]
+            /<command> set refreshRate [tick]
             /<command> set sleep [true|false] [all|world]
             /<command> set speed [multiplier] [all|world]
             /<command> set speedDay [multiplier] [all|world]

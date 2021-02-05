@@ -2,11 +2,11 @@ package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 
 public class TmReload extends MainTM {
@@ -25,31 +25,19 @@ public class TmReload extends MainTM {
 
 			// Re-synchronize all the worlds based on a server constant point
 			TmResync.cmdResync(Bukkit.getServer().getConsoleSender(), "all");
-			// Launch scheduler if is inactive
-			if (increaseScheduleIsOn == false) {
-				WorldSpeedHandler.worldIncreaseSpeed();
-			}
-			if (decreaseScheduleIsOn == false) {
-				WorldSpeedHandler.worldDecreaseSpeed();
-			}
-			if (realScheduleIsOn == false) {
-				WorldSpeedHandler.worldIncreaseSpeed();
-			}
+			// Detect if this world needs to change its speed value
+			WorldSpeedHandler.speedScheduler("all");
 			// 'config.yml is reloaded' notification
-			if (sender instanceof Player) {
-				sender.sendMessage(prefixTMColor + " " + cfgFileReloadMsg); // Player final msg (in case)
-			}
-			Bukkit.getLogger().info(prefixTM + " " + cfgFileReloadMsg); // Console final msg (always)
+			MsgHandler.playerMsg(sender, cfgFileReloadMsg); // Player final msg (in case)
+			MsgHandler.infoMsg(cfgFileReloadMsg); // Console final msg (always)
 			argOk = false;
 		}
 		// When do reload the lang.yml file
 		if (whatToReload.equalsIgnoreCase("language") || whatToReload.equalsIgnoreCase("lang") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
 			LgFileHandler.loadLang("re");
 			// 'lang.yml is reloaded' notification
-			if (sender instanceof Player) {
-				sender.sendMessage(prefixTMColor + " " + lgFileReloadMsg); // Player final msg (in case)
-			}
-			Bukkit.getLogger().info(prefixTM + " " + lgFileReloadMsg); // Console final msg (always)
+			MsgHandler.playerMsg(sender, lgFileReloadMsg); // Player final msg (in case)
+			MsgHandler.infoMsg(lgFileReloadMsg); // Console final msg (always)
 			argOk = false;
 		}
 		// Else, return an error and help message

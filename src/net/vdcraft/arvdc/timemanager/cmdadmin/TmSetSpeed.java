@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldDoDaylightCycleHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 
@@ -21,7 +22,7 @@ public class TmSetSpeed extends MainTM {
 		if (sender instanceof Player)
 			world = ValuesConverter.restoreSpacesInString(world);
 		// Adapt wrong values in the arg
-		speed = ValuesConverter.returnCorrectSpeed(speed);
+		speed = ValuesConverter.correctSpeed(speed);
 
 		// Modify all worlds
 		if (world.equalsIgnoreCase("all")) {
@@ -52,44 +53,28 @@ public class TmSetSpeed extends MainTM {
 			WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 			// Save the config
 			MainTM.getInstance().saveConfig();
-			if (debugMode == true)
-				Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " " + launchSchedulerDebugMsg); // Console debug msg
-			// Launch the good scheduler if is inactive
-			if (speed == realtimeSpeed) {
-				if (realScheduleIsOn == false) {
-					WorldSpeedHandler.worldRealSpeed();
-				}
-			} else if (speed >= 1.0 && speed <= speedMax) {
-				if (increaseScheduleIsOn == false) {
-					WorldSpeedHandler.worldIncreaseSpeed();
-				}
-			} else if (speed > 0.0 && speed < 1.0) {
-				if (decreaseScheduleIsOn == false) {
-					WorldSpeedHandler.worldDecreaseSpeed();
-				}
-			}
+			// Detect if this world needs to change its speed value
+			MsgHandler.debugMsg(launchSchedulerDebugMsg); // Console debug msg
+			WorldSpeedHandler.speedScheduler(world);
+
 			// Notifications
 			if (speed == realtimeSpeed) { // Display realtime message (speed = 24.00)
-				Bukkit.getLogger().info(prefixTM + " " + worldSpeedChgIntro + " " + world + " " + worldRealSpeedChgMsg); // Console final msg (always)
-				if (sender instanceof Player) {
-					sender.sendMessage(prefixTMColor + " " + worldSpeedChgIntro + " §e" + world + " §r" + worldRealSpeedChgMsg); // Player final msg (in case)
-				}
+				MsgHandler.infoMsg(worldSpeedChgIntro + " " + world + " " + worldRealSpeedChgMsg); // Console final msg (always)
+				MsgHandler.playerMsg(sender, worldSpeedChgIntro + " §e" + world + " §r" + worldRealSpeedChgMsg); // Player final msg (in case)
+
 			} else { // Display usual message (any speed but 24.00)
 				if (when.equalsIgnoreCase(CMD_SET_SPEED)) {
-					Bukkit.getLogger().info(prefixTM + " " + worldSpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
-					if (sender instanceof Player) {
-						sender.sendMessage(prefixTMColor + " " + worldSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
-					}
+					MsgHandler.infoMsg(worldSpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
+					MsgHandler.playerMsg(sender, worldSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
+
 				} else if (when.equalsIgnoreCase(CMD_SET_D_SPEED)) {
-					Bukkit.getLogger().info(prefixTM + " " + worldDaySpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
-					if (sender instanceof Player) {
-						sender.sendMessage(prefixTMColor + " " + worldDaySpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
-					}
+					MsgHandler.infoMsg(worldDaySpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
+					MsgHandler.playerMsg(sender, worldDaySpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
+
 				} else if (when.equalsIgnoreCase(CMD_SET_N_SPEED)) {
-					Bukkit.getLogger().info(prefixTM + " " + worldNightSpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
-					if (sender instanceof Player) {
-						sender.sendMessage(prefixTMColor + " " + worldNightSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
-					}
+					MsgHandler.infoMsg(worldNightSpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
+					MsgHandler.playerMsg(sender, worldNightSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
+
 				}
 			}
 		}
