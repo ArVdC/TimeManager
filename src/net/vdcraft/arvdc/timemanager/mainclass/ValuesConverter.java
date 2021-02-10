@@ -368,11 +368,14 @@ public class ValuesConverter extends MainTM {
 	public static String dateFromElapsedDays(long daysNb, String datePart) {
 		// #1. Years
 		if (datePart.contains("yy")) {
-			long years = (1 + (long) Math.floor(daysNb / 365)) % 10000;
-			if (datePart.equalsIgnoreCase("yyyy"))
+			long years = (1 + (long) Math.floor(daysNb / 365));
+			if (datePart.equalsIgnoreCase("yyyy")) {
+				years = years % 10000;
 				return String.format("%04d", years);
-			else
+			} else {
+				years = years % 100;
 				return String.format("%02d", years);
+			}
 		}
 		// #2. Months
 		long dayOfYear = 1 + (daysNb % 365); // Check what day of the year it is today to set the correct month length
@@ -383,7 +386,7 @@ public class ValuesConverter extends MainTM {
 		} else if (dayOfYear >=60 && dayOfYear <=90) { month = 3; dayOfMonth = dayOfYear - 59; // March 
 		} else if (dayOfYear >=91 && dayOfYear <=120) { month = 4; dayOfMonth = dayOfYear - 90; // April 
 		} else if (dayOfYear >=121 && dayOfYear <=151) { month = 5; dayOfMonth = dayOfYear - 120; // May 
-		} else if (dayOfYear >=152 && dayOfYear <=181) { month = 6; dayOfMonth = dayOfYear - 181; // June
+		} else if (dayOfYear >=152 && dayOfYear <=181) { month = 6; dayOfMonth = dayOfYear - 151; // June
 		} else if (dayOfYear >=182 && dayOfYear <=212) { month = 7; dayOfMonth = dayOfYear - 181; // July
 		} else if (dayOfYear >=213 && dayOfYear <=243) { month = 8; dayOfMonth = dayOfYear - 212; // August 
 		} else if (dayOfYear >=244 && dayOfYear <=273) { month = 9; dayOfMonth = dayOfYear - 243; // September
