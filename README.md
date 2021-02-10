@@ -116,9 +116,9 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 
 ### DEPEDENCIES
 Since v1.4.0, TimeManager can display its placeholders through PlaceholderAPI and MVdWPlaceholderAPI. The available placeholders are as follows :
-####PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) :
+#### PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) :
 %tm_currentday%, %tm_daypart%, %tm_elapseddays%, %tm_monthname%, %tm_time%, %tm_yearweek%, %tm_dd%, %tm_mm%, %tm_yy% and %tm_yyyy%.
-####MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) :
+#### MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) :
 {tm_currentday}, {tm_daypart}, {tm_elapseddays}, {tm_monthname}, {tm_time}, {tm_yearweek}, {tm_dd}, {tm_mm}, {tm_yy} and {tm_yyyy}.
 
 ### TUTORIALS
