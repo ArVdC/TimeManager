@@ -56,10 +56,10 @@ public class TmCheckConfig extends MainTM {
 		String colwakeUpTickMsg = "Players will wake up at §e#" + MainTM.getInstance().getConfig().getString(CF_WAKEUPTICK) + "§r.";	
 
 		// New day will start at
-		String tick = "18000";
-		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("dawn")) tick = "0";
-		String newDayAtMsg = "In the calendar, new day starts at " + MainTM.getInstance().getConfig().getString(CF_NEWDAYAT) + ". (#" + tick + ")";
-		String colNewDayAtMsg = "In the calendar, new day starts at §e" + MainTM.getInstance().getConfig().getString(CF_NEWDAYAT) + "§r. (§e#" + tick + "§r)";	
+		String tick = "#18000";
+		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(CF_NEWDAYAT_6H00)) tick = "#0";
+		String newDayAtMsg = "In the calendar, new day starts at " + MainTM.getInstance().getConfig().getString(CF_NEWDAYAT) + ". (" + tick + ")";
+		String colNewDayAtMsg = "In the calendar, new day starts at §e" + MainTM.getInstance().getConfig().getString(CF_NEWDAYAT) + "§r. (§e" + tick + "§r)";	
 
 		// List of the worlds
 		List<String> activeWorlds = CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST);
