@@ -16,7 +16,7 @@
 #  Players can wake up later than 6:00 am. Possible values are ticks from #0 to #6000.
 # -----
 # *newDayAt*
-#  midnight (#18000) or dawn (#0) // TODO
+#  It is possible to determine whether the new day will be counted from 06:00 (= tick #0) or from 00:00 (= tick #18000). Accepted values are 06:00, #0 or dawn and 00:00, #18000 or midnight.
 # -----
 # *worldsList*
 #  The list of available worlds will be refreshed on server startup. Nether and Ender worlds will be erased if present.

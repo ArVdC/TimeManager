@@ -71,6 +71,9 @@ public class WorldSleepHandler implements Listener {
 							if (MainTM.decimalOfMcVersion < 13.0) w.setGameRuleValue("doDaylightCycle", isSleepPermited.toString());
 							else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, isSleepPermited);
 						}
+						
+						// Change the doDaylightCycle value if it needs to be (avoid a bug when the sleep is interrupt)
+						WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 					}
 				} else if (sleepTicks > 0) {
 					MsgHandler.debugMsg("Player §e" + p.getName() + "§b is awake after §e" + sleepTicks + "§b ticks without having been able to sleep."); // Console debug msg
@@ -89,9 +92,9 @@ public class WorldSleepHandler implements Listener {
 				long time = w.getTime();
 				long wakeUpTick = MainTM.getInstance().getConfig().getLong(MainTM.CF_WAKEUPTICK);
 				// Check if the sun is already rising
-				if (time >= 0 && time <= (wakeUpTick + 100) && MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals("true")) {
+				if (time >= 0 && time <= (wakeUpTick + 2) && MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals("true")) {
 					MsgHandler.debugMsg("§aWake up, it's morning !!!"); // Console debug msg
-					afterSleepingSettings(w, wakeUpTick); // If yes, go further
+					afterSleepingSettings(w, wakeUpTick + 2); // If yes, go further
 				} else if (waitingCount > 0) { // If not, try more, until x ticks later
 					waitingCount--;
 					watingForTheDay(w, world);
@@ -103,14 +106,14 @@ public class WorldSleepHandler implements Listener {
 		}, 1L);
 	}
 
-	// # 4. Adjust the time from 6:00 to 12:00 am, the doDaylightCycle gamerule and relaunch the speed scheduler
+	// # 4. Adjust the time from 6:00 to 12:00 am, relaunch the speed scheduler and refresh the doDaylightCycle gamerule
 	public static void afterSleepingSettings(World w, long wakeUpTick) {
 		String world = w.getName();
 		// If sleeping was complete, waking up at a custom hour
 		w.setTime(wakeUpTick);
 		// Get the world daySpeed
 		// Detect if this world needs to change its speed value
-		WorldSpeedHandler.speedScheduler(world); // TODO OOOOOoOOoOOooOo
+		WorldSpeedHandler.speedScheduler(world);
 		// Change the doDaylightCycle value if it needs to be
 		WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 		// Reset the active/inactive variable

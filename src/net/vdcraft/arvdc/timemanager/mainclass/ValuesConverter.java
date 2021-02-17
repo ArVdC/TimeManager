@@ -149,24 +149,22 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Convert a listed String value to a 'start' or 'time' tick value (returns a
-	 * String)
+	 * Convert a listed String value to a 'start' or 'time' tick value (returns a Long)
 	 */
-	public static String tickFromString(String tick) {
-		if (tick.equalsIgnoreCase("day")) {
-			tick = "1000";
-		} else if (tick.equalsIgnoreCase("midday") || tick.equalsIgnoreCase("noon")) {
-			tick = "6000";
-		} else if (tick.equalsIgnoreCase("dusk") || tick.equalsIgnoreCase("sunset") || tick.equalsIgnoreCase("evening")) {
-			tick = "12000";
-		} else if (tick.equalsIgnoreCase("night")) {
-			tick = "13000";
-		} else if (tick.equalsIgnoreCase("midnight")) {
-			tick = "18000";
-		} else if (tick.equalsIgnoreCase("dawn") || tick.equalsIgnoreCase("sunrise") || tick.equalsIgnoreCase("morning")) {
-			tick = "0";
-		}
-		return tick;
+	public static Long tickFromString(String dayPart) {
+		if (dayPart.equalsIgnoreCase("day")) {
+			return 1000L;
+		} else if (dayPart.equalsIgnoreCase("midday") || dayPart.equalsIgnoreCase("noon")) {
+			return 6000L;
+		} else if (dayPart.equalsIgnoreCase("dusk") || dayPart.equalsIgnoreCase("sunset") || dayPart.equalsIgnoreCase("evening")) {
+			return 12000L;
+		} else if (dayPart.equalsIgnoreCase("night")) {
+			return 13000L;
+		} else if (dayPart.equalsIgnoreCase("midnight")) {
+			return 18000L;
+		} else if (dayPart.equalsIgnoreCase("dawn") || dayPart.equalsIgnoreCase("sunrise") || dayPart.equalsIgnoreCase("morning")) {
+			return 0L;
+		} else return 0L;
 	}
 
 	/**
@@ -226,9 +224,9 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert HH:mm[:ss] to a tick nb (1/1728000) (returns a String)
+	 * Get and convert HH:mm[:ss] to a tick nb (1/1728000) (returns a Long)
 	 */
-	public static String tickFromServerTime(String time) {
+	public static Long tickFromServerTime(String time) {
 		String[] splitedHms = time.split(":");
 		try {
 			long H = Long.parseLong(splitedHms[0]) % 24;
@@ -239,9 +237,9 @@ public class ValuesConverter extends MainTM {
 			if (splitedHms.length >= 3)
 				s = Long.parseLong(splitedHms[2]) % 60;
 			Long calcTick = ((H * 72000) + (m * 1200) + (s * 20)) % 1728000;
-			return calcTick.toString();
+			return calcTick;
 		} catch (NumberFormatException nfe) {
-			return time;
+			return 0L;
 		}
 	}
 
@@ -316,14 +314,14 @@ public class ValuesConverter extends MainTM {
 		long m = (newTicks / 60) % 60;
 		long H = (newTicks / (60 * 60)) % 24;
 		String output = String.format("%02d:%02d:%02d", H, m, s);
-		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(MainTM.prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output+ "§b\".");
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output+ "§b\".");
 		return output;
 	}
 
 	/**
-	 * Get and convert [HH:mm:ss] to a tick nb (1/24000) (returns a String)
+	 * Get and convert [HH:mm:ss] to a tick nb (1/24000) (returns a Long)
 	 */
-	public static String tickFromFormattedTime(String time) {
+	public static Long tickFromFormattedTime(String time) {
 		String[] splitedHms = time.split(":");
 		try {
 			long H = Long.parseLong(splitedHms[0]) % 24;
@@ -334,23 +332,55 @@ public class ValuesConverter extends MainTM {
 			if (splitedHms.length >= 3)
 				s = Long.parseLong(splitedHms[2]) % 60;
 			Float calcTick = (float) (((H * 24000 / 24) + (m * 16.678) + (s * 0.278) - 6000L) % 24000);
-			Long newTick = (long) Math.floor(calcTick);
-			return newTick.toString();
+			return (long) Math.floor(calcTick);
 		} catch (NumberFormatException nfe) {
-			return time;
+			return 0L; // TODO 1.5.0 - add devMsg !!!
 		}
+	}
+	
+	/**
+	 * Get and convert [yyyy-mm-dd] to a tick (returns a Long) // TODO 1.5.0
+	 */
+	public static Long tickFromFormattedDate(String date) {
+		String[] splitedDate = date.split(":");
+		try {
+			Long y = Long.parseLong(splitedDate[0]) * 630720000; // (= 365j * 24h * 60m * 60s * 20t)			
+			Long month = Long.parseLong(splitedDate[1]);
+			Long days = 0L; // January 
+			if (month == 2) { days = 31L; // February
+			} else if (month == 3) { days = 59L; // March
+			} else if (month == 4) { days = 90L; // April
+			} else if (month == 5) { days = 120L; // May
+			} else if (month == 6) { days = 151L; // June
+			} else if (month == 7) { days = 181L; // July
+			} else if (month == 8) { days = 212L; // August
+			} else if (month == 9) { days = 243L; // September
+			} else if (month == 10) { days = 273L; // October
+			} else if (month == 11) { days = 304L; // November
+			} else if (month == 12) { days = 334L; // December
+			}
+			Long m = days * 1728000; // (= days * 24h * 60m * 60s * 20t)			
+			Long d = Long.parseLong(splitedDate[3]) * 1728000; // (= 24h * 60m * 60s * 20t)
+			Long tick =  y + m + d;
+			return tick;
+		} catch (NumberFormatException nfe) {
+			return 0L; // TODO 1.5.0 - add devMsg !!!
+		}	
 	}
 
 	/**
-	 * Get and convert a tick (current Fulltime) to a number of elapsed days (returns a Long)
+	 * Get and convert a tick (current Fulltime) to a number of elapsed days(returns a Long)
 	 */
 	public static Long elapsedDaysFromTick(long fulltime) {
-		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")
-				|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("18000")) {
-			if (fulltime < 18000) return 0L;
-			return (1L + ((fulltime - 18000) / 24000));
-		} else {
-			return (1L + ((fulltime) / 24000));	
+		// A real day begin at 00:00
+		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(CF_NEWDAYAT_0H00)) {
+			MsgHandler.devMsg("New day begins at §e00:00§b, so the calculation of elapsed days is : (" + fulltime
+					+ " + 6000 = " + (fulltime + 6000) + ") / 24000 = §e" + (fulltime + 6000) / 24000); // Console dev msg
+			return (fulltime + 6000) / 24000;
+		} else { // An MC day begin at 06:00
+			MsgHandler.devMsg("New day begins at §e06:00§b, so the calculation of elapsed days is : " + fulltime
+					+ " / 24000 = §e" + (fulltime / 24000)); // Console dev msg
+			return fulltime / 24000;
 		}
 	}
 
@@ -512,8 +542,8 @@ public class ValuesConverter extends MainTM {
 	public static void restrainStart(String world) {
 		long t = Bukkit.getWorld(world).getTime();
 		String time = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_START);
+		time = tickFromString(time).toString(); // Check if value is a part of the day
 		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
-		time = ValuesConverter.tickFromString(time); // Check if value is a part of the day
 		long tick;
 		try { // Check if value is a long
 			tick = Long.parseLong(time);
@@ -550,8 +580,8 @@ public class ValuesConverter extends MainTM {
 		double nightSpeedNb;
 		String nightSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
 		if (daySpeed.contains("24") || daySpeed.equalsIgnoreCase("realtime") || nightSpeed.contains("24") || nightSpeed.equalsIgnoreCase("realtime")) {
-			daySpeedNb = MainTM.realtimeSpeed;
-			nightSpeedNb = MainTM.realtimeSpeed;
+			daySpeedNb = realtimeSpeed;
+			nightSpeedNb = realtimeSpeed;
 		} else {
 			try { // Check if day value is a double
 				daySpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);

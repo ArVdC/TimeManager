@@ -93,14 +93,16 @@ public class CfgFileHandler extends MainTM {
 		}
 
 		// #9. Set the default value if missing or corrupt for the newDayAt key
-		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_NEWDAYAT)) {
-			if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("18000")) {
-				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, "midnight");
-			} else if (!MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")) {
-				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, "dawn");
+		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_NEWDAYAT)) { // #9.A. Check if the value already exists
+			if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("18000") // If the value already exists, check if it is 00:00
+					|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")
+					|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("0:0")) {
+				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, CF_NEWDAYAT_0H00);
+			} else {
+				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, CF_NEWDAYAT_6H00); // If not, set the default value
 			}
-		} else {
-			MainTM.getInstance().getConfig().set(CF_NEWDAYAT, "dawn");
+		} else { // #9.B. If not, set the default value
+			MainTM.getInstance().getConfig().set(CF_NEWDAYAT, CF_NEWDAYAT_6H00);
 		}
 
 		// #10. Set the default value if missing or corrupt for the placeholder keys
