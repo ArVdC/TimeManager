@@ -61,16 +61,16 @@
 		<repository>
 			<id>spigot-repo</id>
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-   		</repository>
-        <repository>
+		</repository>
+		<repository>
 			<id>mvdw-software</id>
 			<name>MVdW Public Repositories</name>
 			<url>http://repo.mvdw-software.be/content/groups/public/</url>
 		</repository>
-        <repository>
-            <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
-        </repository>
+		<repository>
+			<id>placeholderapi</id>
+			<url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+		</repository>
 	</repositories>
 	<dependencies>
 		<dependency>
