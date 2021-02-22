@@ -28,7 +28,7 @@ public class TmSetDebugMode extends MainTM {
 		}
 		// Else, return an error and help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, "set debugmode");
+			TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, MainTM.CMD_SET + " " + CMD_SET_DEBUG);
 		}
 	}
 

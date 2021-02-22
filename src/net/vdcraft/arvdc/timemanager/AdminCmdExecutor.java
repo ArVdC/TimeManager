@@ -4,8 +4,6 @@
 
 package net.vdcraft.arvdc.timemanager;
 
-import java.util.Calendar;
-
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,6 +29,7 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleep;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetUpdateMsgSrc;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class AdminCmdExecutor implements CommandExecutor {
@@ -45,7 +44,11 @@ public class AdminCmdExecutor implements CommandExecutor {
 			World w = ((Player) sender).getWorld();
 			defaultWorld = w.getName();
 		}
-
+		
+		MsgHandler.devMsg("Command §e/" + label + "§9 launched with §e" + argsNumb + "§9 arguments :"); // Console dev msg
+		int n = 0;
+		while (n < argsNumb) MsgHandler.devMsg("[" + (n) + "] : §e" + args[n++]); // Console dev msg
+		
 		if (argsNumb >= 1) {
 			// Display a summary of the configuration informations
 			if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKCONFIG)) {
@@ -85,7 +88,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 			// Reload data from yaml file(s)
 			else if (args[0].equalsIgnoreCase(MainTM.CMD_RELOAD)) {
 				if (argsNumb < 2) {
-					TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_RELOAD); // Send error and help msg
+					TmReload.cmdReload(sender, "all");
 					return true;
 				} else {
 					TmReload.cmdReload(sender, args[1]);
@@ -132,7 +135,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					}
 				}
-				// Define the default language to use, in case the asked locale doesn't exist
+				// Set the default language to use, in case the asked locale doesn't exist
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DEFLANG)) {
 					if (argsNumb < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DEFLANG); // Send error and help msg
@@ -142,30 +145,24 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					}
 				}
-				// Define the initial tick
+				// Set the initial tick
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_INITIALTICK)) {
 					if (argsNumb < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_INITIALTICK); // Send error and help msg
 						return true;
 					} else {
 						String tickString = args[2];
-						long tickToSet;
+						Long tickToSet;
 						if (!args[2].contains(":")) {
-							tickString = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
+							tickToSet = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
 						} else {
-							tickString = ValuesConverter.tickFromServerTime(tickString); // Check if the value have an HH:mm:ss format
+							tickToSet = ValuesConverter.tickFromServerTime(tickString); // Check if the value have an HH:mm:ss format
 						}
-						try {
-							tickToSet = Long.parseLong(tickString);
-							TmSetInitialTick.cmdInitTick(sender, tickToSet);
-							return true;
-						} catch (NumberFormatException nfe) {
-							TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_INITIALTICK); // Send error and help msg
-							return true;
-						}
+						TmSetInitialTick.cmdInitTick(sender, tickToSet);
+						return true;
 					}
 				}
-				// Define the auto-translation on/off
+				// Set the auto-translation on/off
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_MULTILANG)) {
 					if (argsNumb < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_MULTILANG); // Send error and help msg
@@ -175,7 +172,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					}
 				}
-				// Define the refresh rate
+				// Set the refresh rate
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_REFRESHRATE)) {
 					if (argsNumb < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_REFRESHRATE); // Send error and help msg
@@ -186,18 +183,22 @@ public class AdminCmdExecutor implements CommandExecutor {
 							TmSetRefreshRate.cmdRefRate(sender, refRate);
 							return true;
 						} catch (NumberFormatException nfe) {
-							TmHelp.sendErrorMsg(sender, MainTM.rateNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_REFRESHRATE); // Send error and help msg
+							TmHelp.sendErrorMsg(sender, MainTM.rateFormatMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_REFRESHRATE); // Send error and help msg
 							return true;
 						}
 					}
 				}
-				// Define the source server of the update message
+				// Set the source server of the update message
 				else if ((args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE))
 						&& (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
-					String source = "false";
-					if (argsNumb >= 3) source = args[2];		
-					TmSetUpdateMsgSrc.cmdSetUpdateSrc(sender, source);
-					return true;
+					if (argsNumb < 3) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_UPDATE); // Send error and help msg
+						return true;
+					} else {
+						String source = args[2];		
+						TmSetUpdateMsgSrc.cmdSetUpdateSrc(sender, source);
+						return true;
+					}
 				}
 			}
 		}
@@ -216,11 +217,11 @@ public class AdminCmdExecutor implements CommandExecutor {
 				concatWorldArgs = (args[currentArgNb] + " " + concatWorldArgs);
 			}
 		}
-		if (argsNumb >= 3) {
+		if (argsNumb >= 2) {
 			if (args[0].equalsIgnoreCase(MainTM.CMD_SET)) {
-				// Define the sleeping possibility for a world
-				if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) || args[1].equalsIgnoreCase("sleepUntilDawn")) { // alias for v1.0 compatibility
-					if (args.length < 3) {
+				// Set the sleeping possibility for a world
+				if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)) {
+					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SLEEP); // Send error and help msg
 						return true;
 					} else {
@@ -229,10 +230,10 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					}
 				}
-				// Define the speed modifier for a world
+				// Set the speed modifier for a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)) {
 					String when = args[1];
-					if (args.length < 3) {
+					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SPEED); // Send error and help msg
 						return true;
 					} else {
@@ -247,37 +248,31 @@ public class AdminCmdExecutor implements CommandExecutor {
 								TmSetSpeed.cmdSetSpeed(sender, speedModif, when, concatWorldArgs);
 								return true;
 							} catch (NumberFormatException nfe) {
-								TmHelp.sendErrorMsg(sender, MainTM.speedNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SPEED); // Send error and help msg
+								TmHelp.sendErrorMsg(sender, MainTM.speedFormatMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SPEED); // Send error and help msg
 								return true;
 							}
 					}
 				}
-				// Define the start time for a world
+				// Set the start time for a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_START)) {
-					if (args.length < 3) {
+					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_START); // Send error and help msg
 						return true;
 					} else {
 						String tickString = args[2];
-						long tickToSet;
+						Long tickToSet;
 						if (!args[2].contains(":")) {
-							tickString = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
+							tickToSet = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
 						} else {
-							tickString = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
+							tickToSet = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
 						}
-						try {
-							tickToSet = Long.parseLong(tickString);
-							TmSetStart.cmdSetStart(sender, tickToSet, concatWorldArgs);
-							return true;
-						} catch (NumberFormatException nfe) {
-							TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_START); // Send error and help msg
-							return true;
-						}
+						TmSetStart.cmdSetStart(sender, tickToSet, concatWorldArgs);
+						return true;
 					}
 				}
-				// Define the permanent synchronization of a world
+				// Set the permanent synchronization of a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)) {
-					if (args.length < 3) {
+					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SYNC); // Send error and help msg
 						return true;
 					} else {
@@ -286,50 +281,57 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					}
 				}
-				// Define the current time for a world
+				// Set the current time for a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)) {
-					if (args.length < 3) {
+					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME); // Send error and help msg
 						return true;
 					} else {
 						String tickString = args[2];
-						long tickToSet;
-						if (!args[2].contains(":")) {
-							tickString = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
+						Long tickLong;
+						if (!tickString.contains(":")) {
+							tickLong = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
 						} else {
-							tickString = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
+							tickLong = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
 						}
+						TmSetTime.cmdSetTime(sender, tickLong, concatWorldArgs);
+						return true;
+					}
+				}
+				// Set the FullTime value of a world, from a days number
+				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) {
+					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg
+						return true;
+					} else {
+						Long elapsedDays;
 						try {
-							tickToSet = Long.parseLong(tickString);
-							TmSetTime.cmdSetTime(sender, tickToSet, concatWorldArgs);
+							elapsedDays = Long.parseLong(args[2]);
+							TmSetFullTime.cmdSetDay(sender, elapsedDays, concatWorldArgs);
 							return true;
 						} catch (NumberFormatException nfe) {
-							TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME); // Send error and help msg
+							TmHelp.sendErrorMsg(sender, MainTM.dayFormatMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg
 							return true;
 						}
 					}
 				}
-				// Define the current Fulltime in days for a world // TODO 1.4
-				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) {
-					if (args.length < 3) {
-						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg
+				// Set the FullTime value of a world, from a date
+				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DATE)) {
+					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DATE); // Send error and help msg
 						return true;
 					} else {
-						String dayString = args[2];
+						String dateString = args[2];
 						Long elapsedDays;
-						if (dayString.equalsIgnoreCase("today")) {
-							int year = Calendar.getInstance().get(Calendar.YEAR);
-							int day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-							elapsedDays = (long) (((year - 1) * 365) + (day - 1));
+						if (dateString.equalsIgnoreCase("today")) {
+							elapsedDays = ValuesConverter.daysFromCurrentDate();
 							TmSetFullTime.cmdSetDay(sender, elapsedDays, concatWorldArgs);
 							return true;
-						}
-						try {
-							elapsedDays = Long.parseLong(dayString);
-							TmSetFullTime.cmdSetDay(sender, elapsedDays, concatWorldArgs);
+						} else if (dateString.contains("-")) {
+							TmSetFullTime.cmdSetDate(sender, dateString, concatWorldArgs);
 							return true;
-						} catch (NumberFormatException nfe) {
-							TmHelp.sendErrorMsg(sender, MainTM.tickNotNbMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg
+						} else {
+							TmHelp.sendErrorMsg(sender, MainTM.dateFormatMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DATE); // Send error and help msg
 							return true;
 						}
 					}

@@ -57,7 +57,7 @@ public class TmCheckConfig extends MainTM {
 
 		// New day will start at
 		String tick = "#18000";
-		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(CF_NEWDAYAT_6H00)) tick = "#0";
+		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_6h00)) tick = "#0";
 		String newDayAtMsg = "In the calendar, new day starts at " + MainTM.getInstance().getConfig().getString(CF_NEWDAYAT) + ". (" + tick + ")";
 		String colNewDayAtMsg = "In the calendar, new day starts at §e" + MainTM.getInstance().getConfig().getString(CF_NEWDAYAT) + "§r. (§e" + tick + "§r)";	
 
@@ -85,7 +85,7 @@ public class TmCheckConfig extends MainTM {
 		// Update
 		String updateMsg = "The update message source can not be checked.";
 		String colUpdateMsg = "The update message source §ecan not be checked§r.";
-		if (!MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC).equals("")) {
+		if (!MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC).equals(defUpdateMsgSrc)) {
 			String updateSrc = "s" + MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC);
 			updateMsg = "The update message will check on " + updateSrc + " server to find a new version.";
 			colUpdateMsg = "The update message will check on §e" + updateSrc + "§r server to find a new version.";

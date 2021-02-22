@@ -108,7 +108,7 @@ public class PlayerCmdExecutor implements CommandExecutor {
 		}
 		if (defUnits.equalsIgnoreCase("hours")) {
 			timeToDisplay = ValuesConverter.formattedTimeFromTick(timeInTicks); // Convert time display format
-		} // TODO >>> add an 12-24 key in config.yml to display am/pm or 24h msg
+		} // TODO >>> add an 12-24 key in lang.yml to display am/pm or 24h msg
 		// #10. Check the player's locale and try to use it
 		String langToUse = UserMsgHandler.setLangToUse(sender);
 

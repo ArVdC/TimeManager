@@ -27,7 +27,7 @@ public class TmSetMultiLang extends MainTM {
 		}
 		// Else, return an error and help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, "set multilang");
+			TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, MainTM.CMD_SET + " " + CMD_SET_MULTILANG);
 		}
 	}
 

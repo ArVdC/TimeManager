@@ -68,7 +68,7 @@ public class TmSetTime extends MainTM {
 		}
 		// Else, return an error and help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set time");
+			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_TIME);
 		}
 	}
 

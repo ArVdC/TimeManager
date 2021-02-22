@@ -1,5 +1,6 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
+import java.util.Calendar;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -9,7 +10,8 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class ValuesConverter extends MainTM {
 
 	/**
-	 * Check and correct any 'speed' value (returns a double)
+	 * Checks and corrects any 'speed' value
+	 * (returns a double)
 	 */
 	public static double correctSpeed(double speed) {
 		if (speed != realtimeSpeed) { // Don't modify the real time value
@@ -23,7 +25,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Check and correct the 'refreshRate' value (returns an integer)
+	 * Checks and corrects the 'refreshRate' value
+	 * (returns an integer)
 	 */
 	public static Integer correctRefreshRate(int newRefreshRate) {
 		if (newRefreshRate > refreshMax) { // Forbid too big numbers
@@ -35,7 +38,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Convert a decimal to a fraction, to produce the speed change with the ratio between the time to add and the refresh rate
+	 * Converts a decimal to a fraction, to produce the speed change with the ratio between the time to add and the refresh rate
+	 * (returns a Long)
 	 */
 	public static Long fractionFromDecimal(Double currentSpeed, String value) {
 		Long modifTime = 0L;
@@ -92,7 +96,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Check and correct any 'start' or 'time' tick value (returns a long)
+	 * Checks and corrects any 'start' or 'time' tick value
+	 * (returns a long)
 	 */
 	public static long correctDailyTicks(long time) {
 		time = ((time % 24000) + 24000) % 24000; // Forbid numbers lower than 0 and higher than 23999 (= end of the MC day)
@@ -100,7 +105,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Check and correct the 'initialTIckNb' tick value (returns a long)
+	 * Checks and corrects the 'initialTIckNb' tick value
+	 * (returns a long)
 	 */
 	public static long correctInitTicks(long time) {
 		time = ((time % 1728000) + 1728000) % 1728000; // Forbid numbers lower than 0 and higher than 727999 (= end of the real day)
@@ -108,7 +114,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Check and correct the 'wakeUpTick' tick value (returns a long)
+	 * Checks and corrects the 'wakeUpTick' tick value
+	 * (returns a long)
 	 */
 	public static long correctwakeUpTick(long time) {
 		if (time > 6000) time = 6000L;// Forbid numbers higher than 6000
@@ -117,7 +124,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Convert a tick in its related part of the day (returns a String)
+	 * Converts a tick in its related part of the day
+	 * (returns a String)
 	 */
 	public static String getDayPart(long tick) {
 		String wichPart = new String();
@@ -136,7 +144,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 *  Get the correct speed value's name (daySpeed or nightSpeed) for a given tick (returns a String)
+	 * Gets the correct speed value's name (daySpeed or nightSpeed) for a given tick
+	 * (returns a String)
 	 */
 	public static String wichSpeedParam(long tick) {
 		String speedParam;
@@ -149,7 +158,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Convert a listed String value to a 'start' or 'time' tick value (returns a Long)
+	 * Converts a listed String value to a tick value
+	 * (returns a Long)
 	 */
 	public static Long tickFromString(String dayPart) {
 		if (dayPart.equalsIgnoreCase("day")) {
@@ -164,22 +174,30 @@ public class ValuesConverter extends MainTM {
 			return 18000L;
 		} else if (dayPart.equalsIgnoreCase("dawn") || dayPart.equalsIgnoreCase("sunrise") || dayPart.equalsIgnoreCase("morning")) {
 			return 0L;
-		} else return 0L;
+		} else {
+			try { // If not a formatted hour neither a word, try to get a tick number
+				dayPart = dayPart.replace("#", "");
+				return Long.parseLong(dayPart);
+			} catch (NumberFormatException nfe) { // If not a Long, set a default value
+				MsgHandler.errorMsg(tickFormatMsg); // Console error msg
+				return 0L;
+			}
+		}
 	}
 
 	/**
-	 * Get and convert current milliseconds UTC+0 time to a 1/1728000 tick value
+	 * Gets and converts current milliseconds UTC+0 time to a 1/1728000 tick value
 	 * (returns a long)
 	 */
 	public static long getServerTick() {
-		long ticksSinceEpoch = System.currentTimeMillis() / 50L; // Get the server actual time in milliseconds and
-		// convert it into ticks
+		long ticksSinceEpoch = System.currentTimeMillis() / 50L; // Get the server actual time in milliseconds and convert it into ticks
 		long daillyServerTick = ticksSinceEpoch % 1728000L; // Display a 24h day loop (1728000 ticks = 1 real day)
 		return daillyServerTick;
 	}
 
 	/**
-	 * Convert a tick value and return a correct UTC value (returns a long)
+	 * Converts a tick value and returns a correct UTC value
+	 * (returns a long)
 	 */
 	public static long formattedUTCFromTick(long tick) {
 		tick = (long) Math.floor(tick / 1000); // Use the 'start' value as an UTC modifier
@@ -187,7 +205,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Format a positive/negative number and return a formatted UTC+/-n value (returns a String)
+	 * Formats a positive/negative number and return a formatted UTC+/-n value
+	 * (returns a String)
 	 */
 	public static String formatAsUTC(long tick) {
 		tick = formattedUTCFromTick(tick);
@@ -201,8 +220,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert the current millisecond UTC+0 time to HH:mm:ss (returns a
-	 * String)
+	 * Gets and converts the current millisecond UTC+0 time to HH:mm:ss
+	 * (returns a String)
 	 */
 	public static String getServerTime() {
 		long seconds = System.currentTimeMillis() / 1000L; // x ms in 1 second
@@ -213,7 +232,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert a real time tick (1/1728000) to HH:mm:ss (returns a String)
+	 * Gets and converts a real time tick (1/1728000) to HH:mm:ss
+	 * (returns a String)
 	 */
 	public static String realTimeFromTick(long tick) {
 		long newTick = tick / 20L; // x tick in 1 seconds
@@ -224,7 +244,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert HH:mm[:ss] to a tick nb (1/1728000) (returns a Long)
+	 * Gets and converts HH:mm[:ss] to a tick nb (1/1728000)
+	 * (returns a Long)
 	 */
 	public static Long tickFromServerTime(String time) {
 		String[] splitedHms = time.split(":");
@@ -239,12 +260,14 @@ public class ValuesConverter extends MainTM {
 			Long calcTick = ((H * 72000) + (m * 1200) + (s * 20)) % 1728000;
 			return calcTick;
 		} catch (NumberFormatException nfe) {
+			MsgHandler.errorMsg(hourFormatMsg); // Console error msg
 			return 0L;
 		}
 	}
 
 	/**
-	 * Return correct case of the locale (xx_XX) (returns a String)
+	 * Returns correct case of the locale (xx_XX)
+	 * (returns a String)
 	 */
 	public static String getCorrectLocaleCase(String l) {
 		String checkedLocale;
@@ -259,7 +282,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Use the first part to reach the nearest lang [en_GB] >>> [en_] >>> [en_US]
+	 * Uses the first part to reach the nearest lang [en_GB] >>> [en_] >>> [en_US]
 	 * (returns a String)
 	 */
 	public static String findNearestLang(String l) {
@@ -278,7 +301,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Replace 'spaces' in a given list (returns a String)
+	 * Replaces 'spaces' in a given list
+	 * (returns a String)
 	 */
 	public static List<String> replaceSpacesInList(List<String> l) {
 		// TODO >>> Find a more appropriate solution for world names with spaces
@@ -294,7 +318,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restore missing 'spaces' in a String (returns a String)
+	 * Restores missing 'spaces' in a String
+	 * (returns a String)
 	 */
 	public static String restoreSpacesInString(String s) {
 		if (s.contains("\u02d9")) {
@@ -304,7 +329,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert a MC tick (1/2400) to HH:mm:ss (returns a String)
+	 * Gets and converts a MC tick (1/2400) to HH:mm:ss
+	 * (returns a String)
 	 */
 	public static String formattedTimeFromTick(long ticks) {
 		long newTicks = (ticks + 6000L) * 72L; // Adjust offset and go real time
@@ -314,12 +340,13 @@ public class ValuesConverter extends MainTM {
 		long m = (newTicks / 60) % 60;
 		long H = (newTicks / (60 * 60)) % 24;
 		String output = String.format("%02d:%02d:%02d", H, m, s);
-		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output+ "§b\".");
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output+ "§b\"."); // Console debug msg
 		return output;
 	}
 
 	/**
-	 * Get and convert [HH:mm:ss] to a tick nb (1/24000) (returns a Long)
+	 * Gets and converts [HH:mm:ss] to a tick nb (1/24000)
+	 * (returns a Long)
 	 */
 	public static Long tickFromFormattedTime(String time) {
 		String[] splitedHms = time.split(":");
@@ -334,58 +361,105 @@ public class ValuesConverter extends MainTM {
 			Float calcTick = (float) (((H * 24000 / 24) + (m * 16.678) + (s * 0.278) - 6000L) % 24000);
 			return (long) Math.floor(calcTick);
 		} catch (NumberFormatException nfe) {
-			return 0L; // TODO 1.5.0 - add devMsg !!!
+			MsgHandler.errorMsg(hourFormatMsg); // Console error msg
+			return 0L;
 		}
 	}
 	
 	/**
-	 * Get and convert [yyyy-mm-dd] to a tick (returns a Long) // TODO 1.5.0
+	 * Gets and converts [yyyy-mm-dd] to a tick
+	 * (returns a Long)
 	 */
 	public static Long tickFromFormattedDate(String date) {
-		String[] splitedDate = date.split(":");
 		try {
-			Long y = Long.parseLong(splitedDate[0]) * 630720000; // (= 365j * 24h * 60m * 60s * 20t)			
+			String[] splitedDate = date.split("-");
+			Long year = Long.parseLong(splitedDate[0]);
 			Long month = Long.parseLong(splitedDate[1]);
-			Long days = 0L; // January 
-			if (month == 2) { days = 31L; // February
-			} else if (month == 3) { days = 59L; // March
-			} else if (month == 4) { days = 90L; // April
-			} else if (month == 5) { days = 120L; // May
-			} else if (month == 6) { days = 151L; // June
-			} else if (month == 7) { days = 181L; // July
-			} else if (month == 8) { days = 212L; // August
-			} else if (month == 9) { days = 243L; // September
-			} else if (month == 10) { days = 273L; // October
-			} else if (month == 11) { days = 304L; // November
-			} else if (month == 12) { days = 334L; // December
+			Long day = Long.parseLong(splitedDate[2]);
+			Long monthToDay = 0L; // January
+			Long maxDays = 31L;
+			if (month == 2) {
+				monthToDay = 31L; // February
+				maxDays = 28L;
+			} else if (month == 3) {
+				monthToDay = 59L; // March
+			} else if (month == 4) {
+				monthToDay = 90L; // April
+				maxDays = 30L;
+			} else if (month == 5) {
+				monthToDay = 120L; // May
+			} else if (month == 6) {
+				monthToDay = 151L; // June
+				maxDays = 30L;
+			} else if (month == 7) {
+				monthToDay = 181L; // July
+			} else if (month == 8) {
+				monthToDay = 212L; // August
+			} else if (month == 9) {
+				monthToDay = 243L; // September
+				maxDays = 30L;
+			} else if (month == 10) {
+				monthToDay = 273L; // October
+			} else if (month == 11) {
+				monthToDay = 304L; // November
+				maxDays = 30L;
+			} else if (month >= 12) {
+				monthToDay = 334L; // December
 			}
-			Long m = days * 1728000; // (= days * 24h * 60m * 60s * 20t)			
-			Long d = Long.parseLong(splitedDate[3]) * 1728000; // (= 24h * 60m * 60s * 20t)
+			// Avoid wrong values, send warn msgs
+			if (year > 9999) {
+				MsgHandler.warnMsg(yearFormatMsg); // Console warn msg
+				year = 9999L;
+			}
+			if (month > 12)	MsgHandler.warnMsg(monthFormatMsg); // Console warn msg
+			if (day > maxDays) {
+				MsgHandler.warnMsg(dayFormatMsg + maxDays + "."); // Console warn msg	
+				day = maxDays;		
+			}
+			Long y;
+			Long m;			
+			Long d;
+			y = (year - 1) * 8760000; // (= 365j * 20m * 60s * 20t)	
+			m = (monthToDay) * 24000; // (= 20m * 60s * 20t)			
+			d = (day - 1) * 24000; // (= 20m * 60s * 20t)
 			Long tick =  y + m + d;
 			return tick;
 		} catch (NumberFormatException nfe) {
-			return 0L; // TODO 1.5.0 - add devMsg !!!
+			MsgHandler.errorMsg(dateFormatMsg); // Console error msg
+			return null;
 		}	
+	}
+	
+	/**
+	 * Gets and converts the current real date to a number of days
+	 * (returns a Long)
+	 */
+	public static Long daysFromCurrentDate() {		
+		int year = Calendar.getInstance().get(Calendar.YEAR);
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+		Long elapsedDays = (long) (((year - 1) * 365) + (day - 1));
+		return elapsedDays;
 	}
 
 	/**
-	 * Get and convert a tick (current Fulltime) to a number of elapsed days(returns a Long)
+	 * Gets and converts a tick (current Fulltime) to a number of elapsed days
+	 * (returns a Long)
 	 */
 	public static Long elapsedDaysFromTick(long fulltime) {
 		// A real day begin at 00:00
-		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(CF_NEWDAYAT_0H00)) {
-			MsgHandler.devMsg("New day begins at §e00:00§b, so the calculation of elapsed days is : (" + fulltime
+		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_0h00)) {
+			MsgHandler.devMsg("New day begins at §e00:00§9, so the calculation of elapsed days is : (" + fulltime
 					+ " + 6000 = " + (fulltime + 6000) + ") / 24000 = §e" + (fulltime + 6000) / 24000); // Console dev msg
 			return (fulltime + 6000) / 24000;
-		} else { // An MC day begin at 06:00
-			MsgHandler.devMsg("New day begins at §e06:00§b, so the calculation of elapsed days is : " + fulltime
+		} else { // A MC day begin at 06:00
+			MsgHandler.devMsg("New day begins at §e06:00§9, so the calculation of elapsed days is : " + fulltime
 					+ " / 24000 = §e" + (fulltime / 24000)); // Console dev msg
 			return fulltime / 24000;
 		}
 	}
 
 	/**
-	 * Get and convert a tick (current Fulltime) to the number of the week in the year (returns a Long)
+	 * Gets and converts a tick (current Fulltime) to the number of the week in the year (returns a Long)
 	 */
 	public static Long yearWeekFromTick(long fulltime) {
 		long daysNb = elapsedDaysFromTick(fulltime) % 365;
@@ -393,7 +467,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Get and convert a number of days to a date part [dd] or [mm] or [yy] or [yyyy] (returns a String)
+	 * Gets and converts a number of days to a date part [dd] or [mm] or [yy] or [yyyy]
+	 * (returns a String)
 	 */
 	public static String dateFromElapsedDays(long daysNb, String datePart) {
 		// #1. Years
@@ -438,7 +513,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Compare two TimeManager versions, return "true" if edgeVersion is bigger than the current one (returns a boolean)
+	 * Compares two TimeManager versions, returns "true" if edgeVersion is bigger than the current one
+	 * (returns a boolean)
 	 */
 	public static boolean tmVersionIsOk(String srcFile, int edgeMajor, int edgeMinor, int edgePatch, int edgeRelease, int edgeDev) {
 		String currentVersion = null;
@@ -462,7 +538,7 @@ public class ValuesConverter extends MainTM {
 		if (currentVersionNb.length >= 3) currentPatch = Integer.parseInt(currentVersionNb[2]);
 		if (currentVersionNb.length >= 4) currentRelease = Integer.parseInt(currentVersionNb[3]);
 		if (currentVersionNb.length >= 5) currentDev = Integer.parseInt(currentVersionNb[4]);    	
-		// Compare versions
+		// Compares versions
 		if ((edgeMajor > currentMajor) 
 				|| (edgeMajor == currentMajor && edgeMinor > currentMinor)
 				|| (edgeMajor == currentMajor && edgeMinor == currentMinor && edgePatch > currentPatch)
@@ -474,7 +550,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Replace characters before splitting version String into integers
+	 * Replaces characters before splitting version String into integers
 	 */
 	public static String replaceChars(String version) {
 		version = version.replace("dev", "d")
@@ -491,13 +567,15 @@ public class ValuesConverter extends MainTM {
 			String versionIntTest = version.replace(".", "");
 			Integer.parseInt(versionIntTest); // Prevent all other parse errors
 		} catch (NumberFormatException e) {
+			MsgHandler.errorMsg(versionTMFormatMsg); // Console error msg
 			return null;
 		}
 		return version;
 	}
 
 	/**
-	 * Restrain refresh rate (modifies the configuration without saving the file)
+	 * Restrains refresh rate
+	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainRate() {
 		try { // Check if value is an integer
@@ -510,7 +588,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrain initial tick (modifies the configuration without saving the file)
+	 * Restrains initial tick (modifies the configuration without saving the file)
 	 */
 	public static void restrainInitTick() {
 		long newInitialTick;
@@ -525,19 +603,22 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrain wakeUpTick tick (modifies the configuration without saving the file)
+	 * Restrains wakeUpTick tick (modifies the configuration without saving the file)
 	 */
 	public static void restrainWakeUpTick() {
-		long newWakeUpTick = 0L;
+		long newWakeUpTick = defWakeUpTick;
 		try { // Check if value is a long
 			newWakeUpTick = MainTM.getInstance().getConfig().getLong(CF_WAKEUPTICK);
 			newWakeUpTick = correctwakeUpTick(newWakeUpTick);
-		} catch (NumberFormatException nfe) {} // If not a long, use the default value
+		} catch (NumberFormatException nfe) { // If not a long, keep the default value
+			MsgHandler.errorMsg(wakeUpTickFormatMsg); // Console error msg
+		}
 		MainTM.getInstance().getConfig().set(CF_WAKEUPTICK, newWakeUpTick);
 	}
 
 	/**
-	 * Restrain start timers (modifies the configuration without saving the file)
+	 * Restrains start timers
+	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainStart(String world) {
 		long t = Bukkit.getWorld(world).getTime();
@@ -553,6 +634,7 @@ public class ValuesConverter extends MainTM {
 				tick = correctDailyTicks(tick); // else, use ticks
 			}
 		} catch (NumberFormatException nfe) { // If not a long, use the default start value
+			MsgHandler.errorMsg(startTickFormatMsg); // Console error msg
 			tick = defStart;
 		}
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, tick);
@@ -560,7 +642,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrain speed modifiers (modifies the configuration without saving the file)
+	 * Restrains speed modifiers
+	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSpeed(String world) {
 		// Transform the old 'speed' value (v1.2.1 &-) in the new 'daySpeed' and 'nightSpeed' (v1.3.0 &+) TODO >>> Should be erased someday
@@ -569,6 +652,7 @@ public class ValuesConverter extends MainTM {
 			try { // Check if the old speed value is a double
 				speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_SPEED);
 			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
+				MsgHandler.errorMsg(speedFormatMsg); // Console error msg
 				speed = defSpeed;
 			}
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);
@@ -587,12 +671,14 @@ public class ValuesConverter extends MainTM {
 				daySpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
 				daySpeedNb = correctSpeed(daySpeedNb);
 			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
+				MsgHandler.errorMsg(speedFormatMsg); // Console error msg
 				daySpeedNb = defSpeed;
 			}
 			try { // Check if night value is a double
 				nightSpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
 				nightSpeedNb = correctSpeed(nightSpeedNb);
 			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
+				MsgHandler.errorMsg(speedFormatMsg); // Console error msg
 				nightSpeedNb = defSpeed;
 			} 
 		}
@@ -603,9 +689,9 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Force 'sync' to true for the 24.0 speed, then false when change to another
-	 * speed ratio. & force 'sync' to false for the 0.0 speed. (modifies the
-	 * configuration without saving the file)
+	 * Force 'sync' to true for the 24.0 speed, then false when change to another speed ratio
+	 * Force 'sync' to false for the 0.0 speed
+	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSync(String world, double oldSpeed) {
 		long t = Bukkit.getWorld(world).getTime();
@@ -623,8 +709,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * If a world's speed:00. or speed:24.0 force 'sleep' to false (modifies the
-	 * configuration without saving the file)
+	 * If a world gets a speed of "0" or "24", force 'sleep' to false
+	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSleep(String world) {
 		long t = Bukkit.getWorld(world).getTime();

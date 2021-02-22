@@ -29,10 +29,11 @@ public class TmSetSleep extends MainTM {
 		// Else, if the string argument is a listed world, modify a single world
 		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 			// Avoid impossible values
+			if (!sleepOrNo.equalsIgnoreCase("true")) sleepOrNo = "false";
 			World w = Bukkit.getWorld(world);
 			long t = w.getTime();
 			String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
-			if ((sleepOrNo.equals("true") && (currentSpeed.equals("0.0") || currentSpeed.equals("24.0")))) {
+			if ((sleepOrNo.equalsIgnoreCase("true") && (currentSpeed.equals("0.0") || currentSpeed.equals("24.0")))) {
 				// Notifications
 				MsgHandler.infoMsg(worldSleepNoChgMsg + " " + world + "."); // Console final msg (always)
 				MsgHandler.playerMsg(sender, worldSleepNoChgMsg + " §e" + world + "§r."); // Player final msg (in case)
@@ -40,7 +41,7 @@ public class TmSetSleep extends MainTM {
 				// Modify the value
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, sleepOrNo);
 				// Avoid to synchronize worlds where players can sleep
-				if (sleepOrNo.equals("true") && MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equals("true")) {
+				if (sleepOrNo.equalsIgnoreCase("true") && MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equals("true")) {
 					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "false");
 					MsgHandler.infoMsg("The world " + world + " " + sleepWorldSyncChgMsg); // Console warn msg (always)
 					MsgHandler.playerMsg(sender, "The world §e" + world + "§r " + sleepWorldSyncChgMsg); // Player warn msg (in case)
@@ -59,7 +60,7 @@ public class TmSetSleep extends MainTM {
 		}
 		// Else, return an error and help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set sleep");
+			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SLEEP);
 		}
 	}
 

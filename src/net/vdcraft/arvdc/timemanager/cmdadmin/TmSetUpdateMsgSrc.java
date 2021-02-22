@@ -8,7 +8,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 public class TmSetUpdateMsgSrc extends MainTM {
 
 	/**
-	 * CMD /tm set update [bukkit|spigot|github]
+	 * CMD /tm set update [none|bukkit|spigot|github]
 	 */
 	public static void cmdSetUpdateSrc(CommandSender sender, String updateSource) {
 
@@ -29,7 +29,7 @@ public class TmSetUpdateMsgSrc extends MainTM {
 
 		} // Disable auto update if the updateSource is false, void or unknown
 		else { 
-			MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, "");
+			MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, defUpdateMsgSrc);
 
 			MsgHandler.infoMsg(updateDisableCheckMsg + " disable."); // Console final msg (always)
 			MsgHandler.playerMsg(sender, updateDisableCheckMsg + "§e disable§r."); // Player final msg (in case)

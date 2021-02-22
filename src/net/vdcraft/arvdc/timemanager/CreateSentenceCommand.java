@@ -36,13 +36,13 @@ public class CreateSentenceCommand implements TabCompleter {
 		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
 	}    
 	// Arguments list for '/tm checkupdate'
-	List<String> tmCheckupdateArgsList = Arrays.asList(MainTM.CF_BUKKIT, MainTM.CF_CURSE, MainTM.CF_SPIGOT, MainTM.CF_GITHUB);
+	List<String> tmCheckupdateArgsList = Arrays.asList("none", MainTM.CF_BUKKIT, MainTM.CF_CURSE, MainTM.CF_SPIGOT, MainTM.CF_GITHUB);
 	// Arguments list for '/tm reload'
-	List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang");
+	List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang"); // , "cmds" TODO 1.5.0
 	// Arguments list for '/tm set'
 	List<String> tmSetArgsList() {
-		if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_UPDATE);
-		else return Arrays.asList(MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS);
+		if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_UPDATE);
+		else return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS);
 	}
 	// Arguments list for '/tm set deflang
 	List<String> tmDefLangArgsList() {
@@ -54,7 +54,9 @@ public class CreateSentenceCommand implements TabCompleter {
 	// First 'tick' arguments for '/tm set start' et '/tm set time'
 	List<String> tmTimeArgsList = Arrays.asList("morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
 	// Number of days arguments for '/tm set elapsedDays'
-	List<String> tmSetDaysArgsList = Arrays.asList("today", "000", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365");
+	List<String> tmSetDateArgsList = Arrays.asList("today", "0001-01-01");
+	// Number of days arguments for '/tm set elapsedDays'
+	List<String> tmSetDaysArgsList = Arrays.asList("000", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365");
 	// Modifier arguments for '/tm set speed'
 	List<String> tmSpeedArgsList = Arrays.asList("0.0", "0.5", "1.0", "1.5", "2.0", "2.5", "5.0", "realtime");
 	// 'tick' arguments list for '/tm set initialtick'
@@ -214,7 +216,13 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) // Command '/tm set elapsedDays <...>' TODO 1.4.0
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DATE)) // Command '/tm set date <...>'
+					{
+						for (String verif : tmSetDateArgsList) {
+							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
+								outputArgsList.add(verif);
+						}
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) // Command '/tm set elapsedDays <...>'
 					{
 						for (String verif : tmSetDaysArgsList) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
@@ -237,11 +245,16 @@ public class CreateSentenceCommand implements TabCompleter {
 					return null;
 				}
 			} else if (args.length == 4) {
-				if ((args[0].equalsIgnoreCase(MainTM.CMD_SET)) && (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_START) || args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS) || args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) // TODO 1.4.0
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC))) // Command '/tm set <...> <...> <...>'
+				if ((args[0].equalsIgnoreCase(MainTM.CMD_SET)) // Command '/tm set <...> <...> <...>'
+						&& args[1].equalsIgnoreCase(MainTM.CMD_SET_DATE)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)
+						|| (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_START)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)))
 				{
 					for (String verif : tmWorldsArgsList(sender)) {
 						if (verif.toLowerCase().startsWith(args[3].toLowerCase()))

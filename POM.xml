@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.vdcraft.arvdc</groupId>
 	<artifactId>TimeManager</artifactId>
-	<version>1.2.1-beta</version>
+	<version>1.4.2</version>
 	<packaging>jar</packaging>	
 	<build>
 		<finalName>TimeManager-${project.version}</finalName>
@@ -28,11 +28,32 @@
 			<plugin>			
                 <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.6.1</version>
+				<version>3.8.0</version>
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.2.4</version>
+				<configuration>
+					<relocations>
+          				<relocation>
+            				<pattern>org.bstats</pattern>
+							<shadedPattern>net.vdcraft.arvdc.timemanager</shadedPattern>
+						</relocation>
+					</relocations>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>	
@@ -42,33 +63,50 @@
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
    		</repository>
         <repository>
+			<id>mvdw-software</id>
+			<name>MVdW Public Repositories</name>
+			<url>http://repo.mvdw-software.be/content/groups/public/</url>
+		</repository>
+        <repository>
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
 	</repositories>
 	<dependencies>
 		<dependency>
-			<groupId>org.spigotmc</groupId>
-			<artifactId>spigot-api</artifactId>
-			<version>1.16.1-R0.1-SNAPSHOT</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.16</version>
+			<version>8.0.23</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.16.5-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
     		<groupId>com.google.http-client</groupId>
     		<artifactId>google-http-client-gson</artifactId>
     		<version>1.23.0</version>
-		</dependency><dependency>
-         <groupId>me.clip</groupId>
-          <artifactId>placeholderapi</artifactId>
-          <version>2.10.9</version>
-         <scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>be.maximvdw</groupId>
+			<artifactId>MVdWPlaceholderAPI</artifactId>
+			<version>3.1.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>me.clip</groupId>
+			<artifactId>placeholderapi</artifactId>
+			<version>2.10.9</version>
+			<scope>provided</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.bstats</groupId>
+			<artifactId>bstats-bukkit</artifactId>
+			<version>2.2.1</version>
+			<scope>compile</scope>
         </dependency>
 	</dependencies>    
 	<issueManagement>

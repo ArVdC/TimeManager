@@ -1,6 +1,6 @@
 name: TimeManager
-version: 1.4.1
-api-version: 1.14
+version: 1.4.2
+api-version: 1.16
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdc.serveminecraft.net
@@ -33,11 +33,12 @@ commands:
             /<command> checktime [all|server|world]
             /<command> checkupdate [bukkit|spigot|github]
             /<command> help [cmd] <subCmd>
-            /<command> reload [all|config|lang]
+            /<command> reload [all|config|lang|cmds]
             /<command> resync [all|world]
+            /<command> set date [today|yyyy-mm-dd] [all|world]
             /<command> set debugmode [true|false]
             /<command> set deflang [lg_LG]
-            /<command> set elapsedDays [today|0 → ∞] [all|world]
+            /<command> set elapsedDays [0 → ∞] [all|world]
             /<command> set initialtick [tick|HH:mm]
             /<command> set multilang [true|false]
             /<command> set refreshRate [tick]
@@ -48,7 +49,7 @@ commands:
             /<command> set start [tick|daypart|HH:mm] [all|world]
             /<command> set sync [true|false] [all|world]
             /<command> set time [tick|daypart|HH:mm] [all|world]
-            /<command> set update [bukkit|spigot|github]
+            /<command> set update [none|bukkit|spigot|github]
     aliases:
       - tmanag
       - timemanag

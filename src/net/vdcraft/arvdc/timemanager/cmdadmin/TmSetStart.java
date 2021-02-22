@@ -50,7 +50,7 @@ public class TmSetStart extends MainTM {
 		}
 		// Else, return an error and display help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set start");
+			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_START);
 		}
 	}
 

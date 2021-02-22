@@ -21,7 +21,7 @@ public class McVersionHandler extends MainTM {
 			completeServerVersion = completeServerVersion.replace("git-", splitMarker);
 			split1 = completeServerVersion.split(splitMarker);
 			if (devMode) { // Dev msg start
-				MsgHandler.devMsg("Version string was split into: §e" + split1.length + "§b part(s)."); // Console dev msg
+				MsgHandler.devMsg("Version string was split into: §e" + split1.length + "§9 part(s)."); // Console dev msg
 				Integer count = 0;
 				for (String split : split1) {
 					MsgHandler.devMsg("[" + count + "]: §e" + split); // Console dev msg
@@ -83,7 +83,7 @@ public class McVersionHandler extends MainTM {
 		} else { // Use the latest version of MC
 			MsgHandler.debugMsg(noVersionNumberDebugMsg + " '" + completeServerVersion + "'."); // Console debug msg
 			mcVersion = minRequiredMcVersion;
-			MsgHandler.warnMsg("1. " + unknowVersionMsg); // Console warn msg
+			MsgHandler.warnMsg("1. " + versionMCFormatMsg); // Console warn msg
 			return mcVersion;
 		}
 		// Then, for the 2 first cases
@@ -97,7 +97,7 @@ public class McVersionHandler extends MainTM {
 			if (secondPart.length() == 1) {
 				secondPart = "0" + secondPart;
 			}
-			MsgHandler.devMsg("Needed to adjust the decimal to compare them correctly: §e1." + mcVersionString + "§b = §e1." + firstPart + "." + secondPart + "§b."); // Console dev msg
+			MsgHandler.devMsg("Needed to adjust the decimal to compare them correctly: §e1." + mcVersionString + "§9 = §e1." + firstPart + "." + secondPart + "§9."); // Console dev msg
 			mcVersionString = firstPart + "." + secondPart;
 		}
 		try { // Check if value could be parsed as a double
@@ -105,7 +105,7 @@ public class McVersionHandler extends MainTM {
 		} catch (NumberFormatException nfe) { // If not possible, use the latest version of MC
 			MsgHandler.debugMsg(wrongVersionNumberDebugMsg + "\n" + nfe);
 			mcVersion = minRequiredMcVersion;
-			MsgHandler.warnMsg(unknowVersionMsg); // Console warn msg
+			MsgHandler.warnMsg(versionMCFormatMsg); // Console warn msg
 		}
 		MsgHandler.debugMsg(serverMcVersionResultDebugMsg + " §e1." + split3[0] + " §bMC version.");
 		return mcVersion;

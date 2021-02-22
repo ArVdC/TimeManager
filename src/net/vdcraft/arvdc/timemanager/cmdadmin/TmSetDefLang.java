@@ -23,7 +23,7 @@ public class TmSetDefLang extends MainTM {
 		}
 		// Else, return an error and help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.wrongLangMsg, "set deflang");
+			TmHelp.sendErrorMsg(sender, MainTM.wrongLangMsg, MainTM.CMD_SET + " " + CMD_SET_DEFLANG);
 		}
 	}
 

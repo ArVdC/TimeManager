@@ -19,6 +19,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import net.vdcraft.arvdc.timemanager.Metrics;
+
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
@@ -57,6 +59,127 @@ public class MainTM extends JavaPlugin {
 	public static Boolean devMode = false; // Displays more verbose debug msgs
 	public static Boolean timerMode = false; // Displays all timers calculations (= ultra-verbose mode)
 
+	// Default config files values
+	protected static String defTimeUnits = "hours";
+	protected static long defWakeUpTick = 0L;
+	protected static long defStart = 0L;
+	protected static Integer defRefresh = 10;
+	protected static Double defSpeed = 1.0;
+	protected static String defSleep = "true";
+	protected static String defSync = "false";
+	protected static String defUpdateMsgSrc = "none";
+
+	// Language to use if locale doesn't exist in the lang.yml = 'defaultLang'
+	protected static String serverLang;
+
+	// Min and Max refresh parameters in ticks
+	protected static Integer refreshMin = 2;
+	protected static Integer refreshMax = 20;
+
+	// Handle the current refresh rate
+	protected static Integer refreshRateInt;
+	protected static Long refreshRateLong;
+
+	// Max speed modifier (Min need to be 0)
+	protected static Double speedMax = 10.0;
+
+	// Number who make time turn real
+	protected static Double realtimeSpeed = 24.0;
+
+	// DayParts in ticks
+	protected static Long dawnStart = 0L;
+	protected static Long dayStart = 1000L;
+	protected static Long duskStart = 12000L;
+	protected static Long nightStart = 13000L;
+	protected static Long mcDayEnd = 24000L;
+	
+	// Expected time for the date change
+	protected static String newDayStartsAt_0h00 = "00:00";
+	protected static String newDayStartsAt_6h00 = "06:00";
+
+	// Add each active schedule in corresponding list
+	public static List<String> realSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> syncSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> asyncIncreaseSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> asyncDecreaseSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> commandsSchedulerIsActive = new ArrayList<String>();
+
+	// Initialize server tick
+	protected static Long initialTick;
+	protected static String initialTime;
+
+	// Config file keys
+	protected static final String CF_VERSION = "version";
+	protected static final String CF_DEFTIMEUNITS = "defTimeUnits";
+	protected static final String CF_REFRESHRATE = "refreshRate";
+	public static final String CF_WAKEUPTICK = "wakeUpTick";
+	public static final String CF_NEWDAYAT = "newDayAt";
+	public static final String CF_WORLDSLIST = "worldsList";
+	public static final String CF_START = "start";
+	public static final String CF_SPEED = "speed";
+	public static final String CF_D_SPEED = "daySpeed";
+	public static final String CF_N_SPEED = "nightSpeed";
+	public static final String CF_SLEEP = "sleep";
+	public static final String CF_SYNC = "sync";
+	protected static final String CF_INITIALTICK = "initialTick";
+	protected static final String CF_INITIALTICKNB = "initialTickNb";
+	protected static final String CF_RESETONSTARTUP = "resetOnStartup";
+	protected static final String CF_USEMYSQL = "useMySql";
+	protected static final String CF_MYSQL = "mySql";
+	protected static final String CF_HOST = "host";
+	protected static final String CF_PORT = "port";
+	protected static final String CF_SSL = "ssl";
+	protected static final String CF_DBPREFIX = "dbPrefix";
+	protected static final String CF_DATABASE = "database";
+	protected static final String CF_TABLE = "table";
+	protected static final String CF_USERNAME = "username";
+	protected static final String CF_PASSWORD = "password";
+	protected static final String CF_UPDATEMSGSRC = "updateMsgSrc";
+	protected static final String CF_BUKKIT = "bukkit";
+	protected static final String CF_CURSE = "curse";
+	protected static final String CF_TWITCH = "twitch";
+	protected static final String CF_SPIGOT = "spigot";
+	protected static final String CF_PAPER = "paper";
+	protected static final String CF_GITHUB = "github";
+	protected static final String CF_DEBUGMODE = "debugMode";
+	protected static final String CF_PLACEHOLDER = "placeholders";
+	protected static final String CF_PLACEHOLDER_PAPI = "PlaceholderAPI";
+	protected static final String CF_PLACEHOLDER_MVDWPAPI = "MVdWPlaceholderAPI";
+	// Lang file keys
+	protected static final String CF_USEMULTILANG = "useMultiLang";
+	protected static final String CF_DEFAULTLANG = "defaultLang";
+	public static final String CF_LANGUAGES = "languages";
+	protected static final String CF_DEFAULT = "default";
+	protected static final String CF_PREFIX = "prefix";
+	protected static final String CF_MSG = "msg";
+	protected static final String CF_NOMSG = "noMsg";
+	public static final String CF_DAYPARTS = "dayparts";
+	protected static final String CF_DAY = "day";
+	protected static final String CF_DUSK = "dusk";
+	protected static final String CF_NIGHT = "night";
+	protected static final String CF_DAWN = "dawn";
+	public static final String CF_MONTHS = "months";
+	protected static final String CF_MONTH_01 = "m01";
+	protected static final String CF_MONTH_02 = "m02";
+	protected static final String CF_MONTH_03 = "m03";
+	protected static final String CF_MONTH_04 = "m04";
+	protected static final String CF_MONTH_05 = "m05";
+	protected static final String CF_MONTH_06 = "m06";
+	protected static final String CF_MONTH_07 = "m07";
+	protected static final String CF_MONTH_08 = "m08";
+	protected static final String CF_MONTH_09 = "m09";
+	protected static final String CF_MONTH_10 = "m10";
+	protected static final String CF_MONTH_11 = "m11";
+	protected static final String CF_MONTH_12 = "m12";
+	// Cmds file keys
+	protected static final String CF_USECOMMANDS = "useCmds";
+	protected static final String CF_COMMANDSLIST = "cmdsList";
+	protected static final String CF_CMD = "cmd";
+	protected static final String CF_REFWORLD = "refTimeWorld";
+	protected static final String CF_NEXTHOUR = "nextHour";
+	protected static final String CF_NEXTDATE = "nextDate";
+	protected static final String CF_REPEATFREQ = "repeatFreq";
+
 	// Commands names
 	protected static final String CMD_TM = "tm";
 	protected static final String CMD_NOW = "now";
@@ -72,11 +195,13 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET = "set";
 
 	// /tm sub-commands names
-	protected static final String CMD_SET_DEBUG = "debugmode";
-	protected static final String CMD_SET_DEFLANG = "deflang";
-	protected static final String CMD_SET_INITIALTICK = "initialtick";
-	protected static final String CMD_SET_MULTILANG = "multilang";
-	protected static final String CMD_SET_REFRESHRATE = "refreshrate";
+	protected static final String CMD_SET_DATE = "date";
+	protected static final String CMD_SET_DEBUG = "debugMode";
+	protected static final String CMD_SET_DEFLANG = "defLang";
+	protected static final String CMD_SET_E_DAYS = "elapsedDays";
+	protected static final String CMD_SET_INITIALTICK = "initialTick";
+	protected static final String CMD_SET_MULTILANG = "multiLang";
+	protected static final String CMD_SET_REFRESHRATE = "refreshRate";
 	protected static final String CMD_SET_SLEEP= "sleep";
 	protected static final String CMD_SET_SPEED = "speed";
 	protected static final String CMD_SET_D_SPEED = "speedDay";
@@ -84,7 +209,6 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_START = "start";
 	protected static final String CMD_SET_SYNC = "sync";
 	protected static final String CMD_SET_TIME = "time";
-	protected static final String CMD_SET_E_DAYS = "elapsedDays";
 	protected static final String CMD_SET_UPDATE = "update";
 
 	// Files names
@@ -214,10 +338,17 @@ public class MainTM extends JavaPlugin {
 	protected static String urlFailMsg = "No update was found, the provided URL was not recognized.";
 	protected static String serverFailMsg = "No update was found, the server could not be reached.";
 
-	// Errors messages
-	protected static String rateNotNbMsg = "Refresh rate must be an integer number.";
-	protected static String tickNotNbMsg = "Tick must be an integer number, a listed part of the day, or to be HH:mm:ss formated.";
-	protected static String speedNotNbMsg = "Speed multiplier must be a number (integer or decimal) or the string \"realtime\".";
+	// Errors messages (B&W)
+	protected static String rateFormatMsg = "Refresh rate must be an integer number.";
+	protected static String wakeUpTickFormatMsg = "Wake up tick must be an integer number, default value will be used.";
+	protected static String startTickFormatMsg = "Start tick must be an integer number, default value will be used.";
+	protected static String yearFormatMsg = "Year number must be an integer number between 1 and 9999.";
+	protected static String monthFormatMsg = "Month number must be an integer number between 1 and 12.";
+	protected static String dayFormatMsg = "Day number must be an integer number between 1 and ";
+	protected static String dateFormatMsg = "Date must be \"today\", or be in the format yyyy-mm-dd, default value will be used.";
+	protected static String tickFormatMsg = "Tick must be an integer number, a listed part of the day, or to be HH:mm:ss formatted, default value will be used.";
+	protected static String hourFormatMsg = "Hour must be in the format HH:mm:ss, default value will be used.";
+	protected static String speedFormatMsg = "Speed multiplier must be a number (integer or decimal) or the string \"realtime\", default value will be used.";
 	protected static String wrongWorldMsg = "The name of the world you just typed does not exist.";
 	protected static String wrongLangMsg = "The language you just typed does not exist in lang.yml file.";
 	protected static String wrongYmlMsg = "The name of the yaml file you just typed does not exist.";
@@ -226,8 +357,8 @@ public class MainTM extends JavaPlugin {
 	protected static String couldNotSaveLang = "File " + LANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
 	protected static String couldNotSaveCmds = "File " + CMDSFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
 	protected static String checkLogMsg = "Please check the console or log file.";
-	protected static String unknowVersionMsg = "Impossible to determine properly the MC version of your server, the plugin will consider it is an old one.";
-
+	protected static String versionMCFormatMsg = "Unable to correctly determine your server MC version, the plugin will consider it is an old one.";
+	protected static String versionTMFormatMsg = "Unable to correctly determine the plugin version. ";
 
 	// Debug messages (with colors)
 	protected static String enableDebugModeDebugMsg = "The debug mode is §aenabled§b.";
@@ -261,8 +392,16 @@ public class MainTM extends JavaPlugin {
 	protected static String wrongVersionNumberDebugMsg = "Your MC version doesn't correspond to any decimal number:";
 	protected static String LatestVersionPart1DebugMsg = "Last version on";
 	protected static String LatestVersionPart2DebugMsg = "and you are running the";
+	public static String sleepProcess1DebugMsg = "§b is sleeping now (1/100 ticks).";
+	public static String sleepProcess2DebugMsg = "Sleep time is almost reached (99/100 ticks).";
+	public static String sleepProcess3DebugMsg = "Achieved ! (100/100 ticks) Now waiting for the morning.";
+	public static String sleepProcess4aDebugMsg = "Sleeping is forbid in the world";
+	public static String sleepProcess4bDebugMsg = "The process ends here.";
+	public static String sleepProcess5DebugMsg = "without having been able to sleep.";
+	public static String sleepOkMorningDebugMsg = "§aWake up, it's morning !!!";
+	public static String sleepNoMorningDebugMsg = "§cToo late...  morning might never come.";
 
-	// Debug Calculation for timer synchronization
+	// Debug Calculation for timer synchronization (with colors)
 	protected static String actualTimeVar = "§c[actualTime]§b";
 	protected static String adjustedElapsedTimeVar = "§5[adjustedElapsedTime]§b";
 	protected static String adjustedTicksVar = "§3[adjustedTick]§b";
@@ -314,123 +453,6 @@ public class MainTM extends JavaPlugin {
 	protected static String datasOverridingFailMsg = "Something keeps the datas from being updated.";
 	protected static String tableReachFailMsg = "The table where the reference tick should be stocked is unreachable.";
 	protected static String disconnectionFailMsg = "Something prevented the mySQL disconnection.";
-
-	// Default config files values
-	protected static String defTimeUnits = "hours";
-	protected static long defStart = 0L;
-	protected static Integer defRefresh = 10;
-	protected static Double defSpeed = 1.0;
-	protected static String defSleep = "true";
-	protected static String defSync = "false";
-
-	// Min and Max refresh parameters in ticks
-	protected static Integer refreshMin = 2;
-	protected static Integer refreshMax = 20;
-
-	// Handle the current refresh rate
-	protected static Integer refreshRateInt;
-	protected static Long refreshRateLong;
-
-	// Max speed modifier (Min need to be 0)
-	protected static Double speedMax = 10.0;
-
-	// Number who make time turn real
-	protected static Double realtimeSpeed = 24.0;
-
-	// DayParts in ticks
-	protected static Long dawnStart = 0L;
-	protected static Long dayStart = 1000L;
-	protected static Long duskStart = 12000L;
-	protected static Long nightStart = 13000L;
-	protected static Long mcDayEnd = 24000L;
-
-	// Add each active schedule in corresponding list
-	public static List<String> realSpeedSchedulerIsActive = new ArrayList<String>();
-	public static List<String> syncSpeedSchedulerIsActive = new ArrayList<String>();
-	public static List<String> asyncIncreaseSpeedSchedulerIsActive = new ArrayList<String>();
-	public static List<String> asyncDecreaseSpeedSchedulerIsActive = new ArrayList<String>();
-	public static List<String> commandsSchedulerIsActive = new ArrayList<String>();
-
-	// Initialize server tick
-	protected static Long initialTick;
-	protected static String initialTime;
-
-	// Language to use if locale doesn't exist in the lang.yml = 'defaultLang'
-	protected static String serverLang;
-
-	// Config file keys
-	protected static final String CF_VERSION = "version";
-	protected static final String CF_DEFTIMEUNITS = "defTimeUnits";
-	protected static final String CF_REFRESHRATE = "refreshRate";
-	public static final String CF_WAKEUPTICK = "wakeUpTick";
-	public static final String CF_NEWDAYAT = "newDayAt";
-	public static final String CF_NEWDAYAT_0H00 = "00:00";
-	public static final String CF_NEWDAYAT_6H00 = "06:00";
-	public static final String CF_WORLDSLIST = "worldsList";
-	public static final String CF_START = "start";
-	public static final String CF_SPEED = "speed";
-	public static final String CF_D_SPEED = "daySpeed";
-	public static final String CF_N_SPEED = "nightSpeed";
-	public static final String CF_SLEEP = "sleep";
-	public static final String CF_SYNC = "sync";
-	protected static final String CF_INITIALTICK = "initialTick";
-	protected static final String CF_INITIALTICKNB = "initialTickNb";
-	protected static final String CF_RESETONSTARTUP = "resetOnStartup";
-	protected static final String CF_USEMYSQL = "useMySql";
-	protected static final String CF_MYSQL = "mySql";
-	protected static final String CF_HOST = "host";
-	protected static final String CF_PORT = "port";
-	protected static final String CF_SSL = "ssl";
-	protected static final String CF_DBPREFIX = "dbPrefix";
-	protected static final String CF_DATABASE = "database";
-	protected static final String CF_TABLE = "table";
-	protected static final String CF_USERNAME = "username";
-	protected static final String CF_PASSWORD = "password";
-	protected static final String CF_UPDATEMSGSRC = "updateMsgSrc";
-	protected static final String CF_BUKKIT = "bukkit";
-	protected static final String CF_CURSE = "curse";
-	protected static final String CF_TWITCH = "twitch";
-	protected static final String CF_SPIGOT = "spigot";
-	protected static final String CF_PAPER = "paper";
-	protected static final String CF_GITHUB = "github";
-	protected static final String CF_DEBUGMODE = "debugMode";
-	protected static final String CF_PLACEHOLDER = "placeholders";
-	protected static final String CF_PLACEHOLDER_PAPI = "PlaceholderAPI";
-	protected static final String CF_PLACEHOLDER_MVDWPAPI = "MVdWPlaceholderAPI";
-	// Lang file keys
-	protected static final String CF_USEMULTILANG = "useMultiLang";
-	protected static final String CF_DEFAULTLANG = "defaultLang";
-	public static final String CF_LANGUAGES = "languages";
-	protected static final String CF_DEFAULT = "default";
-	protected static final String CF_PREFIX = "prefix";
-	protected static final String CF_MSG = "msg";
-	protected static final String CF_NOMSG = "noMsg";
-	public static final String CF_DAYPARTS = "dayparts";
-	protected static final String CF_DAY = "day";
-	protected static final String CF_DUSK = "dusk";
-	protected static final String CF_NIGHT = "night";
-	protected static final String CF_DAWN = "dawn";
-	public static final String CF_MONTHS = "months";
-	protected static final String CF_MONTH_01 = "m01";
-	protected static final String CF_MONTH_02 = "m02";
-	protected static final String CF_MONTH_03 = "m03";
-	protected static final String CF_MONTH_04 = "m04";
-	protected static final String CF_MONTH_05 = "m05";
-	protected static final String CF_MONTH_06 = "m06";
-	protected static final String CF_MONTH_07 = "m07";
-	protected static final String CF_MONTH_08 = "m08";
-	protected static final String CF_MONTH_09 = "m09";
-	protected static final String CF_MONTH_10 = "m10";
-	protected static final String CF_MONTH_11 = "m11";
-	protected static final String CF_MONTH_12 = "m12";
-	// Cmds file keys
-	protected static final String CF_USECOMMANDS = "useCmds";
-	protected static final String CF_COMMANDSLIST = "cmdsList";
-	protected static final String CF_CMD = "cmd";
-	protected static final String CF_REFWORLD = "refTimeWorld";
-	protected static final String CF_NEXTHOUR = "nextHour";
-	protected static final String CF_NEXTDATE = "nextDate";
-	protected static final String CF_REPEATFREQ = "repeatFreq";
 
 	/******************
 	 ***** METHOD *****
@@ -501,11 +523,17 @@ public class MainTM extends JavaPlugin {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_MVDWPAPI + " detected.");
 				MVdWPAPIHandler.loadMVdWPlaceholderAPI();
 			}
+			
+			// #11. bStats
+			int pluginId = 10412;
+	        @SuppressWarnings("unused")
+	        Metrics metrics = new Metrics(this, pluginId);
 
-			// #11. Confirm activation in console
+			// #12. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
-			// #12. Check for an update
+			
+			// #13. Check for an update
 			if (decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)
 				UpdateHandler.delayCheckForUpdate();
 			else MsgHandler.warnMsg(updateCommandsDisabledMsg + requiredMcVersionForUpdate.toString().replace(".0", "."));

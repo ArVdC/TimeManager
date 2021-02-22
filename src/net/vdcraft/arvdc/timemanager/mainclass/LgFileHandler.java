@@ -54,7 +54,7 @@ public class LgFileHandler extends MainTM {
 				// Actualize values
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
-				// Update the file if < 1.4.0 // TODO 1.4.0   
+				// Update the file if < 1.4.0  
 				if (ValuesConverter.tmVersionIsOk("lg", 1, 4, 0, 4, 0)) {
 					updateLangFile(); 				
 				} else MsgHandler.infoMsg(lgFileExistMsg); // Console log msg

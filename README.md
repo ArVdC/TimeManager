@@ -22,7 +22,7 @@ A single command is used to display the time (in ticks or hours), the date and/o
 
 Chat messages support multi-language and could automatically be accorded to any player's locale available in the lang.yml file.
 
-This message is configurable and provide the following placeholders: {player}, {world}, {currentDay}, {dayPart}, {elapsedDays}, {monthName}, {time}, {yearWeek}, {dd}, {mm}, {yy} and {yyyy}.
+This message is configurable and provide the following placeholders: {player}, {world}, {time}, {dayPart}, {currentDay}, {elapsedDays}, {yearWeek}, {monthName}, {dd}, {mm}, {yy} and {yyyy}.
 
 Using the permissions, you can permit players to choose units and/or world arguments or neither of the two.
 
@@ -43,15 +43,17 @@ This command doesn't display time of Nether and the End worlds.
 
 **/tm help \[cmd] <subCmd>** Help provides you the correct usage and a short description of targeted command and subcommand.
 
-**/tm reload \[all|config|lang]** This command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.
+**/tm reload \[all|config|lang|cmds]** This command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.
 
 **/tm resync \[all|world]** This command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.
 
-**/tm set debugmode [true|false]** Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
+**/tm set date \[today|yyyy-mm-dd] \[all|world]** Sets current date for the specified world (or all of them). Could be _today_ or any _yyyy-mm-dd_ date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.
+
+**/tm set debugmode \[true|false]** Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 
 **/tm set deflang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when _'useMultiLang'_ is false.
 
-**/tm set elapsedDays \[today|0 → ∞] \[all|world]** §rSets current fullTime for the specified world (or all of them). Could be _today_ or an integer between _0_ and _infinity_ (or almost). A year always lasts 365 days.
+**/tm set elapsedDays \[0 → ∞] \[all|world]** Sets current number of elapsed days for the specified world (or all of them). Could be an integer between _0_ and _infinity_ (or almost). Setting this to _0_ will bring the world back to day _one_.
 
 **/tm set initialtick \[tick|HH:mm:ss]** Modify the server's initial tick.
 
@@ -68,11 +70,11 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 
 **/tm set start \[ticks|daypart|HH:mm:ss] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
 
-**/tm set sync [true|false] [all|world]** Define if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.
+**/tm set sync \[true|false] \[all|world]** Define if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.
 
 **/tm set time \[ticks|daypart|HH:mm:ss] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
 
-**/tm set update \[bukkit|spigot|github]** Define the source server for the update search. (MC 1.18.9+ only)
+**/tm set update \[none|bukkit|spigot|github]** Define the source server for the update search. (MC 1.18.9+ only)
 
 
 ### SHORT LIST OF COMMANDS AND ARGS
@@ -81,15 +83,16 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 - For Admins:
   - /tm checkconfig
   - /tm checksql
-  - /tm checktime [all|world]
-  - /tm checkupdate [bukkit|spigot|github]
+  - /tm checktime \[all|world]
+  - /tm checkupdate \[bukkit|spigot|github]
   - /tm help \[cmd]
-  - /tm reload \[all|config|lang]
+  - /tm reload \[all|config|lang|cmds]
   - /tm resync \[all|world]
+  - /tm set date \[today|yyyy-mm-dd] \[all|world]
   - /tm set debugmode \[true|false]
   - /tm set deflang \[true|false]
-  - /tm set elapsedDays \[today|0 → ∞] \[all|world]
-  - /tm set initialtick [tick|HH:mm:ss]
+  - /tm set elapsedDays \[0 → ∞] \[all|world]
+  - /tm set initialtick \[tick|HH:mm:ss]
   - /tm set multilang \[lg_LG]
   - /tm set refreshrate \[tick]
   - /tm set sleep \[true|false] \[all|world]
@@ -99,7 +102,7 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
   - /tm set start \[tick|daypart|HH:mm:ss] \[all|world]
   - /tm set sync \[true|false] \[all|world]
   - /tm set time \[tick|daypart|HH:mm:ss] \[all|world]
-  - /tm set update [bukkit|spigot|github]
+  - /tm set update \[none|bukkit|spigot|github]
 
 
 ### PERMISSIONS NODES
@@ -115,16 +118,25 @@ From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different fro
 **timemanager.now:** provide or deny access to /now subcommands with or without restrain available arguments.
 
 ### DEPEDENCIES
-Since v1.4.0, TimeManager can display its placeholders through PlaceholderAPI and MVdWPlaceholderAPI. The available placeholders are as follows :
-#### PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) :
-%tm_currentday%, %tm_daypart%, %tm_elapseddays%, %tm_monthname%, %tm_time%, %tm_yearweek%, %tm_dd%, %tm_mm%, %tm_yy% and %tm_yyyy%.
-#### MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) :
-{tm_currentday}, {tm_daypart}, {tm_elapseddays}, {tm_monthname}, {tm_time}, {tm_yearweek}, {tm_dd}, {tm_mm}, {tm_yy} and {tm_yyyy}.
+Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245) and [MVdWPlaceholderAPI](www.spigotmc.org/resources/mvdwplaceholderapi.11182).
+The available placeholders are as follows :
+- %tm_time% or {tm_time} : Displays the current tick or HH:mm:ss, depending on the value set in the lang.yml file.
+- %tm_daypart% or {tm_daypart} : Displays the name of the current day part, based on entries in the lang.yml file.
+- %tm_currentday% or {tm_currentday} : Displays the number of the current day.
+- %tm_elapseddays% or {tm_elapseddays} : Displays the number of elapsed day(s).
+- %tm_yearweek% or {tm_yearweek} : Displays the number of the week in the year. (1 to 52)
+- %tm_monthname% or {tm_monthname} : Displays the name of current month, based on entries in the lang.yml file.
+- %tm_dd% or {tm_dd} : Displays the _day_ part of the date. (2 digits).
+- %tm_mm% or {tm_mm} : Displays the _month_ part of the date. (2 digits)
+- %tm_yy% or {tm_yy} : Displays the _year_ part of the date. (2 digits)
+- %tm_yyyy% or {tm_yyyy} : Displays the _year_ part of the date. (4 digits)
 
 ### TUTORIALS
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
+* v1.4.2: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.5
+* v1.4.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.5
 * v1.4.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
 * v1.3.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
 * v1.3.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
@@ -143,8 +155,8 @@ Since v1.4.0, TimeManager can display its placeholders through PlaceholderAPI an
 * ~~Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.~~
 * ~~Command: Make an update message and associated commands.~~
 * ~~Day & Night : Make a different speed multiplier for the day and the night.~~
-* ~~Calendar: Create new placeholders to display a count of elapsed days and the date in yyyy-mm-dd format.~~
-* Sleep: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.
+* ~~Calendar: Create new placeholders to display a count of elapsed days and the date in yyyy-mm-dd format.
+* ~~Scheduler: Create a scheduler allowing commands to be executed at specific times.~~
+* Sleep/Sync: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
-* Schedule: Create a schedule allowing commands to be executed at specific times. 
 * Tab completer: Try to improve the current hack that manages the spaces in worlds name.

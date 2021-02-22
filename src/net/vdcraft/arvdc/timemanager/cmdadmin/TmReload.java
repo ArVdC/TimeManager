@@ -12,12 +12,9 @@ import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
 public class TmReload extends MainTM {
 
 	/**
-	 * CMD /tm reload [all|config|lang]
+	 * CMD /tm reload [all|config|lang|cmds]
 	 */
 	public static void cmdReload(CommandSender sender, String whatToReload) {
-
-		// Display the wrong argument message if it stay true at the end
-		boolean argOk = true;
 
 		// When do reload the config.yml file
 		if (whatToReload.equalsIgnoreCase("config") || whatToReload.equalsIgnoreCase("conf") || whatToReload.equalsIgnoreCase("cfg") || whatToReload.equalsIgnoreCase("all")) {
@@ -30,7 +27,7 @@ public class TmReload extends MainTM {
 			// 'config.yml is reloaded' notification
 			MsgHandler.playerMsg(sender, cfgFileReloadMsg); // Player final msg (in case)
 			MsgHandler.infoMsg(cfgFileReloadMsg); // Console final msg (always)
-			argOk = false;
+			return;
 		}
 		// When do reload the lang.yml file
 		if (whatToReload.equalsIgnoreCase("language") || whatToReload.equalsIgnoreCase("lang") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
@@ -38,12 +35,18 @@ public class TmReload extends MainTM {
 			// 'lang.yml is reloaded' notification
 			MsgHandler.playerMsg(sender, lgFileReloadMsg); // Player final msg (in case)
 			MsgHandler.infoMsg(lgFileReloadMsg); // Console final msg (always)
-			argOk = false;
+			return;
+		}
+		// When do reload the cmds.yml file // TODO 1.5.0
+		if (whatToReload.equalsIgnoreCase("commands") || whatToReload.equalsIgnoreCase("cmds") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
+			//CmdsFileHandler.loadCmds("re");
+			// 'lang.yml is reloaded' notification
+			//MsgHandler.playerMsg(sender, cmdsFileReloadMsg); // Player final msg (in case)
+			//MsgHandler.infoMsg(cmdsFileReloadMsg); // Console final msg (always)
+			return;
 		}
 		// Else, return an error and help message
-		if (argOk == true) {
-			TmHelp.sendErrorMsg(sender, wrongYmlMsg, "reload");
-		}
+		TmHelp.sendErrorMsg(sender, wrongYmlMsg, "reload");
 	}
 
 };

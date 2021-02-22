@@ -24,8 +24,8 @@ public class TmSetFullTime extends MainTM {
 		// Modify all worlds
 		if (world.equalsIgnoreCase("all")) {
 			// Relaunch this for each world
-			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
-				cmdSetDay(sender, elapsedDays, listedWorld);
+			for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
+				cmdSetDay(sender, elapsedDays, w);
 			}
 		}
 		// Else, if the string argument is a listed world, modify a single world
@@ -34,12 +34,12 @@ public class TmSetFullTime extends MainTM {
 			World w = Bukkit.getWorld(world);
 			long t = w.getTime();
 			long tickToSet = (elapsedDays * 24000) + t;
-			if (elapsedDays > 0 && t > 18000 && MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(CF_NEWDAYAT_0H00)) {
+			if (elapsedDays > 0 && t > 18000 && MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_0h00)) {
 				tickToSet = tickToSet - 24000;
 			}
 			w.setFullTime(tickToSet);
 			// Notifications
-			if (elapsedDays == 0 && t > 18000 && MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(CF_NEWDAYAT_0H00)) {
+			if (elapsedDays == 0 && t > 18000 && MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_0h00)) {
 				String hour = ValuesConverter.formattedTimeFromTick(t);
 				MsgHandler.infoMsg(tooLateForDayZeroMsg1 + hour + tooLateForDayZeroMsg2); // Console final msg (always)
 				MsgHandler.playerMsg(sender, tooLateForDayZeroMsg1 + "§e" + hour + "§r" + tooLateForDayZeroMsg2); // Console final msg (always)
@@ -50,6 +50,28 @@ public class TmSetFullTime extends MainTM {
 			MsgHandler.playerMsg(sender, worldFullTimeChgMsg + " §e" + world + "§r " + worldTimeChgMsg2 + " §e#" + elapsedDays + " §r(§e" + date + "§r)."); // Player final msg (in case)
 		}
 		// Else, return an error and help message
-		else TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, "set elapsedDays");
+		else TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_E_DAYS);
 	}
+
+	/**
+	 * CMD /tm set date [yyyy-mm-dd] [world]
+	 */
+	public static void cmdSetDate(CommandSender sender, String date, String world) {
+		// Modify all worlds
+		if (world.equalsIgnoreCase("all")) {
+			// Relaunch this for each world
+			for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
+				cmdSetDate(sender, date, w);
+			}
+		}
+		// Else, if the string argument is a listed world, modify a single world
+		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
+			Long tick = ValuesConverter.tickFromFormattedDate(date);
+			Long elapsedDays = ValuesConverter.elapsedDaysFromTick(tick);
+			cmdSetDay(sender, elapsedDays, world);
+		}
+		// Else, return an error and help message
+		else TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_DATE);
+	}
+
 };

@@ -42,7 +42,7 @@ public class WorldSyncHandler extends MainTM {
 	/**
 	 * Sync method for every kind of speed. Args are : <sender>, <world> or <all>, <start> or <time>
 	 */
-	public static void worldSync(CommandSender sender, String target, String startOrTime) {
+	public static void worldSync(CommandSender sender, String world, String startOrTime) {
 		// Get the current server # tick
 		long currentServerTick = ValuesConverter.getServerTick();
 		// Get the current server HH:mm:ss time
@@ -56,7 +56,7 @@ public class WorldSyncHandler extends MainTM {
 		double nightSpeed;
 
 		// #A. Re-synchronize all worlds
-		if (target.equalsIgnoreCase("all")) {
+		if (world.equalsIgnoreCase("all")) {
 			MsgHandler.infoMsg(serverInitTickMsg + " #" + initialTick + " (" + initialTime + ")."); // Final console msg // Console log msg
 			MsgHandler.infoMsg(serverCurrentTickMsg + " #" + currentServerTick + " (" + currentServerTime + ")."); // Console log msg
 			for (World w : Bukkit.getServer().getWorlds()) {
@@ -67,27 +67,29 @@ public class WorldSyncHandler extends MainTM {
 
 		// #B. Re-synchronize a single world
 		} else {
-			long t = Bukkit.getWorld(target).getTime();
-			startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + target + "." + CF_START)); // Get the world's 'start' value
-			speedAtStart = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + target + "." + ValuesConverter.wichSpeedParam(startAtTickNb)); // Get the world's speed value at server start
+			// Get the number of elapsed days
+			Long initElapsedDays = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime());
+			long t = Bukkit.getWorld(world).getTime();
+			startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START)); // Get the world's 'start' value
+			speedAtStart = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(startAtTickNb)); // Get the world's speed value at server start
 			if (startOrTime.equalsIgnoreCase("start")) {
 				speed = speedAtStart; // Get the world's first 'daySpeed/nigthSpeed' value
 			} else {
-				speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + target + "." + ValuesConverter.wichSpeedParam(t)); // Get the world's current 'daySpeed/nigthSpeed' value
+				speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t)); // Get the world's current 'daySpeed/nigthSpeed' value
 			}
-			daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + target + "." + CF_D_SPEED); // Get the world's 'daySpeed' value
-			nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + target + "." + CF_N_SPEED); // Get the world's 'nightSpeed' value
-			long newTime = Bukkit.getServer().getWorld(target).getTime();
+			daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED); // Get the world's 'daySpeed' value
+			nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED); // Get the world's 'nightSpeed' value
+			long newTime = Bukkit.getServer().getWorld(world).getTime();
 
 			// #B.1. If it is a realtime world ...
 			if (speed == realtimeSpeed) {
 				// #B.1.A. Next tick = start at #tick - difference between a real day that starts at 0:00 and a minecraft day that starts at 6:00 + (Current tick / difference between a 24h real day length and a minecraft day that lasts 20min)
 				newTime = startAtTickNb - 6000L + (currentServerTick / 72L);
 				// #B.1.B. Notifications
-				MsgHandler.infoMsg("The world " + target + " " + world24hNoSyncChgMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + target + " §r" + world24hNoSyncChgMsg); // Player final msg (in case)
+				MsgHandler.infoMsg("The world " + world + " " + world24hNoSyncChgMsg); // Console final msg (always)
+				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + world24hNoSyncChgMsg); // Player final msg (in case)
 				// #B.1.C. Debug Msg
-				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + target + "§b:");
+				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
 				MsgHandler.debugMsg(adjustedTicksCalculation + " = §8" + currentServerTick + " §b/ §672 §b= §3" + ((currentServerTick / 72L) % 24000)); // Console debug msg
 				MsgHandler.debugMsg(realActualTimeCalculation + " = §e" + startAtTickNb + " §b- §96000 §b+ §3" + ((currentServerTick / 72L) % 24000) + " §b= §c" + (startAtTickNb - 6000L + (currentServerTick / 72L)) % 24000 + " §brestrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime)); // Console debug msg
 
@@ -96,12 +98,12 @@ public class WorldSyncHandler extends MainTM {
 				// #B.3.A. Next tick = (Start at #tick)
 				newTime = startAtTickNb;
 				// #B.2.B. Debug Msg
-				MsgHandler.infoMsg("The world " + target + " " + worldFrozenNoSyncChgMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + target + " §r" + worldFrozenNoSyncChgMsg); // Player final msg (in case)
+				MsgHandler.infoMsg("The world " + world + " " + worldFrozenNoSyncChgMsg); // Console final msg (always)
+				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + worldFrozenNoSyncChgMsg); // Player final msg (in case)
 				MsgHandler.debugMsg(actualTimeVar + " = " + worldStartAtVar + " = §e" + startAtTickNb + " §brestrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime)); // Console debug msg
 
 			// #B.3. ... or if it is a synchronized world ...
-			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + target + "." + CF_SYNC).equalsIgnoreCase("true")) {
+			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase("true")) {
 				//  #B.3.A. Eventually make a first sync		
 				if (startOrTime.equalsIgnoreCase("start"))  {
 					// #B.3.A.a. If it is a (daySpeed == nightSpeed) world ...
@@ -109,22 +111,22 @@ public class WorldSyncHandler extends MainTM {
 						newTime = (long) ((startAtTickNb + (elapsedServerTime * speed)) % 24000);
 						// #B.3.A.b. ... or if it is a (daySpeed != nightSpeed) world
 					} else { // Next tick is calculated with specific method
-						newTime = differentSpeedsNewTime(target, startAtTickNb, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, true);
+						newTime = differentSpeedsNewTime(world, startAtTickNb, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, true);
 					}
 				}
 				// #B.3.B. Notifications
-				MsgHandler.infoMsg("The world " + target + " " + noResyncNeededMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + target + " §r" + noResyncNeededMsg); // Player final msg (in case)
+				MsgHandler.infoMsg("The world " + world + " " + noResyncNeededMsg); // Console final msg (always)
+				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + noResyncNeededMsg); // Player final msg (in case)
 
 			// #B.4. ... or if it is a (daySpeed == nightSpeed) world ...
-			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + target + "." + CF_D_SPEED).equalsIgnoreCase(MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + target + "." + CF_N_SPEED))) {
+			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED).equalsIgnoreCase(MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED))) {
 				// #B.4.A. Next tick = StartAtTick + (Elapsed time * speedModifier)
 				newTime = (long) (startAtTickNb + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick))) * speed) % 24000));
 				// #B.4.B. Notifications
-				MsgHandler.infoMsg("The world " + target + " " + resyncDoneMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + target + " §r" + resyncDoneMsg); // Player final msg (in case)		
+				MsgHandler.infoMsg("The world " + world + " " + resyncDoneMsg); // Console final msg (always)
+				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + resyncDoneMsg); // Player final msg (in case)		
 				// #B.4.C. Debug Msg
-				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + target + "§b:");
+				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
 				MsgHandler.debugMsg(elapsedTimeCalculation + " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b= §d" + ((currentServerTick - initialTick) % 24000) + " §brestrained to one day = §d" + ValuesConverter.correctDailyTicks(((currentServerTick % 24000) - (initialTick % 24000)))); // Console debug msg
 				MsgHandler.debugMsg(adjustedElapsedTimeCalculation + " = §d" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + speed + " §b= §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed)))); // Console debug msg
 				MsgHandler.debugMsg(actualTimeCalculation + " = §e" + startAtTickNb + " §b+ §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed) + " §b= §c" + (startAtTickNb + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed)) + " §brestrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime)); // Console debug msg
@@ -132,42 +134,45 @@ public class WorldSyncHandler extends MainTM {
 			// #B.5. ... or if it is a (daySpeed != nightSpeed) world
 			} else {
 				// #B.5.A. Next tick is calculated with specific method
-				newTime = differentSpeedsNewTime(target, startAtTickNb, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, true);
+				newTime = differentSpeedsNewTime(world, startAtTickNb, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, true);
 				// #B.5.B. Notifications
-				MsgHandler.infoMsg("The world " + target + " " + resyncDoneMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + target + " §r" + resyncDoneMsg); // Player final msg (in case)
+				MsgHandler.infoMsg("The world " + world + " " + resyncDoneMsg); // Console final msg (always)
+				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + resyncDoneMsg); // Player final msg (in case)
 			}
 
 			// #B.6. Apply modifications
 			newTime = ValuesConverter.correctDailyTicks(newTime);
-			Bukkit.getServer().getWorld(target).setTime(newTime);
+			Bukkit.getServer().getWorld(world).setTime(newTime);
 
 			// #B.7. Adjust doDaylightCycle value
-			WorldDoDaylightCycleHandler.adjustDaylightCycle(target);
+			WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+			
+			// #B.8. Restore the number of elapsed days
+			Long nft = (initElapsedDays * 24000) + newTime;
+			Bukkit.getWorld(world).setFullTime(nft);
 
-			// #B.8. Extra notifications (for each cases)
+			// #B.9. Extra notifications (for each cases)
 			String listedWorldStartTime = ValuesConverter.formattedTimeFromTick(startAtTickNb);
 			String listedWorldCurrentTime = ValuesConverter.formattedTimeFromTick(newTime);
 			String formattedUTC = ValuesConverter.formatAsUTC(startAtTickNb);
-			Long d = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(target).getFullTime());
-			String elapsedDays = d.toString();
-			String date = ValuesConverter.dateFromElapsedDays(d, "yyyy") + "-" + ValuesConverter.dateFromElapsedDays(d, "mm") + "-" + ValuesConverter.dateFromElapsedDays(d, "dd");
+			String elapsedDays = initElapsedDays.toString();
+			String date = ValuesConverter.dateFromElapsedDays(initElapsedDays, "yyyy") + "-" + ValuesConverter.dateFromElapsedDays(initElapsedDays, "mm") + "-" + ValuesConverter.dateFromElapsedDays(initElapsedDays, "dd");
 			if (speed == realtimeSpeed) { // Display realtime message (speed is equal to 24.00)
-				MsgHandler.infoMsg("The world " + target + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + " " + worldCurrentStartMsg + " " + formattedUTC + " (+" + startAtTickNb + " ticks)."); // Final console msg
-				MsgHandler.infoMsg("he world " + target + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + worldCurrentSpeedMsg + " " + worldRealSpeedMsg); // Final console msg
+				MsgHandler.infoMsg("The world " + world + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + " " + worldCurrentStartMsg + " " + formattedUTC + " (+" + startAtTickNb + " ticks)."); // Final console msg
+				MsgHandler.infoMsg("he world " + world + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + worldCurrentSpeedMsg + " " + worldRealSpeedMsg); // Final console msg
 			} else if (daySpeed == nightSpeed) { // Display usual message (one speed)
-				MsgHandler.infoMsg("The world " + target + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + " " + worldCurrentStartMsg + " " + listedWorldStartTime + " (+" + startAtTickNb + " ticks)."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + worldCurrentSpeedMsg + " " + MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + target + "." + CF_D_SPEED) + "."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + " " + worldCurrentStartMsg + " " + listedWorldStartTime + " (+" + startAtTickNb + " ticks)."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + worldCurrentSpeedMsg + " " + MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED) + "."); // Final console msg
 			} else if (daySpeed != nightSpeed) { // Display usual message (two different speeds)
-				MsgHandler.infoMsg("The world " + target + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + " " + worldCurrentStartMsg + " " + listedWorldStartTime + " (+" + startAtTickNb + " ticks)."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + worldCurrentDaySpeedMsg + " " + MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + target + "." + CF_D_SPEED) + "."); // Final console msg
-				MsgHandler.infoMsg("The world " + target + worldCurrentNightSpeedMsg + " " + MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + target + "." + CF_N_SPEED) + "."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + " " + worldCurrentStartMsg + " " + listedWorldStartTime + " (+" + startAtTickNb + " ticks)."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + worldCurrentDaySpeedMsg + " " + MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED) + "."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + worldCurrentNightSpeedMsg + " " + MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED) + "."); // Final console msg
 			}
 		}
 	}
