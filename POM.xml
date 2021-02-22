@@ -40,8 +40,8 @@
 				<version>3.2.4</version>
 				<configuration>
 					<relocations>
-          				<relocation>
-            				<pattern>org.bstats</pattern>
+						<relocation>
+							<pattern>org.bstats</pattern>
 							<shadedPattern>net.vdcraft.arvdc.timemanager</shadedPattern>
 						</relocation>
 					</relocations>
