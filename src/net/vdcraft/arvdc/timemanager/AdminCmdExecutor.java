@@ -275,10 +275,15 @@ public class AdminCmdExecutor implements CommandExecutor {
 					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SYNC); // Send error and help msg
 						return true;
-					} else {
+					} else {						
 						String syncOrNo = args[2];
-						TmSetSync.cmdSetSync(sender, syncOrNo, concatWorldArgs);
-						return true;
+						if (!syncOrNo.equalsIgnoreCase("true") && !syncOrNo.equalsIgnoreCase("false")) {
+							TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SYNC); // Send error and help msg
+							return true;
+						} else {
+							TmSetSync.cmdSetSync(sender, syncOrNo, concatWorldArgs);
+							return true;
+						}
 					}
 				}
 				// Set the current time for a world

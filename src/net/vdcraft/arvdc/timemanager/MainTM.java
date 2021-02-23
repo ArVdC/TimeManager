@@ -328,8 +328,9 @@ public class MainTM extends JavaPlugin {
 	protected static String worldTimeChgMsg1 = "The current time of the world";
 	protected static String worldTimeChgMsg2 = "is now set to";
 	protected static String worldSyncTimeChgMsg = "is synchronized to the server time, its 'start' value will be changed to modify its current time.";
-	protected static String worldRealSyncTimeChgMsg = "will always match real UTC minutes and seconds, a new rounded 'start' value will be calculated.";
-
+	protected static String worldRealSyncTimeChgMsg = "could not be changed. Please use the '/tm set start' command instead if you want to change the time zone.";
+	protected static String worldTimeNoChange = "is synchronized ";
+	
 	// Cmd set update
 	protected static String updateEnableCheckMsg = "The plugin update message at server start will use";
 	protected static String updateDisableCheckMsg = "The plugin update message at server start is now";

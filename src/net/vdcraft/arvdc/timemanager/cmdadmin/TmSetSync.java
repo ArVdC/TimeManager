@@ -34,7 +34,7 @@ public class TmSetSync extends MainTM {
 			World w = Bukkit.getWorld(world);
 			long t = w.getTime();
 			String speed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
-			if ((syncOrNo.equals("true") && speed.equals("0.0")) || (syncOrNo.equals("false") && speed.equals("24.0"))) {
+			if (speed.equals("0.0") || speed.equals("24.0")) {
 				// Notifications
 				MsgHandler.infoMsg(worldSyncNoChgMsg + " " + world + "."); // Console final msg (always)
 				MsgHandler.playerMsg(sender, worldSyncNoChgMsg + " §e" + world + "§r."); // Player final msg (in case)
