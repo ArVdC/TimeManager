@@ -373,12 +373,12 @@ public class MainTM extends JavaPlugin {
 	protected static String daySpeedAdjustDebugMsg = "The §edaySpeed§b option value was converted from";
 	protected static String nightSpeedAdjustDebugMsg = "The §enightSpeed§b option value was converted from";
 	protected static String startAdjustDebugMsg = "The §estart§b option value was converted from";
-	protected static String syncAdjustTrueDebugMsg = "The §esync§b option is forced to §atrue §bfor the world";
-	protected static String syncAdjustFalseDebugMsg = "The §esync§b option is forced to §cfalse §bfor the world";
-	protected static String sleepAdjustFalseDebugMsg = "The §esleep§b option is forced to §cfalse §bfor the world";
+	protected static String syncAdjustTrueDebugMsg = "The §esync§b option is forced to §atrue§b for the world";
+	protected static String syncAdjustFalseDebugMsg = "The §esync§b option is forced to §cfalse§b for the world";
+	protected static String sleepAdjustFalseDebugMsg = "The §esleep§b option is forced to §cfalse§b for the world";
 	protected static String availableTranslationsDebugMsg = "Available translations are:";
-	protected static String daylightTrueDebugMsg = "The gamerule §edoDaylightCycle§b is now set to §atrue§b for the world";
-	protected static String daylightFalseDebugMsg = "The gamerule §edoDaylightCycle§b is now set to §cfalse§b for the world";
+	public static String daylightTrueDebugMsg = "The §edoDaylightCycle§b value is now set to §atrue§b for the world";
+	protected static String daylightFalseDebugMsg = "The §edoDaylightCycle§b value is now set to §cfalse§b for the world";
 	protected static String mcLocaleDebugMsg = "The locale will be determined by the Minecraft client.";
 	protected static String pcLocaleDebugMsg = "The locale will be determined by the computer and §onot §bby the Minecraft client.";
 	protected static String foundLocaleDebugMsg = "The locale found for the player";
@@ -393,12 +393,14 @@ public class MainTM extends JavaPlugin {
 	protected static String wrongVersionNumberDebugMsg = "Your MC version doesn't correspond to any decimal number:";
 	protected static String LatestVersionPart1DebugMsg = "Last version on";
 	protected static String LatestVersionPart2DebugMsg = "and you are running the";
-	public static String sleepProcess1DebugMsg = "§b is sleeping now (1/100 ticks).";
-	public static String sleepProcess2DebugMsg = "Sleep time is almost reached (99/100 ticks).";
-	public static String sleepProcess3DebugMsg = "Achieved ! (100/100 ticks) Now waiting for the morning.";
-	public static String sleepProcess4aDebugMsg = "Sleeping is forbid in the world";
-	public static String sleepProcess4bDebugMsg = "The process ends here.";
-	public static String sleepProcess5DebugMsg = "without having been able to sleep.";
+	public static String sleepProcessStartsDebugMsg = "§b is sleeping now (1/100 ticks).";
+	public static String sleepProcess99TicksDebugMsg = "Sleep time is almost reached (99/100 ticks).";
+	public static String sleepProcess100TicksDebugMsg = "Sleep time is achieved (100/100 ticks).";
+	public static String sleepProcessWaitMorningTicksDebugMsg = "From now on, waiting for the morning.";
+	public static String sleepProcessAdjustMorningTicksDebugMsg = "The morning tick was adjusted to";
+	public static String sleepProcessSleepForbid1DebugMsg = "Sleeping is forbid in the world";
+	public static String sleepProcessSleepForbid2DebugMsg = "The process ends here.";
+	public static String sleepProcessAwakeNoSleepDebugMsg = "without having been able to sleep.";
 	public static String sleepOkMorningDebugMsg = "§aWake up, it's morning !!!";
 	public static String sleepNoMorningDebugMsg = "§cToo late...  morning might never come.";
 
@@ -566,7 +568,7 @@ public class MainTM extends JavaPlugin {
 	/**
 	 * 3. Custom wait
 	 */
-	protected static void waitTime(Integer msToWait) {
+	public static void waitTime(Integer msToWait) {
 		try {
 			Thread.sleep(msToWait);
 		} catch (InterruptedException e) {
