@@ -14,7 +14,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class WorldSleepHandler implements Listener {
 
 	// Define a max waiting count for the sleeping time
-	private static long defWaitingCount = 250L;
+	private static long defWaitingCount = 100L;
 	private static long waitingCount = defWaitingCount;
 	// Create an active/inactive variable
 	public static Boolean watingForTheDay = false;
@@ -91,7 +91,7 @@ public class WorldSleepHandler implements Listener {
 				}
 			}
 
-		}, 1L);
+		}, 2L);
 	}
 
 	// # 3. Wait a little bit before checking
@@ -129,13 +129,13 @@ public class WorldSleepHandler implements Listener {
 					MsgHandler.debugMsg(MainTM.sleepNoMorningDebugMsg); // Console debug msg
 				}
 			}
-		}, 2L);
+		}, 4L);
 	}
 
 	// # 5. Adjust the time from 6:00 to 12:00 am, relaunch the speed scheduler and refresh the doDaylightCycle gamerule
 	public static void afterSleepingSettings(World w, long wakeUpTick) {
-		BukkitScheduler doesDayStartSheduler = MainTM.getInstance().getServer().getScheduler();
-		doesDayStartSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
+		BukkitScheduler afterSleepingSheduler = MainTM.getInstance().getServer().getScheduler();
+		afterSleepingSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				String world = w.getName();
@@ -152,7 +152,6 @@ public class WorldSleepHandler implements Listener {
 				// Change the doDaylightCycle value if it needs to be
 				WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
 			}
-		}, 20L);
+		}, 5L);
 	}
-
 };
