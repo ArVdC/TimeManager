@@ -6,7 +6,7 @@
 ### TIME MANAGING FUNCTIONALITIES
 Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
 
-Time could be stretched/extended up to x10 or match real UTC time, with a per world time adjust.
+Time could be increased/decreased up to x10 or match real UTC time, with a per world time adjust.
 
 Worlds list is actualized and timers are synchronized on each server startup and reload. Most values are automatically checked and corrected depending on the case.
 

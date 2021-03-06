@@ -31,7 +31,7 @@ public class TmHelp extends MainTM {
 	private static String setSpeed_D_N_HelpMsg = "§6/tm set speedDay §ror §6/tm set speedNight [multiplier] [all|world]: §rFrom §o0.0§r to §o10.0§r, the values of daySpeed and nightSpeed can be different from each other.";
 	private static String setStartHelpMsg = "§6/tm set start [tick|daypart|HH:mm:ss] [all|world]: §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized.";
 	private static String setTimeHelpMsg = "§6/tm set time [tick|daypart|HH:mm:ss] [all|world]: §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
-	private static String setE_DaysHelpMsg = "§6/tm set elapsedDays [today|0 → ∞] [all|world]: §rSets current number of elapsed days for the specified world (or all of them). Could be an integer between §o0§r and §oinfinity§r (or almost). Setting this to §o0§r will bring the world back to day §oone§r.";
+	private static String setE_DaysHelpMsg = "§6/tm set elapsedDays [0 → ∞] [all|world]: §rSets current number of elapsed days for the specified world (or all of them). Could be an integer between §o0§r and §oinfinity§r (or almost). Setting this to §o0§r will bring the world back to day §oone§r.";
 	private static String setDateHelpMsg = "§6/tm set date [today|yyyy-mm-dd] [all|world]: §rSets current date for the specified world (or all of them). Could be §otoday§r or any yyyy-mm-dd date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.";
 	private static String setSyncHelpMsg = "§6/tm set sync [true|false] [all|world]: §rDefine if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";   
 	// Except this line, used when 'set' is used without additional argument
@@ -101,7 +101,7 @@ public class TmHelp extends MainTM {
 				}
 				// /tm help set updateMsgSrc
 				else if ((subCmd.equalsIgnoreCase(CMD_SET_UPDATE))
-						&& (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+						&& (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate)) {
 					specificCmdMsg = setupdateSrcHelpMsg; // Help msg (in case of 2 args)
 				}
 			}
@@ -121,7 +121,7 @@ public class TmHelp extends MainTM {
 			}
 			// /tm help checkupdate
 			else if ((subCmd.equalsIgnoreCase(CMD_CHECKUPDATE))
-					&& (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+					&& (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate)) {
 				specificCmdMsg = checkupdateHelpMsg; // Help msg (in case of 1 arg)
 			}
 			// /tm help reload

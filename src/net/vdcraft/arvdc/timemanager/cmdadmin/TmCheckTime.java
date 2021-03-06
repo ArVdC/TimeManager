@@ -1,6 +1,7 @@
 package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -13,12 +14,11 @@ public class TmCheckTime extends MainTM {
 	/**
 	 * CMD /tm checktime [all|server|world]
 	 */
-	public static void cmdCheckTime(CommandSender sender, String worldToGet) {
+	public static void cmdCheckTime(CommandSender sender, String world) {
 		// If using a world name in several parts
-		if (sender instanceof Player)
-			worldToGet = ValuesConverter.restoreSpacesInString(worldToGet);
+		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) world = ValuesConverter.restoreSpacesInString(world);
 		// If the arg is "all" or "server", get the server's initial and actual ticks
-		if (worldToGet.equalsIgnoreCase("all") || worldToGet.equalsIgnoreCase("server")) {
+		if (world.equalsIgnoreCase("all") || world.equalsIgnoreCase("server")) {
 			// Get the current server tick
 			long currentServerTick = ValuesConverter.getServerTick();
 			// Get the current server UTC time in HH:mm:ss
@@ -37,15 +37,15 @@ public class TmCheckTime extends MainTM {
 			}
 		}
 		// If the arg is "all", get each world start tick, actual tick, speeds and sync params
-		if (worldToGet.equalsIgnoreCase("all")) {
+		if (world.equalsIgnoreCase("all")) {
 			// Relaunch this for each world
 			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				cmdDisplayTime(sender, listedWorld);
 			}
 		}
 		// Else, if the string argument is a listed world, check a single world
-		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(worldToGet)) {
-			cmdDisplayTime(sender, worldToGet);
+		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
+			cmdDisplayTime(sender, world);
 		}
 	}
 

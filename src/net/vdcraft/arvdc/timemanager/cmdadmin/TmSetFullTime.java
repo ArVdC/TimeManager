@@ -2,6 +2,7 @@ package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -16,8 +17,7 @@ public class TmSetFullTime extends MainTM {
 	 */
 	public static void cmdSetDay(CommandSender sender, long elapsedDays, String world) {
 		// If using a world name in several parts
-		if (sender instanceof Player)
-			world = ValuesConverter.restoreSpacesInString(world);
+		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) world = ValuesConverter.restoreSpacesInString(world);
 		// Adapt wrong values in the arg
 		if (elapsedDays < 0 ) elapsedDays = 0L;
 
@@ -57,6 +57,8 @@ public class TmSetFullTime extends MainTM {
 	 * CMD /tm set date [yyyy-mm-dd] [world]
 	 */
 	public static void cmdSetDate(CommandSender sender, String date, String world) {
+		// If using a world name in several parts
+		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) world = ValuesConverter.restoreSpacesInString(world);
 		// Modify all worlds
 		if (world.equalsIgnoreCase("all")) {
 			// Relaunch this for each world

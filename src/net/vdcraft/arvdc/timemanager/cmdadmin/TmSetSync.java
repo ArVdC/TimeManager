@@ -2,6 +2,7 @@ package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -17,9 +18,7 @@ public class TmSetSync extends MainTM {
 	 */
 	public static void cmdSetSync(CommandSender sender, String syncOrNo, String world) {
 		// If using a world name in several parts
-		if (sender instanceof Player) {
-			world = ValuesConverter.restoreSpacesInString(world);
-		}
+		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) world = ValuesConverter.restoreSpacesInString(world);
 
 		// Modify all worlds
 		if (world.equalsIgnoreCase("all")) {

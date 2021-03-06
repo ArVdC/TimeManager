@@ -82,7 +82,7 @@ public class WorldSleepHandler implements Listener {
 					MsgHandler.debugMsg(MainTM.sleepProcess100TicksDebugMsg); // Console debug msg					
 					if (speedModifier < 1.0) { // Eventually active doDaylightCycle to permit the ending of sleep
 						MsgHandler.debugMsg(MainTM.daylightTrueDebugMsg + " §e" + world + "§b.");
-						if (MainTM.decimalOfMcVersion < 13.0) w.setGameRuleValue("doDaylightCycle", sleepIsPermited.toString());
+						if (MainTM.decimalOfMcVersion < MainTM.reqMcVForDaylightCycle) w.setGameRuleValue("doDaylightCycle", sleepIsPermited.toString());
 						else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, sleepIsPermited);
 					}
 				// #2.B. If the player stops sleeping
@@ -151,6 +151,8 @@ public class WorldSleepHandler implements Listener {
 				WorldSpeedHandler.speedScheduler(world);
 				// Change the doDaylightCycle value if it needs to be
 				WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+				// Notify the console
+				MsgHandler.infoMsg(MainTM.sleepNewDayMsg + " "  + world + ", it is now tick #" + wakeUpTick + " (" + ValuesConverter.formattedTimeFromTick(wakeUpTick) + ")."); // Console final msg
 			}
 		}, 5L);
 	}

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -27,12 +28,12 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	// List of admin sub-commands
 	List<String> tmCmdArgsList() {
-		if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
+		if (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
 		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
 	}
 	// List of admin sub-commands having a 'help'
 	List<String> tmHelpArgsList() {
-		if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
+		if (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
 		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
 	}    
 	// Arguments list for '/tm checkupdate'
@@ -41,7 +42,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang"); // , "cmds" TODO 1.5.0
 	// Arguments list for '/tm set'
 	List<String> tmSetArgsList() {
-		if (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_UPDATE);
+		if (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_UPDATE);
 		else return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS);
 	}
 	// Arguments list for '/tm set deflang
@@ -69,7 +70,7 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	List<String> tmWorldsArgsList(CommandSender sender) {
 		List<String> worldsArgs = CfgFileHandler.setAnyListFromConfig("worldsList");
-		if (sender instanceof Player) { // Hack it only for players
+		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) { // Hack it only for players and commandblocks (Cause of the tab completion)
 			worldsArgs = ValuesConverter.replaceSpacesInList(worldsArgs);
 		}
 		return Stream.concat(allArg.stream(), worldsArgs.stream()).collect(Collectors.toList());
@@ -80,7 +81,7 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	List<String> tmWorldsTimeArgsList(CommandSender sender) {
 		List<String> worldsArgs = CfgFileHandler.setAnyListFromConfig("worldsList");
-		if (sender instanceof Player) { // Hack it only for players
+		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) { // Hack it only for players and commandblocks (Cause of the tab completion)
 			worldsArgs = ValuesConverter.replaceSpacesInList(worldsArgs);
 		}
 		return Stream.concat(allAndServerArg.stream(), worldsArgs.stream()).collect(Collectors.toList());
@@ -91,7 +92,7 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	List<String> nowWorldsArgsList() {
 		List<String> worldsArgs = CfgFileHandler.setAnyListFromConfig("worldsList");
-		worldsArgs = ValuesConverter.replaceSpacesInList(worldsArgs);
+		worldsArgs = ValuesConverter.replaceSpacesInList(worldsArgs); // Hack it for players (Cause of the tab completion)
 		return worldsArgs;
 	}
 
@@ -120,7 +121,7 @@ public class CreateSentenceCommand implements TabCompleter {
 						if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
 							outputArgsList.add(verif);
 					}
-				} else if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKUPDATE) && MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) // Command '/tm checkupdate <...>'
+				} else if (args[0].equalsIgnoreCase(MainTM.CMD_CHECKUPDATE) && MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate) // Command '/tm checkupdate <...>'
 				{
 					for (String verif : tmCheckupdateArgsList) {
 						if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
@@ -228,7 +229,7 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE) && MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate) // Command '/tm set update <...>'
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE) && MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate) // Command '/tm set update <...>'
 					{
 						for (String verif : tmCheckupdateArgsList) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))

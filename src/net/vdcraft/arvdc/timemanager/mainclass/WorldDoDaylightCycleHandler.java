@@ -25,14 +25,14 @@ public class WorldDoDaylightCycleHandler extends MainTM {
 			long t = w.getTime();
 			double speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST +"." + worldToSet + "." + ValuesConverter.wichSpeedParam(t));
 			if (speedModifier == realtimeSpeed || speedModifier < 1.0) {
-				if (decimalOfMcVersion < 13.0) {
+				if (decimalOfMcVersion < reqMcVForDaylightCycle) {
 					w.setGameRuleValue("doDaylightCycle", "false");
 				} else {
 					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 				}
 				MsgHandler.debugMsg(daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			} else {
-				if (decimalOfMcVersion < 13.0) {
+				if (decimalOfMcVersion < reqMcVForDaylightCycle) {
 					w.setGameRuleValue("doDaylightCycle", "true");
 				} else {
 					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);

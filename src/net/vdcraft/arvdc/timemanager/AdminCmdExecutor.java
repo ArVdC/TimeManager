@@ -5,9 +5,11 @@
 package net.vdcraft.arvdc.timemanager;
 
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHelp;
@@ -40,9 +42,14 @@ public class AdminCmdExecutor implements CommandExecutor {
 		// Count # of arguments
 		int argsNumb = args.length;
 		String defaultWorld = "world"; // Create a default world value in case of missing argument
-		if (sender instanceof Player) {
-			World w = ((Player) sender).getWorld();
-			defaultWorld = w.getName();
+		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) {
+			if (sender instanceof Player) {
+				World w = ((Player) sender).getWorld();
+				defaultWorld = w.getName();
+			} else {
+				World w = ((BlockCommandSender) sender).getBlock().getWorld();
+				defaultWorld = w.getName();
+			}
 		}
 		
 		MsgHandler.devMsg("Command §e/" + label + "§9 launched with §e" + argsNumb + "§9 arguments :"); // Console dev msg
@@ -66,7 +73,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 			}
 			// Check for an update on configured server
 			else if ((args[0].equalsIgnoreCase(MainTM.CMD_CHECKUPDATE)) 
-					&& (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+					&& (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate)) {
 				if (argsNumb < 2) {
 					TmCheckUpdate.cmdCheckUpdate(sender);
 					return true;
@@ -190,7 +197,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 				// Set the source server of the update message
 				else if ((args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE))
-						&& (MainTM.decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)) {
+						&& (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate)) {
 					if (argsNumb < 3) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_UPDATE); // Send error and help msg
 						return true;
@@ -204,7 +211,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 		}
 		String concatWorldArgs = "";
 		if (argsNumb == 3) {
-			if (sender instanceof Player)
+			if ((sender instanceof Player) || (sender instanceof BlockCommandSender))
 				concatWorldArgs = defaultWorld;
 		}
 		if (argsNumb >= 4) {
@@ -221,7 +228,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 			if (args[0].equalsIgnoreCase(MainTM.CMD_SET)) {
 				// Set the sleeping possibility for a world
 				if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)) {
-					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+					if (((argsNumb < 4) && (sender instanceof ConsoleCommandSender)) || ((argsNumb < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SLEEP); // Send error and help msg
 						return true;
 					} else {
@@ -233,7 +240,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				// Set the speed modifier for a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)) {
 					String when = args[1];
-					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+					if (((argsNumb < 4) && (sender instanceof ConsoleCommandSender)) || ((argsNumb < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SPEED); // Send error and help msg
 						return true;
 					} else {
@@ -255,7 +262,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 				// Set the start time for a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_START)) {
-					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+					if (((argsNumb < 4) && (sender instanceof ConsoleCommandSender)) || ((argsNumb < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_START); // Send error and help msg
 						return true;
 					} else {
@@ -272,7 +279,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 				// Set the permanent synchronization of a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)) {
-					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+					if (((argsNumb < 4) && (sender instanceof ConsoleCommandSender)) || ((argsNumb < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SYNC); // Send error and help msg
 						return true;
 					} else {						
@@ -288,7 +295,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 				// Set the current time for a world
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)) {
-					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+					if (((argsNumb < 4) && (sender instanceof ConsoleCommandSender)) || ((argsNumb < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME); // Send error and help msg
 						return true;
 					} else {
@@ -305,7 +312,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 				// Set the FullTime value of a world, from a days number
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)) {
-					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+					if (((argsNumb < 4) && (sender instanceof ConsoleCommandSender)) || ((argsNumb < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_E_DAYS); // Send error and help msg
 						return true;
 					} else {
@@ -322,7 +329,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 				// Set the FullTime value of a world, from a date
 				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DATE)) {
-					if (argsNumb < 4 && !(sender instanceof Player) || (argsNumb < 3 && sender instanceof Player)) {
+					if (((argsNumb < 4) && (sender instanceof ConsoleCommandSender)) || ((argsNumb < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						TmHelp.sendErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DATE); // Send error and help msg
 						return true;
 					} else {

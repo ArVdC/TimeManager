@@ -7,7 +7,7 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class McVersionHandler extends MainTM {
 
 	/**
-	 * Get the version of the server and return only the type (Bukkit/Spigot/Paper)
+	 * Get the version of the server and return only the type (Bukkit/Spigot/Paper/...)
 	 */
 	public static String KeepTypeOfServer() {
 		MsgHandler.debugMsg(serverTypeQueryDebugMsg); // Console debug msg
@@ -63,6 +63,12 @@ public class McVersionHandler extends MainTM {
 					MsgHandler.devMsg("[" + count + "]: §e" + split); // Console dev msg
 					count++;
 				}
+				String completeServerType = split1[0];
+				if (completeServerType.contains("-")) {
+					String[] serverType = completeServerType.split("-");
+					if (serverType.length >= 1) MsgHandler.devMsg("The server version is: §e"+ serverType[0].replace(")", ""));
+					if (serverType.length >= 2) MsgHandler.devMsg("The server type is: §e"+ serverType[1]);
+				}
 			} // Dev msg end
 			split2 = split1[1]; // Keep only what is after the "(mc: 1."
 			split2 = split2.replace(")", splitMarker); // Tag the character ")" after the version value
@@ -77,12 +83,18 @@ public class McVersionHandler extends MainTM {
 					MsgHandler.devMsg("[" + count + "]: §e" + split); // Console dev msg
 					count++;
 				}
+				String completeServerType = split1[0];
+				if (completeServerType.contains("-")) {
+					String[] serverType = completeServerType.split("-");
+					if (serverType.length >= 1) MsgHandler.devMsg("The server version is: §e"+ serverType[0].replace(")", ""));
+					if (serverType.length >= 2) MsgHandler.devMsg("The server type is: §e"+ serverType[1]);
+				}
 			} // Dev msg end
 			split2 = split1[1];
 			split2 = split2.replace(")", splitMarker).replace("]", splitMarker).replace("-", splitMarker).replace("_", splitMarker).replace(" ", splitMarker);
 		} else { // Use the latest version of MC
 			MsgHandler.debugMsg(noVersionNumberDebugMsg + " '" + completeServerVersion + "'."); // Console debug msg
-			mcVersion = minRequiredMcVersion;
+			mcVersion = reqMcVToLoadPlugin;
 			MsgHandler.warnMsg("1. " + versionMCFormatMsg); // Console warn msg
 			return mcVersion;
 		}
@@ -104,7 +116,7 @@ public class McVersionHandler extends MainTM {
 			mcVersion = Double.parseDouble(mcVersionString);
 		} catch (NumberFormatException nfe) { // If not possible, use the latest version of MC
 			MsgHandler.debugMsg(wrongVersionNumberDebugMsg + "\n" + nfe);
-			mcVersion = minRequiredMcVersion;
+			mcVersion = reqMcVToLoadPlugin;
 			MsgHandler.warnMsg(versionMCFormatMsg); // Console warn msg
 		}
 		MsgHandler.debugMsg(serverMcVersionResultDebugMsg + " §e1." + split3[0] + " §bMC version.");

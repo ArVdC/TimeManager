@@ -48,8 +48,9 @@ public class MainTM extends JavaPlugin {
 
 	// Minecraft server minimal required version decimals "x.xx" (without the "1."
 	// and eventually with a "x.0x" format - to permit comparisons)
-	protected static Double minRequiredMcVersion = 4.06;
-	protected static Double requiredMcVersionForUpdate = 8.09;
+	protected static Double reqMcVToLoadPlugin = 4.06;
+	protected static Double reqMcVForUpdate = 8.09;
+	public static Double reqMcVForDaylightCycle = 13.0;
 
 	// Current Minecraft server version decimals "x.xx" (without the "1." and eventually with a "x.0x" format - to permit comparisons)
 	public static Double decimalOfMcVersion;
@@ -236,7 +237,7 @@ public class MainTM extends JavaPlugin {
 
 	// Plugin enable & reload messages
 	protected static String plEnabledMsg = "The plugin is now enabled, timers will be initialized when all the other plugins are loaded.";
-	protected static String plBadVersionMsg = "§cThe plugin is not compatible with versions under 1." + minRequiredMcVersion + " and you are running a ";
+	protected static String plBadVersionMsg = "§cThe plugin is not compatible with versions under 1." + reqMcVToLoadPlugin + " and you are running a ";
 	protected static String plDisabledMsg = "The plugin is now disabled.";
 	protected static String cfgFileCreateMsg = "The configuration file was created.";
 	protected static String lgFileCreaMsg = "The language file was created.";
@@ -429,6 +430,9 @@ public class MainTM extends JavaPlugin {
 	protected static String worldStartAtCalculation = worldStartAtVar + " = " + oldWorldStartAtVar + " + " + askedTimeVar + " - " + actualTimeVar;
 	protected static String adjustedTicksCalculation = adjustedTicksVar + " = " + currentTickVar + " / " + mcTimeRatioVar;
 	protected static String realActualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " - " + sixHoursLessVar + " + " + adjustedTicksVar;
+	
+	// Sleep listener
+	public static String sleepNewDayMsg = "The players slept and spent the night in the world";
 
 	// MySQL
 	protected static String host;
@@ -480,7 +484,7 @@ public class MainTM extends JavaPlugin {
 
 		// #0. Don't start the plugin with too old versions of the game
 		decimalOfMcVersion = McVersionHandler.KeepDecimalOfMcVersion();
-		if (decimalOfMcVersion < minRequiredMcVersion) {
+		if (decimalOfMcVersion < reqMcVToLoadPlugin) {
 			MsgHandler.colorMsg("§c" + plBadVersionMsg + "1." + decimalOfMcVersion + " server.");
 		} else {
 
@@ -537,9 +541,9 @@ public class MainTM extends JavaPlugin {
 			
 			
 			// #13. Check for an update
-			if (decimalOfMcVersion >= MainTM.requiredMcVersionForUpdate)
+			if (decimalOfMcVersion >= MainTM.reqMcVForUpdate)
 				UpdateHandler.delayCheckForUpdate();
-			else MsgHandler.warnMsg(updateCommandsDisabledMsg + requiredMcVersionForUpdate.toString().replace(".0", "."));
+			else MsgHandler.warnMsg(updateCommandsDisabledMsg + reqMcVForUpdate.toString().replace(".0", "."));
 		}
 	}
 
@@ -549,7 +553,7 @@ public class MainTM extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		// #0. Don't disable the plugin with if not loaded first
-		if (decimalOfMcVersion < minRequiredMcVersion) {
+		if (decimalOfMcVersion < reqMcVToLoadPlugin) {
 		} else {
 
 			// #1. Save YAMLs
