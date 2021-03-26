@@ -135,18 +135,19 @@ The available placeholders are as follows :
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-* v1.4.2: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.5
-* v1.4.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.5
-* v1.4.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
-* v1.3.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
-* v1.3.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.4
-* v1.2.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.16.1
-* v1.2.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.14.3
-* v1.1.1: Spigot, Paper and Bukkit - MC 1.4.6 to 1.13
-* v1.1.0: Spigot, Paper and Bukkit - MC 1.4.6 to 1.12.1
-* v1.0.2: Spigot and Bukkit - MC 1.4.6 to 1.12
-* v1.0.1: Spigot - MC 1.9 to 1.12 and Bukkit - MC 1.12
-* v1.0.0: Spigot and Bukkit - MC 1.12
+v1.5.0: MC 1.4.6 to 1.16.5
+v1.4.2: MC 1.4.6 to 1.16.5
+v1.4.1: MC 1.4.6 to 1.16.5
+v1.4.0: MC 1.4.6 to 1.16.4
+v1.3.1: MC 1.4.6 to 1.16.4
+v1.3.0: MC 1.4.6 to 1.16.4
+v1.2.1: MC 1.4.6 to 1.16.1
+v1.2.0: MC 1.4.6 to 1.14.3
+v1.1.1: MC 1.4.6 to 1.13
+v1.1.0: MC 1.4.6 to 1.12.1
+v1.0.2: MC 1.4.6 to 1.12
+v1.0.1: MC 1.9 to 1.12
+v1.0.0: MC 1.12
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
@@ -155,7 +156,7 @@ The available placeholders are as follows :
 * ~~Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.~~
 * ~~Command: Make an update message and associated commands.~~
 * ~~Day & Night : Make a different speed multiplier for the day and the night.~~
-* ~~Calendar: Create new placeholders to display a count of elapsed days and the date in yyyy-mm-dd format.
+* ~~Calendar: Create new placeholders to display a count of elapsed days and the date in yyyy-mm-dd format.~~
 * ~~Scheduler: Create a scheduler allowing commands to be executed at specific times.~~
 * Sleep/Sync: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.

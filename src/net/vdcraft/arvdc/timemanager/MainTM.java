@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import net.vdcraft.arvdc.timemanager.Metrics;
 
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
@@ -57,7 +58,7 @@ public class MainTM extends JavaPlugin {
 
 	// Enable/Disable debugging
 	public static Boolean debugMode = false; // Displays user accessible debug msgs
-	public static Boolean devMode = false; // Displays more verbose debug msgs
+	public static Boolean devMode = true; // Displays more verbose debug msgs
 	public static Boolean timerMode = false; // Displays all timers calculations (= ultra-verbose mode)
 
 	// Default config files values
@@ -104,6 +105,7 @@ public class MainTM extends JavaPlugin {
 	public static List<String> asyncIncreaseSpeedSchedulerIsActive = new ArrayList<String>();
 	public static List<String> asyncDecreaseSpeedSchedulerIsActive = new ArrayList<String>();
 	public static List<String> commandsSchedulerIsActive = new ArrayList<String>();
+	public static int cmdsTask;
 
 	// Initialize server tick
 	protected static Long initialTick;
@@ -175,10 +177,10 @@ public class MainTM extends JavaPlugin {
 	// Cmds file keys
 	protected static final String CF_USECOMMANDS = "useCmds";
 	protected static final String CF_COMMANDSLIST = "cmdsList";
-	protected static final String CF_CMD = "cmd";
-	protected static final String CF_REFWORLD = "refTimeWorld";
-	protected static final String CF_NEXTHOUR = "nextHour";
-	protected static final String CF_NEXTDATE = "nextDate";
+	protected static final String CF_CMDS = "cmds";
+	protected static final String CF_REFTIME = "refTime";
+	protected static final String CF_HOUR = "hour";
+	protected static final String CF_DATE = "date";
 	protected static final String CF_REPEATFREQ = "repeatFreq";
 
 	// Commands names
@@ -344,6 +346,7 @@ public class MainTM extends JavaPlugin {
 	protected static String rateFormatMsg = "Refresh rate must be an integer number.";
 	protected static String wakeUpTickFormatMsg = "Wake up tick must be an integer number, default value will be used.";
 	protected static String startTickFormatMsg = "Start tick must be an integer number, default value will be used.";
+	protected static String utcFormatMsg = "Time shift must be formatted as \"UTC\" followed by \"+ or -\" and an integer number, without space (e.g. UTC+1), default value will be used.";
 	protected static String yearFormatMsg = "Year number must be an integer number between 1 and 9999.";
 	protected static String monthFormatMsg = "Month number must be an integer number between 1 and 12.";
 	protected static String dayFormatMsg = "Day number must be an integer number between 1 and ";
@@ -498,7 +501,7 @@ public class MainTM extends JavaPlugin {
 			LgFileHandler.loadLang("first");
 			
 			// #4. Activate the scheduler file
-			// CmdsFileHandler.loadCmds("first");
+			CmdsFileHandler.loadCmds("first");
 
 			// #5. Activate the class with admins commands
 			CommandExecutor timemanagerExecutor = new AdminCmdExecutor();

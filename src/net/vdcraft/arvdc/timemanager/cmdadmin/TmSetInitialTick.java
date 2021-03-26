@@ -29,7 +29,7 @@ public class TmSetInitialTick extends MainTM {
 		if (!newTick.equals(oldTick) && !newTick.equals(sqlTick)) {
 			// Adapt the value
 			initialTick = newTick;
-			initialTime = ValuesConverter.realTimeFromTick(initialTick);
+			initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick);
 
 			// Save the value in the config.yml
 			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, initialTick);

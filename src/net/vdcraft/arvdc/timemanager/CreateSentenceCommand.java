@@ -39,7 +39,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	// Arguments list for '/tm checkupdate'
 	List<String> tmCheckupdateArgsList = Arrays.asList("none", MainTM.CF_BUKKIT, MainTM.CF_CURSE, MainTM.CF_SPIGOT, MainTM.CF_GITHUB);
 	// Arguments list for '/tm reload'
-	List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang"); // , "cmds" TODO 1.5.0
+	List<String> tmReloadArgsList = Arrays.asList("all", "config", "lang", "cmds"); // TODO 1.5.0
 	// Arguments list for '/tm set'
 	List<String> tmSetArgsList() {
 		if (MainTM.decimalOfMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_UPDATE);

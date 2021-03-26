@@ -235,7 +235,7 @@ public class ValuesConverter extends MainTM {
 	 * Gets and converts a real time tick (1/1728000) to HH:mm:ss
 	 * (returns a String)
 	 */
-	public static String realTimeFromTick(long tick) {
+	public static String realFormattedTimeFromTick(long tick) {
 		long newTick = tick / 20L; // x tick in 1 seconds
 		long s = newTick % 60;
 		long m = (newTick / 60) % 60;
@@ -329,7 +329,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Gets and converts a MC tick (1/2400) to HH:mm:ss
+	 * Gets and converts a MC tick (1/24000) to HH:mm:ss
 	 * (returns a String)
 	 */
 	public static String formattedTimeFromTick(long ticks) {
@@ -434,7 +434,7 @@ public class ValuesConverter extends MainTM {
 	 * Gets and converts the current real date to a number of days
 	 * (returns a Long)
 	 */
-	public static Long daysFromCurrentDate() {		
+	public static Long daysFromCurrentDate() {
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		int day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 		Long elapsedDays = (long) (((year - 1) * 365) + (day - 1));
@@ -448,12 +448,12 @@ public class ValuesConverter extends MainTM {
 	public static Long elapsedDaysFromTick(long fulltime) {
 		// A real day begin at 00:00
 		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_0h00)) {
-			MsgHandler.devMsg("New day begins at §e00:00§9, so the calculation of elapsed days is : (" + fulltime
-					+ " + 6000 = " + (fulltime + 6000) + ") / 24000 = §e" + (fulltime + 6000) / 24000); // Console dev msg
+			MsgHandler.debugMsg("New day begins at §e00:00§b, so the calculation of elapsed days is : (§e" + fulltime
+					+ " §b+ §e6000 §b= §e" + (fulltime + 6000) + "§b) / §e24000 §b= §e" + (fulltime + 6000) / 24000 + "§b."); // Console dev msg
 			return (fulltime + 6000) / 24000;
 		} else { // A MC day begin at 06:00
-			MsgHandler.devMsg("New day begins at §e06:00§9, so the calculation of elapsed days is : " + fulltime
-					+ " / 24000 = §e" + (fulltime / 24000)); // Console dev msg
+			MsgHandler.debugMsg("New day begins at §e06:00§b, so the calculation of elapsed days is : §e" + fulltime
+					+ " §b/ §e24000 §b= §e" + (fulltime / 24000) + "§b."); // Console dev msg
 			return fulltime / 24000;
 		}
 	}

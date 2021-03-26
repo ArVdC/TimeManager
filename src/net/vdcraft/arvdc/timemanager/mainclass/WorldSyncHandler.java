@@ -160,7 +160,7 @@ public class WorldSyncHandler extends MainTM {
 			if (speed == realtimeSpeed) { // Display realtime message (speed is equal to 24.00)
 				MsgHandler.infoMsg("The world " + world + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
 				MsgHandler.infoMsg("The world " + world + " " + worldCurrentStartMsg + " " + formattedUTC + " (+" + startAtTickNb + " ticks)."); // Final console msg
-				MsgHandler.infoMsg("he world " + world + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
 				MsgHandler.infoMsg("The world " + world + worldCurrentSpeedMsg + " " + worldRealSpeedMsg); // Final console msg
 			} else if (daySpeed == nightSpeed) { // Display usual message (one speed)
 				MsgHandler.infoMsg("The world " + world + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
@@ -277,7 +277,7 @@ public class WorldSyncHandler extends MainTM {
 						initialTick = ValuesConverter.getServerTick();
 						SqlHandler.setServerTickSQL(initialTick); // Save tick in SQL database
 					}
-					initialTime = ValuesConverter.realTimeFromTick(initialTick); // Convert the initial time in HH:mm:ss UTC
+					initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick); // Convert the initial time in HH:mm:ss UTC
 					MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, initialTick); // Save tick in config
 					setOrGet = "get from";
 				} else { // If reset is true
@@ -303,11 +303,11 @@ public class WorldSyncHandler extends MainTM {
 			if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase("false") && !MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_INITIALTICKNB).equals("")) {
 				// If reset false AND initialTickNb exists
 				initialTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB); // Get existing reference tick from config.yml
-				initialTime = ValuesConverter.realTimeFromTick(initialTick); // Convert the initial time in HH:mm:ss UTC
+				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick); // Convert the initial time in HH:mm:ss UTC
 				setOrGet = "get from";
 			} else { // Define a new reference tick
 				initialTick = ValuesConverter.getServerTick(); // Create the initial tick
-				initialTime = ValuesConverter.realTimeFromTick(initialTick); // Convert the initial time in HH:mm:ss UTC
+				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick); // Convert the initial time in HH:mm:ss UTC
 				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, initialTick); // Save tick in config.yml
 				setOrGet = "set in";
 			}
@@ -339,7 +339,7 @@ public class WorldSyncHandler extends MainTM {
 			if (!(oldTick.equals(newTick))) {
 				// Actualize the global variables
 				initialTick = newTick;
-				initialTime = ValuesConverter.realTimeFromTick(initialTick);
+				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick);
 				// Notifications
 				MsgHandler.infoMsg(initialTickYmlMsg); // Notify the console
 				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), "server"); // Notify the console
@@ -351,7 +351,7 @@ public class WorldSyncHandler extends MainTM {
 			if (!(oldTick.equals(newTick))) {
 				// Actualize the global variables
 				initialTick = newTick;
-				initialTime = ValuesConverter.realTimeFromTick(initialTick);
+				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick);
 				// Actualize the MySQL database
 				SqlHandler.updateServerTickSQL(newTick);
 				// Notifications
@@ -361,7 +361,7 @@ public class WorldSyncHandler extends MainTM {
 			} else if (sqlTick == null) {
 				// Actualize the global variables
 				initialTick = newTick;
-				initialTime = ValuesConverter.realTimeFromTick(initialTick);
+				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick);
 				// Actualize the MySQL database
 				SqlHandler.updateServerTickSQL(newTick);
 				// Notifications
@@ -374,7 +374,7 @@ public class WorldSyncHandler extends MainTM {
 				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_INITIALTICKNB, sqlTick);
 				// Actualize the global variables
 				initialTick = sqlTick;
-				initialTime = ValuesConverter.realTimeFromTick(initialTick);
+				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick);
 				// Notifications
 				MsgHandler.infoMsg(initialTickGetFromSqlMsg); // Notify the console
 				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), "server"); // Notify the console

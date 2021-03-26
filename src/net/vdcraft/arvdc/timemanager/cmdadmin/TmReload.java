@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
@@ -39,10 +40,10 @@ public class TmReload extends MainTM {
 		}
 		// When do reload the cmds.yml file // TODO 1.5.0
 		if (whatToReload.equalsIgnoreCase("commands") || whatToReload.equalsIgnoreCase("cmds") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
-			//CmdsFileHandler.loadCmds("re");
-			// 'lang.yml is reloaded' notification
-			//MsgHandler.playerMsg(sender, cmdsFileReloadMsg); // Player final msg (in case)
-			//MsgHandler.infoMsg(cmdsFileReloadMsg); // Console final msg (always)
+			CmdsFileHandler.loadCmds("re");
+			// 'cmds.yml is reloaded' notification
+			MsgHandler.playerMsg(sender, cmdsFileReloadMsg); // Player final msg (in case)
+			MsgHandler.infoMsg(cmdsFileReloadMsg); // Console final msg (always)
 			return;
 		}
 		// Else, return an error and help message

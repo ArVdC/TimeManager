@@ -1,0 +1,48 @@
+# [TimeManager] by ArVdC
+# cmds.yml
+# -----
+# *version*
+#  This field is automatically checked and refreshed, don't modify it manually.
+# -----
+# *useCmds*
+#  Set to true to activate the scheduler
+# -----
+# *cmdsList*
+#   Nodes names must be following numbers. Each node must contains the following keys :
+#   *cmd*
+#     The console command(s) you want to run. (with or without a "/" and separated by a ",")
+#   *refTime*
+#     The world whose time will serve as a reference. Possible values are any Minecraft world name or 'UTC+[timeShift]'. If using 'UTC+[timeShift]', the plugin will use the real UTC time as a reference.
+#   *refHour*
+#     The next hour the command will be launched (hh:mm)
+#   *refDate*
+#     The next day the command will be launched (yyyy-mm-dd)
+#   *repeatFreq*
+#     The repetition frequency at which the command will be launched (none || hour || day || month || year)
+# -----
+version: ''
+useCmds: ''
+cmdsList:
+  01:
+    cmds:
+      '1': /say This is an example of scheduled commands provided by Timemanager.
+      '2': /say It is up to you to customize it like you want.
+    refTime: 'world'
+    hour: '12:00'
+    date: 'today'
+    repeatFreq: 'none'
+  02:
+    cmds:
+      '1': /say Good morning @p
+      '2': /weather clear
+    refTime: 'world'
+    hour: '07:00'
+    date: '0001-01-01'
+    repeatFreq: 'day'
+  03:
+    cmds:
+      '1': /say Happy new year @p !!!
+    refTime: 'UTC+1'
+    hour: '00:00'
+    date: '0001-01-01'
+    repeatFreq: 'year'
