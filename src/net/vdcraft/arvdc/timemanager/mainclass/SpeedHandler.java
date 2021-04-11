@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
-public class WorldSpeedHandler extends MainTM {
+public class SpeedHandler extends MainTM {
 
 	/**
 	 * Detect worlds that need to change their speed value
@@ -16,7 +16,7 @@ public class WorldSpeedHandler extends MainTM {
 		refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
 
 		// #A. Calculate time for all worlds
-		if (world.equalsIgnoreCase("all")) {
+		if (world.equalsIgnoreCase(ARG_ALL)) {
 			// Relaunch this for each world
 			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				speedScheduler(listedWorld);
@@ -46,7 +46,7 @@ public class WorldSpeedHandler extends MainTM {
 						realSpeedScheduler(world);
 					}
 				// #B.2. Synchronized time calculation
-				} else if (sync.equalsIgnoreCase("true")) {
+				} else if (sync.equalsIgnoreCase(ARG_TRUE)) {
 					MsgHandler.debugMsg("The world §e" + world + "§b will now use the synchronous speed scheduler.");
 					if (!syncSpeedSchedulerIsActive.contains(world)) {
 						// Declare the world as having an active scheduler
@@ -55,7 +55,7 @@ public class WorldSpeedHandler extends MainTM {
 						syncSpeedScheduler(world, speed);
 					}
 				// #B.3. Normal time calculation
-				} else if (!sync.equalsIgnoreCase("true")) {							
+				} else if (!sync.equalsIgnoreCase(ARG_TRUE)) {							
 					// #B.3.a. If it is an increased speed world
 					if (speed > 1.0) {
 						MsgHandler.debugMsg("The world §e" + world + "§b will now use the asynchronous increase speed scheduler.");
@@ -72,7 +72,7 @@ public class WorldSpeedHandler extends MainTM {
 						if (!asyncDecreaseSpeedSchedulerIsActive.contains(world)) {
 							// Declare the world as having an active scheduler
 							asyncDecreaseSpeedSchedulerIsActive.add(world);
-							// Launch asynchronous decrease speed scheduler
+							// Launch asynchronous decrease speed scheduler 
 							asyncSpeedDecreaseScheduler(world, speed, refreshRate);
 						}
 					} else if (speed.equals(1.0)) {
@@ -157,7 +157,7 @@ public class WorldSpeedHandler extends MainTM {
 				// ... if it is a (daySpeed == nightSpeed) world ...
 				if (daySpeed == nightSpeed) newTime = (long) ((startAtTickNb + (elapsedServerTime * currentSpeed)) % 24000); // Next tick = Start at #tick + (Elapsed time * speed modifier)
 				// ... or if it is a (daySpeed != nightSpeed) world
-				else newTime = WorldSyncHandler.differentSpeedsNewTime(world, startAtTickNb, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, false);
+				else newTime = SyncHandler.differentSpeedsNewTime(world, startAtTickNb, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, false);
 
 				// Restrain too big and too small values
 				newTime = ValuesConverter.correctDailyTicks(newTime);
@@ -168,7 +168,7 @@ public class WorldSpeedHandler extends MainTM {
 				// Change the doDaylightCycle gamerule if it is needed
 				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 				if ((newSpeed > 1 && currentSpeed <= 1) || (newSpeed <= 1 && currentSpeed > 1))
-					WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+					DoDaylightCycleHandler.adjustDaylightCycle(world);
 
 				// While the world is not cancelled and synchronous, launch the loop again
 				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase("true")
@@ -213,10 +213,10 @@ public class WorldSpeedHandler extends MainTM {
 				// Change the doDaylightCycle gamerule if it is needed
 				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 				if ((newSpeed > 1 && currentSpeed <= 1) || (newSpeed <= 1 && currentSpeed > 1))
-					WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+					DoDaylightCycleHandler.adjustDaylightCycle(world);
 
 				// While the world is not cancelled, asynchronous and the speed > 1, launch the loop again
-				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase("false")
+				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
 						&& newSpeed > 1) {
 					asyncSpeedIncreaseScheduler(world, newSpeed);
 				} else {
@@ -259,13 +259,13 @@ public class WorldSpeedHandler extends MainTM {
 				// Change the doDaylightCycle gamerule if it is needed
 				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 				if ((newSpeed > 1 && currentSpeed <= 1) || (newSpeed <= 1 && currentSpeed > 1))
-					WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+					DoDaylightCycleHandler.adjustDaylightCycle(world);
 
 				// Adapt the refresh rate
 				long newRefreshRate = ValuesConverter.fractionFromDecimal(newSpeed, "refreshRate");
 
 				// While the world is not cancelled, asynchronous and the speed < 1, launch the loop again
-				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase("false")
+				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
 						&& newSpeed <= 1) {
 					asyncSpeedDecreaseScheduler(world, newSpeed, newRefreshRate);
 				} else {

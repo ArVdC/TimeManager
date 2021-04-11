@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckTime;
 
-public class WorldSyncHandler extends MainTM {
+public class SyncHandler extends MainTM {
 
 	/**
 	 * Delayed sync all on startup
@@ -21,11 +21,11 @@ public class WorldSyncHandler extends MainTM {
 				// #A. Get the current server time and save it as the reference tick
 				getOrSetInitialTickAndTime(true);
 				// #B. Synchronize the worlds, based on a server constant point
-				worldSync(Bukkit.getServer().getConsoleSender(), "all", "start");
+				worldSync(Bukkit.getServer().getConsoleSender(), ARG_ALL, ARG_START);
 				// #C. Launch the good scheduler if it is inactive
 				waitTime(10);
 				// Detect if this world needs to change its speed value
-				WorldSpeedHandler.speedScheduler("all");
+				SpeedHandler.speedScheduler(ARG_ALL);
 				// #D. Notifications
 				MsgHandler.infoMsg(resyncIntroMsg); // Console log msg (always)
 			}
@@ -36,7 +36,7 @@ public class WorldSyncHandler extends MainTM {
 	 * Sync method, adding the default third argument "time"
 	 */
 	public static void worldSync(CommandSender sender, String target) {
-		worldSync(sender, target, "time");
+		worldSync(sender, target, ARG_TIME);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class WorldSyncHandler extends MainTM {
 		double nightSpeed;
 
 		// #A. Re-synchronize all worlds
-		if (world.equalsIgnoreCase("all")) {
+		if (world.equalsIgnoreCase(ARG_ALL)) {
 			MsgHandler.infoMsg(serverInitTickMsg + " #" + initialTick + " (" + initialTime + ")."); // Final console msg // Console log msg
 			MsgHandler.infoMsg(serverCurrentTickMsg + " #" + currentServerTick + " (" + currentServerTime + ")."); // Console log msg
 			for (World w : Bukkit.getServer().getWorlds()) {
@@ -72,7 +72,7 @@ public class WorldSyncHandler extends MainTM {
 			long t = Bukkit.getWorld(world).getTime();
 			startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START)); // Get the world's 'start' value
 			speedAtStart = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(startAtTickNb)); // Get the world's speed value at server start
-			if (startOrTime.equalsIgnoreCase("start")) {
+			if (startOrTime.equalsIgnoreCase(ARG_START)) {
 				speed = speedAtStart; // Get the world's first 'daySpeed/nigthSpeed' value
 			} else {
 				speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t)); // Get the world's current 'daySpeed/nigthSpeed' value
@@ -87,7 +87,7 @@ public class WorldSyncHandler extends MainTM {
 				newTime = startAtTickNb - 6000L + (currentServerTick / 72L);
 				// #B.1.B. Notifications
 				MsgHandler.infoMsg("The world " + world + " " + world24hNoSyncChgMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + world24hNoSyncChgMsg); // Player final msg (in case)
+				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + world24hNoSyncChgMsg); // Player final msg (in case)
 				// #B.1.C. Debug Msg
 				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
 				MsgHandler.debugMsg(adjustedTicksCalculation + " = §8" + currentServerTick + " §b/ §672 §b= §3" + ((currentServerTick / 72L) % 24000)); // Console debug msg
@@ -99,14 +99,14 @@ public class WorldSyncHandler extends MainTM {
 				newTime = startAtTickNb;
 				// #B.2.B. Debug Msg
 				MsgHandler.infoMsg("The world " + world + " " + worldFrozenNoSyncChgMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + worldFrozenNoSyncChgMsg); // Player final msg (in case)
+				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + worldFrozenNoSyncChgMsg); // Player final msg (in case)
 				MsgHandler.debugMsg(actualTimeVar + " = " + worldStartAtVar + " = §e" + startAtTickNb + " §brestrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime)); // Console debug msg
 
 			// #B.3. ... or if it is a synchronized world ...
-			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase("true")) {
+			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE)) {
 				//  #B.3.A. Eventually make a first sync		
-				if (startOrTime.equalsIgnoreCase("start"))  {
-					// #B.3.A.a. If it is a (daySpeed == nightSpeed) world ...
+				if (startOrTime.equalsIgnoreCase(ARG_START))  {
+					// #B.3.A.a. If it is a (daySpeed == nightSpeed) world ... 
 					if (daySpeed == nightSpeed) { // Next tick = Start at #tick + (Elapsed time * speed modifier)
 						newTime = (long) ((startAtTickNb + (elapsedServerTime * speed)) % 24000);
 						// #B.3.A.b. ... or if it is a (daySpeed != nightSpeed) world
@@ -116,7 +116,7 @@ public class WorldSyncHandler extends MainTM {
 				}
 				// #B.3.B. Notifications
 				MsgHandler.infoMsg("The world " + world + " " + noResyncNeededMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + noResyncNeededMsg); // Player final msg (in case)
+				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + noResyncNeededMsg); // Player final msg (in case)
 
 			// #B.4. ... or if it is a (daySpeed == nightSpeed) world ...
 			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED).equalsIgnoreCase(MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED))) {
@@ -124,7 +124,7 @@ public class WorldSyncHandler extends MainTM {
 				newTime = (long) (startAtTickNb + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick))) * speed) % 24000));
 				// #B.4.B. Notifications
 				MsgHandler.infoMsg("The world " + world + " " + resyncDoneMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + resyncDoneMsg); // Player final msg (in case)		
+				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + resyncDoneMsg); // Player final msg (in case)		
 				// #B.4.C. Debug Msg
 				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
 				MsgHandler.debugMsg(elapsedTimeCalculation + " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b= §d" + ((currentServerTick - initialTick) % 24000) + " §brestrained to one day = §d" + ValuesConverter.correctDailyTicks(((currentServerTick % 24000) - (initialTick % 24000)))); // Console debug msg
@@ -137,7 +137,7 @@ public class WorldSyncHandler extends MainTM {
 				newTime = differentSpeedsNewTime(world, startAtTickNb, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, true);
 				// #B.5.B. Notifications
 				MsgHandler.infoMsg("The world " + world + " " + resyncDoneMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, "The world §e" + world + " §r" + resyncDoneMsg); // Player final msg (in case)
+				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + resyncDoneMsg); // Player final msg (in case)
 			}
 
 			// #B.6. Apply modifications
@@ -145,7 +145,7 @@ public class WorldSyncHandler extends MainTM {
 			Bukkit.getServer().getWorld(world).setTime(newTime);
 
 			// #B.7. Adjust doDaylightCycle value
-			WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+			DoDaylightCycleHandler.adjustDaylightCycle(world);
 			
 			// #B.8. Restore the number of elapsed days
 			Long nft = (initElapsedDays * 24000) + newTime;
@@ -154,12 +154,13 @@ public class WorldSyncHandler extends MainTM {
 			// #B.9. Extra notifications (for each cases)
 			String listedWorldStartTime = ValuesConverter.formattedTimeFromTick(startAtTickNb);
 			String listedWorldCurrentTime = ValuesConverter.formattedTimeFromTick(newTime);
-			String formattedUTC = ValuesConverter.formatAsUTC(startAtTickNb);
+			String formattedUTC = ValuesConverter.formattedUTCShiftfromTick(startAtTickNb);
+			String formattedUTCTick = ValuesConverter.tickUTCShiftfromTick(startAtTickNb);
 			String elapsedDays = initElapsedDays.toString();
-			String date = ValuesConverter.dateFromElapsedDays(initElapsedDays, "yyyy") + "-" + ValuesConverter.dateFromElapsedDays(initElapsedDays, "mm") + "-" + ValuesConverter.dateFromElapsedDays(initElapsedDays, "dd");
+			String date = ValuesConverter.dateFromElapsedDays(initElapsedDays, PH_YYYY) + "-" + ValuesConverter.dateFromElapsedDays(initElapsedDays, PH_MM) + "-" + ValuesConverter.dateFromElapsedDays(initElapsedDays, PH_DD);
 			if (speed == realtimeSpeed) { // Display realtime message (speed is equal to 24.00)
 				MsgHandler.infoMsg("The world " + world + " " + worldCurrentElapsedDaysMsg + " " + elapsedDays + " whole day(s) (" + date + ")."); // Final console msg
-				MsgHandler.infoMsg("The world " + world + " " + worldCurrentStartMsg + " " + formattedUTC + " (+" + startAtTickNb + " ticks)."); // Final console msg
+				MsgHandler.infoMsg("The world " + world + " " + worldCurrentStartMsg + " " + formattedUTC + " (" + formattedUTCTick + " ticks)."); // Final console msg
 				MsgHandler.infoMsg("The world " + world + worldCurrentTimeMsg + " " + listedWorldCurrentTime + " (#" + newTime + ")."); // Final console msg
 				MsgHandler.infoMsg("The world " + world + worldCurrentSpeedMsg + " " + worldRealSpeedMsg); // Final console msg
 			} else if (daySpeed == nightSpeed) { // Display usual message (one speed)
@@ -252,7 +253,7 @@ public class WorldSyncHandler extends MainTM {
 		firstSyncSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
+				if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase(ARG_TRUE)) {
 					getOrSetInitialTickAndTime(false);
 					refreshInitialTickMySql();
 				} else {
@@ -268,9 +269,9 @@ public class WorldSyncHandler extends MainTM {
 	private static void getOrSetInitialTickAndTime(Boolean msgOnOff) {
 		String setOrGet = "null";
 		String ymlOrSql = "null";
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) { // If mySQL is true
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase(ARG_TRUE)) { // If mySQL is true
 			if (SqlHandler.openTheConnectionIfPossible(msgOnOff) == true) {
-				if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase("false")) { // If reset false
+				if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase(ARG_FALSE)) { // If reset false
 					// Try to read database
 					initialTick = SqlHandler.getServerTickSQL(); // Get existing reference tick from SQL database
 					if (initialTick == null) { // If db is null, create the initial tick
@@ -298,9 +299,9 @@ public class WorldSyncHandler extends MainTM {
 				// retry sync but using the config.yml
 				getOrSetInitialTickAndTime(msgOnOff);
 			}
-		} else if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("false")) { // When mySQL is false
+		} else if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase(ARG_FALSE)) { // When mySQL is false
 			// If reset true OR initialTickNb doesn't exist
-			if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase("false") && !MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_INITIALTICKNB).equals("")) {
+			if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase(ARG_FALSE) && !MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_INITIALTICKNB).equals("")) {
 				// If reset false AND initialTickNb exists
 				initialTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB); // Get existing reference tick from config.yml
 				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick); // Convert the initial time in HH:mm:ss UTC
@@ -328,13 +329,13 @@ public class WorldSyncHandler extends MainTM {
 		Long newTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 		// Get the previous initialTickNb from the MySQL database
 		Long sqlTick = null;
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase(ARG_TRUE)) {
 			if (SqlHandler.openTheConnectionIfPossible(true)) {
 				sqlTick = SqlHandler.getServerTickSQL();
 			}
 		}
 		// If mySql is false, try to actualize the configuration:
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("false")) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase(ARG_FALSE)) {
 			// If there are changes in the configuration:
 			if (!(oldTick.equals(newTick))) {
 				// Actualize the global variables
@@ -342,11 +343,11 @@ public class WorldSyncHandler extends MainTM {
 				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick);
 				// Notifications
 				MsgHandler.infoMsg(initialTickYmlMsg); // Notify the console
-				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), "server"); // Notify the console
+				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), ARG_SERVER); // Notify the console
 			}
 			// Else if there are NO changes in the configuration: Don't do nothing at all
 			// Else, if mySql is true, try to set or get the initialTickNb:
-		} else if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
+		} else if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase(ARG_TRUE)) {
 			// If there are changes in the configuration:
 			if (!(oldTick.equals(newTick))) {
 				// Actualize the global variables
@@ -356,7 +357,7 @@ public class WorldSyncHandler extends MainTM {
 				SqlHandler.updateServerTickSQL(newTick);
 				// Notifications
 				MsgHandler.infoMsg(initialTickSqlMsg); // Notify the console
-				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), "server"); // Notify the console
+				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), ARG_SERVER); // Notify the console
 				// Else, if there are NO changes in the configuration AND if sqlTick is null:
 			} else if (sqlTick == null) {
 				// Actualize the global variables
@@ -366,7 +367,7 @@ public class WorldSyncHandler extends MainTM {
 				SqlHandler.updateServerTickSQL(newTick);
 				// Notifications
 				MsgHandler.infoMsg(initialTickSqlMsg); // Notify the console
-				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), "server"); // Notify the console
+				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), ARG_SERVER); // Notify the console
 				// Else, if there are NO changes in the configuration AND if sqlTick isn't null
 				// AND if sqlTick is different from the newTick:
 			} else if (!(sqlTick.equals(newTick))) {
@@ -377,7 +378,7 @@ public class WorldSyncHandler extends MainTM {
 				initialTime = ValuesConverter.realFormattedTimeFromTick(initialTick);
 				// Notifications
 				MsgHandler.infoMsg(initialTickGetFromSqlMsg); // Notify the console
-				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), "server"); // Notify the console
+				TmCheckTime.cmdCheckTime(Bukkit.getServer().getConsoleSender(), ARG_SERVER); // Notify the console
 			}
 			// Else, don't do nothing at all
 		}

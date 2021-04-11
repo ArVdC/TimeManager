@@ -1,10 +1,10 @@
 name: TimeManager
-version: 1.5.0-a
-api-version: 1.16
+version: 1.5.0
+api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
-website: vdc.serveminecraft.net
-description: Display actual time (in mc hours or in ticks) in the chat, define the speed and the start time then synchronize worlds timers.
+website: vdcraft.net
+description: Set and display actual time and date, define per world speed, synchronize worlds timers, execute commands at time, ...
 load: POSTWORLD
 softdepend: [Multiverse-Core, Multiworld, MVdWPlaceholderAPI, PlaceholderAPI]
 database: false
@@ -15,32 +15,33 @@ permissions:
       timemanager.admin:
         default: op
       timemanager.now.*:
-        default: true
+        default: false
         children:
           timemanager.now.cmd:
             default: true
-          timemanager.now.units:
-            default: true
-          timemanager.now.worlds:
+          timemanager.now.display:
+            default: false
+          timemanager.now.world:
             default: false
 commands:
   tm:
     permission: timemanager.admin
     usage: |
             Here is the complete list of commands, subcommands and arguments:
-            /<command> checkconfig
-            /<command> checksql
-            /<command> checktime [all|server|world]
-            /<command> checkupdate [bukkit|spigot|github]
-            /<command> help [cmd] <subCmd>
+            /<command> checkConfig
+            /<command> checkSql
+            /<command> checkTime [all|server|world]
+            /<command> checkUpdate [bukkit|spigot|github]
+            /<command> help [cmd] [<subCmd>]
+            /<command> now [msg|title|actionbar] [player|all|world] 
             /<command> reload [all|config|lang|cmds]
             /<command> resync [all|world]
             /<command> set date [today|yyyy-mm-dd] [all|world]
-            /<command> set debugmode [true|false]
-            /<command> set deflang [lg_LG]
+            /<command> set debugMode [true|false]
+            /<command> set defLang [lg_LG]
             /<command> set elapsedDays [0 → ∞] [all|world]
             /<command> set initialtick [tick|HH:mm]
-            /<command> set multilang [true|false]
+            /<command> set multiLang [true|false]
             /<command> set refreshRate [tick]
             /<command> set sleep [true|false] [all|world]
             /<command> set speed [multiplier] [all|world]
@@ -50,6 +51,7 @@ commands:
             /<command> set sync [true|false] [all|world]
             /<command> set time [tick|daypart|HH:mm] [all|world]
             /<command> set update [none|bukkit|spigot|github]
+            /<command> set useCmds [true|false]
     aliases:
       - tmanag
       - timemanag
@@ -58,8 +60,8 @@ commands:
     description: Generic TimeManager Admin Command
   now:
     permission: timemanager.now.cmd
-    usage: /<command> <units> <world>
-    description: Display a world actual time (in mc hours or in ticks) in the chat.
+    usage: /<command> [<msg|title|actionbar>] [<world>]
+    description: Display a world actual time (in mc hours or in ticks) and/or date in the chat.
     aliases:
       - time
       - hour

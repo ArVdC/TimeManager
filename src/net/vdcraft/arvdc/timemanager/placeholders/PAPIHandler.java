@@ -1,12 +1,12 @@
 package net.vdcraft.arvdc.timemanager.placeholders;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.cmdplayer.UserMsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
-
+import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
 public class PAPIHandler extends PlaceholderExpansion {
 	
 	/**
@@ -72,7 +72,7 @@ public class PAPIHandler extends PlaceholderExpansion {
      */
     @Override
     public String getIdentifier(){
-        return "tm";
+        return MainTM.PH_IDENTIFIER;
     }
 
     /**
@@ -108,81 +108,107 @@ public class PAPIHandler extends PlaceholderExpansion {
             return "";
         }
 
-        // %tm_tick%
-        if(identifier.equals("tick")){
-			Long t = player.getWorld().getTime();
-			String tick = t.toString();
-			return tick;
+        String world = player.getWorld().getName();
+        String lang = PlayerLangHandler.setLangToUse((CommandSender) player);
+        
+        // %tm_player%
+        if(identifier.equals(MainTM.PH_PLAYER)){
+			return player.getName();
         }
 
-        // %tm_time%
-        if(identifier.equals("time")){
-			long t = player.getWorld().getTime();
-			String time = ValuesConverter.formattedTimeFromTick(t);
-			return time;
+        // %tm_world%
+        if(identifier.equals(MainTM.PH_WORLD)){
+			return world;
+        }
+
+        // %tm_tick%
+        if(identifier.equals(MainTM.PH_TICK)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_time12%
+        if(identifier.equals(MainTM.PH_TIME12)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_time24%
+        if(identifier.equals(MainTM.PH_TIME24)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_hours12%
+        if(identifier.equals(MainTM.PH_HOURS12)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_hours24%
+        if(identifier.equals(MainTM.PH_HOURS24)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_minutes%
+        if(identifier.equals(MainTM.PH_MINUTES)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_seconds%
+        if(identifier.equals(MainTM.PH_SECONDS)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_ampm%
+        if(identifier.equals(MainTM.PH_AMPM)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_dayPart%
-        if(identifier.equals("dayPart")){
-			long t = player.getWorld().getTime();
-			String lg = UserMsgHandler.setLangToUse(player);
-			String dayPart = ValuesConverter.getDayPart(t);
-			return MainTM.getInstance().langConf.getString(MainTM.CF_LANGUAGES + "." + lg + "." + MainTM.CF_DAYPARTS + "." + dayPart);
+        if(identifier.equals(MainTM.PH_DAYPART)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_currentday%
+        if(identifier.equals(MainTM.PH_C_DAY)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_elapseddays%
-        if(identifier.equals("elapseddays")){
-			return ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime()).toString();
-        }
-
-        // %tm_currentday%
-        if(identifier.equals("currentday")){
-			Long elapsedDay = ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime());
-			return (++elapsedDay).toString();
+        if(identifier.equals(MainTM.PH_E_DAYS)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_yearweek%
-        if(identifier.equals("yearweek")){
-			Long week = ValuesConverter.yearWeekFromTick(player.getWorld().getFullTime());
-			return week.toString() ;
+        if(identifier.equals(MainTM.PH_YEARWEEK)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+        }
+
+        // %tm_week%
+        if(identifier.equals(MainTM.PH_WEEK)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_monthname%
-        if(identifier.equals("monthname")){
-			String lg = UserMsgHandler.setLangToUse(player);
-			long elapsedDays = ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime());
-			String mm = "m" + ValuesConverter.dateFromElapsedDays(elapsedDays, "mm");
-			return MainTM.getInstance().langConf.getString(MainTM.CF_LANGUAGES + "." + lg + "." + MainTM.CF_MONTHS + "." + mm);
-        }
-
-        // %tm_currentday%
-        if(identifier.equals("currentday")){
-			Long currentDay = ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime());
-			return (++currentDay).toString();
+        if(identifier.equals(MainTM.PH_MONTHNAME)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_dd%
-        if(identifier.equals("dd")){
-			long elapsedDays = ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime());
-			return ValuesConverter.dateFromElapsedDays(elapsedDays, "dd");
+        if(identifier.equals(MainTM.PH_DD)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_mm%
-        if(identifier.equals("mm")){
-			long elapsedDays = ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime());
-			return ValuesConverter.dateFromElapsedDays(elapsedDays, "mm");
+        if(identifier.equals(MainTM.PH_MM)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_yy%
-        if(identifier.equals("yy")){
-			long elapsedDays = ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime());
-			return ValuesConverter.dateFromElapsedDays(elapsedDays, "yy");
+        if(identifier.equals(MainTM.PH_YY)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
 
         // %tm_yyyy%
-        if(identifier.equals("yyyy")){
-			long elapsedDays = ValuesConverter.elapsedDaysFromTick(player.getWorld().getFullTime());
-			return ValuesConverter.dateFromElapsedDays(elapsedDays, "yyyy");
+        if(identifier.equals(MainTM.PH_YYYY)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
         }
  
         // We return null if an invalid placeholder (f.e. %someplugin_placeholder3%) was provided

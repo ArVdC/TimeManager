@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
-public class WorldSleepHandler implements Listener {
+public class SleepHandler implements Listener {
 
 	// Define a max waiting count for the sleeping time
 	private static long defWaitingCount = 100L;
@@ -32,7 +32,7 @@ public class WorldSleepHandler implements Listener {
 		long t = w.getTime();
 		double s = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 		// Ignore: Nether and Ender worlds AND worlds with a fixed time (speed 0 or 24)
-		if (!(world.contains("_nether")) && !(world.contains("_the_end")) && !(s == 24.00) && !(s == 0)) {
+		if (!(world.contains(MainTM.ARG_NETHER)) && !(world.contains(MainTM.ARG_THEEND)) && !(s == 24.00) && !(s == 0)) {
 			// Begin to count the ticks while a player is sleeping
 			sleepTicksCount(p, w, s, 0);
 		}
@@ -66,8 +66,10 @@ public class WorldSleepHandler implements Listener {
 						return;
 					}					
 					Boolean sleepIsPermited = false;
-					if (MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals("true")) sleepIsPermited = true;
-
+					if (MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals(MainTM.ARG_TRUE)
+							|| MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "."+ MainTM.CF_SLEEP).equals(MainTM.ARG_LINKED)) {
+						sleepIsPermited = true;
+					}
 					// #2.A.3. The 99 ticks stage has been reached
 					if (st >= 99) {
 						MsgHandler.debugMsg(MainTM.sleepProcess99TicksDebugMsg); // Console debug msg
@@ -75,14 +77,14 @@ public class WorldSleepHandler implements Listener {
 						if (!sleepIsPermited) {
 							MsgHandler.debugMsg(MainTM.sleepProcessSleepForbid1DebugMsg + " §e" + world + "§b. " + MainTM.sleepProcessSleepForbid2DebugMsg); // Console debug msg
 							p.wakeup(true);
-							return;
+							return; 
 						}
 					}
 					// #2.A.4. The 100 ticks stage has been reached
 					MsgHandler.debugMsg(MainTM.sleepProcess100TicksDebugMsg); // Console debug msg					
 					if (speedModifier < 1.0) { // Eventually active doDaylightCycle to permit the ending of sleep
 						MsgHandler.debugMsg(MainTM.daylightTrueDebugMsg + " §e" + world + "§b.");
-						if (MainTM.decimalOfMcVersion < MainTM.reqMcVForDaylightCycle) w.setGameRuleValue("doDaylightCycle", sleepIsPermited.toString());
+						if (MainTM.serverMcVersion < MainTM.reqMcVForDaylightCycle) w.setGameRuleValue("doDaylightCycle", sleepIsPermited.toString());
 						else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, sleepIsPermited);
 					}
 				// #2.B. If the player stops sleeping
@@ -115,7 +117,9 @@ public class WorldSleepHandler implements Listener {
 				long time = w.getTime();
 				long wakeUpTick = MainTM.getInstance().getConfig().getLong(MainTM.CF_WAKEUPTICK);
 				// Check if the sun is already rising
-				if (time >= 0 && time <= (wakeUpTick + 50) && MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equalsIgnoreCase("true")) {
+				if (time >= 0 && time <= (wakeUpTick + 50)
+						&& (MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equalsIgnoreCase(MainTM.ARG_TRUE)
+						|| MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equalsIgnoreCase(MainTM.ARG_LINKED))) {
 					watingForTheDay = false;
 					waitingCount = defWaitingCount;
 					MsgHandler.debugMsg(MainTM.sleepOkMorningDebugMsg); // Console debug msg
@@ -146,13 +150,31 @@ public class WorldSleepHandler implements Listener {
 				MsgHandler.debugMsg(MainTM.sleepProcessAdjustMorningTicksDebugMsg + " §e" + wakeUpTick + "§b."); // Console debug msg
 				// Restore the number of elapsed days
 				Long nft = (initElapsedDays * 24000) + wakeUpTick;
-				Bukkit.getWorld(world).setFullTime(nft);
+				w.setFullTime(nft);
 				// Detect if this world needs to change its speed value
-				WorldSpeedHandler.speedScheduler(world);
+				SpeedHandler.speedScheduler(world);
 				// Change the doDaylightCycle value if it needs to be
-				WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+				DoDaylightCycleHandler.adjustDaylightCycle(world);
 				// Notify the console
 				MsgHandler.infoMsg(MainTM.sleepNewDayMsg + " "  + world + ", it is now tick #" + wakeUpTick + " (" + ValuesConverter.formattedTimeFromTick(wakeUpTick) + ")."); // Console final msg
+				// TODO Check if other worlds timers must be change
+				String sleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP);
+				if (sleep.equalsIgnoreCase(MainTM.ARG_LINKED)) {
+					for (String linkedWorld : MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST).getKeys(false)) {
+						String linkedSleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + linkedWorld + "." + MainTM.CF_SLEEP);
+						if (linkedSleep.equalsIgnoreCase(MainTM.ARG_LINKED) && !linkedWorld.equalsIgnoreCase(world)) {
+							// Get the number of elapsed days
+							Long linkedInitElapsedDays = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime());
+							// If sleeping was complete, waking up at a custom hour
+							Bukkit.getServer().getWorld(linkedWorld).setTime(wakeUpTick);
+							// Restore the number of elapsed days
+							Long linkedNft = (linkedInitElapsedDays * 24000) + wakeUpTick;
+							Bukkit.getWorld(linkedWorld).setFullTime(linkedNft);
+							// Notify the console
+							MsgHandler.infoMsg("The world " + linkedWorld + " " + MainTM.sleepLinkedNewDayMsg); // Console final msg
+						}
+					}
+				}
 			}
 		}, 5L);
 	}

@@ -4,15 +4,21 @@
 
 package net.vdcraft.arvdc.timemanager;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.cmdplayer.UserMsgHandler;
+import net.vdcraft.arvdc.timemanager.cmdplayer.NowMsgHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class PlayerCmdExecutor implements CommandExecutor {
@@ -24,95 +30,159 @@ public class PlayerCmdExecutor implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		// #1. Check if sender is a Player or the Console
-		if (!(sender instanceof Player)) return false;
+		// #1. Check if sender is a Player or return false
+		if (!(sender instanceof Player)) {
+			MsgHandler.warnMsg(MainTM.nonPlayerSenderMsg);
+			if (!(sender instanceof BlockCommandSender))
+				Bukkit.dispatchCommand(sender, MainTM.CMD_TM + " " + MainTM.CMD_HELP + " " + MainTM.CMD_TMNOW); // retry with correct arguments
+			return true;
+		}
 
-		// #2. Get the world the player stands in as default value
-		World worldToDisplay = ((Player) sender).getWorld();
+		// #2. Check if player has permission to use the /now command
+		if (!sender.hasPermission(MainTM.PERM_NOW) && !sender.isOp()) {
+			return false;
+		}
 
-		// #3. Check if player has permission to define the world with an argument
-		if (sender.hasPermission("timemanager.now.worlds")) {
-			// #3. Check if at least one argument exists, if yes, check it is equal to a
-			// unit of time the redefine the world name
-			Integer nbArgum = args.length;
-			Integer argumRest = nbArgum;
-			Integer argumActu;
-			String givenWorldName = new String();
-			if (nbArgum == 1) {
-				if (args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks")) {
-				} else {
-					givenWorldName = args[0];
-				}
-			} else if (nbArgum == 2) {
-				if (args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks")) {
-					givenWorldName = args[1];
-				} else {
-					givenWorldName = args[0] + " " + args[1];
-				}
-			} else if (nbArgum > 2) {
-				if (args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks")) {
-					givenWorldName = args[1];
-					argumActu = 2;
-					while (argumRest > 2) {
-						givenWorldName = givenWorldName + " " + args[argumActu];
-						argumRest--;
-						argumActu++;
-					}
-				} else {
-					givenWorldName = args[0];
-					argumActu = 1;
-					while (argumRest > 1) {
-						givenWorldName = givenWorldName + " " + args[argumActu];
-						argumRest--;
-						argumActu++;
-					}
-				}
-			}
-			// #4. Compare given world name with permitted worlds list
-			for (World loadedWorld : Bukkit.getServer().getWorlds()) { // List the loaded worlds on the server
+		// #3. Set some basic variables
+		Integer nbArgs = args.length;
+		Player p = ((Player) sender);
+		World w = p.getWorld(); // Set the world the player stands in as default value
+		String display = MainTM.getInstance().langConf.getString(MainTM.CF_DEFAULTDISPLAY);
+		List<String> displays = Arrays.asList(MainTM.ARG_MSG, MainTM.ARG_TITLE, MainTM.ARG_ACTIONBAR);
+		List<String> worlds = CfgFileHandler.setAnyListFromConfig(MainTM.CF_WORLDSLIST);
 
-				if (loadedWorld.getName().equals(givenWorldName)) {
-
-					worldToDisplay = loadedWorld; // Switch from the player's world to the specified one
-				}
+		// #4. Names with spaces : Hack it only for players and commandblocks (Useless since MC 1.13)
+		if (MainTM.serverMcVersion < MainTM.maxMcVForTabCompHack) {
+			int nb = nbArgs - 1 ;
+			while (nb >= 0) {
+				args[nb] = CreateSentenceCommand.restoreSpacesInString(args[nb]);
+				nb--;
 			}
 		}
 
-		// #5. Use the name of the targeted world
-		String worldNameToDisplay = worldToDisplay.getName();
+		// #5. Send dev msg 
+		MsgHandler.devMsg("Command §e/" + label + "§9 launched with §e" + nbArgs + "§9 arguments :"); // Console dev msg
+		int n = 0;
+		while (n < nbArgs) MsgHandler.devMsg("[" + (n) + "] : §e" + args[n++]); // Console dev msg
 
-		// #6. Get the actual tick in regard of the world value
-		Long timeInTicks = worldToDisplay.getTime();
-
-		// #7. Get the calendar data (the total count of elapsed days and the date)
-		Long ed = ValuesConverter.elapsedDaysFromTick(worldToDisplay.getFullTime());
-		Long cd = ed + 1;
-		Long week = ValuesConverter.yearWeekFromTick(worldToDisplay.getFullTime());
-		String elapsedDays = ed.toString();
-		String currentDay = (cd).toString();
-		String yearWeek = week.toString();
-		String dd = ValuesConverter.dateFromElapsedDays(ed, "dd");
-		String mm = ValuesConverter.dateFromElapsedDays(ed, "mm");
-		String yyyy = ValuesConverter.dateFromElapsedDays(ed, "yyyy");
-		String yy = ValuesConverter.dateFromElapsedDays(ed, "yy");
-
-		// #8. Define the part of the days in regard of the tick value
-		String dayPartToDisplay = ValuesConverter.getDayPart(timeInTicks);
-
-		// #9. Check if the first arg is 'hours' or 'ticks' to set the time format
-		String timeToDisplay = "tick #" + timeInTicks.toString(); // Format time to display
-		String defUnits = MainTM.getInstance().getConfig().getString(MainTM.CF_DEFTIMEUNITS); // By default, check the config.yml
-		if (args.length > 0 && sender.hasPermission("timemanager.now.units")
-				&& (args[0].equalsIgnoreCase("hours") || args[0].equalsIgnoreCase("ticks"))) {
-			defUnits = args[0].toString(); // Else store command argument as actual time units param
+		// #6. If there is no argument, send default arguments
+		if (nbArgs == 0) {
+			NowMsgHandler.sendNowMsg(sender);
+			return true;
 		}
-		if (defUnits.equalsIgnoreCase("hours")) {
-			timeToDisplay = ValuesConverter.formattedTimeFromTick(timeInTicks); // Convert time display format
-		} // TODO >>> add an 12-24 key in lang.yml to display am/pm or 24h msg
-		// #10. Check the player's locale and try to use it
-		String langToUse = UserMsgHandler.setLangToUse(sender);
+		// #7. If player has no permission to use any arguments, send default arguments
+		else if (!p.hasPermission(MainTM.PERM_NOW_DISPLAY) && !p.hasPermission(MainTM.PERM_NOW_WORLD) && !sender.isOp()) {
+			NowMsgHandler.sendNowMsg(sender);
+			return true;
+		}
 
-		// #11. Send final msg to user, who will returns a 'true' value at the end
-		return UserMsgHandler.SendNowMsg(sender, worldNameToDisplay, dayPartToDisplay, timeToDisplay, langToUse, elapsedDays, currentDay, yearWeek, dd, mm, yy, yyyy);
-	};
-}
+		// #8. If player has only permission to choose the display
+		else if (p.hasPermission(MainTM.PERM_NOW_DISPLAY) && !p.hasPermission(MainTM.PERM_NOW_WORLD) && !sender.isOp()) {
+			if (displays.contains(args[0])) { // If the display argument is correct, send it
+				display = args[0];
+				NowMsgHandler.sendNowMsg(sender, display);
+				return true;
+			} else { // Else, send default display and world arguments
+				NowMsgHandler.sendNowMsg(sender);
+				return true;
+			}
+		}
+
+		// #9. If player has only permission to choose the world
+		if (!p.hasPermission(MainTM.PERM_NOW_DISPLAY) && p.hasPermission(MainTM.PERM_NOW_WORLD) && !sender.isOp()) {
+			switch (nbArgs) {
+			case 1 : // If there is only one arg
+				if (worlds.contains(args[0])) { // If the display argument is correct, send it
+					w = Bukkit.getServer().getWorld(args[0]);
+					NowMsgHandler.sendNowMsg(sender, w);
+					return true;
+				} else { // Else, send both default display and world arguments
+					NowMsgHandler.sendNowMsg(sender);
+					return true;
+				}
+			default : // If there is more args
+				String concatWorldName = ValuesConverter.concatenateNameWithSpaces(sender, args, 0);
+				if (worlds.contains(concatWorldName)) {
+					w = Bukkit.getServer().getWorld(concatWorldName);
+					NowMsgHandler.sendNowMsg(sender, w);
+					return true;
+				} // Else, send both default display and world arguments
+				NowMsgHandler.sendNowMsg(sender);
+				return true;
+			}
+		}
+
+		// #10. If player has all permissions
+		if ((p.hasPermission(MainTM.PERM_NOW_DISPLAY) && p.hasPermission(MainTM.PERM_NOW_WORLD)) || sender.isOp()) {
+			switch (nbArgs) {
+			case 1 : // If there is only one arg
+				if (displays.contains(args[0])) { // If the display argument is correct, send it
+					display = args[0];
+					NowMsgHandler.sendNowMsg(sender, display);
+					return true;
+				} else if (worlds.contains(args[0])) { // Else, if the world argument is correct, send it
+					w = Bukkit.getServer().getWorld(args[0]);
+					NowMsgHandler.sendNowMsg(sender, w);
+					return true;
+				} else { // Else, send both default display & world arguments
+					NowMsgHandler.sendNowMsg(sender);
+					return true;
+				}
+
+			case 2 : // If there is two args
+				if (displays.contains(args[0]) && worlds.contains(args[1])) { // If both the display & the world arguments are correct, send them
+					display = args[0];
+					w = Bukkit.getServer().getWorld(args[1]);
+					NowMsgHandler.sendNowMsg(sender, display, w);
+					return true;
+				} else if (displays.contains(args[0])) { // If the display argument is correct, send it
+					display = args[0];
+					NowMsgHandler.sendNowMsg(sender, display);
+					return true;
+				} else if (worlds.contains(args[1])) { // If only the world argument is correct, send it
+					w = Bukkit.getServer().getWorld(args[1]);
+					NowMsgHandler.sendNowMsg(sender, w);
+					return true;
+				} else { // Try to use the 2 args to make a world name
+					String concatWorldName = ValuesConverter.concatenateNameWithSpaces(sender, args, 0);
+					if (worlds.contains(concatWorldName)) {
+						w = Bukkit.getServer().getWorld(concatWorldName);
+						NowMsgHandler.sendNowMsg(sender, w);
+						return true;
+					}
+				} // Else, send both default display & world arguments
+				NowMsgHandler.sendNowMsg(sender);
+				return true;
+
+			default : // If there is more args
+				if (displays.contains(args[0]) && worlds.contains(args[1])) { // If both the display & the world arguments are correct, send them
+					display = args[0];
+					w = Bukkit.getServer().getWorld(args[1]);
+					NowMsgHandler.sendNowMsg(sender, display, w);
+					return true;
+				} else if (displays.contains(args[0])) { // If the first argument is the display
+					display = args[0];
+					String concatWorldName = ValuesConverter.concatenateNameWithSpaces(sender, args, 1);
+					if (worlds.contains(concatWorldName)) {
+						w = Bukkit.getServer().getWorld(concatWorldName);
+						NowMsgHandler.sendNowMsg(sender, display, w);
+						return true;
+					} // Else, send default world argument
+					NowMsgHandler.sendNowMsg(sender, display);
+					return true;
+				} else { // If the first argument is not the display
+					String concatWorldName = ValuesConverter.concatenateNameWithSpaces(sender, args, 0);
+					if (worlds.contains(concatWorldName)) {
+						w = Bukkit.getServer().getWorld(concatWorldName);
+						NowMsgHandler.sendNowMsg(sender, w);
+						return true;
+					} // Else, send both default display & world arguments
+					NowMsgHandler.sendNowMsg(sender);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+};

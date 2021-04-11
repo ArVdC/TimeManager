@@ -9,25 +9,25 @@ import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 public class TmSetMultiLang extends MainTM {
 
 	/**
-	 * CMD /tm set multilang [true|false]
+	 * CMD /tm set multiLang [true|false]
 	 */
 	public static void cmdMultiLg(CommandSender sender, String onOff) {
 
 		// Check if the argument matches what is expected
-		if (onOff.equalsIgnoreCase("true") || onOff.equalsIgnoreCase("false")) {
+		if (onOff.equalsIgnoreCase(ARG_TRUE) || onOff.equalsIgnoreCase(ARG_FALSE)) {
 			MainTM.getInstance().langConf.set(CF_USEMULTILANG, onOff);
 			LgFileHandler.SaveLangYml();
-			if (onOff.equalsIgnoreCase("true")) {
+			if (onOff.equalsIgnoreCase(ARG_TRUE)) {
 				MsgHandler.infoMsg(multiLangIsOnMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, multiLangIsOnMsg); // Player final msg (in case)
-			} else if (onOff.equalsIgnoreCase("false")) {
+				MsgHandler.playerAdminMsg(sender, multiLangIsOnMsg); // Player final msg (in case)
+			} else if (onOff.equalsIgnoreCase(ARG_FALSE)) {
 				MsgHandler.infoMsg(multiLangIsOffMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, multiLangIsOffMsg); // Player final msg (in case)
+				MsgHandler.playerAdminMsg(sender, multiLangIsOffMsg); // Player final msg (in case)
 			}
 		}
 		// Else, return an error and help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.isNotBooleanMsg, MainTM.CMD_SET + " " + CMD_SET_MULTILANG);
+			MsgHandler.cmdErrorMsg(sender, MainTM.isNotBooleanMsg, MainTM.CMD_SET + " " + CMD_SET_MULTILANG);
 		}
 	}
 

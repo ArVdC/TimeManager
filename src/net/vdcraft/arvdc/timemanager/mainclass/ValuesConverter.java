@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
@@ -105,7 +106,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Checks and corrects the 'initialTIckNb' tick value
+	 * Checks and corrects the 'initialTickNb' tick value
 	 * (returns a long)
 	 */
 	public static long correctInitTicks(long time) {
@@ -124,21 +125,33 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Converts a tick in its related part of the day
+	 * Converts a tick in its related part of the day (MC names)
 	 * (returns a String)
 	 */
-	public static String getDayPart(long tick) {
-		String wichPart = new String();
+	public static String getMCDayPart(long tick) {
+		String wichPart;
 		if (tick >= dawnStart && tick < dayStart) {
 			wichPart = "dawn";
 		} else if (tick >= dayStart && tick < duskStart) {
 			wichPart = "day";
 		} else if (tick >= duskStart && tick < nightStart) {
 			wichPart = "dusk";
-		} else if (tick >= nightStart && tick < mcDayEnd) {
-			wichPart = "night";
 		} else {
-			return null;
+			wichPart = "night";
+		}
+		return wichPart;
+	}
+
+	/**
+	 * Converts a tick in its related part of the day (AM/PM)
+	 * (returns a String)
+	 */
+	public static String getAmPm(long tick) {
+		String wichPart;
+		if (tick >= 0 && tick < 12000) {
+			wichPart = "AM";
+		} else {
+			wichPart = "PM";
 		}
 		return wichPart;
 	}
@@ -149,7 +162,7 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String wichSpeedParam(long tick) {
 		String speedParam;
-		if (getDayPart(tick).equalsIgnoreCase("night")) {	    
+		if (getMCDayPart(tick).equalsIgnoreCase("night")) {	    
 			speedParam = CF_N_SPEED;
 		} else {
 			speedParam = CF_D_SPEED;
@@ -199,17 +212,18 @@ public class ValuesConverter extends MainTM {
 	 * Converts a tick value and returns a correct UTC value
 	 * (returns a long)
 	 */
-	public static long formattedUTCFromTick(long tick) {
-		tick = (long) Math.floor(tick / 1000); // Use the 'start' value as an UTC modifier
-		return (((tick % 12) + 12) % 12);
+	public static long getUTCShiftFromTick(long tick) {
+		if (tick >= 1000 || tick <= -1000) tick = (long) Math.floor(tick / 1000); // Use the 'start' value as an UTC modifier
+		return tick % 24;
+		
 	}
 
 	/**
-	 * Formats a positive/negative number and return a formatted UTC+/-n value
+	 * Formats a positive/negative number and return a formatted UTC+/-nh value
 	 * (returns a String)
 	 */
-	public static String formatAsUTC(long tick) {
-		tick = formattedUTCFromTick(tick);
+	public static String formattedUTCShiftfromTick(long tick) {
+		tick = getUTCShiftFromTick(tick);
 		String formattedUTC;
 		if (tick < 0) {
 			formattedUTC = "UTC" + tick + "h";
@@ -217,6 +231,20 @@ public class ValuesConverter extends MainTM {
 			formattedUTC = "UTC+" + tick + "h";
 		}
 		return formattedUTC;
+	}
+
+	/**
+	 * Formats a positive/negative number and return a tick +/-n value
+	 * (returns a String)
+	 */
+	public static String tickUTCShiftfromTick(Long tick) {
+		String shiftUTC;
+		if (tick < 0) {
+			shiftUTC = tick.toString();
+		} else {
+			shiftUTC = "+" + tick;
+		}
+		return shiftUTC;
 	}
 
 	/**
@@ -273,8 +301,8 @@ public class ValuesConverter extends MainTM {
 		String checkedLocale;
 		if (l.contains("_")) {
 			String[] splitLocale = l.split("_");
-			String xx_XXLocale = splitLocale[0] + "_" + splitLocale[1].toUpperCase();
-			checkedLocale = xx_XXLocale;
+			String lg_LG_Locale = splitLocale[0] + "_" + splitLocale[1].toUpperCase();
+			checkedLocale = lg_LG_Locale;
 		} else {
 			checkedLocale = l;
 		}
@@ -289,10 +317,10 @@ public class ValuesConverter extends MainTM {
 		String nearestLocale = serverLang; // If not existing, use the default language value
 		if (l.contains("_")) {
 			String[] splitLocale = l.split("_");
-			String xx_Locale = splitLocale[0] + "_";
+			String lg_Locale = splitLocale[0] + "_";
 			List<String> existingLangList = LgFileHandler.setAnyListFromLang(CF_LANGUAGES);
 			for (String lang : existingLangList) {
-				if (lang.contains(xx_Locale)) {
+				if (lang.contains(lg_Locale)) {
 					nearestLocale = lang;
 				}
 			}
@@ -301,46 +329,50 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Replaces 'spaces' in a given list
-	 * (returns a String)
-	 */
-	public static List<String> replaceSpacesInList(List<String> l) {
-		// TODO >>> Find a more appropriate solution for world names with spaces
-		for (String nameWithSpaces : l) {
-			if (nameWithSpaces.contains(" ")) {
-				l.remove(nameWithSpaces);
-				// u00a0 is for "NBSP", u02d9 is for "˙", u00A70 is for "black", " " is for "reset"
-				nameWithSpaces = nameWithSpaces.replace(" ", "\u02d9");
-				l.add(nameWithSpaces);
-			}
-		}
-		return l;
-	}
-
-	/**
-	 * Restores missing 'spaces' in a String
-	 * (returns a String)
-	 */
-	public static String restoreSpacesInString(String s) {
-		if (s.contains("\u02d9")) {
-			s = s.replace("\u02d9", " ");
-		}
-		return s;
-	}
-
-	/**
 	 * Gets and converts a MC tick (1/24000) to HH:mm:ss
 	 * (returns a String)
 	 */
 	public static String formattedTimeFromTick(long ticks) {
+		return formattedTimeFromTick(ticks, PH_TIME24);
+	}
+	public static String formattedTimeFromTick(long ticks, String format) {
 		long newTicks = (ticks + 6000L) * 72L; // Adjust offset and go real time
 		newTicks = correctInitTicks(newTicks);
 		newTicks = newTicks / 20L; // x tick in 1 seconds
-		long s = newTicks % 60;
-		long m = (newTicks / 60) % 60;
-		long H = (newTicks / (60 * 60)) % 24;
-		String output = String.format("%02d:%02d:%02d", H, m, s);
-		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output+ "§b\"."); // Console debug msg
+		int daylong;
+		switch (format) {
+		default :
+		case PH_TIME24 :
+		case PH_HOURS24 :
+			daylong = 24;
+			break;
+		case PH_TIME12 :
+		case PH_HOURS12 :
+			daylong = 12;
+			break;
+		}
+		long ss = newTicks % 60;
+		long mm = (newTicks / 60) % 60;
+		long HH = (newTicks / (60 * 60)) % daylong;
+		String output;
+		switch (format) {
+		default :
+		case PH_TIME24 :
+		case PH_TIME12 :
+			output = String.format("%02d:%02d:%02d", HH, mm, ss);
+			break;
+		case PH_HOURS24 :
+		case PH_HOURS12 :
+			output = String.format("%02d", HH);
+			break;
+		case PH_MINUTES :
+			output = String.format("%02d", mm);
+			break;
+		case PH_SECONDS :
+			output = String.format("%02d", ss);
+			break;
+		}
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output + "§b\"."); // Console debug msg
 		return output;
 	}
 
@@ -459,6 +491,14 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
+	 * Gets and converts a tick (current Fulltime) to the number of the week (returns a Long)
+	 */
+	public static Long weekFromTick(long fulltime) {
+		long daysNb = elapsedDaysFromTick(fulltime);
+		return 1 + (daysNb / 7);
+	}
+	
+	/**
 	 * Gets and converts a tick (current Fulltime) to the number of the week in the year (returns a Long)
 	 */
 	public static Long yearWeekFromTick(long fulltime) {
@@ -517,17 +557,18 @@ public class ValuesConverter extends MainTM {
 	 * (returns a boolean)
 	 */
 	public static boolean tmVersionIsOk(String srcFile, int edgeMajor, int edgeMinor, int edgePatch, int edgeRelease, int edgeDev) {
-		String currentVersion = null;
+		String currentVersion;
 		int currentMajor = 0;
 		int currentMinor = 0;
 		int currentPatch = 0;
 		int currentRelease = 4;
 		int currentDev = 0;
 		// Check current version
-		if (srcFile.equalsIgnoreCase("lg"))
+		if (srcFile.equalsIgnoreCase("lg")) {
 			currentVersion = MainTM.getInstance().langConf.getString(CF_VERSION);
-		else
+		} else {
 			currentVersion = versionTM();    	
+		}
 		currentVersion = replaceChars(currentVersion);    	
 		// Split version numbers
 		String[] currentVersionNb = currentVersion.split("[.]");
@@ -553,6 +594,7 @@ public class ValuesConverter extends MainTM {
 	 * Replaces characters before splitting version String into integers
 	 */
 	public static String replaceChars(String version) {
+		MsgHandler.devMsg("version : " + version);
 		version = version.replace("dev", "d")
 				.replace("alpha", "a")
 				.replace("beta", "b")
@@ -566,11 +608,30 @@ public class ValuesConverter extends MainTM {
 		try {
 			String versionIntTest = version.replace(".", "");
 			Integer.parseInt(versionIntTest); // Prevent all other parse errors
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException nfe) {
 			MsgHandler.errorMsg(versionTMFormatMsg); // Console error msg
 			return null;
 		}
 		return version;
+	}
+	
+	/**
+	 * Concatenate world name in several parts
+	 */
+	public static String concatenateNameWithSpaces(CommandSender sender, String[] args, int firstPartArg) {
+		List<String> worlds = CfgFileHandler.setAnyListFromConfig(MainTM.CF_WORLDSLIST);
+		String concatWorldName = args[firstPartArg];
+		int nbArgs = args.length;
+		int currentArg = firstPartArg + 1;
+		while (currentArg < nbArgs) {
+			concatWorldName = (concatWorldName + " " + args[currentArg++]);
+			if (worlds.contains(concatWorldName)) {
+				MsgHandler.devMsg("Concatenate world name : " + concatWorldName);
+				return concatWorldName;
+			}
+		}
+		MsgHandler.devMsg("Concatenate world name : " + concatWorldName);
+		return concatWorldName;
 	}
 
 	/**
@@ -623,13 +684,14 @@ public class ValuesConverter extends MainTM {
 	public static void restrainStart(String world) {
 		long t = Bukkit.getWorld(world).getTime();
 		String time = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_START);
+		if (time.contains("+")) time = time.replace("+", "");
 		time = tickFromString(time).toString(); // Check if value is a part of the day
 		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
 		long tick;
 		try { // Check if value is a long
 			tick = Long.parseLong(time);
 			if (currentSpeed.contains(realtimeSpeed.toString()) || currentSpeed.equalsIgnoreCase("realtime")) { // First if speed is 'realtime', use UTC
-				tick = formattedUTCFromTick(tick) * 1000;
+				tick = getUTCShiftFromTick(tick) * 1000;
 			} else {
 				tick = correctDailyTicks(tick); // else, use ticks
 			}
@@ -658,7 +720,7 @@ public class ValuesConverter extends MainTM {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SPEED, null);
-		}
+		} // Here comes the real part :
 		double daySpeedNb;
 		String daySpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
 		double nightSpeedNb;
@@ -697,26 +759,27 @@ public class ValuesConverter extends MainTM {
 		long t = Bukkit.getWorld(world).getTime();
 		double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
 		if (currentSpeed == 24.0) { // new speed is 24
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "true");
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_TRUE);
 			MsgHandler.debugMsg(syncAdjustTrueDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} else if (currentSpeed == 0.0) { // new speed is 0
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "false");
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
 			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} else if (oldSpeed == 24.0) { // new speed is anything else with previous value 24
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, "false");
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
 			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} // else, don't do anything
 	}
 
 	/**
-	 * If a world gets a speed of "0" or "24", force 'sleep' to false
+	 * If a world gets a speed of "24", force 'sleep' to false
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSleep(String world) {
+		String sleepOrNo = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SLEEP);
 		long t = Bukkit.getWorld(world).getTime();
 		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
-		if (currentSpeed.equalsIgnoreCase("0.0") || currentSpeed.contains("24")) {
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, "false");
+		if (currentSpeed.contains("24") || (!sleepOrNo.equalsIgnoreCase(ARG_TRUE) && !sleepOrNo.equalsIgnoreCase(ARG_LINKED))) {
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, ARG_FALSE);
 			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		}
 	}

@@ -11,7 +11,7 @@ public class McVersionHandler extends MainTM {
 	 */
 	public static String KeepTypeOfServer() {
 		MsgHandler.debugMsg(serverTypeQueryDebugMsg); // Console debug msg
-		String splitMarker = "XxX";
+		String splitMarker = "\u2063";
 		String[] split1;
 		String split2;
 		String[] split3;
@@ -35,7 +35,7 @@ public class McVersionHandler extends MainTM {
 		} else { // In case 'git' string doesn't exist
 			serverType = "other type of";
 		}
-		MsgHandler.debugMsg(serverTypeResultDebugMsg + " §e" + serverType + " §bserver.");
+		MsgHandler.devMsg(serverTypeResultDebugMsg + " §e" + serverType + " §9server.");
 		return serverType;
 	}
 
@@ -44,7 +44,7 @@ public class McVersionHandler extends MainTM {
 	 */
 	public static Double KeepDecimalOfMcVersion() {
 		MsgHandler.debugMsg(serverMcVersionQueryDebugMsg); // Console debug msg
-		String splitMarker = "XxX";
+		String splitMarker = "\u2063";
 		String[] split1;
 		String split2;
 		String[] split3;
@@ -66,8 +66,8 @@ public class McVersionHandler extends MainTM {
 				String completeServerType = split1[0];
 				if (completeServerType.contains("-")) {
 					String[] serverType = completeServerType.split("-");
-					if (serverType.length >= 1) MsgHandler.devMsg("The server version is: §e"+ serverType[0].replace(")", ""));
 					if (serverType.length >= 2) MsgHandler.devMsg("The server type is: §e"+ serverType[1]);
+					MsgHandler.devMsg("The server version is: §e"+ split1[1].replace(")", ""));
 				}
 			} // Dev msg end
 			split2 = split1[1]; // Keep only what is after the "(mc: 1."
@@ -86,8 +86,8 @@ public class McVersionHandler extends MainTM {
 				String completeServerType = split1[0];
 				if (completeServerType.contains("-")) {
 					String[] serverType = completeServerType.split("-");
-					if (serverType.length >= 1) MsgHandler.devMsg("The server version is: §e"+ serverType[0].replace(")", ""));
 					if (serverType.length >= 2) MsgHandler.devMsg("The server type is: §e"+ serverType[1]);
+					MsgHandler.devMsg("The server version is: §e"+ split1[1].replace(")", ""));
 				}
 			} // Dev msg end
 			split2 = split1[1];

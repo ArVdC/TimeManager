@@ -10,22 +10,25 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class WorldListHandler extends MainTM {
 
 	/**
-	 * Manage available worlds list
+	 * Manage available worlds list in the config.yml file
 	 */
 	public static void listLoadedWorlds() {
+		
 		// #1. Avoid missing 'worldsList' key
 		if (!(MainTM.getInstance().getConfig().getKeys(false).contains(CF_WORLDSLIST))) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + ".Example.start", "0");
 		}
+		
 		// #2. Avoid void 'worldsList' key
 		if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST).equals("")) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + ".Example.start", "example");
 		}
+		
 		// #3. Get the complete list of loaded worlds and add it to config.yml
 		for (World w : Bukkit.getServer().getWorlds()) {
 			String world = w.getName();
 			// Check if it already figures in existing list and if it is not 'nether' neither 'ender'
-			if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) && !(world.contains("_nether")) && !(world.contains("_the_end"))) {
+			if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) && !(world.contains(ARG_NETHER)) && !(world.contains(ARG_THEEND))) {
 				// If not, add it in the list with default parameters
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, defStart);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, defSpeed);
@@ -56,6 +59,7 @@ public class WorldListHandler extends MainTM {
 				}
 			}
 		}
+		
 		// #4. Remove 'Example' + 'nether' + 'ender' + inexistent worlds if they are present in the config list
 		List<World> loadedWorlds = Bukkit.getServer().getWorlds();
 		MsgHandler.debugMsg(refrehWorldsListDebugMsg); // Console debug msg
@@ -68,7 +72,7 @@ public class WorldListHandler extends MainTM {
 		MsgHandler.debugMsg(worldsCfgListDebugMsg + " " + CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST)); // Console debug msg
 		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 			Boolean eraseWorld = false;
-			if (w.equals("Example") || w.contains("_the_end") || w.contains("_nether")) {
+			if (w.equals("Example") || w.contains(ARG_NETHER) || w.contains(ARG_THEEND)) {
 				eraseWorld = true;
 			} else {
 				if (!(loadedWorldsNames.contains(w))) {
@@ -81,8 +85,10 @@ public class WorldListHandler extends MainTM {
 				MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).set(w, null);
 			}
 		}
+		
 		// #5. Save the file
 		MainTM.getInstance().saveConfig();
+		
 		// #6. Notification
 		MsgHandler.infoMsg(worldsCheckMsg); // Final console msg
 	}

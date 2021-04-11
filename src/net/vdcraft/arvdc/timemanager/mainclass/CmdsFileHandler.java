@@ -18,7 +18,7 @@ public class CmdsFileHandler extends MainTM {
 	public static void loadCmds(String firstOrRe) {
 
 		// #1. When it is the server startup
-		if (firstOrRe.equalsIgnoreCase("first")) {
+		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
 			// Creation of cmds.yml file if doesn't exist
 			if (!(MainTM.getInstance().cmdsFileYaml.exists())) {
 				MsgHandler.infoMsg(cmdsFileCreaMsg); // Console log msg
@@ -32,46 +32,63 @@ public class CmdsFileHandler extends MainTM {
 		}
 
 		// #2. When using the admin command /tm reload
-		if (firstOrRe.equalsIgnoreCase("re")) {
+		if (firstOrRe.equalsIgnoreCase(ARG_RE)) {
 			if (MainTM.getInstance().cmdsFileYaml.exists()) {
 				// Notification
 				MsgHandler.infoMsg(cmdsFileTryReloadMsg);
 				// Reload values from cmds.yml file
 				MainTM.getInstance().cmdsConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().cmdsFileYaml);
 			} else
-				loadCmds("first");
+				loadCmds(ARG_FIRST);
 		}
 
 		// #3. In both case
 
 		// #3.A. Is useCmds enable ? Set to false if doesn't exist or if invalid boolean
 		if (MainTM.getInstance().cmdsConf.getKeys(false).contains(CF_USECOMMANDS)) {
-			if (MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase("true")) {
+			if (MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
 				MsgHandler.infoMsg(cmdsIsOnMsg);
 			} else {
-				MainTM.getInstance().cmdsConf.set(CF_USECOMMANDS, "false");
+				MainTM.getInstance().cmdsConf.set(CF_USECOMMANDS, ARG_FALSE);
 				MsgHandler.infoMsg(cmdsIsOffMsg);
 			}
 		} else {
-			MainTM.getInstance().cmdsConf.set(CF_USEMULTILANG, "false");
+			MainTM.getInstance().cmdsConf.set(CF_USEMULTILANG, ARG_FALSE);
 			MsgHandler.infoMsg(cmdsIsOffMsg);
 		}
-
-		// #3.B. If the date is 'today', get the date and convert it into the cmds.yml file
+		
+		// #3.B. Detect wrong worlds names
+		List<String> worlds = CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST);
+		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
+			String phWorld = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD);
+			String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME);
+			String defWorld = Bukkit.getServer().getWorlds().get(0).getName();
+			if (!worlds.contains(phWorld)) {
+				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD, defWorld);
+				MsgHandler.infoMsg("cmd.yml: World '" + phWorld + "' does not exist. It was replaced by the default value '" + defWorld + "'.");
+			}
+			if (!worlds.contains(refTimeSrc)) {
+				if (!refTimeSrc.contains("UTC") || refTimeSrc.equalsIgnoreCase("")) {
+					MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME, defWorld);
+					MsgHandler.infoMsg("cmd.yml: '" + refTimeSrc + "' is neither a world or an UTC time. It was replaced by the default value '" + defWorld + "'.");
+				}
+			}
+		}
+		// #3.C. If the date is 'today', get the date and convert it into the cmds.yml file
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 			String eDate = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_DATE);
 			String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME);
 			Integer year = 1;
 			Integer month = 1;
 			Integer day = 1;
-			if (eDate.equalsIgnoreCase("today")) {
+			if (eDate.equalsIgnoreCase(ARG_TODAY)) {
 				// If the reference time is a MC world, get the world time
 				if (!refTimeSrc.contains("UTC") && !refTimeSrc.equalsIgnoreCase("")) {
 					Long ft = Bukkit.getWorld(refTimeSrc).getFullTime();
 					Long ed = ValuesConverter.elapsedDaysFromTick(ft);
-					year = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, "yyyy"));
-					month = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, "mm"));
-					day = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, "dd"));
+					year = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, PH_YYYY));
+					month = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, PH_MM));
+					day = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, PH_DD));
 				} else { // Else, the reference time is UTC, get local time
 					year = Calendar.getInstance().get(Calendar.YEAR);
 					month = Calendar.getInstance().get(Calendar.MONTH) + 1;
@@ -81,7 +98,7 @@ public class CmdsFileHandler extends MainTM {
 			}
 		}
 		
-		// #3.C. Adapt the repeatFreq key
+		// #3.D. Adapt the repeatFreq key
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 			String repeatFreq = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ);
 			if (repeatFreq.contains("no") || repeatFreq.equalsIgnoreCase("false") || repeatFreq.equalsIgnoreCase(" ") || repeatFreq.equalsIgnoreCase("")) {
@@ -89,22 +106,21 @@ public class CmdsFileHandler extends MainTM {
 			}
 		}
 		
-		// #3.D. Restore the version value
+		// #3.E. Restore the version value
 		MainTM.getInstance().cmdsConf.set(CF_VERSION, versionTM());
 
-		// #3.E. Save the cmds.yml file
+		// #3.F. Save the cmds.yml file
 		SaveCmdsYml();
 		
-		// #3.F. Launch the scheduler if necessary
+		// #3.G. Launch the scheduler if necessary
 		if (!commandsSchedulerIsActive.contains("active") && MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase("true")) {
 			CmdsScheduler.commandsScheduler();
 		}
 		
-		// 3.G. Notifications
+		// 3.H. Notifications
 		if (firstOrRe.equalsIgnoreCase("first")) {
 			MsgHandler.infoMsg(cmdsVersionMsg + MainTM.getInstance().cmdsConf.getString("version") + ".");
 		}
-
 	}
 
 	/**
@@ -114,7 +130,7 @@ public class CmdsFileHandler extends MainTM {
 		try {
 			MainTM.getInstance().cmdsConf.save(MainTM.getInstance().cmdsFileYaml);
 		} catch (IOException e) {
-			MsgHandler.errorMsg(prefixTM + " " + couldNotSaveCmds);
+			MsgHandler.errorMsg(MainTM.prefixTM + " " + couldNotSaveCmds);
 			e.printStackTrace();
 		}
 	}

@@ -8,7 +8,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.SpeedHandler;
 
 public class TmReload extends MainTM {
 
@@ -18,36 +18,35 @@ public class TmReload extends MainTM {
 	public static void cmdReload(CommandSender sender, String whatToReload) {
 
 		// When do reload the config.yml file
-		if (whatToReload.equalsIgnoreCase("config") || whatToReload.equalsIgnoreCase("conf") || whatToReload.equalsIgnoreCase("cfg") || whatToReload.equalsIgnoreCase("all")) {
-			CfgFileHandler.loadConfig("re");
-
+		if (whatToReload.equalsIgnoreCase(ARG_CONFIG) || whatToReload.equalsIgnoreCase("conf") || whatToReload.equalsIgnoreCase("cfg") || whatToReload.equalsIgnoreCase("all")) {
+			CfgFileHandler.loadConfig(ARG_RE);
 			// Re-synchronize all the worlds based on a server constant point
-			TmResync.cmdResync(Bukkit.getServer().getConsoleSender(), "all");
+			TmResync.cmdResync(Bukkit.getServer().getConsoleSender(), ARG_ALL);
 			// Detect if this world needs to change its speed value
-			WorldSpeedHandler.speedScheduler("all");
+			SpeedHandler.speedScheduler(ARG_ALL);
 			// 'config.yml is reloaded' notification
-			MsgHandler.playerMsg(sender, cfgFileReloadMsg); // Player final msg (in case)
+			MsgHandler.playerAdminMsg(sender, cfgFileReloadMsg); // Player final msg (in case)
 			MsgHandler.infoMsg(cfgFileReloadMsg); // Console final msg (always)
 			return;
-		}
+		}		
 		// When do reload the lang.yml file
-		if (whatToReload.equalsIgnoreCase("language") || whatToReload.equalsIgnoreCase("lang") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
-			LgFileHandler.loadLang("re");
+		if (whatToReload.equalsIgnoreCase(ARG_LANG) || whatToReload.equalsIgnoreCase("lang") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
+			LgFileHandler.loadLang(ARG_RE);
 			// 'lang.yml is reloaded' notification
-			MsgHandler.playerMsg(sender, lgFileReloadMsg); // Player final msg (in case)
+			MsgHandler.playerAdminMsg(sender, lgFileReloadMsg); // Player final msg (in case)
 			MsgHandler.infoMsg(lgFileReloadMsg); // Console final msg (always)
 			return;
-		}
+		}		
 		// When do reload the cmds.yml file // TODO 1.5.0
-		if (whatToReload.equalsIgnoreCase("commands") || whatToReload.equalsIgnoreCase("cmds") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
-			CmdsFileHandler.loadCmds("re");
+		if (whatToReload.equalsIgnoreCase(ARG_CMDS) || whatToReload.equalsIgnoreCase("cmds") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
+			CmdsFileHandler.loadCmds(ARG_RE);
 			// 'cmds.yml is reloaded' notification
-			MsgHandler.playerMsg(sender, cmdsFileReloadMsg); // Player final msg (in case)
+			MsgHandler.playerAdminMsg(sender, cmdsFileReloadMsg); // Player final msg (in case)
 			MsgHandler.infoMsg(cmdsFileReloadMsg); // Console final msg (always)
 			return;
-		}
+		}		
 		// Else, return an error and help message
-		TmHelp.sendErrorMsg(sender, wrongYmlMsg, "reload");
+		MsgHandler.cmdErrorMsg(sender, wrongYmlMsg, "reload");
 	}
 
 };

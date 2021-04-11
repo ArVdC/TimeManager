@@ -2,10 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="D:/Documents/MC libs/spigot-api-1.16.5-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="D:/Documents/MC libs/gson-2.8.6.jar"/>
 	<classpathentry kind="lib" path="D:/Documents/MC libs/mysql-connector-java-8.0.16.jar"/>
 	<classpathentry kind="lib" path="D:/Documents/MC libs/MVdWPlaceholderAPI.jar"/>
 	<classpathentry kind="lib" path="D:/Documents/MC libs/PlaceholderAPI-2.10.9.jar"/>
+	<classpathentry kind="lib" path="D:/Documents/MC libs/spigot-api-1.16.5-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

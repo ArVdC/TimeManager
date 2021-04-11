@@ -1,15 +1,13 @@
 package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldDoDaylightCycleHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.DoDaylightCycleHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldSpeedHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.SpeedHandler;
 
 public class TmSetSpeed extends MainTM {
 
@@ -19,13 +17,12 @@ public class TmSetSpeed extends MainTM {
 	 * CMD /tm set speedNight [multiplier] [world]
 	 */
 	public static void cmdSetSpeed(CommandSender sender, double speed, String when, String world) {
-		// If using a world name in several parts
-		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) world = ValuesConverter.restoreSpacesInString(world);
+
 		// Adapt wrong values in the arg
 		speed = ValuesConverter.correctSpeed(speed);
 
 		// Modify all worlds
-		if (world.equalsIgnoreCase("all")) {
+		if (world.equalsIgnoreCase(ARG_ALL)) {
 			// Relaunch this for each world
 			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				cmdSetSpeed(sender, speed, when, listedWorld);
@@ -50,37 +47,37 @@ public class TmSetSpeed extends MainTM {
 			// Restrain the sleep value
 			ValuesConverter.restrainSleep(world);
 			// Do daylightCycle change if needed
-			WorldDoDaylightCycleHandler.adjustDaylightCycle(world);
+			DoDaylightCycleHandler.adjustDaylightCycle(world);
 			// Save the config
 			MainTM.getInstance().saveConfig();
 			// Detect if this world needs to change its speed value
 			MsgHandler.debugMsg(launchSchedulerDebugMsg); // Console debug msg
-			WorldSpeedHandler.speedScheduler(world);
+			SpeedHandler.speedScheduler(world);
 
 			// Notifications
 			if (speed == realtimeSpeed) { // Display realtime message (speed = 24.00)
 				MsgHandler.infoMsg(worldSpeedChgIntro + " " + world + " " + worldRealSpeedChgMsg); // Console final msg (always)
-				MsgHandler.playerMsg(sender, worldSpeedChgIntro + " §e" + world + " §r" + worldRealSpeedChgMsg); // Player final msg (in case)
+				MsgHandler.playerAdminMsg(sender, worldSpeedChgIntro + " §e" + world + " §r" + worldRealSpeedChgMsg); // Player final msg (in case)
 
 			} else { // Display usual message (any speed but 24.00)
 				if (when.equalsIgnoreCase(CMD_SET_SPEED)) {
 					MsgHandler.infoMsg(worldSpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
-					MsgHandler.playerMsg(sender, worldSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
+					MsgHandler.playerAdminMsg(sender, worldSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
 
 				} else if (when.equalsIgnoreCase(CMD_SET_D_SPEED)) {
 					MsgHandler.infoMsg(worldDaySpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
-					MsgHandler.playerMsg(sender, worldDaySpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
+					MsgHandler.playerAdminMsg(sender, worldDaySpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
 
 				} else if (when.equalsIgnoreCase(CMD_SET_N_SPEED)) {
 					MsgHandler.infoMsg(worldNightSpeedChgIntro + " " + world + " " + worldSpeedChgMsg + " " + speed + "."); // Console final msg (always)
-					MsgHandler.playerMsg(sender, worldNightSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
+					MsgHandler.playerAdminMsg(sender, worldNightSpeedChgIntro + " §e" + world + " §r" + worldSpeedChgMsg + " §e" + speed + "§r."); // Player final msg (in case)
 
 				}
 			}
 		}
 		// Else, return an error and help message
 		else {
-			TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_SPEED);
+			MsgHandler.cmdErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_SPEED);
 		}
 	}
 

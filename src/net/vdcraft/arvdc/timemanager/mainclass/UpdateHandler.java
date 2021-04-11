@@ -57,24 +57,24 @@ public class UpdateHandler extends MainTM {
 	 * Update check
 	 */
 	public static void checkForUpdate(CommandSender sender, String updateSource, Boolean saveSource) {
-		if (updateSource.equals(CF_BUKKIT)) {
+		if (updateSource.equals(ARG_BUKKIT)) {
 			if (getURL(bukkitURL)) {
 				downloadURL = bukkitDownloadURL;
 				checkUpdateOnBukkit();
 			}
-		} else if (updateSource.equals(CF_CURSE) || updateSource.equals(CF_TWITCH)) {
+		} else if (updateSource.equals(ARG_CURSE) || updateSource.equals(ARG_TWITCH)) {
 			if (getURL(bukkitURL)) {
-				updateSource = CF_CURSE;
+				updateSource = ARG_CURSE;
 				downloadURL = curseDownloadURL;
 				checkUpdateOnBukkit();
 			}
-		} else if (updateSource.equals(CF_SPIGOT) || updateSource.equals(CF_PAPER)) {
+		} else if (updateSource.equals(ARG_SPIGOT) || updateSource.equals(ARG_PAPER)) {
 			if (getURL(spigotURL)) {
-				updateSource = CF_SPIGOT;
+				updateSource = ARG_SPIGOT;
 				downloadURL = spigotDownloadURL;
 				checkUpdateOnSpigot();
 			}
-		} else if (updateSource.equals(CF_GITHUB)) {
+		} else if (updateSource.equals(ARG_GITHUB)) {
 			if (getURL(githubURL)) {
 				downloadURL = githubDownloadURL;
 				checkUpdateOnGithub();
@@ -100,10 +100,10 @@ public class UpdateHandler extends MainTM {
 	 */
 	private static void displayUpdateMsg(CommandSender sender) {
 		if (compareVersionsForUpdate()) {
-			MsgHandler.playerMsg(sender, "An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Final player msg
+			MsgHandler.playerAdminMsg(sender, "An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Final player msg
 			MsgHandler.colorMsg("An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Console log msg
 		} else {
-			MsgHandler.playerMsg(sender, noUpdateMsg); // Final player msg
+			MsgHandler.playerAdminMsg(sender, noUpdateMsg); // Final player msg
 			MsgHandler.colorMsg(noUpdateMsg); // Console log msg
 		}
 	}
@@ -139,17 +139,18 @@ public class UpdateHandler extends MainTM {
 	private static void checkUpdateOnBukkit() {
 		URLConnection connec = null;
 		String response = null;
-		String splitMarker = "XxX";
+		String splitMarker = "\u2063";
 		try {
 			connec = (URLConnection) checkURL.openConnection();
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(connec.getInputStream()));
 			String[] list = reader.readLine().replace("]", "").replace("[", "").replace("},{", "}," + splitMarker + "{").split(splitMarker);
 			response = list[list.length - 1];
 			reader.close();
+			@SuppressWarnings("deprecation")
 			JsonObject o = (JsonObject) new JsonParser().parse(response);
 			JsonElement e = (JsonElement) o.get("name");
 			latestVersion = e.toString().replaceFirst("TimeManager v", "").replace("\"", "");
-			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + CF_BUKKIT + "/" + CF_CURSE + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
+			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_BUKKIT + "/" + ARG_CURSE + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
 		} catch (IOException e) {
 			MsgHandler.warnMsg(serverFailMsg); // Console warning msg
 		}
@@ -162,7 +163,7 @@ public class UpdateHandler extends MainTM {
 		try {
 			HttpURLConnection con = (HttpURLConnection) checkURL.openConnection();
 			latestVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine().replace("\"", "");
-			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + CF_SPIGOT + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
+			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_SPIGOT + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
 		} catch (Exception e) {
 			MsgHandler.warnMsg(serverFailMsg); // Console warning msg
 		}
@@ -179,10 +180,11 @@ public class UpdateHandler extends MainTM {
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(connec.getInputStream()));
 			response = reader.readLine();
 			reader.close();
+			@SuppressWarnings("deprecation")
 			JsonObject o = (JsonObject) new JsonParser().parse(response);
 			JsonElement e = (JsonElement) o.get("tag_name");
 			latestVersion = e.toString().replaceFirst("v", "").replace("\"", "");
-			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + CF_GITHUB + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
+			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_GITHUB + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
 		} catch (IOException e) {
 			MsgHandler.warnMsg(serverFailMsg); // Console warning msg
 		}

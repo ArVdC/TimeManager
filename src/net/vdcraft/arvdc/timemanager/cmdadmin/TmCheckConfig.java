@@ -13,9 +13,8 @@ import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 public class TmCheckConfig extends MainTM {
 
 	/**
-	 * CMD /tm checkconfig
+	 * CMD /tm checkConfig
 	 */
-
 	public static void cmdCheckConfig(CommandSender sender) {
 
 		/*****************
@@ -28,7 +27,7 @@ public class TmCheckConfig extends MainTM {
 
 		// Multilanguage
 		String multiLangOnOff = "disabled";
-		if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase("true")) {
+		if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase(ARG_TRUE)) {
 			multiLangOnOff = "enabled";
 		}
 		String multiLangMsg = "Multilanguage is " + multiLangOnOff + ".";
@@ -68,7 +67,7 @@ public class TmCheckConfig extends MainTM {
 
 		// Initial tick reset status
 		String resetOnOff = " not ";
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equalsIgnoreCase(ARG_TRUE)) {
 			resetOnOff = " ";
 		}
 		String resetMsg = "The initial tick will" + resetOnOff + "reset on the next startup.";
@@ -76,7 +75,7 @@ public class TmCheckConfig extends MainTM {
 
 		// MySql
 		String sqlOnOff = "the config.yml file";
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equalsIgnoreCase(ARG_TRUE)) {
 			sqlOnOff = "a MySql database";
 		}
 		String sqlMsg = "The initial tick is saved in " + sqlOnOff + ".";
@@ -96,7 +95,7 @@ public class TmCheckConfig extends MainTM {
 
 		// Debug
 		String debugOnOff = "disabled";
-		if (MainTM.getInstance().getConfig().getString(CF_DEBUGMODE).equalsIgnoreCase("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_DEBUGMODE).equalsIgnoreCase(ARG_TRUE)) {
 			debugOnOff = "enabled";
 		}
 		String debugMsg = "The debug mode is " + debugOnOff + ".";
@@ -104,11 +103,11 @@ public class TmCheckConfig extends MainTM {
 
 		// Placeholders
 		String PAPIOnOff = "aren't";
-		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
 			PAPIOnOff = "are";
 		}
 		String MvDWPAPIOnOff = "aren't";
-		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase("true")) {
+		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)) {
 			MvDWPAPIOnOff = "are";
 		}
 		String placeholdersMsg = "Your placeholders " + PAPIOnOff + " registred in " + CF_PLACEHOLDER_PAPI + " and/but they " + MvDWPAPIOnOff + " registred in " + CF_PLACEHOLDER_MVDWPAPI + ".";
@@ -120,33 +119,33 @@ public class TmCheckConfig extends MainTM {
 
 		if (sender instanceof Player) {
 			// Display the version of the plugin
-			MsgHandler.playerMsg(sender, colVersionMsg);
+			MsgHandler.playerAdminMsg(sender, colVersionMsg);
 			// Display the multilanguage status
-			MsgHandler.playerMsg(sender, colMultiLangMsg);
+			MsgHandler.playerAdminMsg(sender, colMultiLangMsg);
 			// Display the default language
-			MsgHandler.playerMsg(sender, colDefLangMsg);
+			MsgHandler.playerAdminMsg(sender, colDefLangMsg);
 			// Display the available languages
-			MsgHandler.playerMsg(sender, colAvailableLangMsg);
+			MsgHandler.playerAdminMsg(sender, colAvailableLangMsg);
 			// Display the default time units
-			MsgHandler.playerMsg(sender, colDefUnitsMsg);
+			MsgHandler.playerAdminMsg(sender, colDefUnitsMsg);
 			// Display the refresh rate
-			MsgHandler.playerMsg(sender, colRefRateMsg);
+			MsgHandler.playerAdminMsg(sender, colRefRateMsg);
 			// Display the wake up tick
-			MsgHandler.playerMsg(sender, colwakeUpTickMsg);
+			MsgHandler.playerAdminMsg(sender, colwakeUpTickMsg);
 			// Display the new day at dawn/midnight
-			MsgHandler.playerMsg(sender, colNewDayAtMsg);
+			MsgHandler.playerAdminMsg(sender, colNewDayAtMsg);
 			// Display the world's list
-			MsgHandler.playerMsg(sender, colWorldsMsg);
+			MsgHandler.playerAdminMsg(sender, colWorldsMsg);
 			// Display the initial tick reset status
-			MsgHandler.playerMsg(sender, colResetMsg);
+			MsgHandler.playerAdminMsg(sender, colResetMsg);
 			// Display the MySql status
-			MsgHandler.playerMsg(sender, colSqlMsg);
+			MsgHandler.playerAdminMsg(sender, colSqlMsg);
 			// Display the update source status
-			MsgHandler.playerMsg(sender, colUpdateMsg);
+			MsgHandler.playerAdminMsg(sender, colUpdateMsg);
 			// Display the debug mode status
-			MsgHandler.playerMsg(sender, colDebugMsg);
+			MsgHandler.playerAdminMsg(sender, colDebugMsg);
 			// Display the placeholder API status
-			MsgHandler.playerMsg(sender, colPlaceholdersMsg);
+			MsgHandler.playerAdminMsg(sender, colPlaceholdersMsg);
 		} else {
 			// Display the version of the plugin
 			MsgHandler.infoMsg(versionMsg);

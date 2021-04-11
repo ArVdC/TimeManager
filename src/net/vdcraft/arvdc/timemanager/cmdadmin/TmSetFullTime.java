@@ -2,9 +2,7 @@ package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
@@ -16,13 +14,12 @@ public class TmSetFullTime extends MainTM {
 	 * CMD /tm set elapsedDays [today|number] [world]
 	 */
 	public static void cmdSetDay(CommandSender sender, long elapsedDays, String world) {
-		// If using a world name in several parts
-		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) world = ValuesConverter.restoreSpacesInString(world);
+		
 		// Adapt wrong values in the arg
 		if (elapsedDays < 0 ) elapsedDays = 0L;
 
 		// Modify all worlds
-		if (world.equalsIgnoreCase("all")) {
+		if (world.equalsIgnoreCase(ARG_ALL)) {
 			// Relaunch this for each world
 			for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				cmdSetDay(sender, elapsedDays, w);
@@ -42,25 +39,24 @@ public class TmSetFullTime extends MainTM {
 			if (elapsedDays == 0 && t > 18000 && MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_0h00)) {
 				String hour = ValuesConverter.formattedTimeFromTick(t);
 				MsgHandler.infoMsg(tooLateForDayZeroMsg1 + hour + tooLateForDayZeroMsg2); // Console final msg (always)
-				MsgHandler.playerMsg(sender, tooLateForDayZeroMsg1 + "§e" + hour + "§r" + tooLateForDayZeroMsg2); // Console final msg (always)
+				MsgHandler.playerAdminMsg(sender, tooLateForDayZeroMsg1 + "§e" + hour + "§r" + tooLateForDayZeroMsg2); // Console final msg (always)
 			}
 			elapsedDays = ValuesConverter.elapsedDaysFromTick(w.getFullTime());
-			String date = ValuesConverter.dateFromElapsedDays(elapsedDays, "yyyy") + "-" + ValuesConverter.dateFromElapsedDays(elapsedDays, "mm") + "-" + ValuesConverter.dateFromElapsedDays(elapsedDays, "dd");
+			String date = ValuesConverter.dateFromElapsedDays(elapsedDays, PH_YYYY) + "-" + ValuesConverter.dateFromElapsedDays(elapsedDays, PH_MM) + "-" + ValuesConverter.dateFromElapsedDays(elapsedDays, PH_DD);
 			MsgHandler.infoMsg(worldFullTimeChgMsg + " " + world + " " + worldTimeChgMsg2 + " #" + elapsedDays + " (" + date + ")."); // Console final msg (always)
-			MsgHandler.playerMsg(sender, worldFullTimeChgMsg + " §e" + world + "§r " + worldTimeChgMsg2 + " §e#" + elapsedDays + " §r(§e" + date + "§r)."); // Player final msg (in case)
+			MsgHandler.playerAdminMsg(sender, worldFullTimeChgMsg + " §e" + world + "§r " + worldTimeChgMsg2 + " §e#" + elapsedDays + " §r(§e" + date + "§r)."); // Player final msg (in case)
 		}
 		// Else, return an error and help message
-		else TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_E_DAYS);
+		else MsgHandler.cmdErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_E_DAYS);
 	}
 
 	/**
 	 * CMD /tm set date [yyyy-mm-dd] [world]
 	 */
 	public static void cmdSetDate(CommandSender sender, String date, String world) {
-		// If using a world name in several parts
-		if ((sender instanceof Player) || (sender instanceof BlockCommandSender)) world = ValuesConverter.restoreSpacesInString(world);
+		
 		// Modify all worlds
-		if (world.equalsIgnoreCase("all")) {
+		if (world.equalsIgnoreCase(ARG_ALL)) {
 			// Relaunch this for each world
 			for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				cmdSetDate(sender, date, w);
@@ -73,7 +69,7 @@ public class TmSetFullTime extends MainTM {
 			cmdSetDay(sender, elapsedDays, world);
 		}
 		// Else, return an error and help message
-		else TmHelp.sendErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_DATE);
+		else MsgHandler.cmdErrorMsg(sender, MainTM.wrongWorldMsg, MainTM.CMD_SET + " " + CMD_SET_DATE);
 	}
 
 };

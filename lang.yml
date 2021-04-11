@@ -10,25 +10,38 @@
 # *defaultLang*
 #  Choose the translation to use if player's locale doesn't exist in the lang.yml or when useMultiLang is false.
 # -----
+# *defaultDisplay*
+#  Choose a default location for the "/now" display. Accepted values are : [msg|title|actionbar]
+# -----
 # *languages*
 #  Provide multi-language support by adding new translation to this lang.yml file.
 #  Languages names are case sensitive, use only Minecraft locale codes from : http://minecraft.gamepedia.com/Language#Available_languages.
 #  Don't try to override the "default" language's parameters, those keys are reseted on every loading.
 #   *prefix*
-#    The message's prefix displayed by the "/now" command is fully customizable in each of the languages.
-#   *msg*
+#    The message's prefix displayed by "/now" and "/tm now" commands is fully customizable in each of the languages.
+#   *msg, title, subtitle and actionbar*
+#    It is possible to configure specific messages for each of these four display locations, in each of the languages.
 #    In the message it's possible to use some placeholders :
-#    - {tm_player} : Displays the name of the player running the command.
-#    - {tm_world} : Displays the world of the player running the command.
-#    - {tm_time} : Displays the current tick or HH:mm:ss, depending on the value set in the lang.yml file.
+#    - {tm_player} : Displays the name of the player.
+#    - {tm_world} : Displays the name of the world.
+#    - {tm_tick} : Displays the current tick.
+#    - {tm_time12} : Displays the current time in hh:mm:ss format. (1 → 12)
+#    - {tm_time24} : Displays the current time in HH:mm:ss format. (0 → 23)
+#    - {tm_hours12} : Displays the current hour value in 2 digits. (1 → 12)
+#    - {tm_hours24} : Displays the current hour value in 2 digits. (0 → 23)
+#    - {tm_minutes} : Displays the current minutes value in 2 digits.
+#    - {tm_seconds} : Displays the current seconds value in 2 digits.
+#    - {tm_ampm} : Displays the current AM or PM part of the day.
+#    - {tm_daypart} : Displays the name of the current part of the day, among the four existing ones, in each of the languages.
 #    - {tm_currentday} : Displays the number of the current day. (1 → ∞)
 #    - {tm_elapseddays} : Displays the number of elapsed day(s). (0 → ∞)
 #    - {tm_yearweek} : Displays the number of the week in the year. (1 → 52)
+#    - {tm_week} : Displays the number of elapsed weeks. (1 → ∞)
 #    - {tm_monthname} : Displays the name of current month, based on entries in the lang.yml file.
-#    - {tm_dd} : Displays the day part of the date. (2 digits).
-#    - {tm_mm} : Displays the month part of the date. (2 digits)
-#    - {tm_yy} : Displays the year part of the date. (2 digits)
-#    - {tm_yyyy} : Displays the year part of the date. (4 digits)
+#    - {tm_dd} : Displays the day part of the date in 2 digits.
+#    - {tm_mm} : Displays the month part of the date in 2 digits.
+#    - {tm_yy} : Displays the year part of the date in 2 digits.
+#    - {tm_yyyy} : Displays the year part of the date in 4 digits.
 #   *noMsg*
 #    Since in the Nether and the End time does not exist, this message will be useful.
 #   *dayparts* and *months*
@@ -39,10 +52,18 @@
 version: ''
 useMultiLang: ''
 defaultLang: ''
+defaultDisplay: ''
+titles:
+  fadeIn: ''
+  stay: ''
+  fadeOut: ''
 languages:
   default:
-    prefix: '&8&l[&6&lTime Manager&8&l]'
-    msg: Please ask an admin to properly define the default language in the lang.yml file then reload the plugin.
+    prefix: '&8&l[&6&lTimeManager&8&l]'
+    msg: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
+    title: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
+    subtitle: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
+    actionbar: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
     noMsg: There is no day-night cycle in the Nether and the End dimensions.
     dayparts:
       dawn: begin at 6.00 am or tick #0
@@ -64,8 +85,11 @@ languages:
       m12: begin at #334 elapsedDays
   de_DE:
     prefix: '&e&l[Stunde]'
-    msg: Es &e{time}&r in der welt {targetWorld}, das ist {dayPart}.
+    msg: Es &e{tm_time24}&r in der welt {tm_world}, das ist {tm_daypart}.
     noMsg: Es gibt keinen tag-nacht zyklus in dieser dimension!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
     dayparts:
       day: die tag
       dusk: die dämmerung
@@ -86,8 +110,11 @@ languages:
        m12: Dezember
   en_US:
     prefix: '&e&l[Time]'
-    msg: It's &e{time}&r in world {targetWorld}, this is {dayPart}.
+    msg: It's &e{tm_time24}&r in world {tm_world}, this is {tm_daypart}.
     noMsg: There is no day-night cycle in this dimension!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
     dayparts:
       day: the day
       dusk: the sunset
@@ -108,8 +135,11 @@ languages:
        m12: December
   es_ES:
     prefix: '&e&l[Hora]'
-    msg: Son las &e{time}&r en el mundo {targetWorld}, es {dayPart}.
+    msg: Son las &e{tm_time24}&r en el mundo {tm_world}, es {tm_daypart}.
     noMsg: No existe un ciclo de día-noche en esta dimensión!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
     dayparts:
       day: la jornada
       dusk: el crepúsculo
@@ -130,8 +160,11 @@ languages:
        m12: diciembre
   fr_FR:
     prefix: '&e&l[Heure]'
-    msg: Il est &e{time}&r dans le monde {targetWorld}, c'est {dayPart}.
+    msg: Il est &e{tm_time24}&r dans le monde {tm_world}, c'est {tm_daypart}.
     noMsg: Il n'y a pas de cycle jour-nuit dans cette dimension!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
     dayparts:
       day: la journée
       dusk: le crépuscule
@@ -152,8 +185,11 @@ languages:
       m12: décembre
   it_IT:
     prefix: '&e&l[Ora]'
-    msg: È &e{time}&r in del monde {targetWorld}, è {dayPart}.
+    msg: È &e{tm_time24}&r in del monde {tm_world}, è {tm_daypart}.
     noMsg: Non esiste un ciclo giorno-notte in questa dimensione!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
     dayparts:
       day: il giorno
       dusk: il tramonto
@@ -174,8 +210,11 @@ languages:
        m12: dicembre
   nl_NL:
     prefix: '&e&l[Uur]'
-    msg: Het is &e{time}&r in wereld {targetWorld}, dit is {dayPart} nu.
+    msg: Het is &e{tm_time24}&r in wereld {tm_world}, dit is {tm_daypart} nu.
     noMsg: Er is geen dag-nacht cyclus in deze dimensie!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
     dayparts:
       day: de dag
       dusk: de schemering
@@ -196,8 +235,11 @@ languages:
        m12: december
   pt_PT:
     prefix: '&e&l[Hora]'
-    msg: É &e{time}&r do mundo {targetWorld}, é {dayPart}.
+    msg: É &e{tm_time24}&r do mundo {tm_world}, é {tm_daypart}.
     noMsg: Não há ciclo de dia-noite nesta dimensão!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
     dayparts:
       day: o dia
       dusk: o crepúsculo

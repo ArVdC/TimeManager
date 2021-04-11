@@ -7,8 +7,7 @@ import be.maximvdw.placeholderapi.PlaceholderReplaceEvent;
 import org.bukkit.event.EventHandler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.cmdplayer.UserMsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
+import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
 
 public class MVdWPAPIHandler extends MainTM {
 
@@ -19,106 +18,162 @@ public class MVdWPAPIHandler extends MainTM {
 	@EventHandler
 	public static void loadMVdWPlaceholderAPI() {
 
-		// Returns the current tick for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_tick", new PlaceholderReplacer() {
+		// Returns the current player's name
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_PLAYER, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				Long t = e.getPlayer().getWorld().getTime();
-				String tick = t.toString();
-				return tick;
+				return e.getPlayer().getName();
+			}
+		});
+
+		// Returns the current world's name
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_WORLD, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return e.getPlayer().getWorld().getName();
+			}
+		});
+
+		// Returns the current tick for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_TICK, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {				
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_TICK + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
+			}
+		});
+
+		// Returns the current time (in hh:mm:ss) for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_TIME12, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_TIME12 + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current time (in HH:mm:ss) for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_time", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_TIME24, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				long t = e.getPlayer().getWorld().getTime();
-				String time = ValuesConverter.formattedTimeFromTick(t);
-				return time;
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_TIME24 + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
+			}
+		});
+
+		// Returns the current hour (in hh) for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_HOURS12, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_HOURS12 + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
+			}
+		});
+
+		// Returns the current hour (in hh) for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_HOURS24, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_HOURS24 + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
+			}
+		});
+
+		// Returns the current minutes (in mm) for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_MINUTES, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_MINUTES + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
+			}
+		});
+
+		// Returns the current seconds (in ss) for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_SECONDS, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_SECONDS + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
+			}
+		});
+
+		// Returns the part of day (AM or PM) for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_AMPM, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_AMPM + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current day part for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_daypart", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_DAYPART, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				long t = e.getPlayer().getWorld().getTime();
-				String lg = UserMsgHandler.setLangToUse(e.getPlayer());
-				String dayPart = ValuesConverter.getDayPart(t);
-				return MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lg + "." + CF_DAYPARTS + "." + dayPart);
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_DAYPART + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the total # of days elapsed for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_elapseddays", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_E_DAYS, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				return ValuesConverter.elapsedDaysFromTick(e.getPlayer().getWorld().getFullTime()).toString();
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_E_DAYS + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current day # for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_currentday", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_C_DAY, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				Long currentDay = ValuesConverter.elapsedDaysFromTick(e.getPlayer().getWorld().getFullTime());
-				return (++currentDay).toString();
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_C_DAY + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current week of the year for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_yearweek", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_YEARWEEK, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				Long week = ValuesConverter.yearWeekFromTick(e.getPlayer().getWorld().getFullTime());
-				return week.toString() ;
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_YEARWEEK + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
+			}
+		});
+
+		// Returns the number of the week for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_WEEK, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_WEEK + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current month's name for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_monthname", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_MONTHNAME, new PlaceholderReplacer() {
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				String lg = UserMsgHandler.setLangToUse(e.getPlayer());
-				long elapsedDays = ValuesConverter.elapsedDaysFromTick(e.getPlayer().getWorld().getFullTime());
-				String mm = "m" + ValuesConverter.dateFromElapsedDays(elapsedDays, "mm");
-				return MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lg + "." + CF_MONTHS + "." + mm);
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_MONTHNAME + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current day in (00 format) for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_dd", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_DD, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				long elapsedDays = ValuesConverter.elapsedDaysFromTick(e.getPlayer().getWorld().getFullTime());
-				return ValuesConverter.dateFromElapsedDays(elapsedDays, "dd");
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_DD + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current month in (00 format) for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_mm", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_MM, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				long elapsedDays = ValuesConverter.elapsedDaysFromTick(e.getPlayer().getWorld().getFullTime());
-				return ValuesConverter.dateFromElapsedDays(elapsedDays, "mm");
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_MM + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current year in (00 format) for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_yy", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_YY, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				long elapsedDays = ValuesConverter.elapsedDaysFromTick(e.getPlayer().getWorld().getFullTime());
-				return ValuesConverter.dateFromElapsedDays(elapsedDays, "yy");
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_YY + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 
 		// Returns the current year in (0000 format) for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, "tm_yyyy", new PlaceholderReplacer() {
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_YYYY, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
-				long elapsedDays = ValuesConverter.elapsedDaysFromTick(e.getPlayer().getWorld().getFullTime());
-				return ValuesConverter.dateFromElapsedDays(elapsedDays, "yyyy");
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_YYYY + "}", e.getPlayer().getWorld().getName(), PlayerLangHandler.setLangToUse(e.getPlayer()));
 			}
 		});
 

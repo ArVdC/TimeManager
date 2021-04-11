@@ -7,7 +7,7 @@ import org.bukkit.World;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
-public class WorldDoDaylightCycleHandler extends MainTM {
+public class DoDaylightCycleHandler extends MainTM {
 
 	/**
 	 * Configure the gamerule doDaylightCycle in targeted world(s), based on actual speed
@@ -15,7 +15,7 @@ public class WorldDoDaylightCycleHandler extends MainTM {
 	@SuppressWarnings("deprecation")
 	public static void adjustDaylightCycle(String worldToSet) {
 		// For all listed worlds
-		if (worldToSet.equalsIgnoreCase("all")) {
+		if (worldToSet.equalsIgnoreCase(ARG_ALL)) {
 			for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				adjustDaylightCycle(w);
 			}
@@ -25,15 +25,15 @@ public class WorldDoDaylightCycleHandler extends MainTM {
 			long t = w.getTime();
 			double speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST +"." + worldToSet + "." + ValuesConverter.wichSpeedParam(t));
 			if (speedModifier == realtimeSpeed || speedModifier < 1.0) {
-				if (decimalOfMcVersion < reqMcVForDaylightCycle) {
-					w.setGameRuleValue("doDaylightCycle", "false");
+				if (serverMcVersion < reqMcVForDaylightCycle) {
+					w.setGameRuleValue("doDaylightCycle", ARG_FALSE);
 				} else {
 					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 				}
 				MsgHandler.debugMsg(daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			} else {
-				if (decimalOfMcVersion < reqMcVForDaylightCycle) {
-					w.setGameRuleValue("doDaylightCycle", "true");
+				if (serverMcVersion < reqMcVForDaylightCycle) {
+					w.setGameRuleValue("doDaylightCycle", ARG_TRUE);
 				} else {
 					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
 				}

@@ -13,7 +13,7 @@ public class CfgFileHandler extends MainTM {
 	public static void loadConfig(String firstOrRe) {
 
 		// #1. Only at the server startup:
-		if (firstOrRe.equalsIgnoreCase("first")) {
+		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
 
 			// #1.a. Create congig.yml file if missing, force actual version
 			if (!(MainTM.getInstance().configFileYaml.exists())) {
@@ -33,14 +33,14 @@ public class CfgFileHandler extends MainTM {
 		long oldTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 
 		// #3. Only when using the admin command /tm reload:
-		if (firstOrRe.equalsIgnoreCase("re")) {
+		if (firstOrRe.equalsIgnoreCase(ARG_RE)) {
 			if (MainTM.getInstance().configFileYaml.exists()) {
 				// #A. Notification
 				MsgHandler.infoMsg(cfgFileTryReloadMsg);
 				// #B. Reload values from config.yml file
 				MainTM.getInstance().reloadConfig();
 			} else
-				loadConfig("first");
+				loadConfig(ARG_FIRST);
 		}
 
 		// #4. Toggle debugMode on/off
@@ -50,20 +50,20 @@ public class CfgFileHandler extends MainTM {
 
 		// #5.a. resetOnStartup value
 		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_RESETONSTARTUP)) {
-			if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equals("false"))) {
-				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, "true");
+			if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equals(ARG_FALSE))) {
+				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, ARG_TRUE);
 			}
 		} else {
-			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, "true");
+			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, ARG_TRUE);
 		}
 
 		// #5.b. useMySql value
 		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_USEMYSQL)) {
-			if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("false"))) {
-				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "true");
+			if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals(ARG_FALSE))) {
+				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, ARG_TRUE);
 			}
 		} else {
-			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, "false");
+			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, ARG_FALSE);
 		}
 
 		// #6. Set some default values if missing or corrupt in the mySQL node
@@ -112,27 +112,27 @@ public class CfgFileHandler extends MainTM {
 		}
 		// #12. Set the default value if missing or corrupt for the placeholder keys
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
-				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase("true")) {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, "false");
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, ARG_FALSE);
 		} else {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, "true");
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, ARG_TRUE);
 		}
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
-				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase("true")) {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, "false");
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_FALSE);
 		} else {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, "true");
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_TRUE);
 		}
 
 		// #13. Only when using the admin command /tm reload: Update the initialTickNb value
-		if (firstOrRe.equalsIgnoreCase("re")) {
-			WorldSyncHandler.updateInitialTickAndTime(oldTick);
+		if (firstOrRe.equalsIgnoreCase(ARG_RE)) {
+			SyncHandler.updateInitialTickAndTime(oldTick);
 		}
 
 		// #14. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals("true") && !mySqlRefreshIsAlreadyOn) {
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals(ARG_TRUE) && !mySqlRefreshIsAlreadyOn) {
 			mySqlRefreshIsAlreadyOn = true;
-			WorldSyncHandler.refreshInitialTickMySql();
+			SyncHandler.refreshInitialTickMySql();
 			MsgHandler.infoMsg(sqlInitialTickAutoUpdateMsg); // Notify the console
 		}
 
@@ -143,16 +143,16 @@ public class CfgFileHandler extends MainTM {
 		// #16. For each world
 		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 
-			// #16.a. Restrain the start times
+			// #16.A. Restrain the start times
 			ValuesConverter.restrainStart(w);
 
-			// #16.b. Restrain the speed modifiers
+			// #16.B. Restrain the speed modifiers
 			ValuesConverter.restrainSpeed(w);
 
-			// #16.c. Restrain the sync value
+			// #16.C. Restrain the sync value
 			ValuesConverter.restrainSync(w, 0.1);
 
-			// #16.d. Restrain the sleep value
+			// #16.D. Restrain the sleep value
 			ValuesConverter.restrainSleep(w);
 		}
 
@@ -163,7 +163,7 @@ public class CfgFileHandler extends MainTM {
 		MainTM.getInstance().saveConfig();
 
 		// #19. Notifications
-		if (firstOrRe.equalsIgnoreCase("first")) {
+		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
 			MsgHandler.infoMsg(cfgVersionMsg + versionTM() + "."); // Notify the console
 		}
 	}

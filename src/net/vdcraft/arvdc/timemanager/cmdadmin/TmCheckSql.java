@@ -11,7 +11,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
 public class TmCheckSql extends MainTM {
 
 	/**
-	 * CMD /tm sqlcheck
+	 * CMD /tm checkSql
 	 */
 	public static void cmdSqlcheck(CommandSender sender) {
 
@@ -19,21 +19,21 @@ public class TmCheckSql extends MainTM {
 			@Override
 			public void run() {
 				String isSslOn = " without";
-				if (ssl.equalsIgnoreCase("true")) {
+				if (ssl.equalsIgnoreCase(ARG_TRUE)) {
 					isSslOn = "";
 				}
 				// Start notifications
-				MsgHandler.playerMsg(sender, tryReachHostMsg + " \"§e" + host + "§r\" on port §e#" + port + "§r" + isSslOn + " using ssl."); // Player final msg (in case)
+				MsgHandler.playerAdminMsg(sender, tryReachHostMsg + " \"§e" + host + "§r\" on port §e#" + port + "§r" + isSslOn + " using ssl."); // Player final msg (in case)
 				MsgHandler.infoMsg(tryReachHostMsg + " \"" + host + "\" on port #" + port + isSslOn + " using ssl."); // Console final msg (always)
 				// Test the connection
 				boolean okOrNot = SqlHandler.connectionToHostIsAvailable(true);
 				// Notifications
 				if (sender instanceof Player) { // Console messages are displayed by 'SqlHandler.connectionToHostIsAvailable()'
 					if (okOrNot == true) { // If the connection is ok
-						MsgHandler.playerMsg(sender, "The mySQL host \"§e" + host + "§r\" " + connectionOkMsg + " §e#" + port + "§r" + isSslOn + " using ssl."); // Player final msg (in case)
+						MsgHandler.playerAdminMsg(sender, "The mySQL host \"§e" + host + "§r\" " + connectionOkMsg + " §e#" + port + "§r" + isSslOn + " using ssl."); // Player final msg (in case)
 						SqlHandler.closeConnection("Host"); // Stop the connection
 					} else { // If the connection is not ok
-						MsgHandler.playerMsg(sender, connectionFailMsg + " \"§e" + host + "§r\". " + checkLogMsg); // Player final msg (in case)
+						MsgHandler.playerAdminMsg(sender, connectionFailMsg + " \"§e" + host + "§r\". " + checkLogMsg); // Player final msg (in case)
 					}
 				}
 			}

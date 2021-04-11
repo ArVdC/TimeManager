@@ -20,8 +20,8 @@ public class TmSetRefreshRate extends MainTM {
 		MainTM.getInstance().saveConfig();
 
 		// Notifications
-		MsgHandler.playerMsg(sender, refreshRateMsg + " §e" + refreshRate + " ticks§r."); // Notify the player (in case)
-		MsgHandler.infoMsg(prefixTM + " " + refreshRateMsg + " " + refreshRate + " ticks."); // Notify the console (always)
+		MsgHandler.playerAdminMsg(sender, refreshRateMsg + " §e" + refreshRate + " ticks§r."); // Notify the player (in case)
+		MsgHandler.infoMsg(MsgHandler.prefixTM + " " + refreshRateMsg + " " + refreshRate + " ticks."); // Notify the console (always)
 	}
 
 };
