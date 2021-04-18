@@ -593,13 +593,13 @@ public class MainTM extends JavaPlugin {
 			instanceMainClass = this;
 
 			// #2. Activate the configuration file
-			CfgFileHandler.loadConfig("first");
+			CfgFileHandler.loadConfig(ARG_FIRST);
 
 			// #3. Activate the languages file
-			LgFileHandler.loadLang("first");
+			LgFileHandler.loadLang(ARG_FIRST);
 			
 			// #4. Activate the scheduler file
-			CmdsFileHandler.loadCmds("first");
+			CmdsFileHandler.loadCmds(ARG_FIRST);
 
 			// #5. Activate the class with admins commands
 			CommandExecutor timemanagerExecutor = new AdminCmdExecutor();
@@ -621,12 +621,12 @@ public class MainTM extends JavaPlugin {
 			SyncHandler.firstSync();
 
 			// #10. Activate (or not) the placeholder APIs
-			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase("true")
+			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
 				new PAPIHandler(this).register();
 			}
-			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase("true")
+			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_MVDWPAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_MVDWPAPI + " detected.");
 				MVdWPAPIHandler.loadMVdWPlaceholderAPI();

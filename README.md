@@ -6,29 +6,26 @@
 ### TIME MANAGING FUNCTIONALITIES
 Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
 
-Time could be increased/decreased up to x10 or match real UTC time, with a per world time adjust.
-
-Worlds list is actualized and timers are synchronized on each server startup and reload. Most values are automatically checked and corrected depending on the case.
-
-Timers and speeds can be modified or re-synchronize with in-game commands or reloading after manually changes.
+Speed could be increased/decreased up to x10 or match real UTC time.
 
 Day and night can be set to different speed values, which can be great for RPG or some mini-games.
 
-Since v1.5.0, TimeManager can schedule commands that run at a time specified in the cmds.yml file. Scheduled commands can use the placeholders described below, with the exception of {tm_player}.
+Worlds list is actualized and timers are synchronized on each server startup and reload.
 
-This plugin override the vanilla "/time" command. The command to change a single world timer is "/tm set time \[ticks|daypart] \[world]".
+Timers and speeds can be modified or re-synchronize with in-game commands or reloading after manually changes.
 
+Sleep can be authorized, forbidden or linked with some other worlds.
 
-### PLAYER COMMAND /now <units> <world>
-A single command is used to display the time (in ticks or hours), the date and/or the number of elapsed days for any world.
+TimeManager can schedule commands that run at a time specified in the cmds.yml file. Scheduled commands can use the placeholders described below, with the exception of {tm_player}.
 
-Chat messages support multi-language and could automatically be accorded to any player's locale available in the lang.yml file.
+This plugin override the vanilla "/time" command. The command to change a single world timer is "/tm set time \[ticks|daypart|HH:mm:ss] \[world]".
 
-This message is configurable and provide placeholders (see below for details).
+### PLAYER COMMAND /now \<msg|title|actionbar> \<world>
+A single command is used to display a custom message with the time, the date, the number of elapsed days or weeks, or many other placeholders.
 
-Using the permissions, you can permit players to choose units and/or world arguments or neither of the two.
+/now messages support multi-language and could automatically be accorded to any player's locale available in the lang.yml file.
 
-Four combinations are therefore possible: "/now", "/now \<display>", "/now \<world>" and "/now \<display> \<world>". The display value can be 'msg', 'title' or 'actionbar'.
+Using the permissions, you can permit players to choose the display and/or the world argument or neither of the two.
 
 This command doesn't display time of Nether and the End worlds.
 
@@ -56,7 +53,7 @@ The available placeholders are as follows :
 - {tm_yyyy} : Displays the year part of the date in 4 digits.
 
 #### DEPEDENCIES
-Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245) and [MVdWPlaceholderAPI](www.spigotmc.org/resources/mvdwplaceholderapi.11182). You just need to place the API in your plugin folder and set the related node to 'true'in the TimeManager config.yml file.
+Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245) and [MVdWPlaceholderAPI](www.spigotmc.org/resources/mvdwplaceholderapi.11182). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
 
 ### ADMIN COMMAND /tm
 **/tm checkConfig** Admins and console can display a summary of the config.yml and lang.yml files.
@@ -110,22 +107,23 @@ If a world is using the real time speed, the start value will determine the UTC 
 
 ### SHORT LIST OF COMMANDS AND ARGS
 - For Players:
-  - /now \<units> \<world>
+  - /now \<msg|title|actionbar> \<world>
 - For Admins:
-  - /tm checkconfig
-  - /tm checksql
-  - /tm checktime \[all|world]
-  - /tm checkupdate \[bukkit|spigot|github]
+  - /tm checkConfig
+  - /tm checkSql
+  - /tm checkTime \[all|world]
+  - /tm checkUpdate \[bukkit|spigot|github]
   - /tm help \[cmd]
+  - /tm now \[msg|title|actionbar] \[player|all|world]
   - /tm reload \[all|config|lang|cmds]
   - /tm resync \[all|world]
   - /tm set date \[today|yyyy-mm-dd] \[all|world]
-  - /tm set debugmode \[true|false]
-  - /tm set deflang \[true|false]
+  - /tm set debugMode \[true|false]
+  - /tm set defLang \[true|false]
   - /tm set elapsedDays \[0 → ∞] \[all|world]
-  - /tm set initialtick \[tick|HH:mm:ss]
-  - /tm set multilang \[lg_LG]
-  - /tm set refreshrate \[tick]
+  - /tm set initialTick \[tick|HH:mm:ss]
+  - /tm set multiLang \[lg_LG]
+  - /tm set refreshRate \[tick]
   - /tm set sleep \[true|false] \[all|world]
   - /tm set speed \[multiplier] \[all|world]
   - /tm set speedDay \[multiplier] \[all|world]
@@ -134,7 +132,7 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set sync \[true|false] \[all|world]
   - /tm set time \[tick|daypart|HH:mm:ss] \[all|world]
   - /tm set update \[none|bukkit|spigot|github]
-  - /tm set upseCmds \[true|false]
+  - /tm set useCmds \[true|false]
 
 
 ### PERMISSIONS NODES
@@ -142,8 +140,8 @@ If a world is using the real time speed, the start value will determine the UTC 
   - timemanager.admin
   - timemanager.now.*
     - timemanager.now.cmd
-    - timemanager.now.units
-    - timemanager.now.worlds
+    - timemanager.now.display
+    - timemanager.now.world
 
 **timemanager.admin:** provide or deny access to /tm subcommands with all arguments.
 

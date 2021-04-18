@@ -90,8 +90,8 @@ public class TmHelp extends MainTM {
 		// /tm help set [arg]
 		if (argsNb >= 3) {
 			if (args[1].equalsIgnoreCase(CMD_SET)) {
-				String subCmd = args[2].toLowerCase();
-				switch (subCmd.toLowerCase()) {
+				String subCmd = args[2];
+				switch (subCmd) {
 				// /tm help set date
 				case CMD_SET_DATE :
 					specificCmdMsg = setDateHelpMsg; // Help msg (in case of 2 args)
@@ -142,9 +142,10 @@ public class TmHelp extends MainTM {
 					break;
 				}
 			}
+		// /tm help [arg]
 		} else if (argsNb >= 2) {
-			String subCmd = args[1].toLowerCase();
-			switch (subCmd.toLowerCase()) {
+			String subCmd = args[1];
+			switch (subCmd) {
 			case CMD_CHECKCONFIG : // /tm help checkconfig
 				specificCmdMsg = checkconfigHelpMsg; // Help msg (in case of 1 arg)
 				break;

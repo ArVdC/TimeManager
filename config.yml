@@ -4,9 +4,6 @@
 # *version*
 #  This field is automatically checked and refreshed, don't modify it manually.
 # -----
-# *defTimeUnits*
-#  Default time units for the player's command /now, possible values are 'hours' and 'ticks'.
-# -----
 # *refreshRate*
 #  The delay in ticks before actualizing the speed stretch/expand effect.
 #  Must be an integer between 2 and 20.
@@ -67,11 +64,8 @@
 # *placeholders*
 #  It is possible to use TimeManager placeholders in other plugins. To do this, set the value to 'true' and place the third-party API in your 'plugins' folder.
 #  The available placeholders are described in lang.yml file.
-#  PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) :
-#  %tm_currentday%, %tm_daypart%, %tm_elapseddays%, %tm_monthname%, %tm_time%, %tm_yearweek%, %tm_dd%, %tm_mm%, %tm_yy% and %tm_yyyy%.
-#  MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) :
-#  {tm_currentday}, {tm_daypart}, {tm_elapseddays}, {tm_monthname}, {tm_time}, {tm_yearweek}, {tm_dd}, {tm_mm}, {tm_yy} and {tm_yyyy}.
-#  See the lang.yml file for details.
+#  PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) -> Use %tm_xxx% instead of {tm_xxx}
+#  MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) -> Use {tm_xxx}
 # -----
 version: ''
 defTimeUnits: ''
