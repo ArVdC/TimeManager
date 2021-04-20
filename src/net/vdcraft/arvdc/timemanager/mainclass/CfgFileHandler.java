@@ -69,30 +69,21 @@ public class CfgFileHandler extends MainTM {
 		// #6. Set some default values if missing or corrupt in the mySQL node
 		SqlHandler.initSqlDatas();
 
-		// #7. defTimeUnits value
-		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_DEFTIMEUNITS)) {
-			if (MainTM.getInstance().getConfig().getString(CF_DEFTIMEUNITS).equals("")) {
-				MainTM.getInstance().getConfig().set(CF_DEFTIMEUNITS, defTimeUnits);
-			}
-		} else {
-			MainTM.getInstance().getConfig().set(CF_DEFTIMEUNITS, defTimeUnits);
-		}
-
-		// #8. Restrain the refresh rate
+		// #7. Restrain the refresh rate
 		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_REFRESHRATE)) {
 			ValuesConverter.restrainRate();
 		} else {
 			MainTM.getInstance().getConfig().set(CF_REFRESHRATE, defRefresh);
 		}
 
-		// #9. Set the default value if missing or corrupt for the wakeUpTick key
+		// #8. Set the default value if missing or corrupt for the wakeUpTick key
 		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_WAKEUPTICK)) {
 			ValuesConverter.restrainWakeUpTick();
 		} else {
 			MainTM.getInstance().getConfig().set(CF_WAKEUPTICK, 0L);
 		}
 
-		// #10. Set the default value if missing or corrupt for the newDayAt key
+		// #9. Set the default value if missing or corrupt for the newDayAt key
 		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_NEWDAYAT)) { // #9.A. Check if the value already exists
 			if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("18000") // If the value already exists, check if it is 00:00
 					|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")
@@ -105,12 +96,12 @@ public class CfgFileHandler extends MainTM {
 			MainTM.getInstance().getConfig().set(CF_NEWDAYAT, newDayStartsAt_6h00);
 		}
 
-		// #11. Set the default value if missing or corrupt for the updateMsgSrc key
+		// #10. Set the default value if missing or corrupt for the updateMsgSrc key
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_UPDATEMSGSRC)
 				|| MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC).equals("")) {
 			MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, defUpdateMsgSrc);
 		}
-		// #12. Set the default value if missing or corrupt for the placeholder keys
+		// #11. Set the default value if missing or corrupt for the placeholder keys
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
 				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, ARG_FALSE);
@@ -124,45 +115,45 @@ public class CfgFileHandler extends MainTM {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_TRUE);
 		}
 
-		// #13. Only when using the admin command /tm reload: Update the initialTickNb value
+		// #12. Only when using the admin command /tm reload: Update the initialTickNb value
 		if (firstOrRe.equalsIgnoreCase(ARG_RE)) {
 			SyncHandler.updateInitialTickAndTime(oldTick);
 		}
 
-		// #14. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
+		// #13. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
 		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals(ARG_TRUE) && !mySqlRefreshIsAlreadyOn) {
 			mySqlRefreshIsAlreadyOn = true;
 			SyncHandler.refreshInitialTickMySql();
 			MsgHandler.infoMsg(sqlInitialTickAutoUpdateMsg); // Notify the console
 		}
 
-		// #15. Check and complete list of available worlds
+		// #14. Check and complete list of available worlds
 		MsgHandler.debugMsg(cfgOptionsCheckDebugMsg); // Console debug msg
 		WorldListHandler.listLoadedWorlds();
 
-		// #16. For each world
+		// #15. For each world
 		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 
-			// #16.A. Restrain the start times
+			// #15.A. Restrain the start times
 			ValuesConverter.restrainStart(w);
 
-			// #16.B. Restrain the speed modifiers
+			// #15.B. Restrain the speed modifiers
 			ValuesConverter.restrainSpeed(w);
 
-			// #16.C. Restrain the sync value
+			// #15.C. Restrain the sync value
 			ValuesConverter.restrainSync(w, 0.1);
 
-			// #16.D. Restrain the sleep value
+			// #15.D. Restrain the sleep value
 			ValuesConverter.restrainSleep(w);
 		}
 
-		// #17. Restore the version value
+		// #16. Restore the version value
 		MainTM.getInstance().getConfig().set(CF_VERSION, versionTM());
 
-		// #18. Save the changes
+		// #17. Save the changes
 		MainTM.getInstance().saveConfig();
 
-		// #19. Notifications
+		// #18. Notifications
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
 			MsgHandler.infoMsg(cfgVersionMsg + versionTM() + "."); // Notify the console
 		}

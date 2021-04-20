@@ -67,7 +67,6 @@ public class MainTM extends JavaPlugin {
 	public static Double maxMcVForTabCompHack = 13.02;
 
 	// Default config files values
-	protected static String defTimeUnits = "hours";
 	protected static long defWakeUpTick = 0L;
 	protected static long defStart = 0L;
 	protected static Integer defRefresh = 10;

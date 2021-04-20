@@ -6,13 +6,13 @@
 ### TIME MANAGING FUNCTIONALITIES
 Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
 
-Speed could be increased/decreased up to x10 or match real UTC time.
+Speed could be increased/decreased up to 10 times or match UTC time with offset to local time.
 
 Day and night can be set to different speed values, which can be great for RPG or some mini-games.
 
 Worlds list is actualized and timers are synchronized on each server startup and reload.
 
-Timers and speeds can be modified or re-synchronize with in-game commands or reloading after manually changes.
+Time and speed can be modified or synchronized with in-game commands or reloading after manually changes.
 
 Sleep can be authorized, forbidden or linked with some other worlds.
 
@@ -20,12 +20,14 @@ TimeManager can schedule commands that run at a time specified in the cmds.yml f
 
 This plugin override the vanilla "/time" command. The command to change a single world timer is "/tm set time \[ticks|daypart|HH:mm:ss] \[world]".
 
-### PLAYER COMMAND /now \<msg|title|actionbar> \<world>
+### PLAYER COMMAND /now \<display> \<world>
 A single command is used to display a custom message with the time, the date, the number of elapsed days or weeks, or many other placeholders.
 
 /now messages support multi-language and could automatically be accorded to any player's locale available in the lang.yml file.
 
 Using the permissions, you can permit players to choose the display and/or the world argument or neither of the two.
+
+Display argument can be : 'msg', 'title' or 'actionbar'.
 
 This command doesn't display time of Nether and the End worlds.
 
@@ -64,7 +66,7 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm checkUpdate \[bukkit|spigot|github]** Search if a newer version of the plugin exists on the chosen server. (MC 1.18.8+ only)
 
-**/tm help \[cmd] \[<subCmd>]** Help provides you the correct usage and a short description of targeted command and subcommand.
+**/tm help \[cmd] \[\<subCmd>]** Help provides you the correct usage and a short description of targeted command and subcommand.
 
 **/tm now \[msg|title|actionbar] \[player|all|world]** Send the '/now' (chat, title or action bar) message to a specific player, all players in a specific world, or all online players.
 
@@ -80,7 +82,7 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm set elapsedDays \[0 → ∞] \[all|world]** Sets current number of elapsed days for the specified world (or all of them). Could be an integer between _0_ and _infinity_ (or almost). Setting this to _0_ will bring the world back to day _one_.
 
-**/tm set initialTick \[tick|HH:mm:ss]** Modify the server's initial tick.
+**/tm set initialTick \[ticks|HH:mm:ss]** Modify the server's initial tick.
 
 **/tm set multiLang \[true|false]** Set true or false to use an automatic translation for the _/now_ command.
 
@@ -113,7 +115,7 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm checkSql
   - /tm checkTime \[all|world]
   - /tm checkUpdate \[bukkit|spigot|github]
-  - /tm help \[cmd]
+  - /tm help \[cmd] \[\<subCmd>]
   - /tm now \[msg|title|actionbar] \[player|all|world]
   - /tm reload \[all|config|lang|cmds]
   - /tm resync \[all|world]
@@ -121,16 +123,16 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set debugMode \[true|false]
   - /tm set defLang \[true|false]
   - /tm set elapsedDays \[0 → ∞] \[all|world]
-  - /tm set initialTick \[tick|HH:mm:ss]
+  - /tm set initialTick \[ticks|HH:mm:ss]
   - /tm set multiLang \[lg_LG]
-  - /tm set refreshRate \[tick]
+  - /tm set refreshRate \[ticks]
   - /tm set sleep \[true|false] \[all|world]
   - /tm set speed \[multiplier] \[all|world]
   - /tm set speedDay \[multiplier] \[all|world]
   - /tm set speedNight \[multiplier] \[all|world]
-  - /tm set start \[tick|daypart|HH:mm:ss] \[all|world]
+  - /tm set start \[ticks|daypart|HH:mm:ss] \[all|world]
   - /tm set sync \[true|false] \[all|world]
-  - /tm set time \[tick|daypart|HH:mm:ss] \[all|world]
+  - /tm set time \[ticks|daypart|HH:mm:ss] \[all|world]
   - /tm set update \[none|bukkit|spigot|github]
   - /tm set useCmds \[true|false]
 

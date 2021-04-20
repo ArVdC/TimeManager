@@ -37,11 +37,11 @@ public class TmHelp extends MainTM {
 	private static String setE_DaysHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_E_DAYS
 			+ " [0 → ∞] [all|world] §rSets current number of elapsed days for the specified world (or all of them). Could be an integer between §o0§r and §oinfinity§r (or almost). Setting this to §o0§r will bring the world back to day §oone§r.";
 	private static String setInitialTickHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_INITIALTICK
-			+ " [tick|HH:mm:ss] §rModify the server's initial tick.";
+			+ " [ticks|HH:mm:ss] §rModify the server's initial tick.";
 	private static String setMultilangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_MULTILANG
 			+ " [true|false] §rSet true or false to use an automatic translation for the §o/now §rcommand.";
 	private static String setRefreshRateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_REFRESHRATE
-			+ " [tick] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
+			+ " [ticks] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
 	private static String setSleepHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SLEEP
 			+ " [true|false|linked] [all|world] §rDefine if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false. If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.";
 	private static String setSpeedHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SPEED
@@ -50,11 +50,11 @@ public class TmHelp extends MainTM {
 			+ CMD_TM + " " + CMD_SET + " " + CMD_SET_N_SPEED
 			+ " [multiplier] [all|world] §rFrom §o0.0§r to §o10.0§r, the values of daySpeed and nightSpeed can be different from each other.";
 	private static String setStartHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_START
-			+ " [tick|daypart|HH:mm:ss|timeShift] [all|world] §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized. If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.";
+			+ " [ticks|daypart|HH:mm:ss|timeShift] [all|world] §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized. If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.";
 	private static String setSyncHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SYNC
 			+ " [true|false] [all|world] §rDefine if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";
 	private static String setTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_TIME
-			+ " [tick|daypart|HH:mm:ss] [all|world] §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
+			+ " [ticks|daypart|HH:mm:ss] [all|world] §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
 	private static String setupdateSrcHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_UPDATE
 			+ " [bukkit|spigot|github] §rDefine the source server for the update search. (MC 1.8.8+ only)";
 	private static String setUseCmdsHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_USECMDS
