@@ -71,7 +71,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	// Arguments list for '/tm set multilang
 	List<String> tmBooleanArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE);
 	// First 'tick' arguments for '/tm set start' et '/tm set time'
-	List<String> tmTimeArgsList = Arrays.asList("morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
+	List<String> tmTimeArgsList = Arrays.asList("day", "morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
 	// Number of days arguments for '/tm set elapsedDays'
 	List<String> tmSetDateArgsList = Arrays.asList("today", "0001-01-01");
 	// Number of days arguments for '/tm set elapsedDays'

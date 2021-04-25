@@ -148,10 +148,10 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String getAmPm(long tick) {
 		String wichPart;
-		if (tick >= 0 && tick < 12000) {
-			wichPart = "AM";
-		} else {
+		if (tick >= 6000 && tick < 18000) {
 			wichPart = "PM";
+		} else {
+			wichPart = "AM";
 		}
 		return wichPart;
 	}
@@ -357,12 +357,14 @@ public class ValuesConverter extends MainTM {
 		String output;
 		switch (format) {
 		default :
-		case PH_TIME24 :
 		case PH_TIME12 :
+			if (HH == 0) HH = 12;
+		case PH_TIME24 :
 			output = String.format("%02d:%02d:%02d", HH, mm, ss);
 			break;
-		case PH_HOURS24 :
 		case PH_HOURS12 :
+			if (HH == 0) HH = 12;
+		case PH_HOURS24 :
 			output = String.format("%02d", HH);
 			break;
 		case PH_MINUTES :
@@ -708,19 +710,6 @@ public class ValuesConverter extends MainTM {
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSpeed(String world) {
-		// Transform the old 'speed' value (v1.2.1 &-) in the new 'daySpeed' and 'nightSpeed' (v1.3.0 &+) TODO >>> Should be erased someday
-		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_SPEED)) {
-			double speed;
-			try { // Check if the old speed value is a double
-				speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_SPEED);
-			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
-				MsgHandler.errorMsg(speedFormatMsg); // Console error msg
-				speed = defSpeed;
-			}
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SPEED, null);
-		} // Here comes the real part :
 		double daySpeedNb;
 		String daySpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
 		double nightSpeedNb;
