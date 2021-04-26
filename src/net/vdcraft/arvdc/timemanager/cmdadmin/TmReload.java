@@ -30,7 +30,7 @@ public class TmReload extends MainTM {
 			return;
 		}		
 		// When do reload the lang.yml file
-		if (whatToReload.equalsIgnoreCase(ARG_LANG) || whatToReload.equalsIgnoreCase("lang") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
+		if (whatToReload.equalsIgnoreCase(ARG_LANG) || whatToReload.equalsIgnoreCase("languages") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
 			LgFileHandler.loadLang(ARG_RE);
 			// 'lang.yml is reloaded' notification
 			MsgHandler.playerAdminMsg(sender, lgFileReloadMsg); // Player final msg (in case)
@@ -38,7 +38,7 @@ public class TmReload extends MainTM {
 			return;
 		}		
 		// When do reload the cmds.yml file // TODO 1.5.0
-		if (whatToReload.equalsIgnoreCase(ARG_CMDS) || whatToReload.equalsIgnoreCase("cmds") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
+		if (whatToReload.equalsIgnoreCase(ARG_CMDS) || whatToReload.equalsIgnoreCase("commands") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
 			CmdsFileHandler.loadCmds(ARG_RE);
 			// 'cmds.yml is reloaded' notification
 			MsgHandler.playerAdminMsg(sender, cmdsFileReloadMsg); // Player final msg (in case)

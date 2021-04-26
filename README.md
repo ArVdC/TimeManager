@@ -166,5 +166,5 @@ v1.5.0: MC 1.8.8 to 1.16.5
 * ~~Scheduler: Create a scheduler allowing commands to be executed at specific times.~~
 * ~~Sleep/Sync: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.~~
 * ~~Tab completer: Try to improve the current hack that manages the spaces in worlds name. (Usefull until MC 1.12.2)~~
-* Worlds: Include _nether_ and _the end_ in the world list.
+* Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.

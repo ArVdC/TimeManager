@@ -65,12 +65,12 @@ public class CmdsFileHandler extends MainTM {
 			String defWorld = Bukkit.getServer().getWorlds().get(0).getName();
 			if (!worlds.contains(phWorld)) {
 				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD, defWorld);
-				MsgHandler.infoMsg("cmd.yml: World '" + phWorld + "' does not exist. It was replaced by the default value '" + defWorld + "'.");
+				MsgHandler.debugMsg("cmd.yml: World §e" + phWorld + "§b " + cmdsWrongPHWorldDebugMsg + " §e" + defWorld + "§b.");
 			}
 			if (!worlds.contains(refTimeSrc)) {
 				if (!refTimeSrc.contains("UTC") || refTimeSrc.equalsIgnoreCase("")) {
 					MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME, defWorld);
-					MsgHandler.infoMsg("cmd.yml: '" + refTimeSrc + "' is neither a world or an UTC time. It was replaced by the default value '" + defWorld + "'.");
+					MsgHandler.debugMsg("cmd.yml: §e" + refTimeSrc + "§b " + cmdsWrongTimeSrcDebugMsg + " §e" + defWorld + "§b.");
 				}
 			}
 		}
@@ -101,8 +101,8 @@ public class CmdsFileHandler extends MainTM {
 		// #3.D. Adapt the repeatFreq key
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 			String repeatFreq = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ);
-			if (repeatFreq.contains("no") || repeatFreq.equalsIgnoreCase("false") || repeatFreq.equalsIgnoreCase(" ") || repeatFreq.equalsIgnoreCase("")) {
-				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ, "none");
+			if (repeatFreq.contains(ARG_FALSE) || repeatFreq.equalsIgnoreCase("no") || repeatFreq.equalsIgnoreCase(" ") || repeatFreq.equalsIgnoreCase("")) {
+				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ, ARG_NONE);
 			}
 		}
 		
@@ -113,13 +113,13 @@ public class CmdsFileHandler extends MainTM {
 		SaveCmdsYml();
 		
 		// #3.G. Launch the scheduler if necessary
-		if (!commandsSchedulerIsActive.contains("active") && MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase("true")) {
+		if (!commandsSchedulerIsActive.contains(ARG_ACTIVE) && MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
 			CmdsScheduler.commandsScheduler();
 		}
 		
 		// 3.H. Notifications
-		if (firstOrRe.equalsIgnoreCase("first")) {
-			MsgHandler.infoMsg(cmdsVersionMsg + MainTM.getInstance().cmdsConf.getString("version") + ".");
+		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
+			MsgHandler.infoMsg(cmdsVersionMsg + MainTM.getInstance().cmdsConf.getString(CF_VERSION) + ".");
 		}
 	}
 

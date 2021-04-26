@@ -120,7 +120,6 @@ public class MainTM extends JavaPlugin {
 
 	// Config file keys
 	protected static final String CF_VERSION = "version";
-	protected static final String CF_DEFTIMEUNITS = "defTimeUnits";
 	protected static final String CF_REFRESHRATE = "refreshRate";
 	public static final String CF_WAKEUPTICK = "wakeUpTick";
 	public static final String CF_NEWDAYAT = "newDayAt";
@@ -356,8 +355,8 @@ public class MainTM extends JavaPlugin {
 	protected static String worldCurrentSpeedMsg = "'s current speed is";
 	protected static String worldCurrentDaySpeedMsg = "'s current day speed is";
 	protected static String worldCurrentNightSpeedMsg = "'s current night speed is";
-	protected static String worldRealSpeedMsg = "set to match real time (=1200 ticks/minute)";
-	protected static String worldCurrentSyncMsg = "synchronized to the server time";
+	protected static String worldRealSpeedMsg = "set to match real time (=1200 ticks/minute).";
+	protected static String worldCurrentSyncMsg = "synchronized to the server time.";
 	protected static String worldCurrentSleepMsg = "'s 'sleep' option is set to";
 
 	// Cmds now & tm now
@@ -502,6 +501,8 @@ public class MainTM extends JavaPlugin {
 	public static String sleepProcessAwakeNoSleepDebugMsg = "without having been able to sleep.";
 	public static String sleepOkMorningDebugMsg = "§aWake up, it's morning !!!";
 	public static String sleepNoMorningDebugMsg = "§cToo late...  morning might never come.";
+	public static String cmdsWrongPHWorldDebugMsg = "does not exist. It was replaced by the default value";
+	public static String cmdsWrongTimeSrcDebugMsg = "is neither a world or an UTC time. It was replaced by the default value";
 
 	// Debug Calculation for timer synchronization (with colors)
 	protected static String actualTimeVar = "§c[actualTime]§b";

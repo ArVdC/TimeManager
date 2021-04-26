@@ -42,10 +42,6 @@ public class TmCheckConfig extends MainTM {
 		String availableLangMsg = "Available languages are : " + availableLg + ".";
 		String colAvailableLangMsg = "Available languages are : §e" + availableLg + "§r.";
 
-		// Default units
-		String defUnitsMsg = "Default time units are " + MainTM.getInstance().getConfig().getString(CF_DEFTIMEUNITS) + ".";
-		String colDefUnitsMsg = "Default time units are §e" + MainTM.getInstance().getConfig().getString(CF_DEFTIMEUNITS) + "§r.";
-
 		// Refresh rate
 		String refRateMsg = refreshRateMsg + " " + MainTM.getInstance().getConfig().getString(CF_REFRESHRATE) + " ticks.";
 		String colRefRateMsg = refreshRateMsg + " §e" + MainTM.getInstance().getConfig().getString(CF_REFRESHRATE) + " ticks§r.";
@@ -126,8 +122,6 @@ public class TmCheckConfig extends MainTM {
 			MsgHandler.playerAdminMsg(sender, colDefLangMsg);
 			// Display the available languages
 			MsgHandler.playerAdminMsg(sender, colAvailableLangMsg);
-			// Display the default time units
-			MsgHandler.playerAdminMsg(sender, colDefUnitsMsg);
 			// Display the refresh rate
 			MsgHandler.playerAdminMsg(sender, colRefRateMsg);
 			// Display the wake up tick
@@ -155,8 +149,6 @@ public class TmCheckConfig extends MainTM {
 			MsgHandler.infoMsg(defLangMsg);
 			// Display the available languages
 			MsgHandler.infoMsg(availableLangMsg);
-			// Display the default time units
-			MsgHandler.infoMsg(defUnitsMsg);
 			// Display the refresh rate
 			MsgHandler.infoMsg(refRateMsg);
 			// Display the wake up tick

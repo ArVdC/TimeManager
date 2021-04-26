@@ -17,7 +17,7 @@ public class PlayerLangHandler extends MainTM {
 	public static String setLangToUse(CommandSender sender) {
 		Player p = (Player) sender;
 		// If option is disable, use default language
-		if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase("false")) {
+		if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase(ARG_FALSE)) {
 			return serverLang;
 		}
 		// Get player locale and format it

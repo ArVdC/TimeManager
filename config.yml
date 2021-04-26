@@ -68,7 +68,6 @@
 #  MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) -> Use {tm_xxx}
 # -----
 version: ''
-defTimeUnits: ''
 refreshRate: ''
 wakeUpTick: ''
 newDayAt: ''
