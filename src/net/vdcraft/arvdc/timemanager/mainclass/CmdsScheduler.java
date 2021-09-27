@@ -36,7 +36,7 @@ public class CmdsScheduler extends MainTM {
 				}
 
 				MsgHandler.devMsg("The scheduler list is active and contains : " + commandsSchedulerIsActive);
-				MsgHandler.devMsg("=================="); // TODO 1.5.0
+				MsgHandler.devMsg("==================");
 
 				for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 
@@ -102,7 +102,7 @@ public class CmdsScheduler extends MainTM {
 						Double speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + refTimeSrc + "." + speedParam);
 						if (speed > 0.0 && speed <= 0.5) {
 							minutesBeforeEnd = 5;
-							ticksBeforeEnd = (long) (84 / speed); // TODO 1.5.0 >>> Check if it works !!!!!
+							ticksBeforeEnd = (long) (84 / speed);
 						} else if (speed > 0.5 && speed <= 1.0) {
 							minutesBeforeEnd = 10;
 							ticksBeforeEnd = (long) (167 / speed);
@@ -167,7 +167,7 @@ public class CmdsScheduler extends MainTM {
 						MsgHandler.devMsg("Interval : " + minutesBeforeEnd + " minutes (#" + ticksBeforeEnd + ")");
 						MsgHandler.devMsg("Reference Time Source : " + refTimeSrc);
 						MsgHandler.devMsg("Repeat Frequence : " + repeatFreq);
-						MsgHandler.devMsg("=================="); // TODO 1.5.0
+						MsgHandler.devMsg("==================");
 					}
 					// #9. Check if we are into the  delay and if schedule is not already active
 					Boolean launchCmds = false;
@@ -204,7 +204,7 @@ public class CmdsScheduler extends MainTM {
 						// After the delay, delete the key from the active scheduler list
 						delayedDeleteKey(ticksBeforeEnd, key);
 						MsgHandler.devMsg("Prepared to remove the key " + key + " from the scheduler list : " + commandsSchedulerIsActive);
-						MsgHandler.devMsg("=================="); // TODO 1.5.0
+						MsgHandler.devMsg("==================");
 
 						// #11. Execute the command(s)
 						ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
@@ -223,7 +223,7 @@ public class CmdsScheduler extends MainTM {
 										for (String ph2 : phSlipt2) {
 											if (ph2.contains("tm_")) {
 												ph2 = ph2.replace("tm_", "");
-												String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang);
+												String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, null);
 												MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\"."); // TODO 1.5.0
 												command = command.replace("{tm_" + ph2 + "}", ph3);
 											}
@@ -256,7 +256,7 @@ public class CmdsScheduler extends MainTM {
 			public void run() {
 				if (commandsSchedulerIsActive.contains(key)) commandsSchedulerIsActive.remove(key);
 				MsgHandler.devMsg("Removed the key " + key + " from the scheduler list : " + commandsSchedulerIsActive);
-				MsgHandler.devMsg("=================="); // TODO 1.5.0
+				MsgHandler.devMsg("==================");
 			}
 		}, endDelay);
 	}

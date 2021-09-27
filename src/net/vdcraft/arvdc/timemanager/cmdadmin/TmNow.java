@@ -49,7 +49,7 @@ public class TmNow extends MainTM {
 		// #2. Get all he players
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			String world = p.getWorld().getName();
-			String player = p.getName();	
+			String player = p.getName();
 			
 			// #3. Check who will receive the msg
 			if (player.equalsIgnoreCase(target) || target.equalsIgnoreCase(ARG_ALL) || target.equalsIgnoreCase(world)) {
@@ -83,11 +83,11 @@ public class TmNow extends MainTM {
 				// #7. Replace placeholders
 				msg = msg.replace("&", "§");
 				msg = msg.replace("{" + PH_PREFIX + PH_PLAYER + "}", player);
-				msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang);
+				msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
 				if (display.equalsIgnoreCase(ARG_TITLE)) {
 					subtitle = subtitle.replace("&", "§");
 					subtitle = subtitle.replace("{" + PH_PREFIX + PH_PLAYER + "}", player);
-					subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang);		
+					subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);		
 				}
 				
 				// #8. Configure and send command

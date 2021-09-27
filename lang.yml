@@ -110,7 +110,7 @@ languages:
        m12: Dezember
   en_US:
     prefix: '&e&l[Time]'
-    msg: It's &e{tm_time24}&r in world {tm_world}, this is {tm_daypart}.
+    msg: It is &e{tm_time24}&r in world {tm_world}, this is {tm_daypart}.
     noMsg: There is no day-night cycle in this dimension!
     title: '&f{tm_yyyy}'
     subtitle: '&e{tm_time24}'

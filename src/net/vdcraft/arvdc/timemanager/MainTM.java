@@ -218,6 +218,8 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_E_DAYS = "elapsedDays";
 	protected static final String CMD_SET_INITIALTICK = "initialTick";
 	protected static final String CMD_SET_MULTILANG = "multiLang";
+	protected static final String CMD_SET_PLAYEROFFSET = "playerOffset"; //  TODO 1.6.0
+	protected static final String CMD_SET_PLAYERTIME = "playerTime"; //  TODO 1.6.0
 	protected static final String CMD_SET_REFRESHRATE = "refreshRate";
 	protected static final String CMD_SET_SLEEP= "sleep";
 	protected static final String CMD_SET_SPEED = "speed";
@@ -256,6 +258,7 @@ public class MainTM extends JavaPlugin {
 	public static final String ARG_THEEND = "_the_end";
 	public static final String ARG_TODAY = "today";
 	public static final String ARG_ACTIVE = "active";
+	public static final String ARG_RESET = "reset";
 	
 	// Placeholders names
 	public static final String PH_IDENTIFIER = "tm";
@@ -356,7 +359,7 @@ public class MainTM extends JavaPlugin {
 	protected static String worldCurrentDaySpeedMsg = "'s current day speed is";
 	protected static String worldCurrentNightSpeedMsg = "'s current night speed is";
 	protected static String worldRealSpeedMsg = "set to match real time (=1200 ticks/minute).";
-	protected static String worldCurrentSyncMsg = "synchronized to the server time.";
+	protected static String worldCurrentSyncMsg = "synchronized to the server time";
 	protected static String worldCurrentSleepMsg = "'s 'sleep' option is set to";
 
 	// Cmds now & tm now
@@ -370,7 +373,7 @@ public class MainTM extends JavaPlugin {
 	protected static String tooLateForDayZeroMsg2 = ") to return to the first day. First use \"/tm set time\" to set a value between 6:00 and 23:59.";
 	
 	// Cmd resync
-	protected static String resyncDoneMsg = "had its time re" + worldCurrentSyncMsg;
+	protected static String resyncDoneMsg = "had its time re" + worldCurrentSyncMsg + ".";
 	protected static String noResyncNeededMsg = "is already synchronized to the server time.";
 
 	// Cmd set refreshRate
@@ -415,6 +418,12 @@ public class MainTM extends JavaPlugin {
 	protected static String worldRealSyncTimeChgMsg = "could not be changed. Please use the '/tm set start' command instead if you want to change the time zone.";
 	protected static String worldTimeNoChange = "is synchronized ";
 	
+	//Cmd set playerTime // TODO 1.6.0
+	protected static String playerOffsetChgMsg1 = "The current offset for the player";
+	protected static String playerTimeChgMsg1 = "The current time for the player";
+	protected static String playerTimeChgMsg2 = "is now set to";
+	protected static String playerTimeResetMsg2 = "is now reseted.";
+	
 	// Cmd set update
 	protected static String updateEnableCheckMsg = "The plugin update message at server start will use";
 	protected static String updateDisableCheckMsg = "The plugin update message at server start is now";
@@ -430,6 +439,7 @@ public class MainTM extends JavaPlugin {
 	// Errors messages (B&W)
 	protected static String playerFormatMsg = "This player doesn't exist, or is offline.";
 	protected static String rateFormatMsg = "Refresh rate must be an integer number.";
+	protected static String offsetTickMsg = "Offset must be an integer number.";
 	protected static String wakeUpTickFormatMsg = "Wake up tick must be an integer number, default value will be used.";
 	protected static String startTickFormatMsg = "Start tick must be an integer number, default value will be used.";
 	protected static String utcFormatMsg = "Time shift must be formatted as 'UTC' followed by '+' or '-' and an integer number, without space (e.g. UTC+1), default value will be used.";

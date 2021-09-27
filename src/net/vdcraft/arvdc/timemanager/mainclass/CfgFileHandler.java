@@ -140,11 +140,11 @@ public class CfgFileHandler extends MainTM {
 			// #15.B. Restrain the speed modifiers
 			ValuesConverter.restrainSpeed(w);
 
-			// #15.C. Restrain the sync value
-			ValuesConverter.restrainSync(w, 0.1);
-
-			// #15.D. Restrain the sleep value
+			// #15.C. Restrain the sleep value
 			ValuesConverter.restrainSleep(w);
+
+			// #15.D. Restrain the sync value
+			ValuesConverter.restrainSync(w, 0.1);
 		}
 
 		// #16. Restore the version value

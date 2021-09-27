@@ -18,7 +18,7 @@ Sleep can be authorized, forbidden or linked with some other worlds.
 
 TimeManager can schedule commands that run at a time specified in the cmds.yml file. Scheduled commands can use the placeholders described below, with the exception of {tm_player}.
 
-This plugin override the vanilla "/time" command. The command to change a single world timer is "/tm set time \[ticks|daypart|HH:mm:ss] \[world]".
+This plugin override the vanilla '/time' command. The command to change a single world timer is '/tm set time \[ticks|daypart|HH:mm:ss] \[world]'.
 
 ### PLAYER COMMAND /now \<display> \<world>
 A single command is used to display a custom message with the time, the date, the number of elapsed days or weeks, or many other placeholders.
@@ -86,6 +86,10 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm set multiLang \[true|false]** Set true or false to use an automatic translation for the _/now_ command.
 
+**/tm set playerOffset [0 → 23999] [player|all] \[all|world]** Define a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.
+
+**/tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|world]** Define a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.
+
 **/tm set refreshRate \[ticks]** Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between _2_ and _20_. Default value is _10 ticks_, please note that a too small value can cause server lags.
 
 **/tm set sleep \[true|false|linked] \[all|world]** Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false.
@@ -116,7 +120,7 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm checkTime \[all|world]
   - /tm checkUpdate \[bukkit|spigot|github]
   - /tm help \[cmd] \[\<subCmd>]
-  - /tm now \[msg|title|actionbar] \[player|all|world]
+  - /tm now \[msg|title|actionbar] \[all|player|world]
   - /tm reload \[all|config|lang|cmds]
   - /tm resync \[all|world]
   - /tm set date \[today|yyyy-mm-dd] \[all|world]
@@ -125,6 +129,7 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set elapsedDays \[0 → ∞] \[all|world]
   - /tm set initialTick \[ticks|HH:mm:ss]
   - /tm set multiLang \[lg_LG]
+  - /tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|world]
   - /tm set refreshRate \[ticks]
   - /tm set sleep \[true|false] \[all|world]
   - /tm set speed \[multiplier] \[all|world]
@@ -166,5 +171,6 @@ v1.5.0: MC 1.8.8 to 1.16.5
 * ~~Scheduler: Create a scheduler allowing commands to be executed at specific times.~~
 * ~~Sleep/Sync: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.~~
 * ~~Tab completer: Try to improve the current hack that manages the spaces in worlds name. (Usefull until MC 1.12.2)~~
+* ~~Command: Allow players to individually set their time.~~
 * Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.

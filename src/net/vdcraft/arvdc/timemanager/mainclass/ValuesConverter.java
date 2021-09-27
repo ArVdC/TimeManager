@@ -171,7 +171,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Converts a listed String value to a tick value
+	 * Converts a listed word or any number to a tick value
 	 * (returns a Long)
 	 */
 	public static Long tickFromString(String dayPart) {
@@ -740,6 +740,24 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
+	 * If a world gets a speed of "24", force 'sleep' to false
+	 * Force 'sync' to false if 'sleep' is 'true' or 'linked'
+	 * (modifies the configuration without saving the file)
+	 */
+	public static void restrainSleep(String world) {
+		String sleep = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SLEEP);
+		long t = Bukkit.getWorld(world).getTime();
+		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
+		if (currentSpeed.contains("24") || (!sleep.equalsIgnoreCase(ARG_TRUE) && !sleep.equalsIgnoreCase(ARG_LINKED))) {
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, ARG_FALSE);
+			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+		} else if (sleep.equalsIgnoreCase(ARG_TRUE) || sleep.equalsIgnoreCase(ARG_LINKED)) {
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
+			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+		}
+	}
+
+	/**
 	 * Force 'sync' to true for the 24.0 speed, then false when change to another speed ratio
 	 * Force 'sync' to false for the 0.0 speed
 	 * (modifies the configuration without saving the file)
@@ -756,20 +774,6 @@ public class ValuesConverter extends MainTM {
 		} else if (oldSpeed == 24.0) { // new speed is anything else with previous value 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
 			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
-		} // else, don't do anything
-	}
-
-	/**
-	 * If a world gets a speed of "24", force 'sleep' to false
-	 * (modifies the configuration without saving the file)
-	 */
-	public static void restrainSleep(String world) {
-		String sleepOrNo = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SLEEP);
-		long t = Bukkit.getWorld(world).getTime();
-		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
-		if (currentSpeed.contains("24") || (!sleepOrNo.equalsIgnoreCase(ARG_TRUE) && !sleepOrNo.equalsIgnoreCase(ARG_LINKED))) {
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, ARG_FALSE);
-			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		}
 	}
 

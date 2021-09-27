@@ -24,6 +24,8 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDebugMode;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDefLang;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetInitialTick;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetMultiLang;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetPlayerOffset;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetPlayerTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetRefreshRate;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetFullTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSpeed;
@@ -296,6 +298,69 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 			}
 		}
+
+		// Set the current time for a player // TODO 1.6.0
+		if (nbArgs >= 2) {
+			if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYEROFFSET)) {
+				// Set a per player time offset
+				if (((nbArgs < 4) && !(sender instanceof Player)) || ((nbArgs < 3) && (sender instanceof Player))) {
+					MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_PLAYEROFFSET); // Send error and help msg
+					return true;
+				} else {
+					// Get the tick arg
+					String tickString = args[2];
+					Long tickLong;
+					try {
+						tickLong = Long.parseLong(tickString); // Check if the value is a long
+						tickLong = ValuesConverter.correctDailyTicks(tickLong);
+					} catch (NumberFormatException nfe) {
+						MsgHandler.cmdErrorMsg(sender, MainTM.offsetTickMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_PLAYEROFFSET); // Send error and help msg
+						return true;
+					}
+					// Get the player arg
+					String player;
+					if ((sender instanceof Player) && (nbArgs == 3)) {
+						player = sender.getName();
+					} else {
+						player = args[3];
+					}
+					// Send the command
+					TmSetPlayerOffset.cmdSetPlayerOffset(sender, tickLong, player, false);
+					return true;
+				}
+			}
+			if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYERTIME)) {
+				// Set a per player time offset
+				if (((nbArgs < 4) && !(sender instanceof Player)) || ((nbArgs < 3) && (sender instanceof Player))) {
+					MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_PLAYERTIME); // Send error and help msg
+					return true;
+				} else {
+					// Get the tick arg
+					String tickString = args[2];
+					Long tickLong;
+					boolean reset = false;
+					if (tickString.equalsIgnoreCase(MainTM.ARG_RESET)) { // Check if the value is 'reset'
+						tickLong = 0L;
+						reset = true;
+					} else if (!tickString.contains(":")) {
+						tickLong = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day or a number
+					} else {
+						tickLong = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
+					}
+					// Get the player arg
+					String player;
+					if ((sender instanceof Player) && (nbArgs == 3)) {
+						player = sender.getName();
+					} else {
+						player = args[3];
+					}
+					// Send the command
+					TmSetPlayerTime.cmdSetPlayerTime(sender, tickLong, player, reset);
+					return true;
+				}
+			}
+		} // TODO 1.6.0
+		
 		String concatWorldName = null;
 		if (nbArgs == 3) {
 			if ((sender instanceof Player) || (sender instanceof BlockCommandSender))
@@ -349,7 +414,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 						String tickString = args[2];
 						Long tickToSet;
 						if (!args[2].contains(":")) {
-							tickToSet = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
+							tickToSet = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day or a number
 						} else {
 							tickToSet = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
 						}
@@ -382,7 +447,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 						String tickString = args[2];
 						Long tickLong;
 						if (!tickString.contains(":")) {
-							tickLong = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day
+							tickLong = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day or a number
 						} else {
 							tickLong = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
 						}

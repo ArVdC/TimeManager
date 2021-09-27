@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.5.1
+version: 1.6.0-b
 api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -33,7 +33,7 @@ commands:
             /<command> checkTime [all|server|world]
             /<command> checkUpdate [bukkit|spigot|github]
             /<command> help [cmd] [<subCmd>]
-            /<command> now [msg|title|actionbar] [player|all|world] 
+            /<command> now [msg|title|actionbar] [all|player|world] 
             /<command> reload [all|config|lang|cmds]
             /<command> resync [all|world]
             /<command> set date [today|yyyy-mm-dd] [all|world]
@@ -42,14 +42,16 @@ commands:
             /<command> set elapsedDays [0 → ∞] [all|world]
             /<command> set initialtick [ticks|HH:mm]
             /<command> set multiLang [true|false]
+            /<command> set playerOffset [0 → 23999] [all|player]
+            /<command> set playerTime [ticks|daypart|HH:mm:ss|reset] [all|player]
             /<command> set refreshRate [ticks]
             /<command> set sleep [true|false] [all|world]
             /<command> set speed [multiplier] [all|world]
             /<command> set speedDay [multiplier] [all|world]
             /<command> set speedNight [multiplier] [all|world]
-            /<command> set start [ticks|daypart|HH:mm] [all|world]
+            /<command> set start [ticks|daypart|HH:mm:ss|timeShift] [all|world]
             /<command> set sync [true|false] [all|world]
-            /<command> set time [ticks|daypart|HH:mm] [all|world]
+            /<command> set time [ticks|daypart|HH:mm:ss] [all|world]
             /<command> set update [none|bukkit|spigot|github]
             /<command> set useCmds [true|false]
     aliases:

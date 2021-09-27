@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
-import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
+//import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
 public class PAPIHandler extends PlaceholderExpansion {
 	
 	/**
@@ -123,92 +123,92 @@ public class PAPIHandler extends PlaceholderExpansion {
 
         // %tm_tick%
         if(identifier.equals(MainTM.PH_TICK)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_time12%
         if(identifier.equals(MainTM.PH_TIME12)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_time24%
         if(identifier.equals(MainTM.PH_TIME24)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_hours12%
         if(identifier.equals(MainTM.PH_HOURS12)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_hours24%
         if(identifier.equals(MainTM.PH_HOURS24)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_minutes%
         if(identifier.equals(MainTM.PH_MINUTES)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_seconds%
         if(identifier.equals(MainTM.PH_SECONDS)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_ampm%
         if(identifier.equals(MainTM.PH_AMPM)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_dayPart%
         if(identifier.equals(MainTM.PH_DAYPART)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_currentday%
         if(identifier.equals(MainTM.PH_C_DAY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_elapseddays%
         if(identifier.equals(MainTM.PH_E_DAYS)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_yearweek%
         if(identifier.equals(MainTM.PH_YEARWEEK)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_week%
         if(identifier.equals(MainTM.PH_WEEK)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_monthname%
         if(identifier.equals(MainTM.PH_MONTHNAME)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_dd%
         if(identifier.equals(MainTM.PH_DD)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_mm%
         if(identifier.equals(MainTM.PH_MM)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_yy%
         if(identifier.equals(MainTM.PH_YY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // %tm_yyyy%
         if(identifier.equals(MainTM.PH_YYYY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
  
         // We return null if an invalid placeholder (f.e. %someplugin_placeholder3%) was provided

@@ -23,7 +23,7 @@ public class TmHelp extends MainTM {
 	private static String helpHelpMsg = "§6/" + CMD_TM + " " + CMD_HELP
 			+ " [cmd] [<subCmd>] §rHelp provides you the correct usage and a short description of targeted command or subcommand.";
 	private static String tmNowHelpMsg = "§6/" + CMD_TM + " " + CMD_NOW
-			+ " [msg|title|actionbar] [player|all|world] §rSend the '/now' (chat, title or action bar) message to a specific player, all players in a specific world, or all online players.";
+			+ " [msg|title|actionbar] [all|player|world] §rSend the '/now' (chat, title or action bar) message to a specific player, all players in a specific world, or all online players.";
 	private static String reloadHelpMsg = "§6/" + CMD_TM + " " + CMD_RELOAD
 			+ " [all|cmds|config|lang] §rThis command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.";
 	private static String resyncHelpMsg = "§6/" + CMD_TM + " " + CMD_RESYNC
@@ -40,6 +40,10 @@ public class TmHelp extends MainTM {
 			+ " [ticks|HH:mm:ss] §rModify the server's initial tick.";
 	private static String setMultilangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_MULTILANG
 			+ " [true|false] §rSet true or false to use an automatic translation for the §o/now §rcommand.";
+	private static String setPlayerOffsetHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYEROFFSET
+			+ " [0 → 23999] [player|all] §rDefine a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel."; //TODO 1.6.0
+	private static String setPlayerTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYERTIME
+			+ " [ticks|daypart|HH:mm:ss|reset] [all|player] §rDefine a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel."; //TODO 1.6.0
 	private static String setRefreshRateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_REFRESHRATE
 			+ " [ticks] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
 	private static String setSleepHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SLEEP
@@ -67,6 +71,8 @@ public class TmHelp extends MainTM {
 			+ CMD_SET_E_DAYS + "|"
 			+ CMD_SET_INITIALTICK + "|"
 			+ CMD_SET_MULTILANG + "|"
+			+ CMD_SET_PLAYEROFFSET + "|"
+			+ CMD_SET_PLAYERTIME + "|"
 			+ CMD_SET_REFRESHRATE + "|"
 			+ CMD_SET_SLEEP + "|"
 			+ CMD_SET_SPEED + "|"
@@ -110,6 +116,12 @@ public class TmHelp extends MainTM {
 					break;
 				case CMD_SET_MULTILANG : // /tm help set multiLang
 					specificCmdMsg = setMultilangHelpMsg; // Help msg (in case of 2 args)
+					break;
+				case CMD_SET_PLAYEROFFSET : // /tm help set playerOffset
+					specificCmdMsg = setPlayerOffsetHelpMsg; // Help msg (in case of 2 args)
+					break;				
+				case CMD_SET_PLAYERTIME : // /tm help set playerTime
+					specificCmdMsg = setPlayerTimeHelpMsg; // Help msg (in case of 2 args)
 					break;
 				case CMD_SET_REFRESHRATE : // /tm help set refreshRate
 					specificCmdMsg = setRefreshRateHelpMsg; // Help msg (in case of 2 args)
@@ -178,6 +190,7 @@ public class TmHelp extends MainTM {
 			case CMD_SET_E_DAYS :
 			case CMD_SET_INITIALTICK :
 			case CMD_SET_MULTILANG :
+			case CMD_SET_PLAYERTIME :
 			case CMD_SET_REFRESHRATE :
 			case CMD_SET_SLEEP :
 			case CMD_SET_SPEED :

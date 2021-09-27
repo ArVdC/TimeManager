@@ -57,14 +57,14 @@ public class SleepHandler implements Listener {
 						// #2.A.4.b. Go to the next step
 						if (!watingForTheDay) {
 							watingForTheDay = true;
-							delayedDoesDayStart(w, world);
+							delayedDoesDayStart(w, world, 50L); // TODO time to wait
 						}				
 					}
-					// #2.A.2. Wait just before the end of the sleep (= 99 ticks)
+					// #2.A.2. Wait just before the end of the sleep (= 99 ticks) // TODO 1.17
 					if (st <= 98) {
 						sleepTicksCount(p, w, speedModifier, st);
 						return;
-					}					
+					}
 					Boolean sleepIsPermited = false;
 					if (MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equals(MainTM.ARG_TRUE)
 							|| MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "."+ MainTM.CF_SLEEP).equals(MainTM.ARG_LINKED)) {
@@ -97,15 +97,15 @@ public class SleepHandler implements Listener {
 	}
 
 	// # 3. Wait a little bit before checking
-	public static void delayedDoesDayStart(World w, String world) {
+	public static void delayedDoesDayStart(World w, String world, long timeToWait) {
 		BukkitScheduler delayedDoesDayStartSheduler = MainTM.getInstance().getServer().getScheduler();
 		delayedDoesDayStartSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				MsgHandler.debugMsg(MainTM.sleepProcessWaitMorningTicksDebugMsg); // Console debug msg
-				doesDayStart( w, world);
+				doesDayStart(w, world);
 			}
-		}, 50L);
+		}, timeToWait);
 	}
 
 	// # 4. After sleeping, check if a new day is starting or not
@@ -157,7 +157,7 @@ public class SleepHandler implements Listener {
 				DoDaylightCycleHandler.adjustDaylightCycle(world);
 				// Notify the console
 				MsgHandler.infoMsg(MainTM.sleepNewDayMsg + " "  + world + ", it is now tick #" + wakeUpTick + " (" + ValuesConverter.formattedTimeFromTick(wakeUpTick) + ")."); // Console final msg
-				// TODO Check if other worlds timers must be change
+				// Check if other worlds timers must be change
 				String sleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP);
 				if (sleep.equalsIgnoreCase(MainTM.ARG_LINKED)) {
 					for (String linkedWorld : MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST).getKeys(false)) {

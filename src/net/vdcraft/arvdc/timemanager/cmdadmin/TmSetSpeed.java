@@ -42,10 +42,10 @@ public class TmSetSpeed extends MainTM {
 			} else if (when.equalsIgnoreCase(CMD_SET_N_SPEED)) {
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);	
 			}
-			// Restrain the sync value
-			ValuesConverter.restrainSync(world, oldSpeed);
 			// Restrain the sleep value
 			ValuesConverter.restrainSleep(world);
+			// Restrain the sync value
+			ValuesConverter.restrainSync(world, oldSpeed);
 			// Do daylightCycle change if needed
 			DoDaylightCycleHandler.adjustDaylightCycle(world);
 			// Save the config

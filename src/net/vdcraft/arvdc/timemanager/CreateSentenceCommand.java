@@ -61,17 +61,27 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmReloadArgsList = Arrays.asList(MainTM.ARG_ALL, MainTM.ARG_CONFIG, MainTM.ARG_LANG, MainTM.ARG_CMDS);
 	// Arguments list for '/tm set'
 	List<String> tmSetArgsList() {
-		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
-		else return Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_USECMDS);
+		List<String> SetArgs = Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_PLAYEROFFSET, MainTM.CMD_SET_PLAYERTIME, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
+		if (MainTM.serverMcVersion < MainTM.reqMcVForUpdate) SetArgs.remove(MainTM.CMD_SET_UPDATE);
+		return SetArgs;
 	}
-	// Arguments list for '/tm set deflang
+	// Arguments list for '/tm set deflang'
 	List<String> tmDefLangArgsList() {
 		return LgFileHandler.setAnyListFromLang(MainTM.CF_LANGUAGES);
 	}
-	// Arguments list for '/tm set multilang
+	// Arguments list for '/tm set multilang'
 	List<String> tmBooleanArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE);
 	// First 'tick' arguments for '/tm set start' et '/tm set time'
 	List<String> tmTimeArgsList = Arrays.asList("day", "morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
+	// Add 'reset' arg to '/tm set playerTime' // TODO 1.6.0
+	List<String> tmPlayerTimeArgsList() {
+		List<String> tmPlayerTimeArgs = new ArrayList<>();
+		tmPlayerTimeArgs.addAll(tmTimeArgsList);
+		tmPlayerTimeArgs.add(MainTM.ARG_RESET);
+		return tmPlayerTimeArgs;
+	}
+	// Arguments list for '/tm set playerOffset' // TODO 1.6.0
+	List<String> tmSetPlayerOffsetList = Arrays.asList("0", "01000", "02000", "03000", "04000", "05000", "06000", "07000", "08000", "09000", "10000", "11000", "12000", "13000", "14000", "15000", "16000", "17000", "18000", "19000", "20000", "21000", "22000", "23000");
 	// Number of days arguments for '/tm set elapsedDays'
 	List<String> tmSetDateArgsList = Arrays.asList("today", "0001-01-01");
 	// Number of days arguments for '/tm set elapsedDays'
@@ -83,7 +93,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	// 'tick' arguments list for '/tm set initialtick'
 	List<String> tmInitialTickArgsList = Arrays.asList("000000", "001200", "072000", "864000");
 	// 'tick' arguments list for '/tm set refreshrate'
-	List<String> tmRefRateArgsList = Arrays.asList("05", "10", "15", "20", "25");
+	List<String> tmRefRateArgsList = Arrays.asList("05", "10", "15", "20");
 	// 'worlds' arguments list for '/tm resync', '/tm set speed', '/tm set start' and '/tm set time' etc.
 	List<String> tmWorldsArgsList(CommandSender sender) {
 		List<String> tmWorldsArgs = new ArrayList<>();
@@ -210,7 +220,19 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_REFRESHRATE)) // Command '/tm set refreshrate <...>'
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYEROFFSET)) // Command '/tm set playerOffset <...>' // TODO 1.6.0
+					{
+						for (String verif : tmSetPlayerOffsetList) {
+							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))								
+								outputArgsList.add(verif);
+						}
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYERTIME)) // Command '/tm set playerTime <...>' // TODO 1.6.0
+					{
+						for (String verif : tmPlayerTimeArgsList()) {
+							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))								
+								outputArgsList.add(verif);
+						}
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_REFRESHRATE)) // Command '/tm set refreshRate <...>'
 					{
 						for (String verif : tmRefRateArgsList) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
@@ -290,13 +312,13 @@ public class CreateSentenceCommand implements TabCompleter {
 				if ((args[0].equalsIgnoreCase(MainTM.CMD_SET)) // Command '/tm set <...> <...> <...>'
 						&& args[1].equalsIgnoreCase(MainTM.CMD_SET_DATE)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)
-						|| (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_START)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME)))
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME))
 				{
 					for (String verif : tmWorldsArgsList(sender)) {
 						if (verif.toLowerCase().startsWith(args[3].toLowerCase()))							

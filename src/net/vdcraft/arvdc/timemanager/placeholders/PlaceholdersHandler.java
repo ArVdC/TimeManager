@@ -2,6 +2,7 @@ package net.vdcraft.arvdc.timemanager.placeholders;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
@@ -13,13 +14,24 @@ public class PlaceholdersHandler extends MainTM {
 	 * Replaces any available placeholder by the corresponding String
 	 * (returns a String)
 	 */
-	public static String replacePlaceholder(String placeholder, String world, String lang) {
-
+	public static String replacePlaceholder(String placeholder, String world, String lang, Player p) {
+		
 		World w = Bukkit.getServer().getWorld(world);
 		Long t = w.getTime();
 		Long ft = w.getFullTime();
 		Long ed = ValuesConverter.elapsedDaysFromTick(ft);
 
+		// TODO 1.6.0
+		if (p != null) {
+			long o = p.getPlayerTimeOffset();
+			if (o != 0) {
+				ft = p.getPlayerTime();
+				t = ValuesConverter.correctDailyTicks(ft);
+				MsgHandler.debugMsg("Player §e" + p.getName() + "§b has a time offset of §e" + o + "§b ticks."); // Console debug msg
+			}
+		}
+		// TODO 1.6.0
+		
 		switch (placeholder) {
 
 			// Returns the current world's name
@@ -120,7 +132,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * Replaces all placeholders found in a String
 	 * (returns a String)
 	 */
-	public static String replaceAllPlaceholders(String msg, String world, String lang) {
+	public static String replaceAllPlaceholders(String msg, String world, String lang, Player p) {
 		if (msg.contains("{tm_")) {
 			String[] phSlipt1 = msg.split("\\{");
 			for (String ph1 : phSlipt1) {
@@ -129,8 +141,8 @@ public class PlaceholdersHandler extends MainTM {
 					for (String ph2 : phSlipt2) {
 						if (ph2.contains("tm_")) {
 							ph2 = "{" + ph2 + "}";
-							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang);
-							MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\"."); // TODO 1.5.0
+							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p);
+							MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\".");
 							msg = msg.replace(ph2, ph3);
 						}
 					}
