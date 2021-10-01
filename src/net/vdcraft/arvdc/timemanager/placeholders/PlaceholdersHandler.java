@@ -21,19 +21,18 @@ public class PlaceholdersHandler extends MainTM {
 		Long ft = w.getFullTime();
 		Long ed = ValuesConverter.elapsedDaysFromTick(ft);
 
-		// TODO 1.6.0
 		if (p != null) {
 			long o = p.getPlayerTimeOffset();
 			if (o != 0) {
 				ft = p.getPlayerTime();
 				t = ValuesConverter.correctDailyTicks(ft);
+				ed = ValuesConverter.elapsedDaysFromTick(ft);
 				MsgHandler.debugMsg("Player §e" + p.getName() + "§b has a time offset of §e" + o + "§b ticks."); // Console debug msg
 			}
 		}
-		// TODO 1.6.0
 		
 		switch (placeholder) {
-
+		
 			// Returns the current world's name
 		case "{" + PH_PREFIX + PH_WORLD + "}" :
 			return world;

@@ -37,7 +37,7 @@ public class TmReload extends MainTM {
 			MsgHandler.infoMsg(lgFileReloadMsg); // Console final msg (always)
 			return;
 		}		
-		// When do reload the cmds.yml file // TODO 1.5.0
+		// When do reload the cmds.yml file
 		if (whatToReload.equalsIgnoreCase(ARG_CMDS) || whatToReload.equalsIgnoreCase("commands") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
 			CmdsFileHandler.loadCmds(ARG_RE);
 			// 'cmds.yml is reloaded' notification

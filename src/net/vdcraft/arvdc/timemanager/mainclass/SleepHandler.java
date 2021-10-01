@@ -31,8 +31,8 @@ public class SleepHandler implements Listener {
 		String world = w.getName();
 		long t = w.getTime();
 		double s = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
-		// Ignore: Nether and Ender worlds AND worlds with a fixed time (speed 0 or 24)
-		if (!(world.contains(MainTM.ARG_NETHER)) && !(world.contains(MainTM.ARG_THEEND)) && !(s == 24.00) && !(s == 0)) {
+		// Ignore worlds with a fixed time (speed 0) or real time (speed 24)
+		if (!(s == 0) && !(s == 24.00)) {
 			// Begin to count the ticks while a player is sleeping
 			sleepTicksCount(p, w, s, 0);
 		}
@@ -60,7 +60,7 @@ public class SleepHandler implements Listener {
 							delayedDoesDayStart(w, world, 50L); // TODO time to wait
 						}				
 					}
-					// #2.A.2. Wait just before the end of the sleep (= 99 ticks) // TODO 1.17
+					// #2.A.2. Wait just before the end of the sleep (= 99 ticks)
 					if (st <= 98) {
 						sleepTicksCount(p, w, speedModifier, st);
 						return;

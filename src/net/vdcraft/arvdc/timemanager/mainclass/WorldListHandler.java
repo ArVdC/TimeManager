@@ -27,8 +27,8 @@ public class WorldListHandler extends MainTM {
 		// #3. Get the complete list of loaded worlds and add it to config.yml
 		for (World w : Bukkit.getServer().getWorlds()) {
 			String world = w.getName();
-			// Check if it already figures in existing list and if it is not 'nether' neither 'ender'
-			if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) && !(world.contains(ARG_NETHER)) && !(world.contains(ARG_THEEND))) {
+			// Check if it already figures in existing list
+			if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world))) {
 				// If not, add it in the list with default parameters
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, defStart);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, defSpeed);
@@ -60,7 +60,7 @@ public class WorldListHandler extends MainTM {
 			}
 		}
 		
-		// #4. Remove 'Example' + 'nether' + 'ender' + inexistent worlds if they are present in the config list
+		// #4. Remove 'Example' and inexistent worlds if they are present in the config list
 		List<World> loadedWorlds = Bukkit.getServer().getWorlds();
 		MsgHandler.debugMsg(refrehWorldsListDebugMsg); // Console debug msg
 		MsgHandler.debugMsg(worldsRawListDebugMsg + " §e" + loadedWorlds); // Console debug msg
@@ -72,14 +72,14 @@ public class WorldListHandler extends MainTM {
 		MsgHandler.debugMsg(worldsCfgListDebugMsg + " " + CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST)); // Console debug msg
 		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 			Boolean eraseWorld = false;
-			if (w.equals("Example") || w.contains(ARG_NETHER) || w.contains(ARG_THEEND)) {
+			if (w.equalsIgnoreCase("Example")) {
 				eraseWorld = true;
 			} else {
 				if (!(loadedWorldsNames.contains(w))) {
 					eraseWorld = true;
 				}
 			}
-			MainTM.waitTime(500);
+			MainTM.waitTime(300);
 			if (eraseWorld == true) {
 				MsgHandler.debugMsg("The world §e" + eraseWorld + "§b " + delWorldDebugMsg); // Console debug msg
 				MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).set(w, null);

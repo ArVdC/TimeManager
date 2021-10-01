@@ -161,7 +161,9 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_DEFAULT = "default";
 	protected static final String CF_PREFIX = "prefix";
 	protected static final String CF_MSG = "msg";
-	protected static final String CF_NOMSG = "noMsg";
+	protected static final String CF_NOMSG = "noMsg"; // TODO Erease this on the next update (1.7.0)
+	protected static final String CF_NETHERMSG = "netherMsg";
+	protected static final String CF_ENDMSG = "endMsg";
 	protected static final String CF_TITLE = "title";
 	protected static final String CF_SUBTITLE = "subtitle";
 	protected static final String CF_ACTIONBAR = "actionbar";
@@ -218,8 +220,8 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_E_DAYS = "elapsedDays";
 	protected static final String CMD_SET_INITIALTICK = "initialTick";
 	protected static final String CMD_SET_MULTILANG = "multiLang";
-	protected static final String CMD_SET_PLAYEROFFSET = "playerOffset"; //  TODO 1.6.0
-	protected static final String CMD_SET_PLAYERTIME = "playerTime"; //  TODO 1.6.0
+	protected static final String CMD_SET_PLAYEROFFSET = "playerOffset";
+	protected static final String CMD_SET_PLAYERTIME = "playerTime";
 	protected static final String CMD_SET_REFRESHRATE = "refreshRate";
 	protected static final String CMD_SET_SLEEP= "sleep";
 	protected static final String CMD_SET_SPEED = "speed";
@@ -418,7 +420,7 @@ public class MainTM extends JavaPlugin {
 	protected static String worldRealSyncTimeChgMsg = "could not be changed. Please use the '/tm set start' command instead if you want to change the time zone.";
 	protected static String worldTimeNoChange = "is synchronized ";
 	
-	//Cmd set playerTime // TODO 1.6.0
+	//Cmd set playerTime
 	protected static String playerOffsetChgMsg1 = "The current offset for the player";
 	protected static String playerTimeChgMsg1 = "The current time for the player";
 	protected static String playerTimeChgMsg2 = "is now set to";

@@ -11,12 +11,12 @@ import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 public class TmSetPlayerOffset extends MainTM {
 
 	/**
-	 * CMD /tm set playerOffset [0 → 23999] [player|all]
+	 * CMD /tm set playerOffset [-23999 → 23999] [all|player]
 	 */
-	public static void cmdSetPlayerOffset(CommandSender sender, long offset, String player, boolean timechange) { // TODO 1.6.0
+	public static void cmdSetPlayerOffset(CommandSender sender, long offset, String player, boolean timechange) {
 		
-		// Adapt wrong values in the arg
-		offset = ValuesConverter.correctDailyTicks(offset);
+		// Limit the offset to one day
+		offset = offset % 24000;
 		
 		// Modify all players time
 		if (player.equalsIgnoreCase(ARG_ALL)) {
@@ -29,7 +29,7 @@ public class TmSetPlayerOffset extends MainTM {
 		else {
 			Player p = Bukkit.getPlayer(player);
 			if (p != null) {
-				if (offset > 0) {
+				if (offset != 0) {
 					p.setPlayerTime(offset, true);
 					// Notifications
 					long tick = p.getPlayerTime();

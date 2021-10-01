@@ -44,24 +44,16 @@ public class NowMsgHandler extends MainTM {
 		String prefix = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_PREFIX);
 		prefix = prefix.replace("&", "§");
 		
-		// #4.Avoid showing actual time if player is in a nether or the_end world
-		if (world.contains(ARG_NETHER) || world.contains(ARG_THEEND)) {
-			msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
-			// #4.A. If the noMsg in lang.yml file is empty, nothing will be send to the player
-			if (msg.equalsIgnoreCase("")) {
-				return true;
-			// #4.B. If the noMsg in lang.yml file exists, send it as msg and return
-			} else {
-				msg = msg.replace("&", "§");
-				MsgHandler.playerChatMsg(p, prefix, msg);
-				return true;
-			}
-		}
-		
-		// #5. Configure message content
+		// #4. Configure message content
 		switch (display) {
-		case ARG_MSG :
-			msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);
+		case ARG_MSG :		
+			if (world.contains(ARG_NETHER)) {
+				msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG);
+			} else if (world.contains(ARG_THEEND)) {
+				msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG);
+			} else {
+				msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);	
+			}
 			break;
 		case ARG_TITLE :
 			msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_TITLE);
@@ -71,8 +63,12 @@ public class NowMsgHandler extends MainTM {
 			msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR);
 			break;
 		}
+		// If the value in lang.yml file is empty, nothing will be send to the player
+		if (msg.equalsIgnoreCase("")) {
+			return true;
+		}
 		
-		// #6. Replace placeholders
+		// #5. Replace placeholders
 		msg = msg.replace("&", "§");
 		msg = msg.replace("{tm_player}", player);
 		msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
@@ -82,7 +78,7 @@ public class NowMsgHandler extends MainTM {
 			subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);		
 		}
 				
-		// #8. Configure and send command
+		// #6. Configure and send command
 		switch (display) {
 		case ARG_MSG :
 			MsgHandler.playerChatMsg(p, prefix, msg);

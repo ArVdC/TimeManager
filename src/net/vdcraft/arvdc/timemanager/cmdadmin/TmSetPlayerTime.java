@@ -11,9 +11,9 @@ import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 public class TmSetPlayerTime extends MainTM {
 
 	/**
-	 * CMD /tm set playerTime [tick|daypart|HH:mm:ss|reset] [player|all]
+	 * CMD /tm set playerTime [tick|daypart|HH:mm:ss|reset] [all|player]
 	 */
-	public static void cmdSetPlayerTime(CommandSender sender, long tick, String player, boolean reset) { // TODO 1.6.0
+	public static void cmdSetPlayerTime(CommandSender sender, long tick, String player, boolean reset) {
 
 		// Adapt wrong values in the arg
 		tick = ValuesConverter.correctDailyTicks(tick);

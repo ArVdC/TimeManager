@@ -12,9 +12,11 @@ Day and night can be set to different speed values, which can be great for RPG o
 
 Worlds list is actualized and timers are synchronized on each server startup and reload.
 
-Time and speed can be modified or synchronized with in-game commands or reloading after manually changes.
+Time and speed can be modified with in-game commands or reloading after manually changes.
 
 Sleep can be authorized, forbidden or linked with some other worlds.
+
+A specific time offset can be defined for each player.
 
 TimeManager can schedule commands that run at a time specified in the cmds.yml file. Scheduled commands can use the placeholders described below, with the exception of {tm_player}.
 
@@ -86,9 +88,9 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm set multiLang \[true|false]** Set true or false to use an automatic translation for the _/now_ command.
 
-**/tm set playerOffset [0 → 23999] [player|all] \[all|world]** Define a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.
+**/tm set playerOffset \[-23999 → 23999] \[all|player]** Define a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.
 
-**/tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|world]** Define a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.
+**/tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|player]** Define a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.
 
 **/tm set refreshRate \[ticks]** Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between _2_ and _20_. Default value is _10 ticks_, please note that a too small value can cause server lags.
 
@@ -129,7 +131,8 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set elapsedDays \[0 → ∞] \[all|world]
   - /tm set initialTick \[ticks|HH:mm:ss]
   - /tm set multiLang \[lg_LG]
-  - /tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|world]
+  - /tm set playerOffset \[-23999 → 23999] \[all|player]
+  - /tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|player]
   - /tm set refreshRate \[ticks]
   - /tm set sleep \[true|false] \[all|world]
   - /tm set speed \[multiplier] \[all|world]
@@ -158,7 +161,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.5.0: MC 1.8.8 to 1.16.5
+v1.6.0: MC 1.8.8 to 1.17.1
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~

@@ -298,11 +298,9 @@ public class AdminCmdExecutor implements CommandExecutor {
 				}
 			}
 		}
-
-		// Set the current time for a player // TODO 1.6.0
+		// Set time offset for player(s)
 		if (nbArgs >= 2) {
 			if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYEROFFSET)) {
-				// Set a per player time offset
 				if (((nbArgs < 4) && !(sender instanceof Player)) || ((nbArgs < 3) && (sender instanceof Player))) {
 					MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_PLAYEROFFSET); // Send error and help msg
 					return true;
@@ -312,7 +310,6 @@ public class AdminCmdExecutor implements CommandExecutor {
 					Long tickLong;
 					try {
 						tickLong = Long.parseLong(tickString); // Check if the value is a long
-						tickLong = ValuesConverter.correctDailyTicks(tickLong);
 					} catch (NumberFormatException nfe) {
 						MsgHandler.cmdErrorMsg(sender, MainTM.offsetTickMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_PLAYEROFFSET); // Send error and help msg
 						return true;
@@ -329,8 +326,8 @@ public class AdminCmdExecutor implements CommandExecutor {
 					return true;
 				}
 			}
-			if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYERTIME)) {
-				// Set a per player time offset
+			// Set current time for player(s)
+			else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYERTIME)) {
 				if (((nbArgs < 4) && !(sender instanceof Player)) || ((nbArgs < 3) && (sender instanceof Player))) {
 					MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_PLAYERTIME); // Send error and help msg
 					return true;
@@ -347,6 +344,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 					} else {
 						tickLong = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
 					}
+					tickLong = ValuesConverter.correctDailyTicks(tickLong);
 					// Get the player arg
 					String player;
 					if ((sender instanceof Player) && (nbArgs == 3)) {
@@ -359,8 +357,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 					return true;
 				}
 			}
-		} // TODO 1.6.0
-		
+		}
 		String concatWorldName = null;
 		if (nbArgs == 3) {
 			if ((sender instanceof Player) || (sender instanceof BlockCommandSender))

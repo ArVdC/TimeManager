@@ -569,7 +569,7 @@ public class ValuesConverter extends MainTM {
 		if (srcFile.equalsIgnoreCase("lg")) {
 			currentVersion = MainTM.getInstance().langConf.getString(CF_VERSION);
 		} else {
-			currentVersion = versionTM();    	
+			currentVersion = versionTM();
 		}
 		currentVersion = replaceChars(currentVersion);    	
 		// Split version numbers
@@ -600,12 +600,13 @@ public class ValuesConverter extends MainTM {
 		version = version.replace("dev", "d")
 				.replace("alpha", "a")
 				.replace("beta", "b")
-				.replace("d", "-0.")
-				.replace("a", "-1.")
-				.replace("b", "-2.")
-				.replace("rc", "-3.")
+				.replace("d", ".0.")
+				.replace("a", ".1.")
+				.replace("b", ".2.")
+				.replace("rc", ".3.")
 				.replace("--", ".")
 				.replace("-", ".")
+				.replace("...", ".")
 				.replace("..", ".");
 		try {
 			String versionIntTest = version.replace(".", "");

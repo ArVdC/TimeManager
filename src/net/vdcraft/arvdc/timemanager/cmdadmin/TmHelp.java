@@ -41,7 +41,7 @@ public class TmHelp extends MainTM {
 	private static String setMultilangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_MULTILANG
 			+ " [true|false] §rSet true or false to use an automatic translation for the §o/now §rcommand.";
 	private static String setPlayerOffsetHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYEROFFSET
-			+ " [0 → 23999] [player|all] §rDefine a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel."; //TODO 1.6.0
+			+ " [-23999 → 23999] [all|player] §rDefine a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel."; //TODO 1.6.0
 	private static String setPlayerTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYERTIME
 			+ " [ticks|daypart|HH:mm:ss|reset] [all|player] §rDefine a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel."; //TODO 1.6.0
 	private static String setRefreshRateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_REFRESHRATE

@@ -54,8 +54,8 @@ public class LgFileHandler extends MainTM {
 				// Actualize values
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
-				// Update the file if < 1.5.0
-				if (ValuesConverter.tmVersionIsOk("lg", 1, 5, 0, 4, 0)) {
+				// Update the file if < 1.6.0-b
+				if (ValuesConverter.tmVersionIsOk("lg", 1, 6, 0, 2, 0)) { // TODO Update this when lang file changes.
 					updateLangFile();
 				} else MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
 			}
@@ -81,7 +81,8 @@ public class LgFileHandler extends MainTM {
 		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_TITLE, defaultMsg);
 		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_SUBTITLE, defaultMsg);
 		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_ACTIONBAR, defaultMsg);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_NOMSG, defaultNoMsg);
+		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_NETHERMSG, defaultNoMsg);
+		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_ENDMSG, defaultNoMsg);
 		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_DAYPARTS + "." + CF_DAY, defaultDay);
 		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_DAYPARTS + "." + CF_DUSK, defaultDusk);
 		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_DAYPARTS + "." + CF_NIGHT, defaultNight);
@@ -188,10 +189,11 @@ public class LgFileHandler extends MainTM {
 			MsgHandler.debugMsg("Does §b\"§e" + langKeys + "§b\" contain every needed keys ?"); // Console debug msg
 			if ((langKeys.contains(CF_PREFIX))
 					&& (langKeys.contains(CF_MSG))
+					&& (langKeys.contains(CF_NETHERMSG))
+					&& (langKeys.contains(CF_ENDMSG))
 					&& (langKeys.contains(CF_TITLE))
 					&& (langKeys.contains(CF_SUBTITLE))
 					&& (langKeys.contains(CF_ACTIONBAR))
-					&& (langKeys.contains(CF_NOMSG))
 					&& (langKeys.contains(CF_DAYPARTS))
 					&& (langKeys.contains(CF_DAYPARTS + "." + CF_DAY))
 					&& (langKeys.contains(CF_DAYPARTS + "." + CF_DUSK))
@@ -284,10 +286,13 @@ public class LgFileHandler extends MainTM {
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_PREFIX, prefix);
 					// #3.C.2 msg
 					String msg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MSG, replaceOldPlaceHolders(msg));
-					// #3.C.3 noMsg
-					String noMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_NOMSG, replaceOldPlaceHolders(noMsg));
+					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MSG, msg);
+					// #3.C.3 nethermsg // TODO 1.6.0 Pay attention to change this on the next update !
+					String netherMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
+					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG, netherMsg);
+					// #3.C.3 endmsg // TODO 1.6.0 Pay attention to change this on the next update !
+					String endMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
+					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG, endMsg);
 					// #3.C.4 dayParts
 					// #3.C.4.A dawn
 					String dawn = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAWN);
@@ -338,10 +343,28 @@ public class LgFileHandler extends MainTM {
 					// #3.C.5.L dec
 					String dec = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_12);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_12, dec);
-					// TODO >>> When another lang file update will be available :
-					// Copy title, subtitle and action bar messages
-					// Copy titles timers values : fadeIn, stay and fadeOut
+					// #3.C.6 title, subtitle and action bar messages
+					// #3.C.6.A title
+					String title = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_TITLE);
+					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_TITLE, title);
+					// #3.C.6.B subtitle
+					String subtitle = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE);
+					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE, subtitle);
+					// #3.C.6.C action bar
+					String actionbar = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR);
+					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR, actionbar);
+					
 				}
+				// #3.D Titles timers values
+				// #3.D.1 fadeIn
+				String fadein = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEIN);
+				MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEIN, fadein);
+				// #3.D.2 stay
+				String stay = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_STAY);
+				MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_STAY, stay);
+				// #3.D.3 fadeOut
+				String fadeout = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEOUT);
+				MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEOUT, fadeout);
 			}		
 
 			// TODO >>> Delete the backup file ???
@@ -350,14 +373,6 @@ public class LgFileHandler extends MainTM {
 		} catch (IOException e) {
 			MsgHandler.infoMsg(LangFileNonOkMsg); // Console log msg
 		}
-	}	
-
-	/**
-	 * Replace all the old placeholder (1.4.2 >>> 1.5.0)
-	 */
-	public static String replaceOldPlaceHolders(String oldString) {
-		String newString = oldString.replace("{", "{tm_").replace("targetWorld", "world").replace("dayPart", "daypart").replace("time", "time24");
-		return newString;
 	}
 
 };

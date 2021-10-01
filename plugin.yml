@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.6.0-b
+version: 1.6.0-b-1
 api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -42,7 +42,7 @@ commands:
             /<command> set elapsedDays [0 → ∞] [all|world]
             /<command> set initialtick [ticks|HH:mm]
             /<command> set multiLang [true|false]
-            /<command> set playerOffset [0 → 23999] [all|player]
+            /<command> set playerOffset [-23999 → 23999] [all|player]
             /<command> set playerTime [ticks|daypart|HH:mm:ss|reset] [all|player]
             /<command> set refreshRate [ticks]
             /<command> set sleep [true|false] [all|world]

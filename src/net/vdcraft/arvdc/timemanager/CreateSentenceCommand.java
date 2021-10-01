@@ -73,19 +73,19 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmBooleanArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE);
 	// First 'tick' arguments for '/tm set start' et '/tm set time'
 	List<String> tmTimeArgsList = Arrays.asList("day", "morning", "noon", "midday", "sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
-	// Add 'reset' arg to '/tm set playerTime' // TODO 1.6.0
+	// Add 'reset' arg to '/tm set playerTime'
 	List<String> tmPlayerTimeArgsList() {
 		List<String> tmPlayerTimeArgs = new ArrayList<>();
 		tmPlayerTimeArgs.addAll(tmTimeArgsList);
 		tmPlayerTimeArgs.add(MainTM.ARG_RESET);
 		return tmPlayerTimeArgs;
 	}
-	// Arguments list for '/tm set playerOffset' // TODO 1.6.0
-	List<String> tmSetPlayerOffsetList = Arrays.asList("0", "01000", "02000", "03000", "04000", "05000", "06000", "07000", "08000", "09000", "10000", "11000", "12000", "13000", "14000", "15000", "16000", "17000", "18000", "19000", "20000", "21000", "22000", "23000");
+	// Arguments list for '/tm set playerOffset'
+	List<String> tmSetPlayerOffsetList = Arrays.asList("-23000", "-22000", "-21000", "-20000", "-19000", "-18000", "-17000", "-16000", "-15000", "-14000", "-13000", "-12000", "-11000", "-10000", "-09000", "-08000", "-07000", "-06000", "-05000", "-04000", "-03000", "-02000", "-01000", "0", "01000", "02000", "03000", "04000", "05000", "06000", "07000", "08000", "09000", "10000", "11000", "12000", "13000", "14000", "15000", "16000", "17000", "18000", "19000", "20000", "21000", "22000", "23000");
 	// Number of days arguments for '/tm set elapsedDays'
 	List<String> tmSetDateArgsList = Arrays.asList("today", "0001-01-01");
 	// Number of days arguments for '/tm set elapsedDays'
-	List<String> tmSetDaysArgsList = Arrays.asList("000", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365");
+	List<String> tmSetDaysArgsList = Arrays.asList("0", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365");
 	// Arguments list for '/tm set sleep
 	List<String> tmSetSleepArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE, MainTM.ARG_LINKED);
 	// Modifier arguments for '/tm set speed'
@@ -220,13 +220,13 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYEROFFSET)) // Command '/tm set playerOffset <...>' // TODO 1.6.0
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYEROFFSET)) // Command '/tm set playerOffset <...>'
 					{
 						for (String verif : tmSetPlayerOffsetList) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))								
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYERTIME)) // Command '/tm set playerTime <...>' // TODO 1.6.0
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYERTIME)) // Command '/tm set playerTime <...>'
 					{
 						for (String verif : tmPlayerTimeArgsList()) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))								

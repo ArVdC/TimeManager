@@ -59,17 +59,18 @@ public class TmNow extends MainTM {
 				String prefix = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_PREFIX);
 				prefix = prefix.replace("&", "§");		
 				
-				// #5. Avoid showing actual time if player is in a nether or the_end world
-				if (world.contains(ARG_NETHER) || world.contains(ARG_THEEND)) {
-					return;
-				}
-				
-				// #6. Configure message content
+				// #5. Configure message content
 				String msg = null;
 				String subtitle = null;
 				switch (display) {
-				case ARG_MSG :
-					msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);
+				case ARG_MSG :		
+					if (world.contains(ARG_NETHER)) {
+						msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG);
+					} else if (world.contains(ARG_THEEND)) {
+						msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG);
+					} else {
+						msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);	
+					}
 					break;
 				case ARG_TITLE :
 					msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_TITLE);
@@ -80,7 +81,7 @@ public class TmNow extends MainTM {
 					break;
 				}
 				
-				// #7. Replace placeholders
+				// #6. Replace placeholders
 				msg = msg.replace("&", "§");
 				msg = msg.replace("{" + PH_PREFIX + PH_PLAYER + "}", player);
 				msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
@@ -90,7 +91,7 @@ public class TmNow extends MainTM {
 					subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);		
 				}
 				
-				// #8. Configure and send command
+				// #7. Configure and send command
 				switch (display) {
 				case ARG_MSG :
 					MsgHandler.playerChatMsg(p, prefix, msg);
