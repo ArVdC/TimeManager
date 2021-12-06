@@ -66,7 +66,7 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm checkTime \[all|server|world]** Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).
 
-**/tm checkUpdate \[bukkit|spigot|github]** Search if a newer version of the plugin exists on the chosen server. (MC 1.18.8+ only)
+**/tm checkUpdate \[bukkit|spigot|github]** Search if a newer version of the plugin exists on the chosen server. (MC 1.8.8+ only)
 
 **/tm help \[cmd] \[\<subCmd>]** Help provides you the correct usage and a short description of targeted command and subcommand.
 
@@ -109,7 +109,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 
 **/tm set time \[ticks|daypart|HH:mm:ss] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
 
-**/tm set update \[none|bukkit|spigot|github]** Define the source server for the update search. (MC 1.18.9+ only)
+**/tm set update \[none|bukkit|spigot|github]** Define the source server for the update search. (MC 1.8.8+ only)
 
 **/tm set useCmds \[true|false]** §rSet true to enable a custom commands scheduler. See the cmds.yml file for details.
 
@@ -175,5 +175,5 @@ v1.6.0: MC 1.8.8 to 1.17.1
 * ~~Sleep/Sync: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.~~
 * ~~Tab completer: Try to improve the current hack that manages the spaces in worlds name. (Usefull until MC 1.12.2)~~
 * ~~Command: Allow players to individually set their time.~~
-* Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.
+* ~~Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world~~.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
