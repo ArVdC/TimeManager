@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.vdcraft.arvdc</groupId>
 	<artifactId>TimeManager</artifactId>
-	<version>1.6.0</version>
+	<version>1.6.1</version>
 	<packaging>jar</packaging>	
 	<build>
 		<finalName>TimeManager-${project.version}</finalName>

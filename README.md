@@ -31,7 +31,7 @@ Using the permissions, you can permit players to choose the display and/or the w
 
 Display argument can be : 'msg', 'title' or 'actionbar'.
 
-This command doesn't display time of Nether and the End worlds.
+Nether and the End worlds could have a specific message.
 
 ### PLACEHOLDERS
 The available placeholders are as follows :
@@ -161,7 +161,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.6.0: MC 1.8.8 to 1.17.1
+v1.6.1: MC 1.8.8 to 1.18.1
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~

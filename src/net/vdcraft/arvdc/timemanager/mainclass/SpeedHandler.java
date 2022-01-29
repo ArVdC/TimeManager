@@ -217,7 +217,7 @@ public class SpeedHandler extends MainTM {
 
 				// While the world is not cancelled, asynchronous and the speed > 1, launch the loop again
 				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
-						&& newSpeed > 1) {
+						&& newSpeed > 1 && newSpeed <= speedMax) {
 					asyncSpeedIncreaseScheduler(world, newSpeed);
 				} else {
 					// Delete the world from the active scheduler list
@@ -266,7 +266,7 @@ public class SpeedHandler extends MainTM {
 
 				// While the world is not cancelled, asynchronous and the speed < 1, launch the loop again
 				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
-						&& newSpeed <= 1) {
+						&& newSpeed > 0 && newSpeed < 1) {
 					asyncSpeedDecreaseScheduler(world, newSpeed, newRefreshRate);
 				} else {
 					// Delete the world from the active scheduler list
