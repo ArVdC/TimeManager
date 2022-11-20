@@ -29,7 +29,7 @@ public class TmSetSleep extends MainTM {
 			World w = Bukkit.getWorld(world);
 			long t = w.getTime();
 			String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
-			if ((sleepValue.equalsIgnoreCase(ARG_TRUE) || (sleepValue.equalsIgnoreCase(ARG_LINKED)) && (currentSpeed.equals("24.0")))) {
+			if (!sleepValue.equalsIgnoreCase(ARG_FALSE) && currentSpeed.equals("24.0")) {
 				// Notifications
 				MsgHandler.infoMsg(worldSleepNoChgMsg + " " + world + "."); // Console final msg (always)
 				MsgHandler.playerAdminMsg(sender, worldSleepNoChgMsg + " §e" + world + "§r."); // Player final msg (in case)
