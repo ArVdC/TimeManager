@@ -272,102 +272,103 @@ public class LgFileHandler extends MainTM {
 			// #2. Get data from backup file
 			MainTM.getInstance().langBckpConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langBckpFileYaml); // Actualize values		
 			// #3. Copy the data from the old file to the new one
-			// #3.A useMultiLang
+			// #3.A. useMultiLang
 			String useMultiLang = MainTM.getInstance().langBckpConf.getString(CF_USEMULTILANG);
 			MainTM.getInstance().langConf.set(CF_USEMULTILANG, useMultiLang);
-			// #3.B defaultLang
+			// #3.B. defaultLang
 			String defaultLang = MainTM.getInstance().langBckpConf.getString(CF_DEFAULTLANG);
 			MainTM.getInstance().langConf.set(CF_DEFAULTLANG, defaultLang);
-			// #3.C Languages
+			// #3.C. Languages
 			for (String lang : MainTM.getInstance().langBckpConf.getConfigurationSection(CF_LANGUAGES).getKeys(false)) {
 				if (!lang.equalsIgnoreCase(CF_DEFAULT)) { // Ignore the default language
-					// #3.C.1 prefix
+					// #3.C.a. prefix
 					String prefix = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_PREFIX);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_PREFIX, prefix);
-					// #3.C.2 msg
+					// #3.C.b. msg
 					String msg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MSG, msg);
-					// #3.C.3 nethermsg // TODO 1.6.0 Pay attention to change this on the next update !
-					String netherMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG, netherMsg);
-					// #3.C.3 endmsg // TODO 1.6.0 Pay attention to change this on the next update !
-					String endMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG, endMsg);
-					// #3.C.4 dayParts
-					// #3.C.4.A dawn
+					// #3.C.c. nethermsg // TODO 1.6.0 Pay attention to change this on the next update ! // TODO 1.7
+					//String netherMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
+					//MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG, netherMsg);
+					// #3.C.d. endmsg // TODO 1.6.0 Pay attention to change this on the next update !
+					//String endMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
+					//MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG, endMsg);
+					// #3.C.e. dayParts
+					// #3.C.e.1. dawn
 					String dawn = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAWN);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAWN, dawn);
-					// #3.C.4.B day
+					// #3.C.e.2. day
 					String day = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAY);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAY, day);
-					// #3.C.4.C dusk
+					// #3.C.e.3. dusk
 					String dusk = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DUSK);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DUSK, dusk);
-					// #3.C.4.D night
+					// #3.C.e.4. night
 					String night = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_NIGHT);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_NIGHT, night);
-					// #3.C.5 months
-					// #3.C.5.A jan
+					// #3.C.f. months
+					// #3.C.f.1. jan
 					String jan = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_01);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_01, jan);				
-					// #3.C.5.B feb
+					// #3.C.f.2. feb
 					String feb = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_02);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_02, feb);
-					// #3.C.5.C mar
+					// #3.C.f.3. mar
 					String mar = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_03);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_03, mar);
-					// #3.C.5.D apr
+					// #3.C.f.4. apr
 					String apr = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_04);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_04, apr);
-					// #3.C.5.E may
+					// #3.C.f.5. may
 					String may = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_05);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_05, may);
-					// #3.C.5.F jun
+					// #3.C.f.6. jun
 					String jun = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_06);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_06, jun);
-					// #3.C.5.G jul
+					// #3.C.f.7. jul
 					String jul = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_07);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_07, jul);
-					// #3.C.5.H aug
+					// #3.C.f.8. aug
 					String aug = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_08);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_08, aug);
-					// #3.C.5.I sep
+					// #3.C.f.9. sep
 					String sep = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_09);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_09, sep);
-					// #3.C.5.J oct
+					// #3.C.f.10. oct
 					String oct = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_10);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_10, oct);
-					// #3.C.5.K nov
+					// #3.C.f.11. nov
 					String nov = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_11);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_11, nov);
-					// #3.C.5.L dec
+					// #3.C.f.12. dec
 					String dec = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_12);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_12, dec);
-					// #3.C.6 title, subtitle and action bar messages
-					// #3.C.6.A title
+					// #3.C.g. title, subtitle and action bar messages
+					// #3.C.g.1. title
 					String title = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_TITLE);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_TITLE, title);
-					// #3.C.6.B subtitle
+					// #3.C.g.2. subtitle
 					String subtitle = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE, subtitle);
-					// #3.C.6.C action bar
+					// #3.C.g.3. action bar
 					String actionbar = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR);
 					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR, actionbar);
 					
 				}
-				// #3.D Titles timers values
-				// #3.D.1 fadeIn
+				// #3.D. Titles timers values
+				// #3.D.a. fadeIn
 				String fadein = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEIN);
 				MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEIN, fadein);
-				// #3.D.2 stay
+				// #3.D.b. stay
 				String stay = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_STAY);
 				MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_STAY, stay);
-				// #3.D.3 fadeOut
+				// #3.D.c. fadeOut
 				String fadeout = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEOUT);
 				MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEOUT, fadeout);
 			}		
 
 			// TODO >>> Delete the backup file ???
+			// MainTM.getInstance().langBckpFileYaml.delete();
 			
 			MsgHandler.infoMsg(langFileUpdateMsg); // Console log msg
 		} catch (IOException e) {

@@ -741,7 +741,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * If a world gets a speed of "24", force 'sleep' to false
+	 * If a world gets a speed of '24', force 'sleep' to 'false'
 	 * Force 'sync' to false if 'sleep' is 'true' or 'linked'
 	 * (modifies the configuration without saving the file)
 	 */
@@ -759,8 +759,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Force 'sync' to true for the 24.0 speed, then false when change to another speed ratio
-	 * Force 'sync' to false for the 0.0 speed
+	 * Force 'sync' to 'true' for the 24.0 speed, then false when change to another speed ratio
+	 * Force 'sync' to 'false' for the 0.0 speed
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSync(String world, double oldSpeed) {
@@ -775,6 +775,19 @@ public class ValuesConverter extends MainTM {
 		} else if (oldSpeed == 24.0) { // new speed is anything else with previous value 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
 			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+		}
+	}
+
+	/**
+	 * Force 'firstStartTime' to 'default' if any expected string is not recognized
+	 * Force 'firstStartTime' to default for the 24.0 speed
+	 * (modifies the configuration without saving the file)
+	 */
+	public static void restrainFirstStartTime(String world) {
+		String firstStartTime = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME);
+		if (!firstStartTime.equalsIgnoreCase(ARG_PREVIOUS) && !firstStartTime.equalsIgnoreCase(ARG_START)) {
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, ARG_DEFAULT);
+			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " §e" + world + "§b."); // Console debug msg
 		}
 	}
 

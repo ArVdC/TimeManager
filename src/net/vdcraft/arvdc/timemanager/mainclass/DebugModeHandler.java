@@ -5,16 +5,23 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class DebugModeHandler extends MainTM {
 
 	/**
-	 * Display or not the colored debug messages in the console
+	 * Activate/Deactivate the display of the colored debug messages in the console
 	 */
 	public static void debugModeOnOff() {
-		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_DEBUGMODE)) { // If the option exists and is not 'true', set it on false
-			if (!(MainTM.getInstance().getConfig().getString(CF_DEBUGMODE).equals(ARG_TRUE))) {
+		// #1. If the node exists, be sure that is a boolean
+		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_DEBUGMODE)) {
+			// #1.A. If the value is not 'true', set it on 'false' ...
+			if (!(MainTM.getInstance().getConfig().getString(CF_DEBUGMODE).equalsIgnoreCase(ARG_TRUE))) {
 				MainTM.getInstance().getConfig().set(CF_DEBUGMODE, ARG_FALSE);
+			// #1.B. ... otherwise confirm the 'true' value
+			} else {
+				MainTM.getInstance().getConfig().set(CF_DEBUGMODE, ARG_TRUE);
 			}
-		} else { // If the option doesn't exist, create it and set it on 'false'
+		// #2. If the node does not exist, create it and set it on 'false'
+		} else {
 			MainTM.getInstance().getConfig().set(CF_DEBUGMODE, ARG_FALSE);
 		}
+		// #3. Toggle the debug mode	
 		String debugOnOff = MainTM.getInstance().getConfig().getString(CF_DEBUGMODE);
 		if (debugOnOff.equalsIgnoreCase(ARG_TRUE)) {
 			debugMode = true;
@@ -25,4 +32,12 @@ public class DebugModeHandler extends MainTM {
 		}
 	}
 
+	/**
+	 * Restore the location of the debugMode node in the config.yml
+	 */
+	public static void debugModeNodeRelocate() {
+		String trueOrFalse = MainTM.getInstance().getConfig().getString(CF_DEBUGMODE);
+		MainTM.getInstance().getConfig().set(CF_DEBUGMODE, null);
+		MainTM.getInstance().getConfig().set(CF_DEBUGMODE, trueOrFalse);
+	}
 };

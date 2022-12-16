@@ -73,6 +73,7 @@ public class MainTM extends JavaPlugin {
 	protected static Double defSpeed = 1.0;
 	protected static String defSleep = "true";
 	protected static String defSync = "false";
+	protected static String defFirstStartTime = "default";
 	protected static String defUpdateMsgSrc = "none";
 	protected static int defTitleFadeIn = 20;
 	protected static int defTitleStay = 60;
@@ -130,6 +131,7 @@ public class MainTM extends JavaPlugin {
 	public static final String CF_N_SPEED = "nightSpeed";
 	public static final String CF_SLEEP = "sleep";
 	public static final String CF_SYNC = "sync";
+	public static final String CF_FIRSTSTARTTIME = "firstStartTime"; // TODO 1.7
 	protected static final String CF_INITIALTICK = "initialTick";
 	protected static final String CF_INITIALTICKNB = "initialTickNb";
 	protected static final String CF_RESETONSTARTUP = "resetOnStartup";
@@ -161,7 +163,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_DEFAULT = "default";
 	protected static final String CF_PREFIX = "prefix";
 	protected static final String CF_MSG = "msg";
-	protected static final String CF_NOMSG = "noMsg"; // TODO Erease this on the next update (1.7.0)
+	protected static final String CF_NOMSG = "noMsg"; // TODO Erase this in a future update (1.8.0 ?)
 	protected static final String CF_NETHERMSG = "netherMsg";
 	protected static final String CF_ENDMSG = "endMsg";
 	protected static final String CF_TITLE = "title";
@@ -240,8 +242,10 @@ public class MainTM extends JavaPlugin {
 	protected static final String ARG_FIRST = "first";
 	protected static final String ARG_RE = "re";
 	protected static final String ARG_ALL = "all";
-	protected static final String ARG_START = "start";
 	protected static final String ARG_TIME = "time";
+	public static final String ARG_START = "start";
+	public static final String ARG_DEFAULT = "default"; // TODO 1.7
+	public static final String ARG_PREVIOUS = "previous"; // TODO 1.7
 	public static final String ARG_LINKED = "linked";
 	protected static final String ARG_CONFIG = "config";
 	protected static final String ARG_LANG = "lang";
@@ -294,11 +298,13 @@ public class MainTM extends JavaPlugin {
 	
 	// Files names
 	protected static final String CONFIGFILENAME = "config.yml";
+	protected static final String HEADERFILENAME = "header.txt";
 	protected static final String LANGFILENAME = "lang.yml";
 	protected static final String CMDSFILENAME = "cmds.yml";
 
 	// Config and Lang files targets
 	public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
+	public File headerFileTxt = new File(this.getDataFolder(), HEADERFILENAME);
 	public File langFileYaml = new File(this.getDataFolder(), LANGFILENAME);
 	public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
 	public File cmdsFileYaml = new File(this.getDataFolder(), CMDSFILENAME);
@@ -410,6 +416,8 @@ public class MainTM extends JavaPlugin {
 	protected static String worldSyncNoChgMsg = "Impossible to change the 'sync' option cause of the actual speed setting for the world";
 	protected static String world24hNoSyncChgMsg = "is synchronized to real UTC time and doesn't need to be resynchronized.";
 	protected static String worldFrozenNoSyncChgMsg = "has its speed frozen and doesn't need to be resynchronized.";
+	protected static String worldPreviousTimeResetMsg = "has been reset to its last known time."; // TODO 1.7
+	protected static String worldStartTimeResetMsg = "has been reset to its default start time."; // TODO 1.7
 	protected static String worldSyncSleepChgMsg = "'sleep' option was forced to false, cause of its synchronization value.";
 	protected static String sleepWorldSyncChgMsg = "'sync' option was forced to false in order to allow players to sleep until the dawn.";
 
@@ -486,6 +494,7 @@ public class MainTM extends JavaPlugin {
 	protected static String syncAdjustTrueDebugMsg = "The §esync§b option is forced to §atrue§b for the world";
 	protected static String syncAdjustFalseDebugMsg = "The §esync§b option is forced to §cfalse§b for the world";
 	protected static String sleepAdjustFalseDebugMsg = "The §esleep§b option is forced to §cfalse§b for the world";
+	protected static String firstStartTimeAdjustDefaultDebugMsg = "The §efirstStartTime§b option is forced to §cdefault§b for the world"; // TODO 1.7
 	protected static String availableTranslationsDebugMsg = "Available translations are:";
 	public static String daylightTrueDebugMsg = "The §edoDaylightCycle§b value is now set to §atrue§b for the world";
 	protected static String daylightFalseDebugMsg = "The §edoDaylightCycle§b value is now set to §cfalse§b for the world";

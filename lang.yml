@@ -47,6 +47,7 @@
 # -----
 # >>> Aliases of the "/now" command are editable in the plugin.yml file, inside the jar file. <<<
 # -----
+
 version: ''
 useMultiLang: ''
 defaultLang: ''

@@ -1,5 +1,8 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,44 +14,112 @@ public class CfgFileHandler extends MainTM {
 	 * Activate or reload the configuration file
 	 */
 	public static void loadConfig(String firstOrRe) {
-
+		
+		MainTM.getInstance().getConfig().options().parseComments(true); // TODO 1.7
+		
 		// #1. Only at the server startup:
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
 
-			// #1.a. Create congig.yml file if missing, force actual version
+			// #1.A. Create congig.yml file if missing, force actual version
 			if (!(MainTM.getInstance().configFileYaml.exists())) {
 				MsgHandler.infoMsg(cfgFileCreateMsg); // Console missing file msg
 			} else {
 				MsgHandler.infoMsg(cfgFileExistMsg); // Console existing file msg
 			}
 
-			// #1.b. Assure to recreate missing key in config.yml file
+			// #1.B. Assure to recreate missing key in config.yml file
 			MainTM.getInstance().getConfig().options().copyDefaults(true);
 
-			// #1.c. Actualize or create the config.yml file
+			// #1.C. Actualize or create the config.yml file
 			MainTM.getInstance().saveDefaultConfig();
+			
+			// #1.D. Load the header from the .txt file // TODO 1.7
+			// #1.D.a. Extract the file from the .jar
+			CopyFilesHandler.copyAnyFile(HEADERFILENAME, MainTM.getInstance().headerFileTxt);
+			// #1.D.b. Try to get the documentation text
+			List<String> header = new ArrayList<String>();
+			try {
+				header.addAll(Files.readAllLines(MainTM.getInstance().headerFileTxt.toPath(), Charset.defaultCharset()));
+			} catch (IOException e) {
+				header.add("header.txt could not be loaded. Find it inside the .jar file to get the config.yml documentation.");
+			}
+			MsgHandler.devMsg("The §eheader§9 of congif.yml file contents : §e" + header); // Console dev msg
+			// #1.D.c. Delete the header.txt file
+			MainTM.getInstance().headerFileTxt.delete();
+			// #1.D.d. Set the header into the config.yml file
+			MainTM.getInstance().getConfig().options().setHeader(header);
 		}
-
+		
 		// # 2. Get the previous initial tick value (before the reload)
 		long oldTick = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_INITIALTICKNB);
 
 		// #3. Only when using the admin command /tm reload:
 		if (firstOrRe.equalsIgnoreCase(ARG_RE)) {
 			if (MainTM.getInstance().configFileYaml.exists()) {
-				// #A. Notification
+				// #3.A. Notification
 				MsgHandler.infoMsg(cfgFileTryReloadMsg);
-				// #B. Reload values from config.yml file
+				// #3.B. Reload values from config.yml file
 				MainTM.getInstance().reloadConfig();
 			} else
 				loadConfig(ARG_FIRST);
 		}
 
-		// #4. Toggle debugMode on/off
+		// #4. Manage and maybe activate the debug mode
 		DebugModeHandler.debugModeOnOff();
+		
+		// #5. Restore the version value
+		MainTM.getInstance().getConfig().set(CF_VERSION, versionTM());
 
-		// #5. Set some default values if missing or corrupt in the initialTick node
+		// #6. Restrain the refresh rate
+		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_REFRESHRATE)) {
+			ValuesConverter.restrainRate();
+		} else {
+			MainTM.getInstance().getConfig().set(CF_REFRESHRATE, defRefresh);
+		}
+		
+		// #7. Set the default value if missing or corrupt for the wakeUpTick key
+		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_WAKEUPTICK)) {
+			ValuesConverter.restrainWakeUpTick();
+		} else {
+			MainTM.getInstance().getConfig().set(CF_WAKEUPTICK, 0L);
+		}
 
-		// #5.a. resetOnStartup value
+		// #8. Set the default value if missing or corrupt for the newDayAt key
+		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_NEWDAYAT)) {
+			// #8.A. Check if the value already exists and if it is 00:00
+			if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("18000")
+					|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")
+					|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("0:0")) {
+				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, newDayStartsAt_0h00);
+			// #8.B. If not, set the default value
+			} else {
+				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, newDayStartsAt_6h00);
+			}
+		} else {
+			MainTM.getInstance().getConfig().set(CF_NEWDAYAT, newDayStartsAt_6h00);
+		}
+		
+		// #9. Manage the worlds list
+		// #9.A. Check and complete list of available worlds
+		MsgHandler.debugMsg(cfgOptionsCheckDebugMsg); // Console debug msg
+		WorldListHandler.listLoadedWorlds();
+		// #9.B. For each world
+		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
+			// #9.A. Restrain the start times
+			ValuesConverter.restrainStart(w);
+			// #9.B. Restrain the speed modifiers
+			ValuesConverter.restrainSpeed(w);
+			// #9.C. Restrain the sleep value
+			ValuesConverter.restrainSleep(w);
+			// #9.D. Restrain the sync value
+			ValuesConverter.restrainSync(w, 0.1);
+			// #9.E. Restrain the firstStartTime value // TODO 1.7
+			ValuesConverter.restrainFirstStartTime(w);
+		}		
+
+		// #10. Manage initial tick
+		// #10.A Set some default values if missing or corrupt in the initialTick node
+		// #10.A.a. resetOnStartup value
 		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_RESETONSTARTUP)) {
 			if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_RESETONSTARTUP).equals(ARG_FALSE))) {
 				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, ARG_TRUE);
@@ -57,7 +128,7 @@ public class CfgFileHandler extends MainTM {
 			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, ARG_TRUE);
 		}
 
-		// #5.b. useMySql value
+		// #10.A.b. useMySql value
 		if (MainTM.getInstance().getConfig().getConfigurationSection(CF_INITIALTICK).getKeys(false).contains(CF_USEMYSQL)) {
 			if (!(MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals(ARG_FALSE))) {
 				MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, ARG_TRUE);
@@ -65,43 +136,30 @@ public class CfgFileHandler extends MainTM {
 		} else {
 			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_USEMYSQL, ARG_FALSE);
 		}
+		// #10.B. Only when using the admin command /tm reload: Update the initialTickNb value
+		if (firstOrRe.equalsIgnoreCase(ARG_RE)) {
+			SyncHandler.updateInitialTickAndTime(oldTick);
+		}
+		// #10.C. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
+		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals(ARG_TRUE) && !mySqlRefreshIsAlreadyOn) {
+			mySqlRefreshIsAlreadyOn = true;
+			SyncHandler.refreshInitialTickMySql();
+			MsgHandler.infoMsg(sqlInitialTickAutoUpdateMsg); // Notify the console
+		}
 
-		// #6. Set some default values if missing or corrupt in the mySQL node
+		// #11. Set some default values if missing or corrupt in the mySQL node
 		SqlHandler.initSqlDatas();
-
-		// #7. Restrain the refresh rate
-		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_REFRESHRATE)) {
-			ValuesConverter.restrainRate();
-		} else {
-			MainTM.getInstance().getConfig().set(CF_REFRESHRATE, defRefresh);
-		}
-
-		// #8. Set the default value if missing or corrupt for the wakeUpTick key
-		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_WAKEUPTICK)) {
-			ValuesConverter.restrainWakeUpTick();
-		} else {
-			MainTM.getInstance().getConfig().set(CF_WAKEUPTICK, 0L);
-		}
-
-		// #9. Set the default value if missing or corrupt for the newDayAt key
-		if (MainTM.getInstance().getConfig().getKeys(false).contains(CF_NEWDAYAT)) { // #9.A. Check if the value already exists
-			if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("18000") // If the value already exists, check if it is 00:00
-					|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase("midnight")
-					|| MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).contains("0:0")) {
-				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, newDayStartsAt_0h00);
-			} else {
-				MainTM.getInstance().getConfig().set(CF_NEWDAYAT, newDayStartsAt_6h00); // If not, set the default value
-			}
-		} else { // #9.B. If not, set the default value
-			MainTM.getInstance().getConfig().set(CF_NEWDAYAT, newDayStartsAt_6h00);
-		}
-
-		// #10. Set the default value if missing or corrupt for the updateMsgSrc key
+		
+		// #12. Set the default value if missing or corrupt for the updateMsgSrc key
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_UPDATEMSGSRC)
 				|| MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC).equals("")) {
 			MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, defUpdateMsgSrc);
-		}
-		// #11. Set the default value if missing or corrupt for the placeholder keys
+		}	
+
+		// #13. Restore debugMode node location
+		DebugModeHandler.debugModeNodeRelocate(); // TODO 1.7
+		
+		// #14. Set the default value if missing or corrupt for the placeholder keys
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
 				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, ARG_FALSE);
@@ -114,46 +172,11 @@ public class CfgFileHandler extends MainTM {
 		} else {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_TRUE);
 		}
-
-		// #12. Only when using the admin command /tm reload: Update the initialTickNb value
-		if (firstOrRe.equalsIgnoreCase(ARG_RE)) {
-			SyncHandler.updateInitialTickAndTime(oldTick);
-		}
-
-		// #13. Refresh the initialTickNb every (x) minutes - only if a MySQL database is used and the scheduleSyncDelayedTask is off
-		if (MainTM.getInstance().getConfig().getString(CF_INITIALTICK + "." + CF_USEMYSQL).equals(ARG_TRUE) && !mySqlRefreshIsAlreadyOn) {
-			mySqlRefreshIsAlreadyOn = true;
-			SyncHandler.refreshInitialTickMySql();
-			MsgHandler.infoMsg(sqlInitialTickAutoUpdateMsg); // Notify the console
-		}
-
-		// #14. Check and complete list of available worlds
-		MsgHandler.debugMsg(cfgOptionsCheckDebugMsg); // Console debug msg
-		WorldListHandler.listLoadedWorlds();
-
-		// #15. For each world
-		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
-
-			// #15.A. Restrain the start times
-			ValuesConverter.restrainStart(w);
-
-			// #15.B. Restrain the speed modifiers
-			ValuesConverter.restrainSpeed(w);
-
-			// #15.C. Restrain the sleep value
-			ValuesConverter.restrainSleep(w);
-
-			// #15.D. Restrain the sync value
-			ValuesConverter.restrainSync(w, 0.1);
-		}
-
-		// #16. Restore the version value
-		MainTM.getInstance().getConfig().set(CF_VERSION, versionTM());
-
-		// #17. Save the changes
+		
+		// #15. Save the changes
 		MainTM.getInstance().saveConfig();
 
-		// #18. Notifications
+		// #16. Notifications
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
 			MsgHandler.infoMsg(cfgVersionMsg + versionTM() + "."); // Notify the console
 		}

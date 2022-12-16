@@ -20,7 +20,7 @@ public class TmSetDebugMode extends MainTM {
 				debugMode = true;
 				MsgHandler.debugMsg(enableDebugModeDebugMsg); // Console debug msg (always)
 				MsgHandler.playerAdminMsg(sender, enableDebugModeDebugMsg); // Player debug msg (in case)
-			} else if (onOff.equalsIgnoreCase("false")) {
+			} else if (onOff.equalsIgnoreCase(ARG_FALSE)) {
 				MsgHandler.debugMsg(disableDebugModeDebugMsg); // Console debug msg (always)
 				MsgHandler.playerAdminMsg(sender, disableDebugModeDebugMsg); // Player debug msg (in case)
 				debugMode = false;
@@ -43,7 +43,7 @@ public class TmSetDebugMode extends MainTM {
 				devMode = true;
 				MsgHandler.devMsg(enableDevModeDebugMsg); // Console dev msg (always)
 				MsgHandler.playerAdminMsg(sender, enableDevModeDebugMsg); // Player dev msg (in case)
-			} else if (onOff.equalsIgnoreCase("false")) {
+			} else if (onOff.equalsIgnoreCase(ARG_FALSE)) {
 				MsgHandler.devMsg(disableDevModeDebugMsg); // Console debug msg (always)
 				MsgHandler.playerAdminMsg(sender, disableDevModeDebugMsg); // Player dev msg (in case) 
 				devMode = false;
@@ -66,7 +66,7 @@ public class TmSetDebugMode extends MainTM {
 				timerMode = true;
 				MsgHandler.timerMsg(enableTimerModeDebugMsg); // Console timer msg (always)
 				MsgHandler.playerAdminMsg(sender, enableTimerModeDebugMsg); // Player timer msg (in case)
-			} else if (onOff.equalsIgnoreCase("false")) {
+			} else if (onOff.equalsIgnoreCase(ARG_FALSE)) {
 				MsgHandler.timerMsg(disableTimerModeDebugMsg); // Console timer msg (always)
 				MsgHandler.playerAdminMsg(sender, disableTimerModeDebugMsg); // Player timer msg (in case)
 				timerMode = false;

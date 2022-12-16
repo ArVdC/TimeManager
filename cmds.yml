@@ -25,6 +25,7 @@
 #   *repeatFreq*
 #     The repetition frequency at which the command will be launched, possibly values are : [none|hour|day|month|year].
 # -----
+
 version: ''
 useCmds: ''
 cmdsList:

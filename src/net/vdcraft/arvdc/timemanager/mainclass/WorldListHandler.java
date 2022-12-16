@@ -14,14 +14,16 @@ public class WorldListHandler extends MainTM {
 	 */
 	public static void listLoadedWorlds() {
 		
-		// #1. Avoid missing 'worldsList' key
+		String example = "Example";
+		
+		// #1. Avoid missing or void 'worldsList' key
 		if (!(MainTM.getInstance().getConfig().getKeys(false).contains(CF_WORLDSLIST))) {
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + ".Example.start", "0");
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + example + "." + CF_START, defStart);
 		}
 		
 		// #2. Avoid void 'worldsList' key
 		if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST).equals("")) {
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + ".Example.start", "example");
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + example + "." + CF_START, defStart);
 		}
 		
 		// #3. Get the complete list of loaded worlds and add it to config.yml
@@ -35,6 +37,7 @@ public class WorldListHandler extends MainTM {
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, defSpeed);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, defSleep);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, defSync);
+				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, defFirstStartTime); // TODO 1.7
 			} // If a world already exists, check its 'start', 'daySpeed', 'nightSpeed', 'sleep' and 'sync' keys
 			else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 				// Check if 'start' exists
@@ -57,6 +60,10 @@ public class WorldListHandler extends MainTM {
 				if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_SYNC))) { // If not, add it in the list with default parameters
 					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, defSync);
 				}
+				// Check if 'firstStartTime' exists  // TODO 1.7
+				if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_FIRSTSTARTTIME))) { // If not, add it in the list with default parameters
+					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, defFirstStartTime);
+				}
 			}
 		}
 		
@@ -72,12 +79,8 @@ public class WorldListHandler extends MainTM {
 		MsgHandler.debugMsg(worldsCfgListDebugMsg + " " + CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST)); // Console debug msg
 		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 			Boolean eraseWorld = false;
-			if (w.equalsIgnoreCase("Example")) {
+			if (w.equalsIgnoreCase(example) || !loadedWorldsNames.contains(w)) {
 				eraseWorld = true;
-			} else {
-				if (!(loadedWorldsNames.contains(w))) {
-					eraseWorld = true;
-				}
 			}
 			MainTM.waitTime(300);
 			if (eraseWorld == true) {
@@ -86,8 +89,7 @@ public class WorldListHandler extends MainTM {
 			}
 		}
 		
-		// #5. Save the file
-		MainTM.getInstance().saveConfig();
+		MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).set(example, null);
 		
 		// #6. Notification
 		MsgHandler.infoMsg(worldsCheckMsg); // Final console msg

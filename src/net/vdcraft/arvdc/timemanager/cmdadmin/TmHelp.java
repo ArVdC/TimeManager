@@ -41,9 +41,9 @@ public class TmHelp extends MainTM {
 	private static String setMultilangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_MULTILANG
 			+ " [true|false] §rSet true or false to use an automatic translation for the §o/now §rcommand.";
 	private static String setPlayerOffsetHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYEROFFSET
-			+ " [-23999 → 23999] [all|player] §rDefine a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel."; //TODO 1.6.0
+			+ " [-23999 → 23999] [all|player] §rDefine a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.";
 	private static String setPlayerTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYERTIME
-			+ " [ticks|daypart|HH:mm:ss|reset] [all|player] §rDefine a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel."; //TODO 1.6.0
+			+ " [ticks|daypart|HH:mm:ss|reset] [all|player] §rDefine a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.";
 	private static String setRefreshRateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_REFRESHRATE
 			+ " [ticks] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
 	private static String setSleepHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SLEEP
