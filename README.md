@@ -76,13 +76,15 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm resync \[all|world]** This command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.
 
-**/tm set date \[today|yyyy-mm-dd] \[all|world]** Sets current date for the specified world (or all of them). Could be _today_ or any _yyyy-mm-dd_ date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.
+**/tm set date \[today|yyyy-mm-dd] \[all|world]** Sets current date for the specified world (or all of them). Could be 'today' or any yyyy-mm-dd date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.
 
 **/tm set debugMode \[true|false]** Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 
-**/tm set defLang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when _'useMultiLang'_ is false.
+**/tm set defLang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when 'useMultiLang' is false.
 
-**/tm set elapsedDays \[0 → ∞] \[all|world]** Sets current number of elapsed days for the specified world (or all of them). Could be an integer between _0_ and _infinity_ (or almost). Setting this to _0_ will bring the world back to day _one_.
+**/tm set elapsedDays \[0 → ∞] \[all|world]** Sets current number of elapsed days for the specified world (or all of them). Could be an integer between '0' and infinity (or almost). Setting this to '0' will bring the world back to day one.
+
+**/tm set firstStartTime \[default|previous|start] \[all|world]** Forces the time at which a world starts when starting the server. The value 'default' allows the usual resynchronization at startup. The value 'start' forces the world to start at the time specified in the world's 'start' node. The value 'previous' returns the time in the world before the server was shut down.
 
 **/tm set initialTick \[ticks|HH:mm:ss]** Modify the server's initial tick.
 
@@ -92,25 +94,25 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|player]** Define a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.
 
-**/tm set refreshRate \[ticks]** Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between _2_ and _20_. Default value is _10 ticks_, please note that a too small value can cause server lags.
+**/tm set refreshRate \[ticks]** Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between '2' and '20'. Default value is '10' ticks, please note that a too small value can cause server lags.
 
 **/tm set sleep \[true|false|linked] \[all|world]** Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false.
 If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.
 
-**/tm set speed \[0.0 → 10.0] \[all|world]** The decimal number argument will multiply the world(s) speed. Use _0.0_ to freeze time, numbers from _0.1_ to _0.9_ to slow time, 1.0 to get normal speed and numbers from _1.1_ to _10.0_ to speed up time. Set this value to _24.0_ or _realtime_ to make the world time match the real speed time.
+**/tm set speed \[0.0 → 10.0] \[all|world]** The decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.1' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to '10.0' to speed up time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.
 
 **/tm set speedDay \[0.0 → 10.0] \[all|world] & /tm set speedNight \[0.0 → 10.0] \[all|world]** 
-From _0.0_ to _10.0_, the values of daySpeed and nightSpeed can be different from each other.
+From '0.0' to '10.0', the values of daySpeed and nightSpeed can be different from each other.
 
 **/tm set start \[ticks|daypart|HH:mm:ss|timeShift] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
-If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.
+If a world is using the real time speed, the start value will determine the UTC time shift and values like '+1' or '-1' will be accepted.
 
 **/tm set sync \[true|false] \[all|world]** Define if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.
 
 **/tm set time \[ticks|daypart|HH:mm:ss] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
 
 **/tm set update \[none|bukkit|spigot|github]** Define the source server for the update search. (MC 1.8.8+ only)
-
+   
 **/tm set useCmds \[true|false]** §rSet true to enable a custom commands scheduler. See the cmds.yml file for details.
 
 ### SHORT LIST OF COMMANDS AND ARGS
@@ -129,6 +131,7 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set debugMode \[true|false]
   - /tm set defLang \[true|false]
   - /tm set elapsedDays \[0 → ∞] \[all|world]
+  - /tm set firstStartTime \[default|previous|start] \[all|world]
   - /tm set initialTick \[ticks|HH:mm:ss]
   - /tm set multiLang \[lg_LG]
   - /tm set playerOffset \[-23999 → 23999] \[all|player]
@@ -158,10 +161,10 @@ If a world is using the real time speed, the start value will determine the UTC 
 **timemanager.now:** provide or deny access to /now subcommands with or without restrain available arguments.
 
 ### TUTORIALS
-[![IMAGE 1. How to Install and Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
+[![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.6.2: MC 1.8.8 to 1.19.2
+v1.7: MC 1.8.8 to 1.19.3
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
@@ -177,4 +180,5 @@ v1.6.2: MC 1.8.8 to 1.19.2
 * ~~Command: Allow players to individually set their time.~~
 * ~~Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.~~
 * ~~Worlds: Add an per world option, for the behavior of timers when starting the server.~~
+* Placeholder: Allow the use of placeholders in books and signs.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.

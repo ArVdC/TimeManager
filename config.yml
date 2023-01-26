@@ -17,7 +17,7 @@ mySql:
   username: ''
   password: ''
 updateMsgSrc: ''
-debugMode: ''
 placeholders:
   PlaceholderAPI: ''
   MVdWPlaceholderAPI: ''
+debugMode: ''

@@ -169,6 +169,16 @@ public class ValuesConverter extends MainTM {
 		}
 		return speedParam;
 	}
+	
+	/**
+	 * Gets the current speed of a world 
+	 * (returns a double)
+	 */
+	public static double getCurrentSpeed(String world) {
+		long t = Bukkit.getWorld(world).getTime();
+		double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
+		return currentSpeed;
+	}
 
 	/**
 	 * Converts a listed word or any number to a tick value
@@ -747,9 +757,8 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static void restrainSleep(String world) {
 		String sleep = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SLEEP);
-		long t = Bukkit.getWorld(world).getTime();
-		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
-		if (currentSpeed.contains("24") || (!sleep.equalsIgnoreCase(ARG_TRUE) && !sleep.equalsIgnoreCase(ARG_LINKED))) {
+		double currentSpeed = getCurrentSpeed(world);
+		if (currentSpeed == 24.0 || (!sleep.equalsIgnoreCase(ARG_TRUE) && !sleep.equalsIgnoreCase(ARG_LINKED))) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, ARG_FALSE);
 			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
 		} else if (sleep.equalsIgnoreCase(ARG_TRUE) || sleep.equalsIgnoreCase(ARG_LINKED)) {
@@ -759,13 +768,12 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Force 'sync' to 'true' for the 24.0 speed, then false when change to another speed ratio
+	 * Force 'sync' to 'true' for the 24.0 speed, then 'false' when change to another speed ratio
 	 * Force 'sync' to 'false' for the 0.0 speed
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSync(String world, double oldSpeed) {
-		long t = Bukkit.getWorld(world).getTime();
-		double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));
+		double currentSpeed = getCurrentSpeed(world);
 		if (currentSpeed == 24.0) { // new speed is 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_TRUE);
 			MsgHandler.debugMsg(syncAdjustTrueDebugMsg + " §e" + world + "§b."); // Console debug msg
@@ -780,12 +788,18 @@ public class ValuesConverter extends MainTM {
 
 	/**
 	 * Force 'firstStartTime' to 'default' if any expected string is not recognized
-	 * Force 'firstStartTime' to default for the 24.0 speed
+	 * Force 'firstStartTime' to 'default' for the synchronized worlds
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainFirstStartTime(String world) {
 		String firstStartTime = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME);
+		String sync = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC);
+		double currentSpeed = getCurrentSpeed(world);
 		if (!firstStartTime.equalsIgnoreCase(ARG_PREVIOUS) && !firstStartTime.equalsIgnoreCase(ARG_START)) {
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, ARG_DEFAULT);
+			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " §e" + world + "§b."); // Console debug msg
+		}
+		if (sync.equalsIgnoreCase(ARG_TRUE) || currentSpeed == 0.0) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, ARG_DEFAULT);
 			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " §e" + world + "§b."); // Console debug msg
 		}

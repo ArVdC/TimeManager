@@ -61,7 +61,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmReloadArgsList = Arrays.asList(MainTM.ARG_ALL, MainTM.ARG_CONFIG, MainTM.ARG_LANG, MainTM.ARG_CMDS);
 	// Arguments list for '/tm set'
 	List<String> tmSetArgsList() {
-		List<String> SetArgs = Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_E_DAYS, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_PLAYEROFFSET, MainTM.CMD_SET_PLAYERTIME, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
+		List<String> SetArgs = Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_E_DAYS,  MainTM.CMD_SET_FIRSTSTARTTIME, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_PLAYEROFFSET, MainTM.CMD_SET_PLAYERTIME, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
 		if (MainTM.serverMcVersion < MainTM.reqMcVForUpdate) SetArgs.remove(MainTM.CMD_SET_UPDATE);
 		return SetArgs;
 	}
@@ -69,6 +69,8 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmDefLangArgsList() {
 		return LgFileHandler.setAnyListFromLang(MainTM.CF_LANGUAGES);
 	}
+	// Arguments list for '/tm set firstStartTime'
+	List<String> tmFirstStartTimeArgsList = Arrays.asList(MainTM.ARG_DEFAULT, MainTM.ARG_PREVIOUS, MainTM.ARG_START);
 	// Arguments list for '/tm set multilang'
 	List<String> tmBooleanArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE);
 	// First 'tick' arguments for '/tm set start' et '/tm set time'
@@ -208,6 +210,13 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
+
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_FIRSTSTARTTIME)) // Command '/tm set firstStartTime <...>'
+					{
+						for (String verif : tmFirstStartTimeArgsList) {
+							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
+								outputArgsList.add(verif);
+						}
 					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_INITIALTICK)) // Command '/tm set initialtick <...>'
 					{
 						for (String verif : tmInitialTickArgsList) {
@@ -314,8 +323,9 @@ public class CreateSentenceCommand implements TabCompleter {
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_FIRSTSTARTTIME)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) 
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_START)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME))

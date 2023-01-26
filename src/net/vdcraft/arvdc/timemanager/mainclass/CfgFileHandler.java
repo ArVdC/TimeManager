@@ -15,7 +15,7 @@ public class CfgFileHandler extends MainTM {
 	 */
 	public static void loadConfig(String firstOrRe) {
 		
-		MainTM.getInstance().getConfig().options().parseComments(true); // TODO 1.7
+		MainTM.getInstance().getConfig().options().parseComments(true);
 		
 		// #1. Only at the server startup:
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
@@ -33,7 +33,7 @@ public class CfgFileHandler extends MainTM {
 			// #1.C. Actualize or create the config.yml file
 			MainTM.getInstance().saveDefaultConfig();
 			
-			// #1.D. Load the header from the .txt file // TODO 1.7
+			// #1.D. Load the header from the .txt file
 			// #1.D.a. Extract the file from the .jar
 			CopyFilesHandler.copyAnyFile(HEADERFILENAME, MainTM.getInstance().headerFileTxt);
 			// #1.D.b. Try to get the documentation text
@@ -113,7 +113,7 @@ public class CfgFileHandler extends MainTM {
 			ValuesConverter.restrainSleep(w);
 			// #9.D. Restrain the sync value
 			ValuesConverter.restrainSync(w, 0.1);
-			// #9.E. Restrain the firstStartTime value // TODO 1.7
+			// #9.E. Restrain the firstStartTime value
 			ValuesConverter.restrainFirstStartTime(w);
 		}		
 
@@ -154,12 +154,9 @@ public class CfgFileHandler extends MainTM {
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_UPDATEMSGSRC)
 				|| MainTM.getInstance().getConfig().getString(CF_UPDATEMSGSRC).equals("")) {
 			MainTM.getInstance().getConfig().set(CF_UPDATEMSGSRC, defUpdateMsgSrc);
-		}	
-
-		// #13. Restore debugMode node location
-		DebugModeHandler.debugModeNodeRelocate(); // TODO 1.7
+		}
 		
-		// #14. Set the default value if missing or corrupt for the placeholder keys
+		// #13. Set the default value if missing or corrupt for the placeholder keys
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
 				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, ARG_FALSE);
@@ -172,6 +169,9 @@ public class CfgFileHandler extends MainTM {
 		} else {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_TRUE);
 		}
+
+		// #14. Restore debugMode node location
+		DebugModeHandler.debugModeNodeRelocate();
 		
 		// #15. Save the changes
 		MainTM.getInstance().saveConfig();

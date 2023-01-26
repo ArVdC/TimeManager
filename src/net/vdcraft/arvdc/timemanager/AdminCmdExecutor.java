@@ -22,6 +22,7 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmReload;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmResync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDebugMode;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDefLang;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetFirstStartTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetInitialTick;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetMultiLang;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetPlayerOffset;
@@ -368,6 +369,17 @@ public class AdminCmdExecutor implements CommandExecutor {
 		}
 		if (nbArgs >= 2) {
 			if (args[0].equalsIgnoreCase(MainTM.CMD_SET)) {
+				// Set the first start time for a world
+				if (args[1].equalsIgnoreCase(MainTM.CMD_SET_FIRSTSTARTTIME)) {
+					if (((nbArgs < 4) && (sender instanceof ConsoleCommandSender)) || ((nbArgs < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
+						MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_FIRSTSTARTTIME); // Send error and help msg
+						return true;
+					} else {
+						String firstStartTime = args[2];
+						TmSetFirstStartTime.cmdSetFirstStartTime(sender, firstStartTime, concatWorldName);
+						return true;
+					}
+				}
 				// Set the sleeping possibility for a world
 				if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)) {
 					if (((nbArgs < 4) && (sender instanceof ConsoleCommandSender)) || ((nbArgs < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {

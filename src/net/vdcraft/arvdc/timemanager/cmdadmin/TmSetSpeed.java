@@ -46,6 +46,8 @@ public class TmSetSpeed extends MainTM {
 			ValuesConverter.restrainSleep(world);
 			// Restrain the sync value
 			ValuesConverter.restrainSync(world, oldSpeed);
+			// Restrain the firstStartTime value
+			ValuesConverter.restrainFirstStartTime(world);
 			// Do daylightCycle change if needed
 			DoDaylightCycleHandler.adjustDaylightCycle(world);
 			// Save the config

@@ -29,32 +29,34 @@ public class TmHelp extends MainTM {
 	private static String resyncHelpMsg = "§6/" + CMD_TM + " " + CMD_RESYNC
 			+ " [all|world] §rThis command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.";
 	private static String setDateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DATE
-			+ " [today|yyyy-mm-dd] [all|world] §rSets current date for the specified world (or all of them). Could be §otoday§r or any yyyy-mm-dd date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.";
+			+ " [today|yyyy-mm-dd] [all|world] §rSets current date for the specified world (or all of them). Could be 'today' or any yyyy-mm-dd date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.";
 	private static String setDebugHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DEBUG
 			+ " [true|false] §rSet true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.";
 	private static String setDefLangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DEFLANG
-			+ " [lg_LG] §rChoose the translation to use if player's locale doesn't exist in the lang.yml or when §o'multiLang'§r is false.";
+			+ " [lg_LG] §rChoose the translation to use if player's locale doesn't exist in the lang.yml or when 'multiLang' is 'false'.";
 	private static String setE_DaysHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_E_DAYS
-			+ " [0 → ∞] [all|world] §rSets current number of elapsed days for the specified world (or all of them). Could be an integer between §o0§r and §oinfinity§r (or almost). Setting this to §o0§r will bring the world back to day §oone§r.";
+			+ " [0 → ∞] [all|world] §rSets current number of elapsed days for the specified world (or all of them). Could be an integer between '0' and infinity (or almost). Setting this to '0' will bring the world back to day one.";
+	private static String setFirstStartTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_FIRSTSTARTTIME
+			+ " [default|previous|start] [all|world] §rForces the time at which a world starts when starting the server. The value 'default' allows the usual resynchronization at startup. The value 'start' forces the world to start at the time specified in the world's 'start' node. The value 'previous' returns the time in the world before the server was shut down.";
 	private static String setInitialTickHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_INITIALTICK
 			+ " [ticks|HH:mm:ss] §rModify the server's initial tick.";
 	private static String setMultilangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_MULTILANG
-			+ " [true|false] §rSet true or false to use an automatic translation for the §o/now §rcommand.";
+			+ " [true|false] §rSet true or false to use an automatic translation for the §o/now§r command.";
 	private static String setPlayerOffsetHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYEROFFSET
 			+ " [-23999 → 23999] [all|player] §rDefine a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.";
 	private static String setPlayerTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYERTIME
 			+ " [ticks|daypart|HH:mm:ss|reset] [all|player] §rDefine a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.";
 	private static String setRefreshRateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_REFRESHRATE
-			+ " [ticks] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between §o" + refreshMin + "§r and §o" + refreshMax + "§r. Default value is §o" + defRefresh + " ticks§r, please note that a too small value can cause server lags.";
+			+ " [ticks] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between '" + refreshMin + "' and '" + refreshMax + "'. Default value is '" + defRefresh + " ticks', please note that a too small value can cause server lags.";
 	private static String setSleepHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SLEEP
 			+ " [true|false|linked] [all|world] §rDefine if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false. If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.";
 	private static String setSpeedHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SPEED
-			+ " [multiplier] [all|world] §rThe decimal number argument will multiply the world(s) speed. Use §o0.0§r to freeze time, numbers from §o0.1§r to §o0.9§r to slow time, §o1.0§r to get normal speed and numbers from §o1.1§r to " + speedMax + " to speedup time. Set this value to §o24.0§r or §orealtime§r to make the world time match the real speed time.";
+			+ " [multiplier] [all|world] §rThe decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.1' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to " + speedMax + " to speedup time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.";
 	private static String setSpeed_D_N_HelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_D_SPEED + " §ror §6/"
 			+ CMD_TM + " " + CMD_SET + " " + CMD_SET_N_SPEED
-			+ " [multiplier] [all|world] §rFrom §o0.0§r to §o10.0§r, the values of daySpeed and nightSpeed can be different from each other.";
+			+ " [multiplier] [all|world] §rFrom '0.0' to '10.0', the values of daySpeed and nightSpeed can be different from each other.";
 	private static String setStartHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_START
-			+ " [ticks|daypart|HH:mm:ss|timeShift] [all|world] §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at §otick #0§r. The timer(s) will be immediately resynchronized. If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.";
+			+ " [ticks|daypart|HH:mm:ss|timeShift] [all|world] §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at tick #0. The timer(s) will be immediately resynchronized. If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.";
 	private static String setSyncHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SYNC
 			+ " [true|false] [all|world] §rDefine if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";
 	private static String setTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_TIME
@@ -110,6 +112,9 @@ public class TmHelp extends MainTM {
 					break;
 				case CMD_SET_E_DAYS : // /tm help set elapsedDays
 					specificCmdMsg = setE_DaysHelpMsg; // Help msg (in case of 2 args)
+					break;
+				case CMD_SET_FIRSTSTARTTIME : // /tm help set firstStartTime 
+					specificCmdMsg = setFirstStartTimeHelpMsg; // Help msg (in case of 2 args)
 					break;
 				case CMD_SET_INITIALTICK : // /tm help set initialTick
 					specificCmdMsg = setInitialTickHelpMsg; // Help msg (in case of 2 args)
@@ -188,6 +193,7 @@ public class TmHelp extends MainTM {
 			case CMD_SET_DEBUG :
 			case CMD_SET_DEFLANG :
 			case CMD_SET_E_DAYS :
+			case CMD_SET_FIRSTSTARTTIME :
 			case CMD_SET_INITIALTICK :
 			case CMD_SET_MULTILANG :
 			case CMD_SET_PLAYERTIME :

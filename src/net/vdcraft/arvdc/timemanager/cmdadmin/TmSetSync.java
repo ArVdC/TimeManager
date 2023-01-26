@@ -46,6 +46,12 @@ public class TmSetSync extends MainTM {
 						MsgHandler.infoMsg("The world " + world + " " + worldSyncSleepChgMsg); // Console warn msg (always)
 						MsgHandler.playerAdminMsg(sender, "The world §e" + world + "§r " + worldSyncSleepChgMsg); // Player warn msg (in case)
 					}
+					// Avoid wrong firstTimeStart values
+					if (!MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME).equals(ARG_DEFAULT)) {
+						MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, ARG_DEFAULT);
+						MsgHandler.infoMsg("The world " + world + " " + worldSyncfirstTimeStartChgMsg); // Console warn msg (always)
+						MsgHandler.playerAdminMsg(sender, "The world §e" + world + "§r " + worldSyncfirstTimeStartChgMsg); // Player warn msg (in case)
+					}
 				}				
 				// Save the value(s) in the config.yml
 				MainTM.getInstance().saveConfig();				

@@ -278,5 +278,5 @@ public class SpeedHandler extends MainTM {
 			}
 		}, refreshRate);
 	}
-
+	
 };

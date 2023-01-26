@@ -43,8 +43,11 @@ public class CmdsFileHandler extends MainTM {
 		}
 
 		// #3. In both case
-
-		// #3.A. Is useCmds enable ? Set to false if doesn't exist or if invalid boolean
+		
+		// #3.A. Restore the version value
+		MainTM.getInstance().cmdsConf.set(CF_VERSION, versionTM());
+		
+		// #3.B. Is useCmds enable ? Set to false if doesn't exist or if invalid boolean
 		if (MainTM.getInstance().cmdsConf.getKeys(false).contains(CF_USECOMMANDS)) {
 			if (MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
 				MsgHandler.infoMsg(cmdsIsOnMsg);
@@ -57,7 +60,7 @@ public class CmdsFileHandler extends MainTM {
 			MsgHandler.infoMsg(cmdsIsOffMsg);
 		}
 		
-		// #3.B. Detect wrong worlds names
+		// #3.C. Detect wrong worlds names
 		List<String> worlds = CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST);
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 			String phWorld = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD);
@@ -74,7 +77,7 @@ public class CmdsFileHandler extends MainTM {
 				}
 			}
 		}
-		// #3.C. If the date is 'today', get the date and convert it into the cmds.yml file
+		// #3.D. If the date is 'today', get the date and convert it into the cmds.yml file
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 			String eDate = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_DATE);
 			String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME);
@@ -98,16 +101,13 @@ public class CmdsFileHandler extends MainTM {
 			}
 		}
 		
-		// #3.D. Adapt the repeatFreq key
+		// #3.E. Adapt the repeatFreq key
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 			String repeatFreq = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ);
 			if (repeatFreq.contains(ARG_FALSE) || repeatFreq.equalsIgnoreCase("no") || repeatFreq.equalsIgnoreCase(" ") || repeatFreq.equalsIgnoreCase("")) {
 				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ, ARG_NONE);
 			}
 		}
-		
-		// #3.E. Restore the version value
-		MainTM.getInstance().cmdsConf.set(CF_VERSION, versionTM());
 
 		// #3.F. Save the cmds.yml file
 		SaveCmdsYml();

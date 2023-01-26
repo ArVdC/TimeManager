@@ -37,9 +37,9 @@ config.yml
    Enabling sync prevents players from sleeping and will automatically set the 'sleep' value to 'false'.
   *firstStartTime*
    This option allows you to force the time at which a world starts when starting the server.
-   The value 'default' allows the usual resynchronization at startup.
-   The 'start' value forces the world to start at the time specified in the world's 'start' node.
+   The 'default' value enables resynchronization on startup set by 'resetOnStartup' (see below for details).
    The 'previous' value returns the time in the world before the server was shut down.
+   The 'start' value forces the world to start at the time specified in the world's 'start' node.
 -----
 *initialTick*
   *initialTickNb*
@@ -63,12 +63,12 @@ config.yml
 *updateMsgSrc*
  Choose a value between 'Bukkit', 'Curse', 'Spigot' or 'Github' to check the update when loading the plugin. Set to 'none', 'false' or '' to avoid verification. (MC 1.8.8+ only)
 -----
-*debugMode*
- Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
------
 *placeholders*
  It is possible to use TimeManager placeholders in other plugins. To do this, set the value to 'true' and place the third-party API in your 'plugins' folder.
  The available placeholders are described in lang.yml file.
  PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) -> Use %tm_xxx% instead of {tm_xxx}
  MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) -> Use {tm_xxx}
+-----
+*debugMode*
+ Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 -----

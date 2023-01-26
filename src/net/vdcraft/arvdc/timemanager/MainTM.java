@@ -131,7 +131,7 @@ public class MainTM extends JavaPlugin {
 	public static final String CF_N_SPEED = "nightSpeed";
 	public static final String CF_SLEEP = "sleep";
 	public static final String CF_SYNC = "sync";
-	public static final String CF_FIRSTSTARTTIME = "firstStartTime"; // TODO 1.7
+	public static final String CF_FIRSTSTARTTIME = "firstStartTime";
 	protected static final String CF_INITIALTICK = "initialTick";
 	protected static final String CF_INITIALTICKNB = "initialTickNb";
 	protected static final String CF_RESETONSTARTUP = "resetOnStartup";
@@ -163,7 +163,6 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_DEFAULT = "default";
 	protected static final String CF_PREFIX = "prefix";
 	protected static final String CF_MSG = "msg";
-	protected static final String CF_NOMSG = "noMsg"; // TODO Erase this in a future update (1.8.0 ?)
 	protected static final String CF_NETHERMSG = "netherMsg";
 	protected static final String CF_ENDMSG = "endMsg";
 	protected static final String CF_TITLE = "title";
@@ -221,6 +220,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_DEFLANG = "defLang";
 	protected static final String CMD_SET_E_DAYS = "elapsedDays";
 	protected static final String CMD_SET_INITIALTICK = "initialTick";
+	protected static final String CMD_SET_FIRSTSTARTTIME = "firstStartTime";
 	protected static final String CMD_SET_MULTILANG = "multiLang";
 	protected static final String CMD_SET_PLAYEROFFSET = "playerOffset";
 	protected static final String CMD_SET_PLAYERTIME = "playerTime";
@@ -244,8 +244,8 @@ public class MainTM extends JavaPlugin {
 	protected static final String ARG_ALL = "all";
 	protected static final String ARG_TIME = "time";
 	public static final String ARG_START = "start";
-	public static final String ARG_DEFAULT = "default"; // TODO 1.7
-	public static final String ARG_PREVIOUS = "previous"; // TODO 1.7
+	public static final String ARG_DEFAULT = "default";
+	public static final String ARG_PREVIOUS = "previous";
 	public static final String ARG_LINKED = "linked";
 	protected static final String ARG_CONFIG = "config";
 	protected static final String ARG_LANG = "lang";
@@ -384,20 +384,33 @@ public class MainTM extends JavaPlugin {
 	protected static String resyncDoneMsg = "had its time re" + worldCurrentSyncMsg + ".";
 	protected static String noResyncNeededMsg = "is already synchronized to the server time.";
 
-	// Cmd set refreshRate
-	protected static String refreshRateMsg = "The time increase/decrease will refresh every";
-
-	// Cmd set initial tick
+	// Cmd set initialTick
 	protected static String initialTickYmlMsg = "The new initial tick will be saved in the config.yml file.";
 	protected static String initialTickSqlMsg = "The new initial tick will be saved in the MySQL database.";
 	protected static String initialTickGetFromSqlMsg = "The new initial tick was get from the MySQL database.";
 	protected static String initialTickNoChgMsg = "The tick you just entered is the same as the current one.";
+
+	// Cmd set firstStartTime
+	protected static String firstStartTimeNoChgMsg = "Impossible to change the 'firstStartTime' option cause of the actual 'sync' setting for the world";
+	protected static String firstStartTimeStartChgMsg = "will start according to its 'start' value.";
+	protected static String firstStartTimePreviousChgMsg = "will start at the time it was when the server shut down.";
+	protected static String firstStartTimeDefaultChgMsg = "will start according to the 'resetOnStartup' value.";
+	
+	//Cmd set playerTime
+	protected static String playerOffsetChgMsg1 = "The current offset for the player";
+	protected static String playerTimeChgMsg1 = "The current time for the player";
+	protected static String playerTimeChgMsg2 = "is now set to";
+	protected static String playerTimeResetMsg2 = "is now reseted.";
+
+	// Cmd set refreshRate
+	protected static String refreshRateMsg = "The time increase/decrease will refresh every";
 
 	// Cmd set sleep
 	protected static String worldSleepTrueChgMsg = "It is allowed to sleep until the dawn in the world";
 	protected static String worldSleepLinkedChgMsg = "This world will now react to any sleep event in the other linked worlds.";
 	protected static String worldSleepFalseChgMsg = "It is forbidden to sleep until the dawn in the world";
 	protected static String worldSleepNoChgMsg = "Impossible to change the 'sleep' option cause of the actual speed setting for the world";
+	protected static String sleepWorldSyncChgMsg = "'sync' option was forced to false in order to allow players to sleep until the dawn.";
 
 	// Cmd set speed
 	protected static String worldSpeedChgIntro = "The speed of the world";
@@ -416,10 +429,10 @@ public class MainTM extends JavaPlugin {
 	protected static String worldSyncNoChgMsg = "Impossible to change the 'sync' option cause of the actual speed setting for the world";
 	protected static String world24hNoSyncChgMsg = "is synchronized to real UTC time and doesn't need to be resynchronized.";
 	protected static String worldFrozenNoSyncChgMsg = "has its speed frozen and doesn't need to be resynchronized.";
-	protected static String worldPreviousTimeResetMsg = "has been reset to its last known time."; // TODO 1.7
-	protected static String worldStartTimeResetMsg = "has been reset to its default start time."; // TODO 1.7
-	protected static String worldSyncSleepChgMsg = "'sleep' option was forced to false, cause of its synchronization value.";
-	protected static String sleepWorldSyncChgMsg = "'sync' option was forced to false in order to allow players to sleep until the dawn.";
+	protected static String worldPreviousTimeResetMsg = "has been reset to its last known time.";
+	protected static String worldStartTimeResetMsg = "has been reset to its default start time.";
+	protected static String worldSyncSleepChgMsg = "'sleep' option was forced to 'false', cause of its new synchronization value.";
+	protected static String worldSyncfirstTimeStartChgMsg = "'firstTimeStart' option was forced to 'default', cause of its new synchronization value.";
 
 	// Cmd set time
 	protected static String worldTimeChgMsg1 = "The current time of the world";
@@ -427,12 +440,6 @@ public class MainTM extends JavaPlugin {
 	protected static String worldSyncTimeChgMsg = "is synchronized to the server time, its 'start' value will be changed to modify its current time.";
 	protected static String worldRealSyncTimeChgMsg = "could not be changed. Please use the '/tm set start' command instead if you want to change the time zone.";
 	protected static String worldTimeNoChange = "is synchronized ";
-	
-	//Cmd set playerTime
-	protected static String playerOffsetChgMsg1 = "The current offset for the player";
-	protected static String playerTimeChgMsg1 = "The current time for the player";
-	protected static String playerTimeChgMsg2 = "is now set to";
-	protected static String playerTimeResetMsg2 = "is now reseted.";
 	
 	// Cmd set update
 	protected static String updateEnableCheckMsg = "The plugin update message at server start will use";
@@ -494,7 +501,7 @@ public class MainTM extends JavaPlugin {
 	protected static String syncAdjustTrueDebugMsg = "The §esync§b option is forced to §atrue§b for the world";
 	protected static String syncAdjustFalseDebugMsg = "The §esync§b option is forced to §cfalse§b for the world";
 	protected static String sleepAdjustFalseDebugMsg = "The §esleep§b option is forced to §cfalse§b for the world";
-	protected static String firstStartTimeAdjustDefaultDebugMsg = "The §efirstStartTime§b option is forced to §cdefault§b for the world"; // TODO 1.7
+	protected static String firstStartTimeAdjustDefaultDebugMsg = "The §efirstStartTime§b option is forced to §cdefault§b for the world";
 	protected static String availableTranslationsDebugMsg = "Available translations are:";
 	public static String daylightTrueDebugMsg = "The §edoDaylightCycle§b value is now set to §atrue§b for the world";
 	protected static String daylightFalseDebugMsg = "The §edoDaylightCycle§b value is now set to §cfalse§b for the world";

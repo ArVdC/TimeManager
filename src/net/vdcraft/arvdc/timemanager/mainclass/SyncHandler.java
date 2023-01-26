@@ -66,10 +66,9 @@ public class SyncHandler extends MainTM {
 			} 
 
 		// #2. Re-synchronize a single world
-		} else {
-			// Get the number of elapsed days
-			Long initElapsedDays = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime());
-			long t = Bukkit.getWorld(world).getTime();
+		} else {			
+			Long initElapsedDays = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime()); // Get the number of elapsed days
+			long t = Bukkit.getWorld(world).getTime(); // Get the world's current time
 			startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START)); // Get the world's 'start' value
 			speedAtStart = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(startAtTickNb)); // Get the world's speed value at server start
 			if (startOrTime.equalsIgnoreCase(ARG_START)) {
@@ -79,10 +78,8 @@ public class SyncHandler extends MainTM {
 			}
 			daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED); // Get the world's 'daySpeed' value
 			nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED); // Get the world's 'nightSpeed' value
-			long newTime = Bukkit.getServer().getWorld(world).getTime();
-
-			// Get the firstStartTime value // TODO 1.7
-			String firstStartTime = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME);
+			long newTime = Bukkit.getServer().getWorld(world).getTime();			
+			String firstStartTime = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME); // Get the firstStartTime value
 			
 			// #2.A. If it is a realtime world ...
 			if (speed == realtimeSpeed) {
@@ -121,9 +118,8 @@ public class SyncHandler extends MainTM {
 				MsgHandler.infoMsg("The world " + world + " " + noResyncNeededMsg); // Console final msg (always)
 				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + noResyncNeededMsg); // Player final msg (in case)
 			
-			// TODO 1.7
-			// #2.D. ... or if it is an exception at the first start time calculation ...	
-			} else if (firstStartTime.equalsIgnoreCase(ARG_PREVIOUS) && startOrTime.equalsIgnoreCase(ARG_START)) {
+			// #2.D. ... or if it is an exception at the first start time calculation : 'previous' or 'start'	
+			} else if (!firstStartTime.equalsIgnoreCase(ARG_DEFAULT)) {
 				// #2.D.a. Next tick = (original #tick)
 				long oldTime = Bukkit.getServer().getWorld(world).getTime();
 				newTime = oldTime;
@@ -131,15 +127,13 @@ public class SyncHandler extends MainTM {
 				MsgHandler.infoMsg("The world " + world + " " + worldPreviousTimeResetMsg); // Console final msg (always)
 				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + worldPreviousTimeResetMsg); // Player final msg (in case)
 					
-			// #2.E. 
+			// #2.E. ... or if it is an exception at the first start time calculation : 'START' ...	
 			} else if (firstStartTime.equalsIgnoreCase(ARG_START) && startOrTime.equalsIgnoreCase(ARG_START)) {
 				// #2.E.a. Next tick = (cfg 'start' #tick)
 				newTime = startAtTickNb;
 				// #2.E.b. Notifications
 				MsgHandler.infoMsg("The world " + world + " " + worldStartTimeResetMsg); // Console final msg (always)
 				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + worldStartTimeResetMsg); // Player final msg (in case)
-
-			// TODO 1.7
 				
 			// #2.F. ... or if it is a (daySpeed == nightSpeed) world ...
 			} else if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED).equalsIgnoreCase(MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED))) {
