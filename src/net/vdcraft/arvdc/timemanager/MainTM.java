@@ -20,7 +20,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.vdcraft.arvdc.timemanager.Metrics;
-
+import net.vdcraft.arvdc.timemanager.mainclass.BooksHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
@@ -645,10 +645,13 @@ public class MainTM extends JavaPlugin {
 			// #8. Listen to sleep events
 			getServer().getPluginManager().registerEvents(new SleepHandler(), this);
 
-			// #9. Synchronize worlds and create scheduled task for faking the time increase/decrease
+			// #9. Listen to books events
+			getServer().getPluginManager().registerEvents(new BooksHandler(), this);
+
+			// #10. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();
 
-			// #10. Activate (or not) the placeholder APIs
+			// #11. Activate (or not) the placeholder APIs
 			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
@@ -660,16 +663,16 @@ public class MainTM extends JavaPlugin {
 				MVdWPAPIHandler.loadMVdWPlaceholderAPI();
 			}
 			
-			// #11. bStats
+			// #12. bStats
 			int pluginId = 10412;
 	        @SuppressWarnings("unused")
 	        Metrics metrics = new Metrics(this, pluginId);
 
-			// #12. Confirm activation in console
+			// #13. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
 			
-			// #13. Check for an update
+			// #14. Check for an update
 			if (serverMcVersion >= MainTM.reqMcVForUpdate)
 				UpdateHandler.delayCheckForUpdate();
 			else MsgHandler.warnMsg(updateCommandsDisabledMsg + reqMcVForUpdate.toString().replace(".0", "."));

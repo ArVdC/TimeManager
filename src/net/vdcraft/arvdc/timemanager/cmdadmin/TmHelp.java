@@ -71,6 +71,7 @@ public class TmHelp extends MainTM {
 			+ CMD_SET_DEBUG + "|"
 			+ CMD_SET_DEFLANG + "|"
 			+ CMD_SET_E_DAYS + "|"
+			+ CMD_SET_FIRSTSTARTTIME + "|"
 			+ CMD_SET_INITIALTICK + "|"
 			+ CMD_SET_MULTILANG + "|"
 			+ CMD_SET_PLAYEROFFSET + "|"

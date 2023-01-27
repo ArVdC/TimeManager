@@ -164,7 +164,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.7: MC 1.8.8 to 1.19.3
+v1.8: MC 1.8.8 to 1.19.3
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
@@ -180,5 +180,5 @@ v1.7: MC 1.8.8 to 1.19.3
 * ~~Command: Allow players to individually set their time.~~
 * ~~Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.~~
 * ~~Worlds: Add an per world option, for the behavior of timers when starting the server.~~
-* Placeholder: Allow the use of placeholders in books and signs.
+* ~~Placeholder: Allow the use of placeholders in books and signs.~~
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
