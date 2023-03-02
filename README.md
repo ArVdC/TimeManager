@@ -181,4 +181,5 @@ v1.8: MC 1.8.8 to 1.19.3
 * ~~Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.~~
 * ~~Worlds: Add an per world option, for the behavior of timers when starting the server.~~
 * ~~Placeholder: Allow the use of placeholders in books and signs.~~
+* Placeholder: Create signs where the date and time constantly refresh. 
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.

@@ -1,6 +1,7 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -100,8 +101,32 @@ public class CmdsFileHandler extends MainTM {
 				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_DATE, String.format("%04d", year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", day));
 			}
 		}
-		
-		// #3.E. Adapt the repeatFreq key
+		// #3.E. Ensure to save the time value as a string (Some wrong values ​​cannot be avoided because all yaml nodes are read before this code)
+		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
+			String time = "0" + MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_TIME);
+			String tPart1 = "00";
+			String tPart2 = "00";
+			if (!time.contains(":")) {
+				time = time + ":00";
+			}
+			String[] timeParts = time.split(":");
+			Integer hours = 0;
+			Integer mins = 0;
+			try { // The date is supposed to be in correct format (HH:mm)
+				hours = Integer.parseInt(timeParts[0]);
+				mins = Integer.parseInt(timeParts[1]);
+				hours = hours % 24;
+				mins = mins % 60;
+			} catch (NumberFormatException nfe) {
+				MsgHandler.errorMsg(hourFormatMsg + " The data found are not integers."); // Console error msg
+			}
+			DecimalFormat formater = new DecimalFormat("00"); // Converts the 2 integers to formatted strings (00)
+			tPart1 = formater.format(hours);
+			tPart2 = formater.format(mins);		
+			MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_TIME, tPart1 + ":" + tPart2);
+		}
+
+		// #3.F. Adapt the repeatFreq key
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
 			String repeatFreq = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ);
 			if (repeatFreq.contains(ARG_FALSE) || repeatFreq.equalsIgnoreCase("no") || repeatFreq.equalsIgnoreCase(" ") || repeatFreq.equalsIgnoreCase("")) {
@@ -109,15 +134,15 @@ public class CmdsFileHandler extends MainTM {
 			}
 		}
 
-		// #3.F. Save the cmds.yml file
+		// #3.G. Save the cmds.yml file
 		SaveCmdsYml();
 		
-		// #3.G. Launch the scheduler if necessary
+		// #3.H. Launch the scheduler if necessary
 		if (!commandsSchedulerIsActive.contains(ARG_ACTIVE) && MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
 			CmdsScheduler.commandsScheduler();
 		}
 		
-		// 3.H. Notifications
+		// 3.I. Notifications
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
 			MsgHandler.infoMsg(cmdsVersionMsg + MainTM.getInstance().cmdsConf.getString(CF_VERSION) + ".");
 		}

@@ -26,6 +26,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.SignsHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SleepHandler;
@@ -88,7 +89,7 @@ public class MainTM extends JavaPlugin {
 
 	// Handle the current refresh rate
 	protected static Integer refreshRateInt;
-	protected static Long refreshRateLong;
+	public static Long refreshRateLong;
 
 	// Max speed modifier (Min need to be 0)
 	protected static Double speedMax = 10.0;
@@ -121,7 +122,7 @@ public class MainTM extends JavaPlugin {
 
 	// Config file keys
 	protected static final String CF_VERSION = "version";
-	protected static final String CF_REFRESHRATE = "refreshRate";
+	public static final String CF_REFRESHRATE = "refreshRate";
 	public static final String CF_WAKEUPTICK = "wakeUpTick";
 	public static final String CF_NEWDAYAT = "newDayAt";
 	public static final String CF_WORLDSLIST = "worldsList";
@@ -648,10 +649,13 @@ public class MainTM extends JavaPlugin {
 			// #9. Listen to books events
 			getServer().getPluginManager().registerEvents(new BooksHandler(), this);
 
-			// #10. Synchronize worlds and create scheduled task for faking the time increase/decrease
+			// #10. Listen to books events
+			getServer().getPluginManager().registerEvents(new SignsHandler(), this);
+
+			// #11. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();
 
-			// #11. Activate (or not) the placeholder APIs
+			// #12. Activate (or not) the placeholder APIs
 			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
@@ -663,16 +667,16 @@ public class MainTM extends JavaPlugin {
 				MVdWPAPIHandler.loadMVdWPlaceholderAPI();
 			}
 			
-			// #12. bStats
+			// #13. bStats
 			int pluginId = 10412;
 	        @SuppressWarnings("unused")
 	        Metrics metrics = new Metrics(this, pluginId);
 
-			// #13. Confirm activation in console
+			// #14. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
 			
-			// #14. Check for an update
+			// #15. Check for an update
 			if (serverMcVersion >= MainTM.reqMcVForUpdate)
 				UpdateHandler.delayCheckForUpdate();
 			else MsgHandler.warnMsg(updateCommandsDisabledMsg + reqMcVForUpdate.toString().replace(".0", "."));

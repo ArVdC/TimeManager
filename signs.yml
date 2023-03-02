@@ -1,0 +1,37 @@
+# [TimeManager] by ArVdC
+# signs.yml
+# -----
+# *version*
+#  This field is automatically checked and refreshed, don't modify it manually.
+# -----
+# *signsList*
+#  All this file content is automatically generated, it is necessary to save signs after server shutdown.
+#   *id*
+#	 Each sign must have an unique id.
+#    *world*
+#     The name of the world where the sign is in.
+#    *position*
+#     if a sign exists at this position (x, y, z), its placeholders would be actualized.
+#    *content*
+#     .........
+# -----
+
+version: ''
+signsList:
+  01:
+    world: 'world'
+    position: '1, 1, 1'
+    content:
+      line1: ''
+      line2: ''
+      line3: ''
+      line4: ''
+    
+  02:
+    world: 'world'
+    position: '1, 2, 1'
+    content:
+      line1: ''
+      line2: ''
+      line3: ''
+      line4: ''

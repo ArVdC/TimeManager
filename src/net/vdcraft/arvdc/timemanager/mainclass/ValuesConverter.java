@@ -131,13 +131,13 @@ public class ValuesConverter extends MainTM {
 	public static String getMCDayPart(long tick) {
 		String wichPart;
 		if (tick >= dawnStart && tick < dayStart) {
-			wichPart = "dawn";
+			wichPart = CF_DAWN;
 		} else if (tick >= dayStart && tick < duskStart) {
-			wichPart = "day";
+			wichPart = CF_DAY;
 		} else if (tick >= duskStart && tick < nightStart) {
-			wichPart = "dusk";
+			wichPart = CF_DUSK;
 		} else {
-			wichPart = "night";
+			wichPart = CF_NIGHT;
 		}
 		return wichPart;
 	}

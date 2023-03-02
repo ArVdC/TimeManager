@@ -20,6 +20,9 @@ public class CmdsScheduler extends MainTM {
 	public static void commandsScheduler() {
 
 		BukkitScheduler commandsScheduler = MainTM.getInstance().getServer().getScheduler();
+			
+		long refreshRate = 30L;
+		
 		cmdsTask = commandsScheduler.scheduleSyncRepeatingTask(MainTM.getInstance(), new Runnable() {
 
 			@Override
@@ -30,7 +33,7 @@ public class CmdsScheduler extends MainTM {
 					stopCmdsScheduler();
 					MsgHandler.devMsg("The commands scheduler is stopped.");
 					// #2. Declare active if useCmds is true (once only)
-				} else if (!commandsSchedulerIsActive.contains("active")) {
+				} else if (!commandsSchedulerIsActive.contains(ARG_ACTIVE)) {
 					commandsSchedulerIsActive.add(ARG_ACTIVE);
 					MsgHandler.devMsg("The commands scheduler is started.");
 				}
@@ -47,7 +50,7 @@ public class CmdsScheduler extends MainTM {
 					String repeatFreq = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ);
 
 					// #5. Get the expected date and time
-					// Get the date 
+					// #5.A. Get the date 
 					String eDate = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_DATE);
 					Integer expectedYear = 1;
 					Integer expectedMonth = 1;
@@ -60,18 +63,15 @@ public class CmdsScheduler extends MainTM {
 					} catch (NumberFormatException nfe) {
 						MsgHandler.errorMsg(dateFormatMsg); // Console error msg
 					}
-					// Get the time 
+					// #5.B. Get the time 
 					String eHour = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_TIME);
 					Integer expectedHour = 0;
 					Integer expectedMin = 0;
 					String[] eh = eHour.split(":");
-					try { // The date is supposed to be in correct format (HH:mm)
-						expectedHour = Integer.parseInt(eh[0]);
-						expectedMin = Integer.parseInt(eh[1]);
-					} catch (NumberFormatException nfe) {
-						MsgHandler.errorMsg(hourFormatMsg); // Console error msg
-					}
-					// Also set a LocalDateTimeDateTime
+					expectedHour = Integer.parseInt(eh[0]);
+					expectedMin = Integer.parseInt(eh[1]);
+					
+					// #5.C. Also set a LocalDateTimeDateTime
 					LocalDateTime expectedDateTime = LocalDateTime.of(expectedYear, expectedMonth, expectedDay, expectedHour, expectedMin);
 
 					// #6. Get the current date and time
@@ -83,6 +83,7 @@ public class CmdsScheduler extends MainTM {
 					// Set a default delay
 					int minutesBeforeEnd = 1; // (=1min.)
 					long ticksBeforeEnd = 1200L; // (=1min.)
+					
 					// #6.A. If the reference time is an MC world
 					if (!refTimeSrc.contains("UTC") && !refTimeSrc.equalsIgnoreCase("")) {
 						// Get the date
@@ -113,6 +114,7 @@ public class CmdsScheduler extends MainTM {
 							minutesBeforeEnd = 20;
 							ticksBeforeEnd = (long) (334 / speed);
 						}
+						
 					} // #6.B. Else, the reference time is UTC
 					else {						
 						// Get the time shift
@@ -131,7 +133,7 @@ public class CmdsScheduler extends MainTM {
 						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
 						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));
 					}
-					// Also set a LocalDateTime
+					// #6.C. Also set a LocalDateTime
 					LocalDateTime currentDateTime = LocalDateTime.of(currentYear, currentMonth, currentDay, currentHour, currentMin);
 
 					// #7. Get the edge date and time
@@ -157,50 +159,72 @@ public class CmdsScheduler extends MainTM {
 					// #8. Send dev messages
 					if (devMode) {
 						MsgHandler.devMsg("Command #" + key);
-						MsgHandler.devMsg("Expected Date and Time :   §e" + expectedDateTime);
 						if (!refTimeSrc.contains("UTC") && !refTimeSrc.equalsIgnoreCase("")) {
-							MsgHandler.devMsg("Current MC Date and Time : §e" + currentDateTime);
+							MsgHandler.devMsg("Current MC Date and Time :  §e" + currentDateTime);
 						} else {
-							MsgHandler.devMsg("Current UTC Date and Time :§e" + currentDateTime);
+							MsgHandler.devMsg("Current UTC Date and Time : §e" + currentDateTime);
 						}
-						MsgHandler.devMsg("Edge Date and Time :       §e" + edgeDateTime);
+						MsgHandler.devMsg("Expected Date and Time :    §e" + expectedDateTime);
+						MsgHandler.devMsg("Edge Date and Time :        §e" + edgeDateTime);
 						MsgHandler.devMsg("Interval : " + minutesBeforeEnd + " minutes (#" + ticksBeforeEnd + ")");
 						MsgHandler.devMsg("Reference Time Source : " + refTimeSrc);
 						MsgHandler.devMsg("Repeat Frequence : " + repeatFreq);
 						MsgHandler.devMsg("==================");
 					}
-					// #9. Check if we are into the  delay and if schedule is not already active
+					// #9. Check if we are into the delay and if schedule is not already active and try to launch it
 					Boolean launchCmds = false;
 					if (!commandsSchedulerIsActive.contains(key)) {
 						switch (repeatFreq) {
-						case "none":
-							if ((eraUp && (expectedYear <= currentYear || currentYear <= edgeYear))
-									|| (expectedDateTime.isBefore(currentDateTime) && currentDateTime.isBefore(edgeDateTime))) {
-							} else break;
-						case "year":
-							if ((yearUp && (expectedMonth <= currentMonth || currentMonth <= edgeMonth))
-									|| (expectedMonth <= currentMonth && currentMonth <= edgeMonth)) {
-							} else break;
-						case "month" : 
-							if ((monthUp && (expectedDay <= currentDay || currentDay <= edgeDay))
-									|| (expectedDay <= currentDay && currentDay <= edgeDay)) {
-							} else break;
-						case "day" :
-							if ((dayUp && (expectedHour <= currentHour || currentHour <= edgeHour))
-									|| (expectedHour <= currentHour && currentHour <= edgeHour)) {
-							} else break;
-						case "hour" :
-							if ((hourUp && (expectedMin <= currentMin || currentMin <= edgeMin))
-									|| (expectedMin <= currentMin && currentMin <= edgeMin)) {
-								launchCmds = true;
+						case "none": // If there is no repetition, the whole date and hour must match
+							MsgHandler.devMsg("Years will now be checked :");
+							if ((eraUp && ((expectedYear == currentYear) && (expectedMonth <= currentMonth)) || ((currentYear == edgeYear) && (currentMonth <= edgeMonth))) // If there is a transition to the next era (only concern year edge)
+									|| (expectedYear <= currentYear && currentYear <= edgeYear)) {
+								MsgHandler.devMsg("The data of the years correspond, let's look further.");
+							} else {
+								MsgHandler.devMsg("The data of the year does not correspond, do nothing.");
+								break;
 							}
+						case "year": // If there is a yearly repetition, the year is ignored
+							MsgHandler.devMsg("Months will now be checked :");
+							if ((yearUp && ((expectedMonth == currentMonth) && (expectedDay <= currentDay)) || ((currentMonth == edgeMonth) && (currentDay <= edgeDay))) // If there is a transition to the next year (only concern month edge)
+									|| (expectedMonth <= currentMonth && currentMonth <= edgeMonth)) {
+								MsgHandler.devMsg("The data of the month correspond, let's look further.");
+							} else {
+								MsgHandler.devMsg("The data of the month does not correspond, do nothing.");
+								break;
+							}
+						case "month" : // If there is a monthly repetition, year and month are ignored
+							MsgHandler.devMsg("Days will now be checked :");
+							if ((monthUp && ((expectedDay == currentDay) && (expectedHour <= currentHour)) || ((currentDay == edgeDay) && (currentHour <= edgeHour))) // If there is a transition to the next month (only concern day edge)
+									|| (expectedDay <= currentDay && currentDay <= edgeDay)) {
+								MsgHandler.devMsg("The data of the days correspond, let's look further.");
+							} else {
+								MsgHandler.devMsg("The data of the day does not correspond, do nothing.");
+								break;
+							}
+						case "day" : // If there is a daily repetition, year, month and day are ignored
+							MsgHandler.devMsg("Hours will now be checked :");
+							if ((dayUp && ((expectedHour == currentHour) && (expectedMin <= currentMin)) || ((currentHour == edgeHour) && (currentMin <= edgeMin))) // If there is a transition to the next day (only concern hour edge)
+									|| (expectedHour <= currentHour && currentHour <= edgeHour)) {
+								MsgHandler.devMsg("The data of the hours correspond, let's look further.");
+							} else {
+								MsgHandler.devMsg("The data of the hour does not correspond, do nothing.");
+								break;
+							}
+						case "hour" : // If there is a hourly repetition, year, month, day and hour are ignored (Only minutes must be less than the edge)
+							MsgHandler.devMsg("Minutes will now be checked :");
+							if ((hourUp && (expectedMin <= currentMin || currentMin < edgeMin)) // If there is a transition to the next hour (only concern minutes edge)
+									|| (expectedMin <= currentMin && currentMin < edgeMin)) {
+								MsgHandler.devMsg("The data of the minutes correspond, let's launch commands.");
+								launchCmds = true;
+							} else MsgHandler.devMsg("The data of the minutes does not correspond, do nothing.");
 						}
 					}
 					if (launchCmds) {
 						// #10. Declare the key as having an active scheduler
 						commandsSchedulerIsActive.add(key);
 						MsgHandler.devMsg("Added the key " + key + " at the scheduler list : " + commandsSchedulerIsActive);
-						MsgHandler.devMsg("=================="); //  
+						MsgHandler.devMsg("=================="); 
 						// After the delay, delete the key from the active scheduler list
 						delayedDeleteKey(ticksBeforeEnd, key);
 						MsgHandler.devMsg("Prepared to remove the key " + key + " from the scheduler list : " + commandsSchedulerIsActive);
@@ -208,35 +232,37 @@ public class CmdsScheduler extends MainTM {
 
 						// #11. Execute the command(s)
 						ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-						String lang = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + CF_DEFAULTLANG);
+						String lang = MainTM.getInstance().langConf.getString(CF_DEFAULTLANG);
+						// #11.A. Search for each listed command
 						for (String commandNb : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST + "." + key + "." + CF_CMDS).getKeys(false)) {
 							MsgHandler.devMsg("CommandNb : " + commandNb);
 							String command = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_CMDS + "." + commandNb);
 							MsgHandler.devMsg("Command : " + command);
 							command = command.replace("/","").replace("&","§");
 							String world = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD);
-							if (command.contains("{tm_")) {
+							// #11.B. Replace placeholders
+							if (command.contains("{" + PH_PREFIX)) {
 								String[] phSlipt1 = command.split("\\{");
 								for (String ph1 : phSlipt1) {
 									if (ph1.contains("}")) {
 										String[] phSlipt2 = ph1.split("\\}");
 										for (String ph2 : phSlipt2) {
-											if (ph2.contains("tm_")) {
-												ph2 = ph2.replace("tm_", "");
-												String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, null);
-												MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\"."); // TODO 1.5.0
-												command = command.replace("{tm_" + ph2 + "}", ph3);
+											if (ph2.contains(PH_PREFIX)) {
+												String ph3 = PlaceholdersHandler.replacePlaceholder("{" + ph2 + "}", world, lang, null);
+												MsgHandler.devMsg("A placeholder was detected : §e" + "{" + ph2 + "}" + "§9 will be changed by \"§e" + ph3 + "§9\".");
+												String ph = "{" + ph2 + "}";
+												command = command.replace(ph, ph3);
 											}
 										}
 									}
 								}
-							}
+							} // #11.C. Dispatch the command
 							Bukkit.dispatchCommand(console, command);
 						}
 					}
 				}
 			}
-		}, 0L, 60L);
+		}, 0L, refreshRate);
 	}
 
 	/**

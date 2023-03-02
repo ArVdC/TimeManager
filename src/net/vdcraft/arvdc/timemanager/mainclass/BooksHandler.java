@@ -28,9 +28,9 @@ public class BooksHandler implements Listener {
 		if (book.hasPages()) {
 			int pagesNb = book.getPageCount();			
 			while (pagesNb > 0) {				
-				String msg = book.getPage(pagesNb);				
-				msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);				
-				book.setPage(pagesNb, msg);				
+				String pg = book.getPage(pagesNb);				
+				pg = PlaceholdersHandler.replaceAllPlaceholders(pg, world, lang, p);				
+				book.setPage(pagesNb, pg);				
 				pagesNb--;
 			}			
 		}

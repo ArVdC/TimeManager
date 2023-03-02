@@ -35,8 +35,8 @@ cmdsList:
       '2': /say It is up to you to customize it like you want.
       '3': /tm now title all
       '3': /tm now actionbar all
-    cmdsRefTime: 'world'
-    plholderRefWorld: 'world'
+    cmdsRefTime: world
+    plholderRefWorld: world
     time: '12:00'
     date: '2021-07-01'
     repeatFreq: 'none'
@@ -45,15 +45,15 @@ cmdsList:
       '1': /say Good morning @p,
       '2': /say it is {tm_hours12}:00 {tm_ampm} in {tm_world}.
       '3': /weather clear
-    cmdsRefTime: 'world'
-    plholderRefWorld: 'world'
+    cmdsRefTime: world
+    plholderRefWorld: world
     time: '07:00'
     date: '0001-01-01'
     repeatFreq: 'day'
   03:
     cmds:
       '1': /title @a subtitle {"text":"Happy new year @a !!!","color":"red"}  
-      '2': /title {"text":"{tm_yyyy}","color":"white"}  
+      '2': /title @a {"text":"{tm_yyyy}","color":"white"}  
     cmdsRefTime: 'UTC+1'
     plholderRefWorld: 'world' 
     time: '00:00'
