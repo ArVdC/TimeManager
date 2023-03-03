@@ -205,7 +205,7 @@ public class CmdsScheduler extends MainTM {
 						case "day" : // If there is a daily repetition, year, month and day are ignored
 							MsgHandler.devMsg("Hours will now be checked :");
 							if ((dayUp && ((expectedHour == currentHour) && (expectedMin <= currentMin)) || ((currentHour == edgeHour) && (currentMin <= edgeMin))) // If there is a transition to the next day (only concern hour edge)
-									|| (expectedHour <= currentHour && currentHour <= edgeHour)) {
+									|| (expectedHour <= currentHour && expectedMin <= currentMin && currentHour <= edgeHour && currentMin <= edgeMin)) {
 								MsgHandler.devMsg("The data of the hours correspond, let's look further.");
 							} else {
 								MsgHandler.devMsg("The data of the hour does not correspond, do nothing.");
