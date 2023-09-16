@@ -23,11 +23,16 @@ public class SyncHandler extends MainTM {
 				// #2. Synchronize the worlds, based on a server constant point
 				worldSync(Bukkit.getServer().getConsoleSender(), ARG_ALL, ARG_START);
 				// #3. Launch the good scheduler if it is inactive
-				waitTime(10);
-				// #4. Detect if this world needs to change its speed value
-				SpeedHandler.speedScheduler(ARG_ALL);
-				// #5. Notifications
-				MsgHandler.infoMsg(resyncIntroMsg); // Console log msg (always)
+				BukkitScheduler firstSpeedLaunch = MainTM.getInstance().getServer().getScheduler();
+				firstSpeedLaunch.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
+					@Override
+					public void run() {
+						// #1. Detect if this world needs to change its speed value
+						SpeedHandler.speedScheduler(ARG_ALL);
+						// #2. Notifications
+						MsgHandler.infoMsg(resyncIntroMsg); // Console log msg (always)
+					}
+				}, 2L);
 			}
 		}, 2L);
 	}

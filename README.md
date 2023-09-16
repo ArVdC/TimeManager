@@ -48,6 +48,7 @@ The available placeholders are as follows :
 - {tm_daypart} : Displays the name of the current part of the day, among the four existing ones, in each of the languages.
 - {tm_currentday} : Displays the number of the current day. (1 → ∞)
 - {tm_elapseddays} : Displays the number of elapsed day(s). (0 → ∞)
+- {tm_weekday} : Displays the number of the day in the year. (1 → 7)
 - {tm_yearweek} : Displays the number of the week in the year. (1 → 52)
 - {tm_week} : Displays the number of elapsed weeks. (1 → ∞)
 - {tm_monthname} : Displays the name of current month, based on entries in the lang.yml file.
@@ -164,7 +165,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.8: MC 1.8.8 to 1.19.3
+v1.7.2: MC 1.8.8 to 1.20.1
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
@@ -181,5 +182,8 @@ v1.8: MC 1.8.8 to 1.19.3
 * ~~Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.~~
 * ~~Worlds: Add an per world option, for the behavior of timers when starting the server.~~
 * ~~Placeholder: Allow the use of placeholders in books and signs.~~
-* Placeholder: Create signs where the date and time constantly refresh. 
+* ~~cmds.yml file: Permit to use a 'pause' between commands lines.~~
+* ~~Placeholder: Add a placeholder to show current number of the day in the week.~~
+* Placeholder: Add a placeholder to show current number of the day in the week.
+* Placeholder: Create signs where the placeholders constantly refresh.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.

@@ -134,7 +134,16 @@ public class MVdWPAPIHandler extends MainTM {
 			}
 		});
 
-		// Returns the current week of the year for the player's world
+		// Returns the number of the current day in the week for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_WEEKDAY, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				Player p = e.getPlayer();
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_WEEKDAY + "}", p.getWorld().getName(), PlayerLangHandler.setLangToUse(p), p);
+			}
+		});
+
+		// Returns the number of the current week in the year for the player's world
 		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_YEARWEEK, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
@@ -143,7 +152,7 @@ public class MVdWPAPIHandler extends MainTM {
 			}
 		});
 
-		// Returns the number of the week for the player's world
+		// Returns the number of elapsed weeks for the player's world
 		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_WEEK, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {

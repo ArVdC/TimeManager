@@ -36,13 +36,13 @@ public class SignsHandler implements Listener {
 	}
 	
 	/**
-	 * Create auto-updated signs TODO 1.8
+	 * Create auto-updated signs // TODO (1.8.0 ?)
 	 */
 	// On server load -> create 'signs.yml'
 	
-	// On command /tm giveSign <player> -> create and give a special item
+	// On command /tm giveActiveSign <player> -> create and give a special item
 	
-	// When using this item -> command /tm placeSign <x, y, z> <world>
+	// When using this item -> command /tm placeActiveSign <x, y, z> <world>
 	// & add location reference + text WITH original placeholders in 'signs.yml'
 	
 	// Loop and actualize every known signs with existing refreshRate

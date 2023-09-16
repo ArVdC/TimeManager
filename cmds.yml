@@ -10,7 +10,9 @@
 # *cmdsList*
 #   Nodes names must be following numbers. Each node must contains the following keys :
 #   *cmds*
-#     The console command(s) you want to run. (with or without a "/" and separated by a ",")
+#     The console command(s) you want to run. 
+#     If you use multiple commands, they must be in a numbered list, one command per line.
+#     It is possible to specify a break time between two commands : instead of a command line, use 'wait' or 'pause' and the desired number of seconds to wait.
 #   *cmdsRefTime*
 #     The source whose will be checked for expected time and date.
 #     Possible values are any Minecraft world name or 'UTC+[timeShift]'.
@@ -34,7 +36,8 @@ cmdsList:
       '1': /say This is an example of scheduled commands provided by Timemanager.
       '2': /say It is up to you to customize it like you want.
       '3': /tm now title all
-      '3': /tm now actionbar all
+      '4': wait 5 seconds
+      '5': /tm now actionbar all
     cmdsRefTime: world
     plholderRefWorld: world
     time: '12:00'

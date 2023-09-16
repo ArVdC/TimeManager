@@ -283,6 +283,7 @@ public class MainTM extends JavaPlugin {
 	public static final String PH_SECONDS = "seconds";
 	public static final String PH_E_DAYS = "elapseddays";
 	public static final String PH_C_DAY = "currentday";
+	public static final String PH_WEEKDAY = "weekday";
 	public static final String PH_YEARWEEK = "yearweek";
 	public static final String PH_WEEK = "week";
 	public static final String PH_MONTHNAME = "monthname";
@@ -458,6 +459,7 @@ public class MainTM extends JavaPlugin {
 	protected static String playerFormatMsg = "This player doesn't exist, or is offline.";
 	protected static String rateFormatMsg = "Refresh rate must be an integer number.";
 	protected static String offsetTickMsg = "Offset must be an integer number.";
+	protected static String waitBeforeCmdMsg = "Waiting time must be an integer number.";
 	protected static String wakeUpTickFormatMsg = "Wake up tick must be an integer number, default value will be used.";
 	protected static String startTickFormatMsg = "Start tick must be an integer number, default value will be used.";
 	protected static String utcFormatMsg = "Time shift must be formatted as 'UTC' followed by '+' or '-' and an integer number, without space (e.g. UTC+1), default value will be used.";

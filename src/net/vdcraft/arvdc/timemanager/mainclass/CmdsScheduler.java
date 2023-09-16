@@ -231,7 +231,7 @@ public class CmdsScheduler extends MainTM {
 						MsgHandler.devMsg("==================");
 
 						// #11. Execute the command(s)
-						ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+						Long delay = 0L;
 						String lang = MainTM.getInstance().langConf.getString(CF_DEFAULTLANG);
 						// #11.A. Search for each listed command
 						for (String commandNb : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST + "." + key + "." + CF_CMDS).getKeys(false)) {
@@ -256,8 +256,23 @@ public class CmdsScheduler extends MainTM {
 										}
 									}
 								}
-							} // #11.C. Dispatch the command
-							Bukkit.dispatchCommand(console, command);
+							}
+							// #11.C. Check if a waiting time is asked
+							if (command.contains("wait ") || command.contains("pause ") ) {							
+								String[] pauseSlipt = command.split(" ");
+								if (pauseSlipt.length >= 1) {
+									MsgHandler.devMsg("A waiting time is asked for " + pauseSlipt[1] + " seconds"); // Console dev msg
+									try {
+										Long p = Long.parseLong(pauseSlipt[1]) * 20;
+										delay = delay + p;
+									} catch (NumberFormatException nfe) {
+										MsgHandler.errorMsg(waitBeforeCmdMsg); // Console error msg
+									}
+								}
+							// #11.D. Dispatch the command	
+							} else {
+								delayedCmdDispatch(delay, command);
+							}
 						}
 					}
 				}
@@ -266,16 +281,31 @@ public class CmdsScheduler extends MainTM {
 	}
 
 	/**
+	 * Dispatch a single command, eventually with a cumulative delay
+	 */
+	private static void delayedCmdDispatch(Long delay, String command) {
+		BukkitScheduler delayedCmdDispatch = MainTM.getInstance().getServer().getScheduler();
+		delayedCmdDispatch.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+				MsgHandler.devMsg("The command '" + command + "' will now be dispatched."); // Console dev msg
+				Bukkit.dispatchCommand(console, command);
+			}
+		}, delay);
+	}
+
+	/**
 	 * Cancel the active command scheduler
 	 */
-	public static void stopCmdsScheduler() {
+	private static void stopCmdsScheduler() {
 		Bukkit.getScheduler().cancelTask(MainTM.cmdsTask);
 	}
 
 	/**
 	 * Delete the key from the active scheduler list
 	 */
-	public static void delayedDeleteKey(Long endDelay, String key) {
+	private static void delayedDeleteKey(Long endDelay, String key) {
 		BukkitScheduler delayedDeleteKey = MainTM.getInstance().getServer().getScheduler();
 		delayedDeleteKey.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override

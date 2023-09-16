@@ -82,7 +82,7 @@ public class WorldListHandler extends MainTM {
 			if (w.equalsIgnoreCase(example) || !loadedWorldsNames.contains(w)) {
 				eraseWorld = true;
 			}
-			MainTM.waitTime(300);
+			waitTime(200);
 			if (eraseWorld == true) {
 				MsgHandler.debugMsg("The world §e" + eraseWorld + "§b " + delWorldDebugMsg); // Console debug msg
 				MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).set(w, null);

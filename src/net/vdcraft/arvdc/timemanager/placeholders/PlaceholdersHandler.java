@@ -91,12 +91,17 @@ public class PlaceholdersHandler extends MainTM {
 		case "{" + PH_PREFIX + PH_E_DAYS + "}" :
 			return ValuesConverter.elapsedDaysFromTick(ft).toString();
 
-			// Returns the current week of the year for the player's world
+		// Returns the number of the current day in the week for the player's world
+		case "{" + PH_PREFIX + PH_WEEKDAY + "}" :
+			Long wDay = ValuesConverter.weekDay(ft);
+			return wDay.toString();
+
+			// Returns the number of the current week in the year for the player's world
 		case "{" + PH_PREFIX + PH_YEARWEEK + "}" :
 			Long yWeek = ValuesConverter.yearWeekFromTick(ft);
 			return yWeek.toString();
 
-			// Returns the current week of the year for the player's world
+			// Returns the number of elapsed weeks for the player's world
 		case "{" + PH_PREFIX + PH_WEEK + "}" :
 			Long week = ValuesConverter.weekFromTick(ft);
 			return week.toString();
@@ -141,7 +146,7 @@ public class PlaceholdersHandler extends MainTM {
 						if (ph2.contains("tm_")) {
 							ph2 = "{" + ph2 + "}";
 							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p);
-							MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\".");
+							MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\".");  // Console dev msg
 							msg = msg.replace(ph2, ph3);
 						}
 					}
