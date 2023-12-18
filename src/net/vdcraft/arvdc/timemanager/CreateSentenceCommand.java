@@ -56,7 +56,9 @@ public class CreateSentenceCommand implements TabCompleter {
 		return worlds;
 	}
 	// Arguments list for '/tm checkupdate'
-	List<String> tmCheckupdateArgsList = Arrays.asList(MainTM.ARG_NONE, MainTM.ARG_BUKKIT, MainTM.ARG_CURSE, MainTM.ARG_SPIGOT, MainTM.ARG_GITHUB);
+	List<String> tmCheckupdateArgsList = Arrays.asList(MainTM.ARG_BUKKIT, MainTM.ARG_CURSE, MainTM.ARG_SPIGOT, MainTM.ARG_GITHUB);
+	// Arguments list for '/tm set update'
+	List<String> tmSetupdateArgsList = Arrays.asList(MainTM.ARG_NONE, MainTM.ARG_BUKKIT, MainTM.ARG_CURSE, MainTM.ARG_SPIGOT, MainTM.ARG_GITHUB);
 	// Arguments list for '/tm reload'
 	List<String> tmReloadArgsList = Arrays.asList(MainTM.ARG_ALL, MainTM.ARG_CONFIG, MainTM.ARG_LANG, MainTM.ARG_CMDS);
 	// Arguments list for '/tm set'
@@ -291,7 +293,7 @@ public class CreateSentenceCommand implements TabCompleter {
 						}
 					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE) && MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) // Command '/tm set update <...>'
 					{
-						for (String verif : tmCheckupdateArgsList) {
+						for (String verif : tmSetupdateArgsList) {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}

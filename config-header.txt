@@ -68,6 +68,10 @@ config.yml
  The available placeholders are described in lang.yml file.
  PlaceholderAPI (www.spigotmc.org/resources/placeholderapi.6245) -> Use %tm_xxx% instead of {tm_xxx}
  MVdWPlaceholderAPI (www.spigotmc.org/resources/mvdwplaceholderapi.11182) -> Use {tm_xxx}
+  *inChatEnable*
+   If true, the plugin's placeholders will be interpreted in chat messages.
+  *inCommandsEnable*
+   If true, the plugin's placeholders will be interpreted in any commands launched by the console, players or command blocks.
 -----
 *debugMode*
  Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.

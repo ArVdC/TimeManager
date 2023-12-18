@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.7.2
+version: 1.8.0
 api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -14,6 +14,8 @@ permissions:
     children:
       timemanager.admin:
         default: op
+      timemanager.placeholders:
+        default: true
       timemanager.now.*:
         default: false
         children:
@@ -31,7 +33,7 @@ commands:
             /<command> checkConfig
             /<command> checkSql
             /<command> checkTime [all|server|world]
-            /<command> checkUpdate [bukkit|spigot|github]
+            /<command> checkUpdate [bukkit|curse|spigot|github]
             /<command> help [cmd] [<subCmd>]
             /<command> now [msg|title|actionbar] [all|player|world] 
             /<command> reload [all|config|lang|cmds]
@@ -53,7 +55,7 @@ commands:
             /<command> set start [ticks|daypart|HH:mm:ss|timeShift] [all|world]
             /<command> set sync [true|false] [all|world]
             /<command> set time [ticks|daypart|HH:mm:ss] [all|world]
-            /<command> set update [none|bukkit|spigot|github]
+            /<command> set update [none|bukkit|curse|spigot|github]
             /<command> set useCmds [true|false]
     aliases:
       - tmanag

@@ -8,8 +8,8 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="D:/Documents/MC libs/gson-2.8.6.jar"/>
 	<classpathentry kind="lib" path="D:/Documents/MC libs/mysql-connector-java-8.0.16.jar"/>
-	<classpathentry kind="lib" path="D:/Documents/MC libs/MVdWPlaceholderAPI.jar"/>
-	<classpathentry kind="lib" path="D:/Documents/MC libs/PlaceholderAPI-2.10.9.jar"/>
-	<classpathentry kind="lib" path="D:/Documents/MC libs/spigot-api-1.20.1-R0.1-SNAPSHOT-shaded.jar"/>
+	<classpathentry kind="lib" path="D:/Documents/MC libs/MVdWPlaceholderAPI-3.1.1.jar"/>
+	<classpathentry kind="lib" path="D:/Documents/MC libs/PlaceholderAPI-2.11.5.jar"/>
+	<classpathentry kind="lib" path="D:/Documents/MC libs/spigot-api-1.20.4-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

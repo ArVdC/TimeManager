@@ -1,6 +1,8 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,16 +22,31 @@ public class CmdsFileHandler extends MainTM {
 
 		// #1. When it is the server startup
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
-			// Creation of cmds.yml file if doesn't exist
+			// #1.A Creation of cmds.yml file if doesn't exist
 			if (!(MainTM.getInstance().cmdsFileYaml.exists())) {
 				MsgHandler.infoMsg(cmdsFileCreaMsg); // Console log msg
-				// Copy the file from src in .jar
+				// #1.A.a. Copy the file from src in .jar
 				CopyFilesHandler.copy(MainTM.getInstance().getResource(CMDSFILENAME), MainTM.getInstance().cmdsFileYaml);
-				// Actualize values
+				// #1.A.b. Actualize values
 				MainTM.getInstance().cmdsConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().cmdsFileYaml);
 			} else {		
 				MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
 			}
+			// #1.B. Load the header from the .txt file TODO 1.8.0
+			// #1.B.a. Extract the file from the .jar
+			CopyFilesHandler.copyAnyFile(CMDSHEADERFILENAME, MainTM.getInstance().cmdsHeaderFileTxt);
+			// #1.B.b. Try to get the documentation text
+			List<String> header = new ArrayList<String>();
+			try {
+				header.addAll(Files.readAllLines(MainTM.getInstance().cmdsHeaderFileTxt.toPath(), Charset.defaultCharset()));
+			} catch (IOException e) {
+				header.add(CMDSHEADERFILENAME + " could not be loaded. Find it inside the .jar file to get the " + CMDSFILENAME + " documentation.");
+			}
+			MsgHandler.devMsg("The §eheader§9 of " + CMDSFILENAME + " file contents : §e" + header); // Console dev msg
+			// #1.B.c. Delete the txt file
+			MainTM.getInstance().cmdsHeaderFileTxt.delete();
+			// #1.B.d. Set the header into the yml file
+			MainTM.getInstance().cmdsConf.options().setHeader(header);
 		}
 
 		// #2. When using the admin command /tm reload

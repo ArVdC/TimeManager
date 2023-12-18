@@ -33,6 +33,8 @@ Display argument can be : 'msg', 'title' or 'actionbar'.
 
 Nether and the End worlds could have a specific message.
 
+Hexadecimal colors can be used in the YAML files.
+
 ### PLACEHOLDERS
 The available placeholders are as follows :
 - {tm_player} : Displays the name of the player.
@@ -57,8 +59,12 @@ The available placeholders are as follows :
 - {tm_yy} : Displays the year part of the date in 2 digits.
 - {tm_yyyy} : Displays the year part of the date in 4 digits.
 
+Please note that these placeholders are case sensitive.
+
+They can be used in lang and cmds YAML files, but also in signs, books, chat messages and commands.
+
 #### DEPEDENCIES
-Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245) and [MVdWPlaceholderAPI](www.spigotmc.org/resources/mvdwplaceholderapi.11182). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
+TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245) and [MVdWPlaceholderAPI](www.spigotmc.org/resources/mvdwplaceholderapi.11182). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
 
 ### ADMIN COMMAND /tm
 **/tm checkConfig** Admins and console can display a summary of the config.yml and lang.yml files.
@@ -67,7 +73,7 @@ Since v1.4.0, TimeManager can display its placeholders through [PlaceholderAPI](
 
 **/tm checkTime \[all|server|world]** Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).
 
-**/tm checkUpdate \[bukkit|spigot|github]** Search if a newer version of the plugin exists on the chosen server. (MC 1.8.8+ only)
+**/tm checkUpdate \[bukkit|curse|spigot|github]** Search if a newer version of the plugin exists on the chosen server. (MC 1.8.8+ only)
 
 **/tm help \[cmd] \[\<subCmd>]** Help provides you the correct usage and a short description of targeted command and subcommand.
 
@@ -112,7 +118,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 
 **/tm set time \[ticks|daypart|HH:mm:ss] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
 
-**/tm set update \[none|bukkit|spigot|github]** Define the source server for the update search. (MC 1.8.8+ only)
+**/tm set update \[none|bukkit|curse|spigot|github]** Define the source server for the update search. (MC 1.8.8+ only)
    
 **/tm set useCmds \[true|false]** §rSet true to enable a custom commands scheduler. See the cmds.yml file for details.
 
@@ -165,7 +171,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.7.2: MC 1.8.8 to 1.20.1
+v1.8.0: MC 1.8.8 to 1.20.4
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
@@ -184,6 +190,10 @@ v1.7.2: MC 1.8.8 to 1.20.1
 * ~~Placeholder: Allow the use of placeholders in books and signs.~~
 * ~~cmds.yml file: Permit to use a 'pause' between commands lines.~~
 * ~~Placeholder: Add a placeholder to show current number of the day in the week.~~
-* Placeholder: Add a placeholder to show current number of the day in the week.
+* ~~Colors: Add hexadecimal color recognition.~~
+* ~~Placeholder: Permit players to use placeholders in chat messages.~~
+* ~~Placeholder: Permit external commands to use placeholders.~~
+* Command: Allow players to display the list of placeholders.
+* Placeholder: Add new placeholders for the names of the seven days of the week.
 * Placeholder: Create signs where the placeholders constantly refresh.
 * Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.

@@ -99,11 +99,11 @@ public class TmCheckConfig extends MainTM {
 
 		// Placeholders
 		String PAPIOnOff = "aren't";
-		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
+		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
 			PAPIOnOff = "are";
 		}
 		String MvDWPAPIOnOff = "aren't";
-		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)) {
+		if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)) {
 			MvDWPAPIOnOff = "are";
 		}
 		String placeholdersMsg = "Your placeholders " + PAPIOnOff + " registred in " + CF_PLACEHOLDER_PAPI + " and/but they " + MvDWPAPIOnOff + " registred in " + CF_PLACEHOLDER_MVDWPAPI + ".";

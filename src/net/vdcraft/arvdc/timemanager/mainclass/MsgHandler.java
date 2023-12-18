@@ -1,6 +1,7 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
@@ -42,9 +43,9 @@ public class MsgHandler extends MainTM {
 	 * Command error message and its associated help message
 	 */
 	public static void cmdErrorMsg(CommandSender sender, String msgError, String cmdHelp) {
-		playerAdminMsg(sender, "§c" + msgError); // Player error msg (in case is player)
+		playerAdminMsg(sender, ChatColor.RED + msgError); // Player error msg (in case is player)
 		warnMsg(msgError); // Console error msg (always)
-		Bukkit.dispatchCommand(sender, "tm help " + cmdHelp); // Sender help msg (always)
+		Bukkit.dispatchCommand(sender, CMD_TM + " " + CMD_HELP + cmdHelp); // Sender help msg (always)
 	}
 
 	/**
@@ -58,14 +59,14 @@ public class MsgHandler extends MainTM {
 	 * Dev msg
 	 */
 	public static void devMsg(String msg) {
-		if (devMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + "§9 " + msg);
+		if (devMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + ChatColor.BLUE + " " + msg);
 	}
 
 	/**
 	 * Timer msg
 	 */
 	public static void timerMsg(String msg) {
-		if (timerMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + "§5 " + msg);
+		if (timerMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + ChatColor.DARK_PURPLE + " " + msg);
 	}
 
 	/**
@@ -80,7 +81,7 @@ public class MsgHandler extends MainTM {
 	 * Player chat msg
 	 */
 	public static void playerChatMsg(Player p, String prefix, String msg) {
-		p.sendMessage(prefix + "§r " + msg);
+		p.sendMessage(prefix + ChatColor.RESET + " " + msg);
 	}
 
 	/**

@@ -20,4 +20,6 @@ updateMsgSrc: ''
 placeholders:
   PlaceholderAPI: ''
   MVdWPlaceholderAPI: ''
+  inChatEnable: ''
+  inCommandsEnable: ''
 debugMode: ''

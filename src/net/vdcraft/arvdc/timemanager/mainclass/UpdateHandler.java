@@ -62,7 +62,7 @@ public class UpdateHandler extends MainTM {
 				downloadURL = bukkitDownloadURL;
 				checkUpdateOnBukkit();
 			}
-		} else if (updateSource.equals(ARG_CURSE) || updateSource.equals(ARG_TWITCH)) {
+		} else if (updateSource.equals(ARG_CURSE)) {
 			if (getURL(bukkitURL)) {
 				updateSource = ARG_CURSE;
 				downloadURL = curseDownloadURL;
@@ -99,7 +99,7 @@ public class UpdateHandler extends MainTM {
 	 * Send the update message to the command sender
 	 */
 	private static void displayUpdateMsg(CommandSender sender) {
-		if (compareVersionsForUpdate()) {
+		if (newPluginVersionExists()) {
 			MsgHandler.playerAdminMsg(sender, "An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Final player msg
 			MsgHandler.colorMsg("An update is available, check §e" + downloadURL + "§r to get the " + latestVersion + " version."); // Console log msg
 		} else {
@@ -109,9 +109,9 @@ public class UpdateHandler extends MainTM {
 	}
 
 	/**
-	 * Compare the current version to the last found
+	 * Compare the current plugin version to the latest and returns "true" if an update exists
 	 */
-	private static boolean compareVersionsForUpdate() {
+	private static boolean newPluginVersionExists() {
 		int latestMajor = 0;
 		int latestMinor = 0;
 		int latestPatch = 0;
@@ -129,7 +129,7 @@ public class UpdateHandler extends MainTM {
 			latestRelease = Integer.parseInt(latestVersionNb[3]);
 		if (latestVersionNb.length >= 5)
 			latestDev = Integer.parseInt(latestVersionNb[4]);
-		if (ValuesConverter.tmVersionIsOk("cfg", latestMajor, latestMinor, latestPatch, latestRelease, latestDev)) return true;
+		if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("cfg", latestMajor, latestMinor, latestPatch, latestRelease, latestDev)) return true;
 		return false;
 	}
 
@@ -150,7 +150,7 @@ public class UpdateHandler extends MainTM {
 			JsonObject o = (JsonObject) new JsonParser().parse(response);
 			JsonElement e = (JsonElement) o.get("name");
 			latestVersion = e.toString().replaceFirst("TimeManager v", "").replace("\"", "");
-			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_BUKKIT + "/" + ARG_CURSE + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
+			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_BUKKIT + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
 		} catch (IOException e) {
 			MsgHandler.warnMsg(serverFailMsg); // Console warning msg
 		}

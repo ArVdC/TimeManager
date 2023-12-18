@@ -36,7 +36,7 @@ public class SignsHandler implements Listener {
 	}
 	
 	/**
-	 * Create auto-updated signs // TODO (1.8.0 ?)
+	 * Create auto-updated signs // TODO (1.9.0 ?)
 	 */
 	// On server load -> create 'signs.yml'
 	

@@ -15,7 +15,6 @@ public class TmSetUpdateMsgSrc extends MainTM {
 		// Check if the argument matches what is expected
 		if (updateSource.equalsIgnoreCase(ARG_BUKKIT)
 				|| updateSource.equalsIgnoreCase(ARG_CURSE)
-				|| updateSource.equalsIgnoreCase(ARG_TWITCH)
 				|| updateSource.equalsIgnoreCase(ARG_SPIGOT)
 				|| updateSource.equalsIgnoreCase(ARG_PAPER)
 				|| updateSource.equalsIgnoreCase(ARG_GITHUB)) {

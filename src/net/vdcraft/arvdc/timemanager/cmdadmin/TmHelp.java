@@ -1,6 +1,7 @@
 package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
@@ -11,62 +12,62 @@ public class TmHelp extends MainTM {
 	 * Help messages
 	 */
 	// Always copy this content in the README.md
-	private static String headerHelp = "§e---------§r Help: " + prefixTMColor + " §e---------";
-	private static String checkconfigHelpMsg = "§6/" + CMD_TM + " " + CMD_CHECKCONFIG
-			+ " §rAdmins and console can display a summary of the config.yml and lang.yml files.";
-	private static String checkSqlHelpMsg = "§6/" + CMD_TM + " " + CMD_CHECKSQL
-			+ " §rCheck the availability of the mySQL server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.";
-	private static String checktimeHelpMsg = "§6/" + CMD_TM + " " + CMD_CHECKTIME
-			+ " [all|server|world] §rAdmins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).";
-	private static String checkupdateHelpMsg = "§6/" + CMD_TM + " " + CMD_CHECKUPDATE
-			+ " [bukkit|spigot|github] §rSearch if a newer version of the plugin exists on the chosen server. (MC 1.18.9+ only)";
-	private static String helpHelpMsg = "§6/" + CMD_TM + " " + CMD_HELP
-			+ " [cmd] [<subCmd>] §rHelp provides you the correct usage and a short description of targeted command or subcommand.";
-	private static String tmNowHelpMsg = "§6/" + CMD_TM + " " + CMD_NOW
-			+ " [msg|title|actionbar] [all|player|world] §rSend the '/now' (chat, title or action bar) message to a specific player, all players in a specific world, or all online players.";
-	private static String reloadHelpMsg = "§6/" + CMD_TM + " " + CMD_RELOAD
-			+ " [all|cmds|config|lang] §rThis command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.";
-	private static String resyncHelpMsg = "§6/" + CMD_TM + " " + CMD_RESYNC
-			+ " [all|world] §rThis command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.";
-	private static String setDateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DATE
-			+ " [today|yyyy-mm-dd] [all|world] §rSets current date for the specified world (or all of them). Could be 'today' or any yyyy-mm-dd date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.";
-	private static String setDebugHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DEBUG
-			+ " [true|false] §rSet true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.";
-	private static String setDefLangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DEFLANG
-			+ " [lg_LG] §rChoose the translation to use if player's locale doesn't exist in the lang.yml or when 'multiLang' is 'false'.";
-	private static String setE_DaysHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_E_DAYS
-			+ " [0 → ∞] [all|world] §rSets current number of elapsed days for the specified world (or all of them). Could be an integer between '0' and infinity (or almost). Setting this to '0' will bring the world back to day one.";
-	private static String setFirstStartTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_FIRSTSTARTTIME
-			+ " [default|previous|start] [all|world] §rForces the time at which a world starts when starting the server. The value 'default' allows the usual resynchronization at startup. The value 'start' forces the world to start at the time specified in the world's 'start' node. The value 'previous' returns the time in the world before the server was shut down.";
-	private static String setInitialTickHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_INITIALTICK
-			+ " [ticks|HH:mm:ss] §rModify the server's initial tick.";
-	private static String setMultilangHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_MULTILANG
-			+ " [true|false] §rSet true or false to use an automatic translation for the §o/now§r command.";
-	private static String setPlayerOffsetHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYEROFFSET
-			+ " [-23999 → 23999] [all|player] §rDefine a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.";
-	private static String setPlayerTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYERTIME
-			+ " [ticks|daypart|HH:mm:ss|reset] [all|player] §rDefine a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.";
-	private static String setRefreshRateHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_REFRESHRATE
-			+ " [ticks] §rSet the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between '" + refreshMin + "' and '" + refreshMax + "'. Default value is '" + defRefresh + " ticks', please note that a too small value can cause server lags.";
-	private static String setSleepHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SLEEP
-			+ " [true|false|linked] [all|world] §rDefine if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false. If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.";
-	private static String setSpeedHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SPEED
-			+ " [multiplier] [all|world] §rThe decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.1' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to " + speedMax + " to speedup time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.";
-	private static String setSpeed_D_N_HelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_D_SPEED + " §ror §6/"
+	private static String headerHelp = ChatColor.YELLOW + "---------" + ChatColor.RESET + " Help: " + prefixTMColor + ChatColor.YELLOW + " ---------";
+	private static String checkconfigHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_CHECKCONFIG
+			+ " " + ChatColor.RESET + "Admins and console can display a summary of the config.yml and lang.yml files.";
+	private static String checkSqlHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_CHECKSQL
+			+ " " + ChatColor.RESET + "Check the availability of the mySQL server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.";
+	private static String checktimeHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_CHECKTIME
+			+ " [all|server|world] " + ChatColor.RESET + "Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).";
+	private static String checkupdateHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_CHECKUPDATE
+			+ " [bukkit|spigot|github] " + ChatColor.RESET + "Search if a newer version of the plugin exists on the chosen server. (MC 1.18.9+ only)";
+	private static String helpHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_HELP
+			+ " [cmd] [<subCmd>] " + ChatColor.RESET + "Help provides you the correct usage and a short description of targeted command or subcommand.";
+	private static String tmNowHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_NOW
+			+ " [msg|title|actionbar] [all|player|world] " + ChatColor.RESET + "Send the '/now' (chat, title or action bar) message to a specific player, all players in a specific world, or all online players.";
+	private static String reloadHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_RELOAD
+			+ " [all|cmds|config|lang] " + ChatColor.RESET + "This command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.";
+	private static String resyncHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_RESYNC
+			+ " [all|world] " + ChatColor.RESET + "This command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.";
+	private static String setDateHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DATE
+			+ " [today|yyyy-mm-dd] [all|world] " + ChatColor.RESET + "Sets current date for the specified world (or all of them). Could be 'today' or any yyyy-mm-dd date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.";
+	private static String setDebugHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DEBUG
+			+ " [true|false] " + ChatColor.RESET + "Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.";
+	private static String setDefLangHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DEFLANG
+			+ " [lg_LG] " + ChatColor.RESET + "Choose the translation to use if player's locale doesn't exist in the lang.yml or when 'multiLang' is 'false'.";
+	private static String setE_DaysHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_E_DAYS
+			+ " [0 → ∞] [all|world] " + ChatColor.RESET + "Sets current number of elapsed days for the specified world (or all of them). Could be an integer between '0' and infinity (or almost). Setting this to '0' will bring the world back to day one.";
+	private static String setFirstStartTimeHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_FIRSTSTARTTIME
+			+ " [default|previous|start] [all|world] " + ChatColor.RESET + "Forces the time at which a world starts when starting the server. The value 'default' allows the usual resynchronization at startup. The value 'start' forces the world to start at the time specified in the world's 'start' node. The value 'previous' returns the time in the world before the server was shut down.";
+	private static String setInitialTickHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_INITIALTICK
+			+ " [ticks|HH:mm:ss] " + ChatColor.RESET + "Modify the server's initial tick.";
+	private static String setMultilangHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_MULTILANG
+			+ " [true|false] " + ChatColor.RESET + "Set true or false to use an automatic translation for the " + ChatColor.ITALIC + "/now" + ChatColor.RESET + " command.";
+	private static String setPlayerOffsetHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYEROFFSET
+			+ " [-23999 → 23999] [all|player] " + ChatColor.RESET + "Define a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.";
+	private static String setPlayerTimeHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_PLAYERTIME
+			+ " [ticks|daypart|HH:mm:ss|reset] [all|player] " + ChatColor.RESET + "Define a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.";
+	private static String setRefreshRateHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_REFRESHRATE
+			+ " [ticks] " + ChatColor.RESET + "Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between '" + refreshMin + "' and '" + refreshMax + "'. Default value is '" + defRefresh + " ticks', please note that a too small value can cause server lags.";
+	private static String setSleepHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SLEEP
+			+ " [true|false|linked] [all|world] " + ChatColor.RESET + "Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false. If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.";
+	private static String setSpeedHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SPEED
+			+ " [multiplier] [all|world] " + ChatColor.RESET + "The decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.1' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to " + speedMax + " to speedup time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.";
+	private static String setSpeed_D_N_HelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_D_SPEED + " " + ChatColor.RESET + "or " + ChatColor.GOLD + "/"
 			+ CMD_TM + " " + CMD_SET + " " + CMD_SET_N_SPEED
-			+ " [multiplier] [all|world] §rFrom '0.0' to '10.0', the values of daySpeed and nightSpeed can be different from each other.";
-	private static String setStartHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_START
-			+ " [ticks|daypart|HH:mm:ss|timeShift] [all|world] §rDefines the time at server startup for the specified world (or all of them). By default, all worlds will start at tick #0. The timer(s) will be immediately resynchronized. If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.";
-	private static String setSyncHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SYNC
-			+ " [true|false] [all|world] §rDefine if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";
-	private static String setTimeHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_TIME
-			+ " [ticks|daypart|HH:mm:ss] [all|world] §rSets current time for the specified world (or all of them). Consider using this instead of the vanilla §o/time§r command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
-	private static String setupdateSrcHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_UPDATE
-			+ " [bukkit|spigot|github] §rDefine the source server for the update search. (MC 1.8.8+ only)";
-	private static String setUseCmdsHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_USECMDS
-			+ " [true|false] §rSet true to enable a custom commands scheduler. See the " + CMDSFILENAME + " file for details.";
+			+ " [multiplier] [all|world] " + ChatColor.RESET + "From '0.0' to '10.0', the values of daySpeed and nightSpeed can be different from each other.";
+	private static String setStartHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_START
+			+ " [ticks|daypart|HH:mm:ss|timeShift] [all|world] " + ChatColor.RESET + "Defines the time at server startup for the specified world (or all of them). By default, all worlds will start at tick #0. The timer(s) will be immediately resynchronized. If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.";
+	private static String setSyncHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SYNC
+			+ " [true|false] [all|world] " + ChatColor.RESET + "Define if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.";
+	private static String setTimeHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_TIME
+			+ " [ticks|daypart|HH:mm:ss] [all|world] " + ChatColor.RESET + "Sets current time for the specified world (or all of them). Consider using this instead of the vanilla " + ChatColor.ITALIC + "/time" + ChatColor.RESET + " command. The tab completion also provides handy presets like \"day\", \"noon\", \"night\", \"midnight\", etc.";
+	private static String setupdateSrcHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_UPDATE
+			+ " [bukkit|spigot|github] " + ChatColor.RESET + "Define the source server for the update search. (MC 1.8.8+ only)";
+	private static String setUseCmdsHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_USECMDS
+			+ " [true|false] " + ChatColor.RESET + "Set true to enable a custom commands scheduler. See the " + CMDSFILENAME + " file for details.";
 	// Except this line, used when 'set' is used without additional argument
-	private static String missingSetArgHelpMsg = "§6/" + CMD_TM + " " + CMD_SET + " ["
+	private static String missingSetArgHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " ["
 			+ CMD_SET_DATE + "|"
 			+ CMD_SET_DEBUG + "|"
 			+ CMD_SET_DEFLANG + "|"
@@ -86,7 +87,7 @@ public class TmHelp extends MainTM {
 			+ CMD_SET_TIME + "|"
 			+ CMD_SET_UPDATE + "|"
 			+ CMD_SET_USECMDS
-			+ "]: §rThis command, used with arguments, permit to change plugin parameters.";
+			+ "]: " + ChatColor.RESET + "This command, used with arguments, permit to change plugin parameters.";
 
 	/**
 	 * CMD /tm help [cmd]

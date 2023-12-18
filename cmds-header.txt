@@ -1,0 +1,31 @@
+[TimeManager] by ArVdC
+cmds.yml
+-----
+*version*
+ This field is automatically checked and refreshed, don't modify it manually.
+-----
+*useCmds*
+ Set to true to activate the scheduler.
+-----
+*cmdsList*
+  Nodes names must be following numbers. Each node must contains the following keys :
+  *cmds*
+    The console command(s) you want to run. 
+    If you use multiple commands, they must be in a numbered list, one command per line.
+    It is possible to specify a break time between two commands : instead of a command line, use 'wait' or 'pause' and the desired number of seconds to wait.
+  *cmdsRefTime*
+    The source whose will be checked for expected time and date.
+    Possible values are any Minecraft world name or 'UTC+[timeShift]'.
+    If using 'UTC+[timeShift]', the plugin will use the local time of your choice as a reference.
+  *plholderRefWorld*
+    The Minecraft world that will be use as source for the placeholders described in lang.yml file.
+    Only the {tm_player} doesn't not work with the scheduler, cause the command sender is the console.
+  *time*
+    The time the command will be launched, formatted as 'hh:mm'.
+  *date*
+    The next day the command will be launched, formatted as 'yyyy-mm-dd'. 'today' can also be used and will be automatically converted to a date.
+  *repeatFreq*
+    The repetition frequency at which the command will be launched, possibly values are : [none|hour|day|month|year].
+-----
+>>> Since version 1.8.0, this file supports hexadecimal colors. <<<
+-----

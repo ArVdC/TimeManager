@@ -31,9 +31,13 @@ import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SleepHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.ChatHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.ConsoleCommandHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.PlayerCommandHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.MVdWPAPIHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PAPIHandler;
 
+@SuppressWarnings("unused")
 public class MainTM extends JavaPlugin {
 
 	/*****************
@@ -49,8 +53,8 @@ public class MainTM extends JavaPlugin {
 	}
 
 	// Enable/Disable debugging
-	public static Boolean debugMode = false; // Displays user accessible debug msgs
-	public static Boolean devMode = false; // Displays more verbose debug msgs
+	public static Boolean debugMode = false; // Displays user accessible debug messages
+	public static Boolean devMode = false; // Displays more verbose debug messages
 	public static Boolean timerMode = false; // Displays all timers calculations (= ultra-verbose mode)
 
 	// Current Minecraft server version decimals "x.xx" (without the "1." and eventually with a "x.0x" format - to permit comparisons)
@@ -66,6 +70,7 @@ public class MainTM extends JavaPlugin {
 	public static Double reqMcVForTxtCompLegacyMsg = 12.0;
 	public static Double reqMcVForNewSendTitleMsg = 16.0;
 	public static Double maxMcVForTabCompHack = 13.02;
+	public static Double reqMcVForHexColors = 16.0;
 
 	// Default config files values
 	protected static long defWakeUpTick = 0L;
@@ -148,13 +153,15 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_PASSWORD = "password";
 	protected static final String CF_UPDATEMSGSRC = "updateMsgSrc";
 	protected static final String CF_DEBUGMODE = "debugMode";
-	protected static final String CF_PLACEHOLDER = "placeholders";
+	public static final String CF_PLACEHOLDERS = "placeholders";
 	protected static final String CF_PLACEHOLDER_PAPI = "PlaceholderAPI";
 	protected static final String CF_PLACEHOLDER_MVDWPAPI = "MVdWPlaceholderAPI";
+	public static final String CF_PLACEHOLDER_CHAT = "inChatEnable";
+	public static final String CF_PLACEHOLDER_CMDS = "inCommandsEnable";
 	
 	// Lang file keys
 	protected static final String CF_USEMULTILANG = "useMultiLang";
-	protected static final String CF_DEFAULTLANG = "defaultLang";
+	public static final String CF_DEFAULTLANG = "defaultLang";
 	protected static final String CF_DEFAULTDISPLAY = "defaultDisplay";
 	public static final String CF_LANGUAGES = "languages";
 	public static final String CF_TITLES = "titles";
@@ -166,6 +173,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_MSG = "msg";
 	protected static final String CF_NETHERMSG = "netherMsg";
 	protected static final String CF_ENDMSG = "endMsg";
+	protected static final String CF_NOMSG = "noMsg";
 	protected static final String CF_TITLE = "title";
 	protected static final String CF_SUBTITLE = "subtitle";
 	protected static final String CF_ACTIONBAR = "actionbar";
@@ -238,7 +246,7 @@ public class MainTM extends JavaPlugin {
 	
 	// Commands arguments names
 	public static final String ARG_TRUE = "true";
-	protected static final String ARG_FALSE = "false";
+	public static final String ARG_FALSE = "false";
 	protected static final String ARG_NONE = "none";
 	protected static final String ARG_FIRST = "first";
 	protected static final String ARG_RE = "re";
@@ -257,7 +265,6 @@ public class MainTM extends JavaPlugin {
 	protected static final String ARG_SERVER = "server";
 	protected static final String ARG_BUKKIT = "bukkit";
 	protected static final String ARG_CURSE = "curse";
-	protected static final String ARG_TWITCH = "twitch";
 	protected static final String ARG_SPIGOT = "spigot";
 	protected static final String ARG_PAPER = "paper";
 	protected static final String ARG_GITHUB = "github";
@@ -300,17 +307,21 @@ public class MainTM extends JavaPlugin {
 	
 	// Files names
 	protected static final String CONFIGFILENAME = "config.yml";
-	protected static final String HEADERFILENAME = "header.txt";
+	protected static final String CONFIGHEADERFILENAME = "config-header.txt";
 	protected static final String LANGFILENAME = "lang.yml";
+	protected static final String LANGHEADERFILENAME = "lang-header.txt";
 	protected static final String CMDSFILENAME = "cmds.yml";
+	protected static final String CMDSHEADERFILENAME = "cmds-header.txt";
 
 	// Config and Lang files targets
 	public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
-	public File headerFileTxt = new File(this.getDataFolder(), HEADERFILENAME);
+	public File configHeaderFileTxt = new File(this.getDataFolder(), CONFIGHEADERFILENAME);
 	public File langFileYaml = new File(this.getDataFolder(), LANGFILENAME);
 	public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
+	public File langHeaderFileTxt = new File(this.getDataFolder(), LANGHEADERFILENAME);
 	public File cmdsFileYaml = new File(this.getDataFolder(), CMDSFILENAME);
 	public FileConfiguration cmdsConf = YamlConfiguration.loadConfiguration(cmdsFileYaml);
+	public File cmdsHeaderFileTxt = new File(this.getDataFolder(), CMDSHEADERFILENAME);
 
 	// Use a lang_backup file
 	protected final static String LANGBCKPFILENAME = "lang_backup.yml";
@@ -651,34 +662,39 @@ public class MainTM extends JavaPlugin {
 			// #9. Listen to books events
 			getServer().getPluginManager().registerEvents(new BooksHandler(), this);
 
-			// #10. Listen to books events
+			// #10. Listen to signs events
 			getServer().getPluginManager().registerEvents(new SignsHandler(), this);
 
-			// #11. Synchronize worlds and create scheduled task for faking the time increase/decrease
+			// #11. Listen to chat events
+			getServer().getPluginManager().registerEvents(new ChatHandler(), this);
+
+			// #12. Listen to commands events
+			getServer().getPluginManager().registerEvents(new PlayerCommandHandler(), this);
+			getServer().getPluginManager().registerEvents(new ConsoleCommandHandler(), this);			
+
+			// #13. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();
 
-			// #12. Activate (or not) the placeholder APIs
-			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
+			// #14. Activate (or not) the placeholder APIs
+			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
 				new PAPIHandler(this).register();
 			}
-			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)
+			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_MVDWPAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_MVDWPAPI + " detected.");
 				MVdWPAPIHandler.loadMVdWPlaceholderAPI();
 			}
 			
-			// #13. bStats
+			// #15. bStats
 			int pluginId = 10412;
-	        @SuppressWarnings("unused")
 	        Metrics metrics = new Metrics(this, pluginId);
 
-			// #14. Confirm activation in console
+			// #16. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
-			
-			// #15. Check for an update
+			// #17. Check for an update
 			if (serverMcVersion >= MainTM.reqMcVForUpdate)
 				UpdateHandler.delayCheckForUpdate();
 			else MsgHandler.warnMsg(updateCommandsDisabledMsg + reqMcVForUpdate.toString().replace(".0", "."));

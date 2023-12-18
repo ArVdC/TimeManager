@@ -35,18 +35,18 @@ public class CfgFileHandler extends MainTM {
 			
 			// #1.D. Load the header from the .txt file
 			// #1.D.a. Extract the file from the .jar
-			CopyFilesHandler.copyAnyFile(HEADERFILENAME, MainTM.getInstance().headerFileTxt);
+			CopyFilesHandler.copyAnyFile(CONFIGHEADERFILENAME, MainTM.getInstance().configHeaderFileTxt);
 			// #1.D.b. Try to get the documentation text
 			List<String> header = new ArrayList<String>();
 			try {
-				header.addAll(Files.readAllLines(MainTM.getInstance().headerFileTxt.toPath(), Charset.defaultCharset()));
+				header.addAll(Files.readAllLines(MainTM.getInstance().configHeaderFileTxt.toPath(), Charset.defaultCharset()));
 			} catch (IOException e) {
-				header.add("header.txt could not be loaded. Find it inside the .jar file to get the config.yml documentation.");
+				header.add(CONFIGHEADERFILENAME + " could not be loaded. Find it inside the .jar file to get the " + CONFIGFILENAME + " documentation.");
 			}
-			MsgHandler.devMsg("The §eheader§9 of congif.yml file contents : §e" + header); // Console dev msg
-			// #1.D.c. Delete the header.txt file
-			MainTM.getInstance().headerFileTxt.delete();
-			// #1.D.d. Set the header into the config.yml file
+			MsgHandler.devMsg("The §eheader§9 of " + CONFIGFILENAME + " file contents : §e" + header); // Console dev msg
+			// #1.D.c. Delete the txt file
+			MainTM.getInstance().configHeaderFileTxt.delete();
+			// #1.D.d. Set the header into the yml file
 			MainTM.getInstance().getConfig().options().setHeader(header);
 		}
 		
@@ -157,17 +157,29 @@ public class CfgFileHandler extends MainTM {
 		}
 		
 		// #13. Set the default value if missing or corrupt for the placeholder keys
-		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
-				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, ARG_FALSE);
+		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDERS)
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI, ARG_FALSE);
 		} else {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_PAPI, ARG_TRUE);
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI, ARG_TRUE);
 		}
-		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDER)
-				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)) {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_FALSE);
+		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDERS)
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_FALSE);
 		} else {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDER + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_TRUE);
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_MVDWPAPI, ARG_TRUE);
+		}
+		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDERS)
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CHAT).equalsIgnoreCase(ARG_FALSE)) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CHAT, ARG_TRUE);
+		} else {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CHAT, ARG_FALSE); // TODO 1.8.0
+		}
+		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDERS)
+				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS).equalsIgnoreCase(ARG_FALSE)) {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS, ARG_TRUE);
+		} else {
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS, ARG_FALSE); // TODO 1.8.0
 		}
 
 		// #14. Restore debugMode node location

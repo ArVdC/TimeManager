@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
 
 public class NowMsgHandler extends MainTM {
@@ -32,7 +33,7 @@ public class NowMsgHandler extends MainTM {
 	public static boolean sendNowMsg(CommandSender sender, String display, World w) {
 		// #1. Set basic variables
 		Player p = ((Player) sender);
-		String player = p.getName();
+		//String player = p.getName();
 		String world = w.getName();
 		String msg = null;
 		String subtitle = null;
@@ -70,15 +71,28 @@ public class NowMsgHandler extends MainTM {
 		
 		// #5. Replace placeholders
 		msg = msg.replace("&", "§");
-		msg = msg.replace("{tm_player}", player);
+		//msg = msg.replace("{tm_player}", player);
 		msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
 		if (display.equalsIgnoreCase("title")) {
 			subtitle = subtitle.replace("&", "§");
-			subtitle = subtitle.replace("{tm_player}", player);
+			//subtitle = subtitle.replace("{tm_player}", player);
 			subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);		
 		}
-				
-		// #6. Configure and send command
+		
+		// #6. Replace hexadecimal colors by ChatColors
+		if (serverMcVersion >= reqMcVForHexColors){ // Check if MC version is at least 1.16.0
+			msg = ValuesConverter.replaceAllHexColors(msg);
+			switch (display) {
+			case ARG_MSG :
+				prefix = ValuesConverter.replaceAllHexColors(prefix);
+				break;
+			case ARG_TITLE :
+				subtitle = ValuesConverter.replaceAllHexColors(subtitle);
+				break;
+			}
+		}
+		
+		// #7. Configure and send command
 		switch (display) {
 		case ARG_MSG :
 			MsgHandler.playerChatMsg(p, prefix, msg);

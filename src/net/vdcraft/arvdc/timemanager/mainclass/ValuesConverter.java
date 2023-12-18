@@ -2,10 +2,13 @@ package net.vdcraft.arvdc.timemanager.mainclass;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
+import net.md_5.bungee.api.ChatColor;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 public class ValuesConverter extends MainTM {
@@ -573,10 +576,10 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Compares two TimeManager versions, returns "true" if edgeVersion is bigger than the current one
+	 * Compares two versions of TimeManager, returns "true" if the requested version is newer than the current one
 	 * (returns a boolean)
 	 */
-	public static boolean tmVersionIsOk(String srcFile, int edgeMajor, int edgeMinor, int edgePatch, int edgeRelease, int edgeDev) {
+	public static boolean requestedPluginVersionIsNewerThanCurrent(String srcFile, int requestedMajor, int requestedMinor, int requestedPatch, int requestedRelease, int requestedDev) {
 		String currentVersion;
 		int currentMajor = 0;
 		int currentMinor = 0;
@@ -600,11 +603,11 @@ public class ValuesConverter extends MainTM {
 		if (currentVersionNb.length >= 4) currentRelease = Integer.parseInt(currentVersionNb[3]);
 		if (currentVersionNb.length >= 5) currentDev = Integer.parseInt(currentVersionNb[4]);    	
 		// Compares versions
-		if ((edgeMajor > currentMajor) 
-				|| (edgeMajor == currentMajor && edgeMinor > currentMinor)
-				|| (edgeMajor == currentMajor && edgeMinor == currentMinor && edgePatch > currentPatch)
-				|| (edgeMajor == currentMajor && edgeMinor == currentMinor && edgePatch == currentPatch && edgeRelease > currentRelease)
-				|| (edgeMajor == currentMajor && edgeMinor == currentMinor && edgePatch == currentPatch && edgeRelease == currentRelease && edgeDev > currentDev)) {
+		if ((requestedMajor > currentMajor) 
+				|| (requestedMajor == currentMajor && requestedMinor > currentMinor)
+				|| (requestedMajor == currentMajor && requestedMinor == currentMinor && requestedPatch > currentPatch)
+				|| (requestedMajor == currentMajor && requestedMinor == currentMinor && requestedPatch == currentPatch && requestedRelease > currentRelease)
+				|| (requestedMajor == currentMajor && requestedMinor == currentMinor && requestedPatch == currentPatch && requestedRelease == currentRelease && requestedDev > currentDev)) {
 			return true;
 		}
 		return false;
@@ -612,9 +615,10 @@ public class ValuesConverter extends MainTM {
 
 	/**
 	 * Replaces characters before splitting version String into integers
+	 * (returns a String)
 	 */
 	public static String replaceChars(String version) {
-		MsgHandler.devMsg("version : " + version);
+		MsgHandler.devMsg("Plugin version to convert : " + version);
 		version = version.replace("dev", "d")
 				.replace("alpha", "a")
 				.replace("beta", "b")
@@ -626,6 +630,7 @@ public class ValuesConverter extends MainTM {
 				.replace("-", ".")
 				.replace("...", ".")
 				.replace("..", ".");
+		MsgHandler.devMsg("Plugin version converted : " + version);
 		try {
 			String versionIntTest = version.replace(".", "");
 			Integer.parseInt(versionIntTest); // Prevent all other parse errors
@@ -638,6 +643,7 @@ public class ValuesConverter extends MainTM {
 	
 	/**
 	 * Concatenate world name in several parts
+	 * (returns a String)
 	 */
 	public static String concatenateNameWithSpaces(CommandSender sender, String[] args, int firstPartArg) {
 		List<String> worlds = CfgFileHandler.setAnyListFromConfig(MainTM.CF_WORLDSLIST);
@@ -653,6 +659,24 @@ public class ValuesConverter extends MainTM {
 		}
 		MsgHandler.devMsg("Concatenate world name : " + concatWorldName);
 		return concatWorldName;
+	}
+	
+	/**
+	 * Replace any hexadecimal color by corresponding ChatColor
+	 * (returns a String)
+	 */	
+	// Define hexadecimal colors pattern
+	private final static Pattern hexpattern = Pattern.compile("#[a-fA-F0-9]{6}");
+	public static String replaceAllHexColors(String txt) {
+		Matcher match = hexpattern.matcher(txt);
+		while (match.find()) {
+			MsgHandler.devMsg("The matcher found an hexadecimal color in the §e/now §9message");	
+			String color = match.group(); // Get the first hexadecimal color found
+			MsgHandler.devMsg("This hexadecimal color is §e" + color);
+			MsgHandler.devMsg("The corresponding color is " + ChatColor.translateAlternateColorCodes('&', ChatColor.of(color).toString()) + ChatColor.of(color).getColor());
+			txt = txt.replace(color, ChatColor.of(color).toString());// Convert it to the corresponding ChatColor
+		}		
+		return txt;
 	}
 
 	/**
@@ -670,7 +694,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains initial tick (modifies the configuration without saving the file)
+	 * Restrains initial tick
+	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainInitTick() {
 		long newInitialTick;
@@ -685,7 +710,8 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains wakeUpTick tick (modifies the configuration without saving the file)
+	 * Restrains wakeUpTick tick
+	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainWakeUpTick() {
 		long newWakeUpTick = defWakeUpTick;

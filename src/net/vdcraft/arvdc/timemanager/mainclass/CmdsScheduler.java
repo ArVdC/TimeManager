@@ -257,7 +257,11 @@ public class CmdsScheduler extends MainTM {
 									}
 								}
 							}
-							// #11.C. Check if a waiting time is asked
+							// #11.C Replace hexadecimal colors by ChatColors
+							if (serverMcVersion >= reqMcVForHexColors){ // Check if MC version is at least 1.16.0
+								command = ValuesConverter.replaceAllHexColors(command);
+							}
+							// #11.D. Check if a waiting time is asked
 							if (command.contains("wait ") || command.contains("pause ") ) {							
 								String[] pauseSlipt = command.split(" ");
 								if (pauseSlipt.length >= 1) {
@@ -269,7 +273,7 @@ public class CmdsScheduler extends MainTM {
 										MsgHandler.errorMsg(waitBeforeCmdMsg); // Console error msg
 									}
 								}
-							// #11.D. Dispatch the command	
+							// #11.E. Dispatch the command	
 							} else {
 								delayedCmdDispatch(delay, command);
 							}
