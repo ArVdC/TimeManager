@@ -265,7 +265,7 @@ public class CmdsScheduler extends MainTM {
 							if (command.contains("wait ") || command.contains("pause ") ) {							
 								String[] pauseSlipt = command.split(" ");
 								if (pauseSlipt.length >= 1) {
-									MsgHandler.devMsg("A waiting time is asked for " + pauseSlipt[1] + " seconds"); // Console dev msg
+									MsgHandler.devMsg("A waiting time is asked for §e" + pauseSlipt[1] + "§9 seconds"); // Console dev msg
 									try {
 										Long p = Long.parseLong(pauseSlipt[1]) * 20;
 										delay = delay + p;

@@ -95,7 +95,7 @@ public class SyncHandler extends MainTM {
 				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + world24hNoSyncChgMsg); // Player final msg (in case)
 				// #2.A.c Debug Msg
 				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
-				MsgHandler.debugMsg(adjustedTicksCalculation + " = §8" + currentServerTick + " §b/ §672 §b= §3" + ((currentServerTick / 72L) % 24000)); // Console debug msg
+				MsgHandler.debugMsg(worldTicksCalculation + " = §8" + currentServerTick + " §b/ §672 §b= §3" + ((currentServerTick / 72L) % 24000)); // Console debug msg
 				MsgHandler.debugMsg(realActualTimeCalculation + " = §e" + startAtTickNb + " §b- §96000 §b+ §3" + ((currentServerTick / 72L) % 24000) + " §b= §c" + (startAtTickNb - 6000L + (currentServerTick / 72L)) % 24000 + " §brestrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime)); // Console debug msg
 
 			// #2.B. ... or if it is a frozen world ...
@@ -149,9 +149,17 @@ public class SyncHandler extends MainTM {
 				MsgHandler.playerAdminMsg(sender, "The world §e" + world + " §r" + resyncDoneMsg); // Player final msg (in case)		
 				// #2.F.c. Debug Msg
 				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
-				MsgHandler.debugMsg(elapsedTimeCalculation + " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b= §d" + ((currentServerTick - initialTick) % 24000) + " §brestrained to one day = §d" + ValuesConverter.correctDailyTicks(((currentServerTick % 24000) - (initialTick % 24000)))); // Console debug msg
-				MsgHandler.debugMsg(adjustedElapsedTimeCalculation + " = §d" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + speed + " §b= §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed)))); // Console debug msg
-				MsgHandler.debugMsg(actualTimeCalculation + " = §e" + startAtTickNb + " §b+ §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed) + " §b= §c" + (startAtTickNb + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed)) + " §brestrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime)); // Console debug msg
+				MsgHandler.debugMsg(elapsedTimeCalculation
+						+ " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b="
+						+ " §d" + ((currentServerTick - initialTick) % 24000)
+						+ " §b(Restrained to one day = §d" + ValuesConverter.correctDailyTicks(((currentServerTick % 24000) - (initialTick % 24000))) + "§b)"); // Console debug msg
+				MsgHandler.debugMsg(worldElapsedTimeCalculation
+						+ " = §d" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + speed
+						+ " §b= §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed)))); // Console debug msg
+				MsgHandler.debugMsg(actualTimeCalculation
+						+ " = §e" + startAtTickNb + " §b+ §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed)
+						+ " §b= §c" + (startAtTickNb + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * speed))
+						+ " §b(Restrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime) + "§b)"); // Console debug msg
 				
 			// #2.G. ... or if it is a (daySpeed != nightSpeed) world
 			} else {
@@ -203,64 +211,91 @@ public class SyncHandler extends MainTM {
 	/**
 	 * Calculate world time when daySpeed and nightSpeed are not equal (returns a long)
 	 */
-	public static long differentSpeedsNewTime(String world, long startAtTickNb, long elapsedServerTime, long currentServerTick, double speedAtStart, double daySpeed, double nightSpeed, boolean displayMsg) {
+	public static long differentSpeedsNewTime(String world, long worldStartAt, long elapsedServerTime, long currentServerTick, double speedAtStart, double daySpeed, double nightSpeed, boolean displayMsg) {
 		// Get the required server time for spending a day or a night or both in the target world
 		long worldDayTimeInServerTicks = (long) (13000 / daySpeed);
 		long worldNightTimeInServerTicks = (long) (11000 / nightSpeed);
 		long worldFullTimeInServerTicks = worldDayTimeInServerTicks + worldNightTimeInServerTicks;
 		// Use two variables for speed, depending of day/night starting time
-		double firstSpeed = daySpeed; // day
+		double firstSpeed = daySpeed; // if world starts with a day
 		double secondSpeed = nightSpeed;
+		long firstHalfDaylightCycle = 13000;
+		long secondHalfDaylightCycle = 11000;
+		long firstCycleDuration = worldDayTimeInServerTicks;
 		long secondCycleDuration = worldNightTimeInServerTicks;
-		long halfDaylightCycle = 13000;
-		if (speedAtStart == nightSpeed) { // night
+		if (speedAtStart == nightSpeed) { // if world starts with a night
 			firstSpeed = nightSpeed;	
 			secondSpeed = daySpeed;
+			firstHalfDaylightCycle = 11000;
+			secondHalfDaylightCycle = 13000;
+			firstCycleDuration = worldNightTimeInServerTicks;
 			secondCycleDuration = worldDayTimeInServerTicks;
-			halfDaylightCycle = 11000;
 		}
 		// Use a clone of elapsedTime to subtract the number of ticks remaining
 		long serverRemainingTime = elapsedServerTime;
 		long newTime;
-		// #1. If elapsed time is smaller than the difference between an half day minus and the startTime (= no day/night change) ...
-		if ((elapsedServerTime * firstSpeed) < (halfDaylightCycle - (startAtTickNb % halfDaylightCycle))) {
+		
+		// #1. If elapsed time is smaller than the difference between an half day minus the startTime (= no day/night change) ...
+		if ((elapsedServerTime * firstSpeed) < (firstHalfDaylightCycle - (worldStartAt % firstHalfDaylightCycle))) {
 			// #1.A. Use the classic easy formula
-			newTime = (long) (startAtTickNb + (elapsedServerTime * firstSpeed));
+			newTime = (long) ((worldStartAt + (elapsedServerTime * firstSpeed)) % 24000);
 			// #1.B. Debug Msg
 			if (displayMsg) {
 				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
-				MsgHandler.debugMsg(elapsedTimeCalculation + " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b= §d" + ((currentServerTick - initialTick) % 24000) + " §brestrained to one day = §d" + ValuesConverter.correctDailyTicks(((currentServerTick % 24000) - (initialTick % 24000)))); // Console debug msg
-				MsgHandler.debugMsg(adjustedElapsedTimeCalculation + " = §d" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + firstSpeed + " §b= §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed)))); // Console debug msg
-				MsgHandler.debugMsg(actualTimeCalculation + " = §e" + startAtTickNb + " §b+ §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed) + " §b= §c" + (startAtTickNb + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed)) + " §brestrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime)); // Console debug msg
+				MsgHandler.debugMsg(elapsedTimeCalculation
+						+ " = (§8" + currentServerTick + " §b- §7" + initialTick + "§b) % §624000 §b="
+						+ " §d" + ((currentServerTick - initialTick) % 24000)
+						+ " §b(Restrained to one day = §d" + ValuesConverter.correctDailyTicks(((currentServerTick % 24000) - (initialTick % 24000))) + "§b)"); // Console debug msg
+				MsgHandler.debugMsg(worldElapsedTimeCalculation
+						+ " = §d" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick % 24000))) + " §b* §a" + firstSpeed
+						+ " §b= §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed)))); // Console debug msg
+				MsgHandler.debugMsg(actualTimeCalculation
+						+ " = §e" + worldStartAt + " §b+ §5" + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed)
+						+ " §b= §c" + (worldStartAt + ((ValuesConverter.correctDailyTicks(((currentServerTick - initialTick) % 24000))) * firstSpeed))
+						+ " §b(Restrained to one day = §ctick #" + ValuesConverter.correctDailyTicks(newTime) + "§b)"); // Console debug msg
 			}
-		// #2. ... or if elapsed time is bigger than an half-day (= a least one day/night change)
-		} else {
-			// #2.A. Count the 1st cycle (<= half-day)
-			newTime = halfDaylightCycle; // (+) 1st cycle
-			serverRemainingTime = (long) (serverRemainingTime - ((halfDaylightCycle - startAtTickNb) * firstSpeed)); // (-) 1st cycle
-			// #2.B. Count down all full-days
-			if (serverRemainingTime > worldFullTimeInServerTicks) {
-				serverRemainingTime = (long) (serverRemainingTime % (worldFullTimeInServerTicks)); // (-) all full daylightCycles
-			}
-			// #2.C. Count an eventual complete day or night cycle ...
-			if (serverRemainingTime > secondCycleDuration) {
-				newTime = (long) (newTime + halfDaylightCycle); // (+) a complete day or night cycle
-				serverRemainingTime = serverRemainingTime - secondCycleDuration; // (-) a complete day or night cycle
+		// #2. ... else if elapsed time is bigger than an half-day (= a least one day/night change)
+		} else {			
+			
+			// #2.A. Count the elapsed 1st half-cycle (day or night)
+				newTime = firstHalfDaylightCycle; // (+) 1st complete half-cycle
+				serverRemainingTime = (long) (elapsedServerTime - firstCycleDuration + (worldStartAt / firstSpeed)); // (-) 1st complete half-cycle
+				// #2.B. Count down all full-days
+				if (serverRemainingTime > worldFullTimeInServerTicks) {
+					serverRemainingTime = (long) (serverRemainingTime % (worldFullTimeInServerTicks)); // (-) all full daylightCycles
+				}
+				// #2.C.a. Count an eventual complete half-cycle (day or night) ...
+				if (serverRemainingTime > secondCycleDuration) {
+					newTime = (long) (newTime + secondHalfDaylightCycle); // (+) 2nd complete half-cycle
+					serverRemainingTime = serverRemainingTime - secondCycleDuration; // (-) 2nd complete half-cycle
 
-				// #2.C.a. ... and finally count the rest of the last day or night cycle
-				newTime = (long) (newTime + (serverRemainingTime * firstSpeed)); // (+) last partial 
+					// #2.C.b. ... and finally count the rest of the last half-cycle (day or night)
+					newTime = (long) (newTime + (serverRemainingTime * firstSpeed)); // (+) 3nd and last partial half-cycle
 
-				// #2.C.b. ... or directly count the rest of the last day or night cycle
-			} else {
-				newTime = (long) (newTime + serverRemainingTime * secondSpeed); // (+) last partial cycle
-			}
-			// Restrain too big and too small values
+				// #2.D. ... or directly count the rest of the last half-cycle (day or night)
+				} else {
+					newTime = (long) (newTime + (serverRemainingTime * secondSpeed)); // (+) 2nd and last partial half-cycle
+			}	
+			// #2.E. Restrain too big and too small values
 			newTime = ValuesConverter.correctDailyTicks(newTime);
-			// #2.D. Debug Msg
+			
+			// #2.F. Debug Msg
 			if (displayMsg) {
 				MsgHandler.debugMsg("Resync: Calculation of " + actualTimeVar + " for world §e" + world + "§b:");
-				MsgHandler.debugMsg(serverRemainingTimeVar + " = (" + elapsedTimeVar + " - ((" + halfDaylightCycleVar + " - " + worldStartAtVar + ") / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + "))) % ((§" + halfDaylightCycle + " §b/ " + daySpeedModifierVar + ") + (§f12000 §b/ " + nightSpeedModifierVar + "))) - (§f0 §b|| §f" + halfDaylightCycle + "§b) / (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §5" + serverRemainingTime); // Console debug msg
-				MsgHandler.debugMsg(actualTimeVar + " = " + halfDaylightCycleVar + " + §b(§f0 §b|| §f" + halfDaylightCycle + "§b) + (" + serverRemainingTimeVar + " * (" + daySpeedModifierVar + " || " + nightSpeedModifierVar + ")) = §c" + "§ctick #" + newTime); // Console debug msg
+				MsgHandler.debugMsg(serverRemainingTimeVar
+						+ " = (" + elapsedTimeVar + " - ((" + firstHalfDaylightCycleVar + " - " + worldStartAtVar + ")"
+						+ " / (" + firstSpeedModifierVar + ")))"
+						+ " % ((" + firstHalfDaylightCycleVar + " / " + firstSpeedModifierVar
+						+ ") + (" + secondHalfDaylightCycleVar + " / " + secondSpeedModifierVar + ")))"
+						+ " - (" + secondHalfDaylightCycleVar + ")"
+						+ " / (" + firstSpeedModifierVar + " || " + secondSpeedModifierVar + "))"
+						+ " = §5" + serverRemainingTime); // Console debug msg
+				MsgHandler.debugMsg(actualTimeVar
+						+ " = " + firstHalfDaylightCycleVar
+						+ " + (" + serverRemainingTimeVar + " * " + secondSpeedModifierVar
+						+ " || " + secondHalfDaylightCycleVar + " + " + serverRemainingTimeVar + " * "
+						+ firstSpeedModifierVar + ")"
+						+ " = §c" + "§ctick #" + newTime); // Console debug msg
 			}
 		} 
 		return newTime;

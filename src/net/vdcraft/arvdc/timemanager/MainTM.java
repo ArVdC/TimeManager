@@ -115,9 +115,11 @@ public class MainTM extends JavaPlugin {
 	
 	// Add each active schedule in corresponding list
 	public static List<String> realSpeedSchedulerIsActive = new ArrayList<String>();
-	public static List<String> syncSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> syncConstantSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> syncVariableSpeedSchedulerIsActive = new ArrayList<String>();
 	public static List<String> asyncIncreaseSpeedSchedulerIsActive = new ArrayList<String>();
 	public static List<String> asyncDecreaseSpeedSchedulerIsActive = new ArrayList<String>();
+	public static List<String> asyncNormalSpeedSchedulerIsActive = new ArrayList<String>();
 	public static List<String> commandsSchedulerIsActive = new ArrayList<String>();
 	public static int cmdsTask;
 
@@ -281,6 +283,8 @@ public class MainTM extends JavaPlugin {
 	public static final String PH_WORLD = "world";
 	public static final String PH_TICK = "tick";
 	public static final String PH_AMPM = "ampm";
+	public static final String PH_AM = "AM";
+	public static final String PH_PM = "PM";
 	public static final String PH_DAYPART = "daypart";
 	public static final String PH_TIME12 = "time12";
 	public static final String PH_TIME24 = "time24";
@@ -545,32 +549,42 @@ public class MainTM extends JavaPlugin {
 	public static String sleepNoMorningDebugMsg = "§cToo late...  morning might never come.";
 	public static String cmdsWrongPHWorldDebugMsg = "does not exist. It was replaced by the default value";
 	public static String cmdsWrongTimeSrcDebugMsg = "is neither a world or an UTC time. It was replaced by the default value";
+	public static String schedulerOffDebugMsg = "will no longer use any scheduler.";
+	public static String scheduler24DebugMsg = "the realtime speed scheduler.";
+	public static String schedulerConstantSyncDebugMsg = "the synchronous constant speed scheduler.";
+	public static String schedulerVariableSyncDebugMsg = "the synchronous variable speed scheduler.";
+	public static String schedulerAsyncIncreaseDebugMsg = "the asynchronous increase speed scheduler.";
+	public static String schedulerAsyncDecreaseDebugMsg = "the asynchronous decrease speed scheduler.";
+	public static String schedulerAsyncNormalDebugMsg = "the asynchronous normal speed scheduler.";
+	public static String schedulerWillUseDebugMsg = "will now use ";
+	public static String schedulerIsRunningDebugMsg = "is running in ";
 
 	// Debug Calculation for timer synchronization (with colors)
 	protected static String actualTimeVar = "§c[actualTime]§b";
-	protected static String adjustedElapsedTimeVar = "§5[adjustedElapsedTime]§b";
-	protected static String adjustedTicksVar = "§3[adjustedTick]§b";
 	protected static String askedTimeVar = "§8[askedTime]§b";
-	protected static String currentTickVar = "§8[currentTick]§b";
 	protected static String currentServerTickVar = "§8[currentServerTick]§b";
-	protected static String elapsedTimeVar = "§d[elapsedTime]§b";
+	protected static String currentTickVar = "§8[currentTick]§b";
+	protected static String elapsedTimeVar = "§d[ServerElapsedTime]§b";
+	protected static String firstHalfDaylightCycleVar = "§f[firstHalfDaylightCycle]§b";
+	protected static String firstSpeedModifierVar = "§a[firstSpeedModifier]§b";
 	protected static String initialTickVar = "§7[initialTick]§b";
 	protected static String mcTimeRatioVar = "§6[mcTimeRatio]§b";
+	protected static String oldWorldStartAtVar = "§3[oldWorldStartAt]§b";
+	protected static String secondHalfDaylightCycleVar = "§f[secondHalfDaylightCycle]§b";
+	protected static String secondSpeedModifierVar = "§2[secondSpeedModifier]§b";
+	protected static String serverRemainingTimeVar = "§5[serverRemainingTime]§b";
 	protected static String sixHoursLessVar = "§9[sixHoursLess]§b";
 	protected static String speedModifierVar = "§a[speedModifier]§b";
-	protected static String daySpeedModifierVar = "§a[daySpeedModifier]§b";
-	protected static String nightSpeedModifierVar = "§2[nightspeedModifier]§b";
-	protected static String halfDaylightCycleVar = "§7[halfDaylightCycle]§b";
-	protected static String serverRemainingTimeVar = "§5[serverRemainingTime]§b";
 	protected static String ticksInOneDayVar = "§6[ticksInOneDay]§b";
+	protected static String worldElapsedTimeVar = "§5[WorldElapsedTime]§b";
 	protected static String worldStartAtVar = "§e[worldStartAt]§b";
-	protected static String oldWorldStartAtVar = "§3[oldWorldStartAt]§b";
-	protected static String actualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " + " + adjustedElapsedTimeVar;
+	protected static String worldTicksVar = "§3[worldTick]§b";
+	protected static String actualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " + " + worldElapsedTimeVar;
 	protected static String elapsedTimeCalculation = elapsedTimeVar + " = (" + currentServerTickVar + " - " + initialTickVar + ") % " + ticksInOneDayVar;
-	protected static String adjustedElapsedTimeCalculation = adjustedElapsedTimeVar + " = " + elapsedTimeVar + " * " + speedModifierVar;
+	protected static String realActualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " - " + sixHoursLessVar + " + " + worldTicksVar;
 	protected static String worldStartAtCalculation = worldStartAtVar + " = " + oldWorldStartAtVar + " + " + askedTimeVar + " - " + actualTimeVar;
-	protected static String adjustedTicksCalculation = adjustedTicksVar + " = " + currentTickVar + " / " + mcTimeRatioVar;
-	protected static String realActualTimeCalculation = actualTimeVar + " = " + worldStartAtVar + " - " + sixHoursLessVar + " + " + adjustedTicksVar;
+	protected static String worldTicksCalculation = worldTicksVar + " = " + currentTickVar + " / " + mcTimeRatioVar;
+	protected static String worldElapsedTimeCalculation = worldElapsedTimeVar + " = " + elapsedTimeVar + " * " + speedModifierVar;
 	
 	// Sleep listener
 	public static String sleepNewDayMsg = "The players slept and spent the night in the world";

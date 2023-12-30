@@ -1,6 +1,7 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -75,7 +76,7 @@ public class SleepHandler implements Listener {
 						MsgHandler.debugMsg(MainTM.sleepProcess99TicksDebugMsg); // Console debug msg
 						// #2.A.3.a. Awake the player if sleep is not permitted in this world and stop the process
 						if (!sleepIsPermited) {
-							MsgHandler.debugMsg(MainTM.sleepProcessSleepForbid1DebugMsg + " §e" + world + "§b. " + MainTM.sleepProcessSleepForbid2DebugMsg); // Console debug msg
+							MsgHandler.debugMsg(MainTM.sleepProcessSleepForbid1DebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + ". " + MainTM.sleepProcessSleepForbid2DebugMsg); // Console debug msg
 							p.wakeup(true);
 							return; 
 						}

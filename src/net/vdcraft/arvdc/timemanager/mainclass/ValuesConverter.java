@@ -122,7 +122,7 @@ public class ValuesConverter extends MainTM {
 	 * (returns a long)
 	 */
 	public static long correctwakeUpTick(long time) {
-		if (time > 6000) time = 6000L;// Forbid numbers higher than 6000
+		if (time > 6000) time = 6000L; // Forbid numbers higher than 6000
 		if (time < 0) time = 0L; // Forbid numbers smaller than 0
 		return time;
 	}
@@ -152,9 +152,9 @@ public class ValuesConverter extends MainTM {
 	public static String getAmPm(long tick) {
 		String wichPart;
 		if (tick >= 6000 && tick < 18000) {
-			wichPart = "PM";
+			wichPart = PH_PM;
 		} else {
-			wichPart = "AM";
+			wichPart = PH_AM;
 		}
 		return wichPart;
 	}
@@ -165,7 +165,7 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String wichSpeedParam(long tick) {
 		String speedParam;
-		if (getMCDayPart(tick).equalsIgnoreCase("night")) {	    
+		if (getMCDayPart(tick).equalsIgnoreCase(CF_NIGHT)) {	    
 			speedParam = CF_N_SPEED;
 		} else {
 			speedParam = CF_D_SPEED;
@@ -387,7 +387,7 @@ public class ValuesConverter extends MainTM {
 			output = String.format("%02d", ss);
 			break;
 		}
-		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"§e" + ticks + "§b\" was converted to \"§e" + output + "§b\"."); // Console debug msg
+		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"" + ChatColor.YELLOW + ticks + ChatColor.AQUA + "\" was converted to \"" + ChatColor.YELLOW + output + ChatColor.AQUA + "\"."); // Console debug msg
 		return output;
 	}
 
@@ -495,12 +495,12 @@ public class ValuesConverter extends MainTM {
 	public static Long elapsedDaysFromTick(long fulltime) {
 		// A real day begin at 00:00
 		if (MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_0h00)) {
-			MsgHandler.debugMsg("New day begins at §e00:00§b, so the calculation of elapsed days is : (§e" + fulltime
-					+ " §b+ §e6000 §b= §e" + (fulltime + 6000) + "§b) / §e24000 §b= §e" + (fulltime + 6000) / 24000 + "§b."); // Console dev msg
+			MsgHandler.devMsg("New day begins at " + ChatColor.YELLOW + "00:00" + ChatColor.BLUE + ", so the calculation of elapsed days is : (" + ChatColor.YELLOW + fulltime
+					+ ChatColor.BLUE + " + " + ChatColor.YELLOW + "6000" + ChatColor.BLUE + " = " + ChatColor.YELLOW + (fulltime + 6000) + ChatColor.BLUE + ") / " + ChatColor.YELLOW + "24000" + ChatColor.BLUE + " = " + ChatColor.YELLOW + (fulltime + 6000) / 24000 + ChatColor.BLUE + "."); // Console dev msg
 			return (fulltime + 6000) / 24000;
 		} else { // A MC day begin at 06:00
-			MsgHandler.debugMsg("New day begins at §e06:00§b, so the calculation of elapsed days is : §e" + fulltime
-					+ " §b/ §e24000 §b= §e" + (fulltime / 24000) + "§b."); // Console dev msg
+			MsgHandler.devMsg("New day begins at " + ChatColor.YELLOW + "06:00" + ChatColor.BLUE + ", so the calculation of elapsed days is : " + ChatColor.YELLOW + fulltime
+					+ ChatColor.BLUE + " / " + ChatColor.YELLOW + "24000" + ChatColor.BLUE + " = " + ChatColor.YELLOW + (fulltime / 24000) + ChatColor.BLUE + "."); // Console dev msg
 			return fulltime / 24000;
 		}
 	}
@@ -535,9 +535,9 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String dateFromElapsedDays(long daysNb, String datePart) {
 		// #1. Years
-		if (datePart.contains("yy")) {
+		if (datePart.contains(PH_YY)) {
 			long years = (1 + (long) Math.floor(daysNb / 365));
-			if (datePart.equalsIgnoreCase("yyyy")) {
+			if (datePart.equalsIgnoreCase(PH_YYYY)) {
 				years = years % 10000;
 				return String.format("%04d", years);
 			} else {
@@ -562,12 +562,12 @@ public class ValuesConverter extends MainTM {
 		} else if (dayOfYear >=305 && dayOfYear <=334) { month = 11; dayOfMonth = dayOfYear - 304; // November
 		} else if (dayOfYear >=335 && dayOfYear <=365) { month = 12; dayOfMonth = dayOfYear - 334; // December
 		}
-		if (datePart.equalsIgnoreCase("mm")) {
+		if (datePart.equalsIgnoreCase(PH_MM)) {
 			String mm = String.format("%02d", month);
 			return mm;
 		}
 		// #3. Days
-		if (datePart.equalsIgnoreCase("dd")) {
+		if (datePart.equalsIgnoreCase(PH_DD)) {
 			long days = dayOfMonth;
 			String dd = String.format("%02d", days);
 			return dd;
@@ -666,15 +666,16 @@ public class ValuesConverter extends MainTM {
 	 * (returns a String)
 	 */	
 	// Define hexadecimal colors pattern
-	private final static Pattern hexpattern = Pattern.compile("#[a-fA-F0-9]{6}");
 	public static String replaceAllHexColors(String txt) {
+		Pattern hexpattern = Pattern.compile("#[a-fA-F0-9]{6}");
 		Matcher match = hexpattern.matcher(txt);
 		while (match.find()) {
 			MsgHandler.devMsg("The matcher found an hexadecimal color in the §e/now §9message");	
 			String color = match.group(); // Get the first hexadecimal color found
-			MsgHandler.devMsg("This hexadecimal color is §e" + color);
-			MsgHandler.devMsg("The corresponding color is " + ChatColor.translateAlternateColorCodes('&', ChatColor.of(color).toString()) + ChatColor.of(color).getColor());
-			txt = txt.replace(color, ChatColor.of(color).toString());// Convert it to the corresponding ChatColor
+			ChatColor cColor = ChatColor.of(color);
+			MsgHandler.devMsg("This hexadecimal color number is " + ChatColor.YELLOW + color);
+			MsgHandler.devMsg("The corresponding color is " + ChatColor.translateAlternateColorCodes('&', cColor.toString()) + cColor.getColor());
+			txt = txt.replace(color, cColor.toString()); // Convert it to the corresponding ChatColor
 		}		
 		return txt;
 	}
@@ -747,7 +748,7 @@ public class ValuesConverter extends MainTM {
 			tick = defStart;
 		}
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, tick);
-		MsgHandler.debugMsg(startAdjustDebugMsg + " §e" + time + "§b to §e" + tick + "§b for the world §e" + world + "§b."); // Console debug msg
+		MsgHandler.debugMsg(startAdjustDebugMsg + " " + ChatColor.YELLOW + time + ChatColor.AQUA + " to " + ChatColor.YELLOW + tick + ChatColor.AQUA + " for the world §e" + world + ChatColor.AQUA + "."); // Console debug msg
 	}
 
 	/**
@@ -780,8 +781,8 @@ public class ValuesConverter extends MainTM {
 		}
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, daySpeedNb);
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, nightSpeedNb);
-		MsgHandler.debugMsg(daySpeedAdjustDebugMsg + " §e" + daySpeed + "§b to §e" + daySpeedNb + "§b for the world §e" + world + "§b."); // Console debug msg
-		MsgHandler.debugMsg(nightSpeedAdjustDebugMsg + " §e" + nightSpeed + "§b to §e" + nightSpeedNb + "§b for the world §e" + world + "§b."); // Console debug msg
+		MsgHandler.debugMsg(daySpeedAdjustDebugMsg + " " + ChatColor.YELLOW + daySpeed + ChatColor.AQUA + " to " + ChatColor.YELLOW + daySpeedNb + ChatColor.AQUA + " for the world " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
+		MsgHandler.debugMsg(nightSpeedAdjustDebugMsg + " " + ChatColor.YELLOW + nightSpeed + ChatColor.AQUA + " to " + ChatColor.YELLOW + nightSpeedNb + ChatColor.AQUA + " for the world " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 	}
 
 	/**
@@ -794,10 +795,10 @@ public class ValuesConverter extends MainTM {
 		double currentSpeed = getCurrentSpeed(world);
 		if (currentSpeed == 24.0 || (!sleep.equalsIgnoreCase(ARG_TRUE) && !sleep.equalsIgnoreCase(ARG_LINKED))) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, ARG_FALSE);
-			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		} else if (sleep.equalsIgnoreCase(ARG_TRUE) || sleep.equalsIgnoreCase(ARG_LINKED)) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
-			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		}
 	}
 
@@ -810,13 +811,13 @@ public class ValuesConverter extends MainTM {
 		double currentSpeed = getCurrentSpeed(world);
 		if (currentSpeed == 24.0) { // new speed is 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_TRUE);
-			MsgHandler.debugMsg(syncAdjustTrueDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(syncAdjustTrueDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		} else if (currentSpeed == 0.0) { // new speed is 0
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
-			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		} else if (oldSpeed == 24.0) { // new speed is anything else with previous value 24
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, ARG_FALSE);
-			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(syncAdjustFalseDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		}
 	}
 
@@ -831,11 +832,11 @@ public class ValuesConverter extends MainTM {
 		double currentSpeed = getCurrentSpeed(world);
 		if (!firstStartTime.equalsIgnoreCase(ARG_PREVIOUS) && !firstStartTime.equalsIgnoreCase(ARG_START)) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, ARG_DEFAULT);
-			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		}
 		if (sync.equalsIgnoreCase(ARG_TRUE) || currentSpeed == 0.0) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, ARG_DEFAULT);
-			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " §e" + world + "§b."); // Console debug msg
+			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		}
 	}
 

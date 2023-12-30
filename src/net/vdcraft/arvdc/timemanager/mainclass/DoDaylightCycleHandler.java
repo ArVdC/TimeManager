@@ -24,14 +24,15 @@ public class DoDaylightCycleHandler extends MainTM {
 			World w = Bukkit.getWorld(worldToSet);
 			long t = w.getTime();
 			double speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST +"." + worldToSet + "." + ValuesConverter.wichSpeedParam(t));
-			if (speedModifier == realtimeSpeed || speedModifier < 1.0) {
+			// If the speed of the world is freeze, decreased or normal & sync 
+			if (speedModifier == realtimeSpeed || speedModifier < 1.0 || (speedModifier == 1.0 && MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE))) {
 				if (serverMcVersion < reqMcVForDaylightCycle) {
 					w.setGameRuleValue("doDaylightCycle", ARG_FALSE);
 				} else {
 					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 				}
 				MsgHandler.debugMsg(daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
-			} else {
+			} else { // If the speed of the world is increased or normal & async
 				if (serverMcVersion < reqMcVForDaylightCycle) {
 					w.setGameRuleValue("doDaylightCycle", ARG_TRUE);
 				} else {

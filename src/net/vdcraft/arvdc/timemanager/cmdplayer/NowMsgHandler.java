@@ -33,7 +33,6 @@ public class NowMsgHandler extends MainTM {
 	public static boolean sendNowMsg(CommandSender sender, String display, World w) {
 		// #1. Set basic variables
 		Player p = ((Player) sender);
-		//String player = p.getName();
 		String world = w.getName();
 		String msg = null;
 		String subtitle = null;
@@ -71,11 +70,9 @@ public class NowMsgHandler extends MainTM {
 		
 		// #5. Replace placeholders
 		msg = msg.replace("&", "§");
-		//msg = msg.replace("{tm_player}", player);
 		msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
 		if (display.equalsIgnoreCase("title")) {
 			subtitle = subtitle.replace("&", "§");
-			//subtitle = subtitle.replace("{tm_player}", player);
 			subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);		
 		}
 		

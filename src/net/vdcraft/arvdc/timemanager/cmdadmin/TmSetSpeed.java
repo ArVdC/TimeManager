@@ -30,7 +30,7 @@ public class TmSetSpeed extends MainTM {
 		}
 		// Else, if the string argument is a listed world, modify a single world
 		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
-			// Get the old speed value of this world to correctly resynchronize 24h worlds
+			// Get the old speed value of this world to correctly re-synchronize 24h worlds
 			long t = Bukkit.getWorld(world).getTime();
 			Double oldSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
 			// Modify the speed in the config    
@@ -38,9 +38,13 @@ public class TmSetSpeed extends MainTM {
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);
 			} else if (when.equalsIgnoreCase(CMD_SET_D_SPEED)) {
-				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);	
+				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);
+				double nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
+				if (nightSpeed == 24) MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);
 			} else if (when.equalsIgnoreCase(CMD_SET_N_SPEED)) {
-				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);	
+				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, speed);
+				double daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
+				if (daySpeed == 24) MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, speed);
 			}
 			// Restrain the sleep value
 			ValuesConverter.restrainSleep(world);
