@@ -6,7 +6,7 @@
 ### TIME MANAGING FUNCTIONALITIES
 Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
 
-Speed could be increased/decreased up to 10 times or match UTC time with offset to local time.
+Speed could be increased/decreased up to 20 times or match UTC time with offset to local time.
 
 Day and night can be set to different speed values, which can be great for RPG or some mini-games.
 
@@ -171,7 +171,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.8.1: MC 1.8.8 to 1.20.4
+v1.8.3-a: MC 1.8.8 to 1.20.4
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~

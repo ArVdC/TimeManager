@@ -87,12 +87,42 @@ public class ValuesConverter extends MainTM {
 		} else if (currentSpeed >= 0.1) {
 			modifTime = 1L;
 			refreshRate = 10L;
-		} else if (currentSpeed > 0.05) {
+		} else if (currentSpeed >= 0.06) {
 			modifTime = 1L;
 			refreshRate = 15L;
-		} else if (currentSpeed <= 0.05) {
+		} else if (currentSpeed >= 0.05) {
 			modifTime = 1L;
 			refreshRate = 20L;
+		} else if (currentSpeed >= 0.04) {
+			modifTime = 1L;
+			refreshRate = 25L;
+		} else if (currentSpeed >= 0.03) {
+			modifTime = 1L;
+			refreshRate = 30L;
+		} else if (currentSpeed >= 0.025) {
+			modifTime = 1L;
+			refreshRate = 40L;
+		} else if (currentSpeed >= 0.02) {
+			modifTime = 1L;
+			refreshRate = 50L;
+		} else if (currentSpeed >= 0.018) {
+			modifTime = 1L;
+			refreshRate = 55L;
+		} else if (currentSpeed >= 0.0165) {
+			modifTime = 1L;
+			refreshRate = 60L;
+		} else if (currentSpeed >= 0.015) {
+			modifTime = 1L;
+			refreshRate = 65L;
+		} else if (currentSpeed >= 0.0143) {
+			modifTime = 1L;
+			refreshRate = 70L;
+		} else if (currentSpeed >= 0.014) {
+			modifTime = 1L;
+			refreshRate = 71L;
+		} else if (currentSpeed < 0.014) {
+			modifTime = 1L;
+			refreshRate = 72L;
 		}
 		if (value.equalsIgnoreCase("modifTime")) return modifTime;
 		else if (value.equalsIgnoreCase("refreshRate")) return refreshRate;

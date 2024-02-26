@@ -97,7 +97,7 @@ public class MainTM extends JavaPlugin {
 	public static Long refreshRateLong;
 
 	// Max speed modifier (Min need to be 0)
-	protected static Double speedMax = 10.0;
+	protected static Double speedMax = 20.0;
 
 	// Number who make time turn real
 	protected static Double realtimeSpeed = 24.0;

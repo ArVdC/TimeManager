@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.vdcraft.arvdc</groupId>
 	<artifactId>TimeManager</artifactId>
-	<version>1.8.2</version>
+	<version>1.8.3-a</version>
 	<packaging>jar</packaging>	
 	<build>
 		<finalName>TimeManager-${project.version}</finalName>
@@ -28,10 +28,10 @@
 			<plugin>			
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.0</version>
+				<version>3.9.6</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>18</source>
+					<target>18</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -40,6 +40,10 @@
 				<version>3.2.4</version>
 				<configuration>
 					<relocations>
+						<relocation>
+							<pattern>org.bstats</pattern>
+							<shadedPattern>net.vdcraft.arvdc.timemanager</shadedPattern>
+						</relocation>
 						<relocation>
 							<pattern>org.bstats</pattern>
 							<shadedPattern>net.vdcraft.arvdc.timemanager</shadedPattern>
@@ -77,7 +81,7 @@
 			<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.23</version>
+			<version>8.3.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
