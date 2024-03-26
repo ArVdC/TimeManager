@@ -790,7 +790,7 @@ public class ValuesConverter extends MainTM {
 		String daySpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
 		double nightSpeedNb;
 		String nightSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
-		if (daySpeed.contains("24") || daySpeed.equalsIgnoreCase("realtime") || nightSpeed.contains("24") || nightSpeed.equalsIgnoreCase("realtime")) {
+		if (daySpeed.equals("24") || daySpeed.equalsIgnoreCase("realtime") || nightSpeed.equals("24") || nightSpeed.equalsIgnoreCase("realtime")) {
 			daySpeedNb = realtimeSpeed;
 			nightSpeedNb = realtimeSpeed;
 		} else {

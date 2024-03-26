@@ -93,7 +93,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	// Arguments list for '/tm set sleep
 	List<String> tmSetSleepArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE, MainTM.ARG_LINKED);
 	// Modifier arguments for '/tm set speed'
-	List<String> tmSpeedArgsList = Arrays.asList("0.0", "0.5", "1.0", "1.5", "2.0", "2.5", "5.0", "realtime");
+	List<String> tmSpeedArgsList = Arrays.asList("0.0", "0.015", "0.025", "0.05", "0.1", "0.5", "1.0", "1.5", "2.0", "2.5", "5.0",  "10.0",  "20.0", "realtime");
 	// 'tick' arguments list for '/tm set initialtick'
 	List<String> tmInitialTickArgsList = Arrays.asList("000000", "001200", "072000", "864000");
 	// 'tick' arguments list for '/tm set refreshrate'

@@ -106,10 +106,10 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 **/tm set sleep \[true|false|linked] \[all|world]** Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false.
 If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.
 
-**/tm set speed \[0.0 → 10.0] \[all|world]** The decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.1' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to '10.0' to speed up time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.
+**/tm set speed \[0.0 → 20.0] \[all|world]** The decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.01' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to '20.0' to speed up time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.
 
-**/tm set speedDay \[0.0 → 10.0] \[all|world] & /tm set speedNight \[0.0 → 10.0] \[all|world]** 
-From '0.0' to '10.0', the values of daySpeed and nightSpeed can be different from each other.
+**/tm set speedDay \[0.0 → 20.0] \[all|world] & /tm set speedNight \[0.0 → 20.0] \[all|world]** 
+From '0.0' to '20.0', the values of daySpeed and nightSpeed can be different from each other.
 
 **/tm set start \[ticks|daypart|HH:mm:ss|timeShift] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
 If a world is using the real time speed, the start value will determine the UTC time shift and values like '+1' or '-1' will be accepted.

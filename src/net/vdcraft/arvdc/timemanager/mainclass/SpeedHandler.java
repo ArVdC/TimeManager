@@ -114,35 +114,39 @@ public class SpeedHandler extends MainTM {
 		realSpeedSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				// Get the world's current time
-				Long currentTime = Bukkit.getWorld(world).getTime();
-				// Timer msg
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + schedulerIsRunningDebugMsg + scheduler24DebugMsg);
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + realtimeSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + "72" + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
-				// Get the world's 'speed' value
-				long t = Bukkit.getWorld(world).getTime();
-				double speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
-				// Get the world's 'start' value
-				long worldStartAt = MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START);
-				// Get the current server tick
-				long currentServerTick = ValuesConverter.getServerTick();				
-				// Calculate the new time
-				long newTime = (currentServerTick / 72L) + (worldStartAt - 6000L); // -6000 cause a mc's day start at 6:00
-				// Restrain too big and too small values
-				newTime = ValuesConverter.correctDailyTicks(newTime);				
-				// Change world's timer
-				Bukkit.getWorld(world).setTime(newTime);
-				// While the world is not cancelled and the speed still 24h, launch the loop again ...
-				if (speed == realtimeSpeed) {
-					realSpeedScheduler(world);
-				}  // ... or break the loop
-				else {
-					// Delete the world from the active scheduler list
-					if (realSpeedSchedulerIsActive.contains(world)) realSpeedSchedulerIsActive.remove(world);
-					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + scheduler24DebugMsg);
-					// Detect if this world needs to change its speed value
-					speedScheduler(world);
-				}
+				// If the world exists
+				if (!Bukkit.getWorld(world).equals(null)) {
+					// Get the world's current time
+					Long currentTime = Bukkit.getWorld(world).getTime();
+					// Timer msg
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + schedulerIsRunningDebugMsg + scheduler24DebugMsg);
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + realtimeSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + "72" + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
+					// Get the world's 'speed' value
+					long t = Bukkit.getWorld(world).getTime();
+					double speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
+					// Get the world's 'start' value
+					long worldStartAt = MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START);
+					// Get the current server tick
+					long currentServerTick = ValuesConverter.getServerTick();				
+					// Calculate the new time
+					long newTime = (currentServerTick / 72L) + (worldStartAt - 6000L); // -6000 cause a mc's day start at 6:00
+					// Restrain too big and too small values
+					newTime = ValuesConverter.correctDailyTicks(newTime);				
+					// Change world's timer
+					Bukkit.getWorld(world).setTime(newTime);
+					// While the world is not cancelled and the speed still 24h, launch the loop again ...
+					if (speed == realtimeSpeed) {
+						realSpeedScheduler(world);
+					}  // ... or break the loop
+					else {
+						// Delete the world from the active scheduler list
+						if (realSpeedSchedulerIsActive.contains(world)) realSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + scheduler24DebugMsg);
+						// Detect if this world needs to change its speed value
+						speedScheduler(world);
+					}
+				// If the world doesn't exist
+				} else speedScheduler(world);
 			}
 		}, 72L);
 	}
@@ -156,46 +160,50 @@ public class SpeedHandler extends MainTM {
 		syncConstantSpeedScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				// Get the refresh rate
-				refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
-				// Get the world's current time
-				Long currentTime = Bukkit.getWorld(world).getTime();
-				// Timer msg
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + schedulerIsRunningDebugMsg + schedulerConstantSyncDebugMsg);
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
-				// Get the current server time
-				long currentServerTick = ValuesConverter.getServerTick();
-				// Get the world's 'start' value
-				long startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START));
-				// Get the total server's elapsed time
-				long elapsedServerTime = currentServerTick - initialTick;
-				// Calculate the new time ...
-				Long newTime = (long) ((startAtTickNb + (elapsedServerTime * currentSpeed)) % 24000); // Next tick = Start at #tick + (Elapsed time * speed modifier)
-				// Restrain too big and too small values
-				newTime = ValuesConverter.correctDailyTicks(newTime);
-				// Change the world's time
-				Bukkit.getWorld(world).setTime(newTime);
-				// Change the doDaylightCycle gamerule if it is needed
-				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
-				if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
-					DoDaylightCycleHandler.adjustDaylightCycle(world);
-				// Get the world's 'daySpeed' value
-				double daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
-				// Get the world's 'nightSpeed' value
-				double nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
-				// While the world is not cancelled and still constant custom synchronous, launch the loop again ...
-				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE)
-						&& (newSpeed != realtimeSpeed)
-						&& (daySpeed == nightSpeed)) {
-					syncConstantSpeedScheduler(world, newSpeed);
-				} // ... or break the loop
-				else {
-					// Delete the world from the active scheduler list
-					if (syncConstantSpeedSchedulerIsActive.contains(world)) syncConstantSpeedSchedulerIsActive.remove(world);
-					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerConstantSyncDebugMsg);
-					// Detect if this world needs to change its speed value
-					speedScheduler(world);
-				}
+				// If the world exists
+				if (!Bukkit.getWorld(world).equals(null)) {
+					// Get the refresh rate
+					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
+					// Get the world's current time
+					Long currentTime = Bukkit.getWorld(world).getTime();
+					// Timer msg
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + schedulerIsRunningDebugMsg + schedulerConstantSyncDebugMsg);
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
+					// Get the current server time
+					long currentServerTick = ValuesConverter.getServerTick();
+					// Get the world's 'start' value
+					long startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START));
+					// Get the total server's elapsed time
+					long elapsedServerTime = currentServerTick - initialTick;
+					// Calculate the new time ...
+					Long newTime = (long) ((startAtTickNb + (elapsedServerTime * currentSpeed)) % 24000); // Next tick = Start at #tick + (Elapsed time * speed modifier)
+					// Restrain too big and too small values
+					newTime = ValuesConverter.correctDailyTicks(newTime);
+					// Change the world's time
+					Bukkit.getWorld(world).setTime(newTime);
+					// Change the doDaylightCycle gamerule if it is needed
+					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
+					if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
+						DoDaylightCycleHandler.adjustDaylightCycle(world);
+					// Get the world's 'daySpeed' value
+					double daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
+					// Get the world's 'nightSpeed' value
+					double nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
+					// While the world is not cancelled and still constant custom synchronous, launch the loop again ...
+					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE)
+							&& (newSpeed != realtimeSpeed)
+							&& (daySpeed == nightSpeed)) {
+						syncConstantSpeedScheduler(world, newSpeed);
+					} // ... or break the loop
+					else {
+						// Delete the world from the active scheduler list
+						if (syncConstantSpeedSchedulerIsActive.contains(world)) syncConstantSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerConstantSyncDebugMsg);
+						// Detect if this world needs to change its speed value
+						speedScheduler(world);
+					}
+				// If the world doesn't exist
+				} else speedScheduler(world);
 			}
 		}, refreshRateLong);
 	}
@@ -209,48 +217,52 @@ public class SpeedHandler extends MainTM {
 		syncVariableSpeedScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				// Get the refresh rate
-				refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
-				// Get the world's current time
-				Long currentTime = Bukkit.getWorld(world).getTime();
-				// Timer msg
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + schedulerIsRunningDebugMsg + schedulerVariableSyncDebugMsg);
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
-				// Get the current server time
-				long currentServerTick = ValuesConverter.getServerTick();
-				// Get the world's 'start' value
-				long worldStartAt = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START));
-				// Get the world's speed value at server start
-				double speedAtStart = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(worldStartAt));
-				// Get the world's 'daySpeed' value
-				double daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
-				// Get the world's 'nightSpeed' value
-				double nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
-				// Get the total server's elapsed time
-				long elapsedServerTime = currentServerTick - initialTick;
-				// Calculate the new time ...
-				Long newTime = SyncHandler.differentSpeedsNewTime(world, worldStartAt, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, false);
-				// Restrain too big and too small values
-				newTime = ValuesConverter.correctDailyTicks(newTime);
-				// Change the world's time
-				Bukkit.getWorld(world).setTime(newTime);
-				// Change the doDaylightCycle gamerule if it is needed
-				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
-				if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
-					DoDaylightCycleHandler.adjustDaylightCycle(world);
-				// While the world is not cancelled and still variable synchronous, launch the loop again ...
-				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE)
-						&& (newSpeed != realtimeSpeed)
-						&& (daySpeed != nightSpeed)) {
-					syncVariableSpeedScheduler(world, newSpeed);
-				} // ... or break the loop
-				else {
-					// Delete the world from the active scheduler list
-					if (syncVariableSpeedSchedulerIsActive.contains(world)) syncVariableSpeedSchedulerIsActive.remove(world);
-					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerVariableSyncDebugMsg);
-					// Detect if this world needs to change its speed value
-					speedScheduler(world);
-				}
+				// If the world exists
+				if (!Bukkit.getWorld(world).equals(null)) {
+					// Get the refresh rate
+					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
+					// Get the world's current time
+					Long currentTime = Bukkit.getWorld(world).getTime();
+					// Timer msg
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + schedulerIsRunningDebugMsg + schedulerVariableSyncDebugMsg);
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
+					// Get the current server time
+					long currentServerTick = ValuesConverter.getServerTick();
+					// Get the world's 'start' value
+					long worldStartAt = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START));
+					// Get the world's speed value at server start
+					double speedAtStart = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(worldStartAt));
+					// Get the world's 'daySpeed' value
+					double daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
+					// Get the world's 'nightSpeed' value
+					double nightSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
+					// Get the total server's elapsed time
+					long elapsedServerTime = currentServerTick - initialTick;
+					// Calculate the new time ...
+					Long newTime = SyncHandler.differentSpeedsNewTime(world, worldStartAt, elapsedServerTime, currentServerTick, speedAtStart, daySpeed, nightSpeed, false);
+					// Restrain too big and too small values
+					newTime = ValuesConverter.correctDailyTicks(newTime);
+					// Change the world's time
+					Bukkit.getWorld(world).setTime(newTime);
+					// Change the doDaylightCycle gamerule if it is needed
+					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
+					if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
+						DoDaylightCycleHandler.adjustDaylightCycle(world);
+					// While the world is not cancelled and still variable synchronous, launch the loop again ...
+					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE)
+							&& (newSpeed != realtimeSpeed)
+							&& (daySpeed != nightSpeed)) {
+						syncVariableSpeedScheduler(world, newSpeed);
+					} // ... or break the loop
+					else {
+						// Delete the world from the active scheduler list
+						if (syncVariableSpeedSchedulerIsActive.contains(world)) syncVariableSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerVariableSyncDebugMsg);
+						// Detect if this world needs to change its speed value
+						speedScheduler(world);
+					}
+				// If the world doesn't exist
+				} else speedScheduler(world);
 			}
 		}, refreshRateLong);
 	}
@@ -264,35 +276,39 @@ public class SpeedHandler extends MainTM {
 		asyncSpeedIncreaseScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				// Get the refresh rate
-				refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
-				// Get the world's current time
-				Long currentTime = Bukkit.getWorld(world).getTime();
-				// Timer msg
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + schedulerIsRunningDebugMsg + schedulerAsyncIncreaseDebugMsg);
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
-				// Calculate the new time
-				long newTime = currentTime + (long) Math.ceil(refreshRateInt * currentSpeed) - refreshRateInt;
-				// Restrain too big and too small values
-				newTime = ValuesConverter.correctDailyTicks(newTime);
-				// Change the world's time
-				Bukkit.getWorld(world).setTime(newTime);
-				// Change the doDaylightCycle gamerule if it is needed
-				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
-				if (newSpeed < 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
-				// While the world is not cancelled, asynchronous and with a speed bigger than 1, launch the loop again ...
-				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
-						&& (newSpeed > 1)
-						&& (newSpeed <= speedMax)) {
-					asyncIncreaseSpeedScheduler(world, newSpeed);
-				} // ... or break the loop
-				else {
-					// Delete the world from the active scheduler list
-					if (asyncIncreaseSpeedSchedulerIsActive.contains(world)) asyncIncreaseSpeedSchedulerIsActive.remove(world);
-					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncIncreaseDebugMsg);
-					// Detect if this world needs to change its speed value
-					speedScheduler(world);
-				}
+				// If the world exists
+				if (!Bukkit.getWorld(world).equals(null)) {
+					// Get the refresh rate
+					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
+					// Get the world's current time
+					Long currentTime = Bukkit.getWorld(world).getTime();
+					// Timer msg
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + schedulerIsRunningDebugMsg + schedulerAsyncIncreaseDebugMsg);
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
+					// Calculate the new time
+					long newTime = currentTime + (long) Math.ceil(refreshRateInt * currentSpeed) - refreshRateInt;
+					// Restrain too big and too small values
+					newTime = ValuesConverter.correctDailyTicks(newTime);
+					// Change the world's time
+					Bukkit.getWorld(world).setTime(newTime);
+					// Change the doDaylightCycle gamerule if it is needed
+					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
+					if (newSpeed < 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
+					// While the world is not cancelled, asynchronous and with a speed bigger than 1, launch the loop again ...
+					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
+							&& (newSpeed > 1)
+							&& (newSpeed <= speedMax)) {
+						asyncIncreaseSpeedScheduler(world, newSpeed);
+					} // ... or break the loop
+					else {
+						// Delete the world from the active scheduler list
+						if (asyncIncreaseSpeedSchedulerIsActive.contains(world)) asyncIncreaseSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncIncreaseDebugMsg);
+						// Detect if this world needs to change its speed value
+						speedScheduler(world);						
+					}
+				// If the world doesn't exist
+				} else speedScheduler(world);
 			}
 		}, refreshRateLong);
 	}
@@ -309,33 +325,37 @@ public class SpeedHandler extends MainTM {
 		asyncSpeedDecreaseScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				// Get the world's current time
-				Long currentTime = Bukkit.getWorld(world).getTime();
-				// Timer msg
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + schedulerIsRunningDebugMsg + schedulerAsyncDecreaseDebugMsg);
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + decreaseRefreshRate + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
-				// Calculate the new time
-				long newTime = currentTime + ValuesConverter.fractionFromDecimal(currentSpeed, "modifTime");
-				// Restrain too big and too small values
-				newTime = ValuesConverter.correctDailyTicks(newTime);
-				// Change the world's time
-				Bukkit.getWorld(world).setTime(newTime);
-				// Change the doDaylightCycle gamerule if it is needed
-				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
-				if (newSpeed >= 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
-				// While the world is not cancelled, asynchronous and with a speed between 0 and 1, launch the loop again ...
-				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
-						&& (newSpeed > 0)
-						&& (newSpeed < 1)) {
-					asyncDecreaseSpeedScheduler(world, newSpeed);
-				} // ... or break the loop
-				else {
-					// Delete the world from the active scheduler list
-					if (asyncDecreaseSpeedSchedulerIsActive.contains(world)) asyncDecreaseSpeedSchedulerIsActive.remove(world);
-					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncDecreaseDebugMsg);
-					// Detect if this world needs to change its speed value
-					speedScheduler(world);
-				}
+				// If the world exists
+				if (!Bukkit.getWorld(world).equals(null)) {
+					// Get the world's current time
+					Long currentTime = Bukkit.getWorld(world).getTime();
+					// Timer msg
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + schedulerIsRunningDebugMsg + schedulerAsyncDecreaseDebugMsg);
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + decreaseRefreshRate + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
+					// Calculate the new time
+					long newTime = currentTime + ValuesConverter.fractionFromDecimal(currentSpeed, "modifTime");
+					// Restrain too big and too small values
+					newTime = ValuesConverter.correctDailyTicks(newTime);
+					// Change the world's time
+					Bukkit.getWorld(world).setTime(newTime);
+					// Change the doDaylightCycle gamerule if it is needed
+					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
+					if (newSpeed >= 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
+					// While the world is not cancelled, asynchronous and with a speed between 0 and 1, launch the loop again ...
+					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
+							&& (newSpeed > 0)
+							&& (newSpeed < 1)) {
+						asyncDecreaseSpeedScheduler(world, newSpeed);
+					} // ... or break the loop
+					else {
+						// Delete the world from the active scheduler list
+						if (asyncDecreaseSpeedSchedulerIsActive.contains(world)) asyncDecreaseSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncDecreaseDebugMsg);
+						// Detect if this world needs to change its speed value
+						speedScheduler(world);
+					}
+				// If the world doesn't exist
+				} else speedScheduler(world);
 			}
 		}, decreaseRefreshRate);
 	}
@@ -349,28 +369,32 @@ public class SpeedHandler extends MainTM {
 		asyncNormalSpeedScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				// Get the world's current time
-				Long currentTime = Bukkit.getWorld(world).getTime();
-				// Get the refresh rate
-				refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
-				// Timer msg
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + schedulerIsRunningDebugMsg + schedulerAsyncNormalDebugMsg);
-				MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
-				// Change the doDaylightCycle gamerule if it is needed
-				double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(currentTime));
-				if (newSpeed != 1 ) DoDaylightCycleHandler.adjustDaylightCycle(world);
-				// While the world is not cancelled, asynchronous and with a speed = 1, launch the loop again ...
-				if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
-						&& (newSpeed == 1)) { //
-					asyncNormalSpeedScheduler(world, newSpeed);
-				} // ... or break the loop
-				else {
-					// Delete the world from the active scheduler list
-					if (asyncNormalSpeedSchedulerIsActive.contains(world)) asyncNormalSpeedSchedulerIsActive.remove(world);
-					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncNormalDebugMsg);
-					// Detect if this world needs to change its speed value
-					speedScheduler(world);
-				}
+				// If the world exists
+				if (!Bukkit.getWorld(world).equals(null)) {
+					// Get the world's current time
+					Long currentTime = Bukkit.getWorld(world).getTime();
+					// Get the refresh rate
+					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
+					// Timer msg
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + schedulerIsRunningDebugMsg + schedulerAsyncNormalDebugMsg);
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
+					// Change the doDaylightCycle gamerule if it is needed
+					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(currentTime));
+					if (newSpeed != 1 ) DoDaylightCycleHandler.adjustDaylightCycle(world);
+					// While the world is not cancelled, asynchronous and with a speed = 1, launch the loop again ...
+					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
+							&& (newSpeed == 1)) { //
+						asyncNormalSpeedScheduler(world, newSpeed);
+					} // ... or break the loop
+					else {
+						// Delete the world from the active scheduler list
+						if (asyncNormalSpeedSchedulerIsActive.contains(world)) asyncNormalSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncNormalDebugMsg);
+						// Detect if this world needs to change its speed value
+						speedScheduler(world);
+					}
+				// If the world doesn't exist
+				} else speedScheduler(world);
 			}
 		}, refreshRateLong);
 	}

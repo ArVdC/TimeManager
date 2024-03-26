@@ -173,13 +173,13 @@ public class CfgFileHandler extends MainTM {
 				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CHAT).equalsIgnoreCase(ARG_FALSE)) {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CHAT, ARG_TRUE);
 		} else {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CHAT, ARG_FALSE); // TODO 1.8.0
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CHAT, ARG_FALSE);
 		}
 		if (!MainTM.getInstance().getConfig().getKeys(false).contains(CF_PLACEHOLDERS)
 				|| !MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS).equalsIgnoreCase(ARG_FALSE)) {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS, ARG_TRUE);
 		} else {
-			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS, ARG_FALSE); // TODO 1.8.0
+			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS, ARG_FALSE);
 		}
 
 		// #14. Restore debugMode node location
