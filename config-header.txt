@@ -22,9 +22,10 @@ config.yml
    If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.
   *daySpeed & nightSpeed*
    Define if the time will be locked, accelerated, decelerated or normally spend for the specified world.
-   Use 0.0 to freeze time, numbers from 0.01 to 0.9 to slow time, 1.0 to get normal speed and numbers from 1.1 to 20.0 to speedup time.
-   Set this value to '24.0' or 'realtime' to make the world time match the real speed time.
-   From 0.0 to 20.0, the values of daySpeed and nightSpeed can be different from each other.
+   Use 0.0 to freeze time, numbers from 0.01 to 0.99 to slow time, 1.0 to get normal speed and numbers from 1.1 to 20.0 to speedup time.
+   Set this value to 24.0 or 'realtime' to make the world time match the real speed time.
+   Night and day speeds can be different from each other.
+   It is also possible to use a 00d-00h-00m-00s format instead of the multiplier.
   *sleep*
    Since sleeping at night causes significant time changes, this is a priority setting to manage if you want to keep synchronization between maps.
    Three values are allowed: 'true', 'false' and 'linked'.

@@ -35,6 +35,10 @@ public class TmHelp extends MainTM {
 			+ " [true|false] " + ChatColor.RESET + "Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.";
 	private static String setDefLangHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DEFLANG
 			+ " [lg_LG] " + ChatColor.RESET + "Choose the translation to use if player's locale doesn't exist in the lang.yml or when 'multiLang' is 'false'.";
+	private static String setDurationHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_DURATION
+			+ " [00d-00h-00m-00s] [all|world] " + ChatColor.RESET + "Sets the speed of the world based on the desired duration rather than with a speed multiplier.";
+	private static String setDuration_D_N_HelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_D_DURATION + " " + ChatColor.RESET + "or " + ChatColor.GOLD + CMD_SET_N_DURATION
+			+ " [00d-00h-00m-00s] [all|world] " + ChatColor.RESET + "The length of day and night can be defined separately.";
 	private static String setE_DaysHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_E_DAYS
 			+ " [0 → ∞] [all|world] " + ChatColor.RESET + "Sets current number of elapsed days for the specified world (or all of them). Could be an integer between '0' and infinity (or almost). Setting this to '0' will bring the world back to day one.";
 	private static String setFirstStartTimeHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_FIRSTSTARTTIME
@@ -52,10 +56,9 @@ public class TmHelp extends MainTM {
 	private static String setSleepHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SLEEP
 			+ " [true|false|linked] [all|world] " + ChatColor.RESET + "Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false. If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.";
 	private static String setSpeedHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SPEED
-			+ " [multiplier] [all|world] " + ChatColor.RESET + "The decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.01' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to " + speedMax + " to speedup time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.";
-	private static String setSpeed_D_N_HelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_D_SPEED + " " + ChatColor.RESET + "or " + ChatColor.GOLD + "/"
-			+ CMD_TM + " " + CMD_SET + " " + CMD_SET_N_SPEED
-			+ " [multiplier] [all|world] " + ChatColor.RESET + "From '0.0' to '" + speedMax + "', the values of daySpeed and nightSpeed can be different from each other.";
+			+ " [0.0 → 20.0] [all|world] " + ChatColor.RESET + "The decimal number argument will multiply the world(s) speed. Use 0.0 to freeze time, numbers from 0.01 to 0.99 to slow time, 1.0 to get normal speed and numbers from 1.1 to " + speedMax + " to speedup time. Set this value to 24.0 or 'realtime' to make the world time match the real speed time.";
+	private static String setSpeed_D_N_HelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_D_SPEED + " " + ChatColor.RESET + "or " + ChatColor.GOLD + CMD_SET_N_SPEED
+			+ " [0.0 → 20.0] [all|world] " + ChatColor.RESET + "Night and day speeds can be different from each other.";
 	private static String setStartHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_START
 			+ " [ticks|daypart|HH:mm:ss|timeShift] [all|world] " + ChatColor.RESET + "Defines the time at server startup for the specified world (or all of them). By default, all worlds will start at tick #0. The timer(s) will be immediately resynchronized. If a world is using the real time speed, the start value will determine the UTC time shift and values like +1 or -1 will be accepted.";
 	private static String setSyncHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " " + CMD_SET_SYNC
@@ -71,6 +74,9 @@ public class TmHelp extends MainTM {
 			+ CMD_SET_DATE + "|"
 			+ CMD_SET_DEBUG + "|"
 			+ CMD_SET_DEFLANG + "|"
+			+ CMD_SET_DURATION + "|"
+			+ CMD_SET_D_DURATION + "|"
+			+ CMD_SET_N_DURATION + "|"
 			+ CMD_SET_E_DAYS + "|"
 			+ CMD_SET_FIRSTSTARTTIME + "|"
 			+ CMD_SET_INITIALTICK + "|"
@@ -111,6 +117,13 @@ public class TmHelp extends MainTM {
 					break;
 				case CMD_SET_DEFLANG : // /tm help set defLang
 					specificCmdMsg = setDefLangHelpMsg; // Help msg (in case of 2 args)
+					break;
+				case CMD_SET_DURATION : // /tm help set duration
+					specificCmdMsg = setDurationHelpMsg; // Help msg (in case of 2 args)
+					break;
+				case CMD_SET_D_DURATION : // /tm help set durationDay
+				case CMD_SET_N_DURATION : // /tm help set durationNight
+					specificCmdMsg = setDuration_D_N_HelpMsg; // Help msg (in case of 2 args)
 					break;
 				case CMD_SET_E_DAYS : // /tm help set elapsedDays
 					specificCmdMsg = setE_DaysHelpMsg; // Help msg (in case of 2 args)
@@ -194,6 +207,9 @@ public class TmHelp extends MainTM {
 			case CMD_SET_DATE :
 			case CMD_SET_DEBUG :
 			case CMD_SET_DEFLANG :
+			case CMD_SET_DURATION :
+			case CMD_SET_D_DURATION :
+			case CMD_SET_N_DURATION :
 			case CMD_SET_E_DAYS :
 			case CMD_SET_FIRSTSTARTTIME :
 			case CMD_SET_INITIALTICK :

@@ -22,6 +22,7 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmReload;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmResync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDebugMode;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDefLang;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetDuration;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetFirstStartTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetInitialTick;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetMultiLang;
@@ -380,8 +381,25 @@ public class AdminCmdExecutor implements CommandExecutor {
 						return true;
 					}
 				}
+				// Set the duration for a world
+				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_DURATION) || args[1].equalsIgnoreCase(MainTM.CMD_SET_D_DURATION) || args[1].equalsIgnoreCase(MainTM.CMD_SET_N_DURATION)) {
+					String when = args[1];
+					if (((nbArgs < 4) && (sender instanceof ConsoleCommandSender)) || ((nbArgs < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
+						MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DURATION); // Send error and help msg
+						return true;
+					} else {
+						String formatedDuration = args[2];
+						if (formatedDuration.contains("d") || formatedDuration.contains("h") || formatedDuration.contains("m") || formatedDuration.contains("s")) {
+							TmSetDuration.cmdSetDuration(sender, formatedDuration, when, concatWorldName);
+							return true;
+						} else {
+							MsgHandler.cmdErrorMsg(sender, MainTM.durationFormatMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_DURATION); // Send error and help msg
+							return true;
+						}
+					}
+				}
 				// Set the sleeping possibility for a world
-				if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)) {
+				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)) {
 					if (((nbArgs < 4) && (sender instanceof ConsoleCommandSender)) || ((nbArgs < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
 						MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SLEEP); // Send error and help msg
 						return true;

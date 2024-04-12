@@ -69,7 +69,7 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 ### ADMIN COMMAND /tm
 **/tm checkConfig** Admins and console can display a summary of the config.yml and lang.yml files.
 
-**/tm checkSql** Check the availability of the mySql server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.
+**/tm checkSql** Checks the availability of the mySql server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.
 
 **/tm checkTime \[all|server|world]** Admins and console can display a debug/managing message, who displays the startup server's time, the current server's time and the current time, start time and speed for a specific world (or for all of them).
 
@@ -87,6 +87,10 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 
 **/tm set debugMode \[true|false]** Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 
+**/tm set duration \[00d-00h-00m-00s] \[all|world]** Sets the speed of the world based on the desired duration rather than with a speed multiplier.
+
+**/tm set durationDay \[00d-00h-00m-00s] \[all|world] & /tm set durationNight \[00d-00h-00m-00s] \[all|world]** The length of day and night can be defined separately.
+
 **/tm set defLang \[lg_LG]** Choose the translation to use if player's locale doesn't exist in the lang.yml or when 'useMultiLang' is false.
 
 **/tm set elapsedDays \[0 → ∞] \[all|world]** Sets current number of elapsed days for the specified world (or all of them). Could be an integer between '0' and infinity (or almost). Setting this to '0' will bring the world back to day one.
@@ -97,28 +101,28 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 
 **/tm set multiLang \[true|false]** Set true or false to use an automatic translation for the _/now_ command.
 
-**/tm set playerOffset \[-23999 → 23999] \[all|player]** Define a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.
+**/tm set playerOffset \[-23999 → 23999] \[all|player]** Defines a specific offset relative to the world time on player's client (the world speed will be still active). Set to '0' to cancel.
 
-**/tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|player]** Define a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.
+**/tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|player]** Defines a specific time on player's client (the world speed will be still active). Use the 'reset' argument to cancel.
 
-**/tm set refreshRate \[ticks]** Set the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between '2' and '20'. Default value is '10' ticks, please note that a too small value can cause server lags.
+**/tm set refreshRate \[ticks]** Sets the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between '2' and '20'. Default value is '10' ticks, please note that a too small value can cause server lags.
 
-**/tm set sleep \[true|false|linked] \[all|world]** Define if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false.
+**/tm set sleep \[true|false|linked] \[all|world]** Defines if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false.
 If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.
 
-**/tm set speed \[0.0 → 20.0] \[all|world]** The decimal number argument will multiply the world(s) speed. Use '0.0' to freeze time, numbers from '0.01' to '0.9' to slow time, '1.0' to get normal speed and numbers from '1.1' to '20.0' to speed up time. Set this value to '24.0' or 'realtime' to make the world time match the real speed time.
+**/tm set speed \[0.0 → 20.0] \[all|world]** The decimal number argument will multiply the world(s) speed. Use 0.0 to freeze time, numbers from 0.01 to 0.99 to slow time, 1.0 to get normal speed and numbers from 1.1 to 20.0 to speed up time. Set this value to 24.0 or 'realtime' to make the world time match the real speed time.
 
 **/tm set speedDay \[0.0 → 20.0] \[all|world] & /tm set speedNight \[0.0 → 20.0] \[all|world]** 
-From '0.0' to '20.0', the values of daySpeed and nightSpeed can be different from each other.
+Night and day speeds can be different from each other.
 
-**/tm set start \[ticks|daypart|HH:mm:ss|timeShift] \[all|world]** Define the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
+**/tm set start \[ticks|daypart|HH:mm:ss|timeShift] \[all|world]** Defines the time at server startup for the specified world (or all of them). By default, all worlds will start at tick \#0. The timer(s) will be immediately resynchronized.
 If a world is using the real time speed, the start value will determine the UTC time shift and values like '+1' or '-1' will be accepted.
 
-**/tm set sync \[true|false] \[all|world]** Define if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.
+**/tm set sync \[true|false] \[all|world]** Defines if the speed distortion method will increase/decrease the world's actual tick, or fit the theoretical tick value based on the server one. By default, all worlds will start with parameter false. Real time based worlds and frozen worlds do not use this option, on the other hand this will affect even the worlds with a normal speed.
 
-**/tm set time \[ticks|daypart|HH:mm:ss] \[all|world]** Set current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
+**/tm set time \[ticks|daypart|HH:mm:ss] \[all|world]** Sets current time for the specified world (or all of them). Consider using this instead of the vanilla _/time_ command. The tab completion also provides handy presets like "day", "noon", "night", "midnight", etc.
 
-**/tm set update \[none|bukkit|curse|spigot|github]** Define the source server for the update search. (MC 1.8.8+ only)
+**/tm set update \[none|bukkit|curse|spigot|github]** Defines the source server for the update search. (MC 1.8.8+ only)
    
 **/tm set useCmds \[true|false]** §rSet true to enable a custom commands scheduler. See the cmds.yml file for details.
 
@@ -171,7 +175,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.8.3-a: MC 1.8.8 to 1.20.4
+v1.9.0: MC 1.8.8 to 1.20.4
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~

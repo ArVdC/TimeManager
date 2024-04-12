@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.8.3-a
+version: 1.9.0
 api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -41,6 +41,9 @@ commands:
             /<command> set date [today|yyyy-mm-dd] [all|world]
             /<command> set debugMode [true|false]
             /<command> set defLang [lg_LG]
+            /<command> set duration [00d-00h-00m-00s] [all|world]
+            /<command> set durationDay [00d-00h-00m-00s] [all|world]
+            /<command> set durationNight [00d-00h-00m-00s] [all|world]
             /<command> set elapsedDays [0 → ∞] [all|world]
             /<command> set firstStartTime [default|previous|start] [all|world]
             /<command> set initialtick [ticks|HH:mm]
@@ -49,9 +52,9 @@ commands:
             /<command> set playerTime [ticks|daypart|HH:mm:ss|reset] [all|player]
             /<command> set refreshRate [ticks]
             /<command> set sleep [true|false] [all|world]
-            /<command> set speed [multiplier] [all|world]
-            /<command> set speedDay [multiplier] [all|world]
-            /<command> set speedNight [multiplier] [all|world]
+            /<command> set speed [0.0 → 20.0] [all|world]
+            /<command> set speedDay [0.0 → 20.0] [all|world]
+            /<command> set speedNight [0.0 → 20.0] [all|world]
             /<command> set start [ticks|daypart|HH:mm:ss|timeShift] [all|world]
             /<command> set sync [true|false] [all|world]
             /<command> set time [ticks|daypart|HH:mm:ss] [all|world]

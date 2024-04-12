@@ -23,7 +23,7 @@ public class SleepHandler implements Listener {
 	/**
 	 * When a player try to sleep, authorize entering the bed but check if the time need to be spend until the dawn or not
 	 */
-	// # 1. Listen to PlayerBedEnterEvent in relevant worlds
+	// #1. Listen to PlayerBedEnterEvent in relevant worlds
 	@EventHandler
 	public void whenPlayerTryToSleep(PlayerBedEnterEvent e) throws InterruptedException {
 		// Get the event's world name
@@ -39,7 +39,7 @@ public class SleepHandler implements Listener {
 		}
 	}
 
-	// # 2. Wait the nearly end of the sleep to permit or refuse the night spend until the dawn
+	// #2. Wait the nearly end of the sleep to permit or refuse the night spend until the dawn
 	public static void sleepTicksCount(Player p, World w, double speedModifier, int sleepTicks) {
 		BukkitScheduler sleepTicksCountSheduler = MainTM.getInstance().getServer().getScheduler();
 		sleepTicksCountSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
@@ -97,7 +97,7 @@ public class SleepHandler implements Listener {
 		}, 2L);
 	}
 
-	// # 3. Wait a little bit before checking
+	// #3. Wait a little bit before checking
 	public static void delayedDoesDayStart(World w, String world, long timeToWait) {
 		BukkitScheduler delayedDoesDayStartSheduler = MainTM.getInstance().getServer().getScheduler();
 		delayedDoesDayStartSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
@@ -109,7 +109,7 @@ public class SleepHandler implements Listener {
 		}, timeToWait);
 	}
 
-	// # 4. After sleeping, check if a new day is starting or not
+	// #4. After sleeping, check if a new day is starting or not
 	public static void doesDayStart(World w, String world) {
 		BukkitScheduler doesDayStartSheduler = MainTM.getInstance().getServer().getScheduler();
 		doesDayStartSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
@@ -137,7 +137,7 @@ public class SleepHandler implements Listener {
 		}, 4L);
 	}
 
-	// # 5. Adjust the time from 6:00 to 12:00 am, relaunch the speed scheduler and refresh the doDaylightCycle gamerule
+	// #5. Adjust the time from 6:00 to 12:00 am, relaunch the speed scheduler and refresh the doDaylightCycle gamerule
 	public static void afterSleepingSettings(World w, long wakeUpTick) {
 		BukkitScheduler afterSleepingSheduler = MainTM.getInstance().getServer().getScheduler();
 		afterSleepingSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {

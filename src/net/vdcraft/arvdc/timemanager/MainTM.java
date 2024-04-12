@@ -229,6 +229,9 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_DEV = "devMode";
 	protected static final String CMD_SET_TIMER = "timerMode";
 	protected static final String CMD_SET_DEFLANG = "defLang";
+	protected static final String CMD_SET_DURATION = "duration";
+	protected static final String CMD_SET_D_DURATION = "durationDay";
+	protected static final String CMD_SET_N_DURATION = "durationNight";
 	protected static final String CMD_SET_E_DAYS = "elapsedDays";
 	protected static final String CMD_SET_INITIALTICK = "initialTick";
 	protected static final String CMD_SET_FIRSTSTARTTIME = "firstStartTime";
@@ -477,15 +480,16 @@ public class MainTM extends JavaPlugin {
 	protected static String waitBeforeCmdMsg = "Waiting time must be an integer number.";
 	protected static String wakeUpTickFormatMsg = "Wake up tick must be an integer number, default value will be used.";
 	protected static String startTickFormatMsg = "Start tick must be an integer number, default value will be used.";
-	protected static String utcFormatMsg = "Time shift must be formatted as 'UTC' followed by '+' or '-' and an integer number, without space (e.g. UTC+1), default value will be used.";
-	protected static String yearFormatMsg = "Year number must be an integer number between 1 and 9999.";
-	protected static String monthFormatMsg = "Month number must be an integer number between 1 and 12.";
 	protected static String dayFormatMsg = "Day number must be an integer number between 1 and ";
 	protected static String dateFormatMsg = "Date must be 'today', or be in the format yyyy-mm-dd, default value will be used.";
-	protected static String tickFormatMsg = "Tick must be an integer number, a listed part of the day, or to be HH:mm:ss formatted, default value will be used.";
+	protected static String durationFormatMsg = "Duration must be in the format 00d-00h-00m-00s, default value will be used.";
 	protected static String hourFormatMsg = "Hour must be in the format HH:mm:ss, default value will be used.";
+	protected static String monthFormatMsg = "Month number must be an integer number between 1 and 12.";
 	protected static String speedFormatMsg = "Speed multiplier must be a number (integer or decimal) or the string 'realtime', default value will be used.";
+	protected static String tickFormatMsg = "Tick must be an integer number, a listed part of the day, or to be HH:mm:ss formatted, default value will be used.";
 	protected static String titlesTimersFormatMsg = "Titles timers (fadeIn, stay, fadeOut) must be integers, default values will be used.";
+	protected static String utcFormatMsg = "Time shift must be formatted as 'UTC' followed by '+' or '-' and an integer number, without space (e.g. UTC+1), default value will be used.";
+	protected static String yearFormatMsg = "Year number must be an integer number between 1 and 9999.";
 	protected static String wrongWorldMsg = "The name of the world you just typed does not exist.";
 	protected static String wrongLangMsg = "The language you just typed does not exist in lang.yml file.";
 	protected static String wrongYmlMsg = "The name of the yaml file you just typed does not exist.";
@@ -558,7 +562,9 @@ public class MainTM extends JavaPlugin {
 	public static String schedulerAsyncNormalDebugMsg = "the asynchronous normal speed scheduler.";
 	public static String schedulerWillUseDebugMsg = "will now use ";
 	public static String schedulerIsRunningDebugMsg = "is running in ";
-
+	public static String schedulerFractionDebugMsg = "The fraction used as a time modifier from the decimal is : ";
+	public static String durationToFractionDebugMsg = "The calculation of the duration as a speed multiplier is : ";
+	
 	// Debug Calculation for timer synchronization (with colors)
 	protected static String actualTimeVar = "§c[actualTime]§b";
 	protected static String askedTimeVar = "§8[askedTime]§b";

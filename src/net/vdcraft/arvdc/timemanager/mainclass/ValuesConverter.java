@@ -29,8 +29,60 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
+	 * Checks and corrects any 'duration' value
+	 * (returns a String)
+	 */
+	public static String correctDuration(String duration) {
+		if (duration.contains("d") && !duration.contains("d-")) { // If days are mentioned without the separator "-"
+			String[] splitedDuration = duration.split("d");
+			if (splitedDuration.length > 0) {
+				duration = splitedDuration[0] + "d-";
+				if (splitedDuration.length > 1) {
+					duration = duration + splitedDuration[1];
+				}
+			}
+		} else if (!duration.contains("d-")) { // If days are not mentioned at all
+			duration = "00d-" + duration;
+		}
+		if (duration.contains("h") && !duration.contains("h-")) { // If hours are mentioned without the separator "-"
+			String[] splitedDuration = duration.split("h");
+			if (splitedDuration.length > 0) {
+				duration = splitedDuration[0] + "h-";
+				if (splitedDuration.length > 1) {
+					duration = duration + splitedDuration[1];
+				}
+			}
+		} else if (!duration.contains("h-")) { // If hours are not mentioned at all
+			String[] splitedDuration = duration.split("d-");
+			duration = splitedDuration[0] + "d-" + "00h-";
+			if (splitedDuration.length > 1) {
+				duration = duration + splitedDuration[1];
+			}
+		}
+		if (duration.contains("m") && !duration.contains("m-")) { // If minutes are mentioned without the separator "-"
+			String[] splitedDuration = duration.split("m");
+			if (splitedDuration.length > 0) {
+				duration = splitedDuration[0] + "m-";
+				if (splitedDuration.length > 1) {
+					duration = duration + splitedDuration[1];
+				}
+			}
+		} else if (!duration.contains("m-")) { // If minutes are not mentioned at all
+			String[] splitedDuration = duration.split("h-");
+			duration = splitedDuration[0] + "h-" + "00m-";
+			if (splitedDuration.length > 1) {
+				duration = duration + splitedDuration[1];
+			}
+		}
+		if (!duration.contains("s")) { // If seconds are not mentioned
+			duration = duration + "00s";
+		}
+		return duration;
+	}
+
+	/**
 	 * Checks and corrects the 'refreshRate' value
-	 * (returns an integer)
+	 * (returns an Integer)
 	 */
 	public static Integer correctRefreshRate(int newRefreshRate) {
 		if (newRefreshRate > refreshMax) { // Forbid too big numbers
@@ -40,7 +92,50 @@ public class ValuesConverter extends MainTM {
 		}
 		return newRefreshRate;
 	}
-
+	
+	/**
+	 * Gets and converts [00d-00h-00m-00s] to a decimal speed multiplier
+	 * (returns a double)
+	 */
+	public static double doubleFromFormatedTime(String formatedTime, String dayPart) {
+		try {
+			String t = formatedTime.replace("d", "").replace("h", "").replace("m", "").replace("s", "");
+			String[] splitedTime = t.split("-");
+			int d = Integer.parseInt(splitedTime[0]);
+			int h = Integer.parseInt(splitedTime[1]);
+			int m = Integer.parseInt(splitedTime[2]);
+			int s = Integer.parseInt(splitedTime[3]);
+			// Find the expected time length
+			Long ticks = (d*1728000L) + (h*72000L) + (m*1200L) + (s*20L);
+			if (ticks > 0.0) {
+				// Set the asked cycle
+				double cycle;
+				switch (dayPart) {
+					default :
+					case CMD_SET_DURATION :
+						cycle = 24000;
+						break;
+					case CMD_SET_D_DURATION :
+						cycle = 13000;
+						break;
+					case CMD_SET_N_DURATION :
+						cycle = 11000;
+						break;
+					}
+				// Find the corresponding multiplier
+				double denominator = ticks / cycle;
+				double multiplier = 1.0 / denominator;
+				multiplier = (Math.round(multiplier * Math.pow(10,9))) / Math.pow(10,9);
+				MsgHandler.debugMsg(durationToFractionDebugMsg + ChatColor.YELLOW + formatedTime + ChatColor.AQUA + " = " + ChatColor.YELLOW + + 1.0 + "/" + denominator + ChatColor.AQUA + " = " + ChatColor.YELLOW + multiplier);  // Console debug msg
+				if (multiplier > speedMax) multiplier = speedMax;
+				return multiplier;
+			} else return 0.0;
+		} catch (NumberFormatException nfe) {
+			MsgHandler.errorMsg(durationFormatMsg); // Console error msg
+			return 1.0;
+		}
+	}
+	
 	/**
 	 * Converts a decimal to a fraction, to produce the speed change with the ratio between the time to add and the refresh rate
 	 * (returns a Long)
@@ -48,81 +143,232 @@ public class ValuesConverter extends MainTM {
 	public static Long fractionFromDecimal(Double currentSpeed, String value) {
 		Long modifTime = 0L;
 		Long refreshRate = 0L;
-		if (currentSpeed >= 0.9) {
+		if (currentSpeed >= 0.95) {
+			modifTime = 19L;
+			refreshRate = 20L;
+		} else if (currentSpeed >= 0.947) {
+			modifTime = 18L;
+			refreshRate = 19L;
+		} else if (currentSpeed >= 0.944) {
+			modifTime = 17L;
+			refreshRate = 18L;
+		} else if (currentSpeed >= 0.941) {
+			modifTime = 16L;
+			refreshRate = 17L;
+		} else if (currentSpeed >= 0.937) {
+			modifTime = 15L;
+			refreshRate = 16L;
+		} else if (currentSpeed >= 0.933) {
+			modifTime = 14L;
+			refreshRate = 15L;
+		} else if (currentSpeed >= 0.928) {
+			modifTime = 13L;
+			refreshRate = 14L;
+		} else if (currentSpeed >= 0.923) {
+			modifTime = 12L;
+			refreshRate = 13L;
+		} else if (currentSpeed >= 0.916) {
+			modifTime = 11L;
+			refreshRate = 12L;
+		} else if (currentSpeed >= 0.909) {
 			modifTime = 10L;
 			refreshRate = 11L;
-		} else if (currentSpeed >= 0.8) {
+		} else if (currentSpeed >= 0.9) {
+			modifTime = 9L;
+			refreshRate = 10L;
+		} else if (currentSpeed >= 0.888) {
+			modifTime = 8L;
+			refreshRate = 9L;
+		} else if (currentSpeed >= 0.875) {
+			modifTime = 7L;
+			refreshRate = 8L;
+		} else if (currentSpeed >= 0.857) {
+			modifTime = 6L;
+			refreshRate = 7L;
+		} else if (currentSpeed >= 0.846) {
+			modifTime = 11L;
+			refreshRate = 13L;
+		} else if (currentSpeed >= 0.833) {
 			modifTime = 5L;
 			refreshRate = 6L;
-		} else if (currentSpeed >= 0.7) {
+		} else if (currentSpeed >= 0.818) {
+			modifTime = 9L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.8) {
+			modifTime = 4L;
+			refreshRate = 5L;
+		} else if (currentSpeed >= 0.785) {
+			modifTime = 11L;
+			refreshRate = 14L;
+		} else if (currentSpeed >= 0.777) {
+			modifTime = 7L;
+			refreshRate = 9L;
+		} else if (currentSpeed >= 0.75) {
+			modifTime = 3L;
+			refreshRate = 4L;
+		} else if (currentSpeed >= 0.727) {
+			modifTime = 8L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.714) {
 			modifTime = 5L;
 			refreshRate = 7L;
-		} else if (currentSpeed >= 0.65) {
+		} else if (currentSpeed >= 0.7) {
+			modifTime = 7L;
+			refreshRate = 10L;
+		} else if (currentSpeed >= 0.692) {
+			modifTime = 9L;
+			refreshRate = 13L;
+		} else if (currentSpeed >= 0.666) {
 			modifTime = 2L;
 			refreshRate = 3L;
-		} else if (currentSpeed >= 0.6) {
+		} else if (currentSpeed >= 0.636) {
+			modifTime = 7L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.625) {
 			modifTime = 5L;
 			refreshRate = 8L;
-		} else if (currentSpeed >= 0.55) {
+		} else if (currentSpeed >= 0.615) {
+			modifTime = 8L;
+			refreshRate = 13L;
+		} else if (currentSpeed >= 0.6) {
+			modifTime = 3L;
+			refreshRate = 5L;
+		} else if (currentSpeed >= 0.583) {
+			modifTime = 7L;
+			refreshRate = 12L;
+		} else if (currentSpeed >= 0.571) {
+			modifTime = 4L;
+			refreshRate = 7L;
+		} else if (currentSpeed >= 0.555) {
 			modifTime = 5L;
 			refreshRate = 9L;
+		} else if (currentSpeed >= 0.545) {
+			modifTime = 6L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.538) {
+			modifTime = 7L;
+			refreshRate = 13L;
 		} else if (currentSpeed >= 0.5) {
-			modifTime = 4L;
-			refreshRate = 8L;
-		} else if (currentSpeed >= 0.45) {
+			modifTime = 1L;
+			refreshRate = 2L;
+		} else if (currentSpeed >= 0.461) {
+			modifTime = 6L;
+			refreshRate = 13L;
+		} else if (currentSpeed >= 0.454) {
 			modifTime = 5L;
 			refreshRate = 11L;
+		} else if (currentSpeed >= 0.444) {
+			modifTime = 4L;
+			refreshRate = 9L;
+		} else if (currentSpeed >= 0.428) {
+			modifTime = 3L;
+			refreshRate = 7L;
+		} else if (currentSpeed >= 0.416) {
+			modifTime = 5L;
+			refreshRate = 12L;
 		} else if (currentSpeed >= 0.4) {
 			modifTime = 2L;
 			refreshRate = 5L;
-		} else if (currentSpeed >= 0.3) {
-			modifTime = 2L;
-			refreshRate = 6L;
-		} else if (currentSpeed >= 0.25) {
-			modifTime = 2L;
+		} else if (currentSpeed >= 0.384) {
+			modifTime = 5L;
+			refreshRate = 13L;
+		} else if (currentSpeed >= 0.375) {
+			modifTime = 3L;
 			refreshRate = 8L;
-		} else if (currentSpeed >= 0.2) {
-			modifTime = 2L;
+		} else if (currentSpeed >= 0.363) {
+			modifTime = 4L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.357) {
+			modifTime = 5L;
+			refreshRate = 14L;
+		} else if (currentSpeed >= 0.333) {
+			modifTime = 1L;
+			refreshRate = 3L;
+		} else if (currentSpeed >= 0.315) {
+			modifTime = 6L;
+			refreshRate = 19L;
+		} else if (currentSpeed >= 0.3) {
+			modifTime = 3L;
 			refreshRate = 10L;
+		} else if (currentSpeed >= 0.285) {
+			modifTime = 2L;
+			refreshRate = 7L;
+		} else if (currentSpeed >= 0.272) {
+			modifTime = 3L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.266) {
+			modifTime = 4L;
+			refreshRate = 15L;
+		} else if (currentSpeed >= 0.25) {
+			modifTime = 1L;
+			refreshRate = 4L;
+		} else if (currentSpeed >= 0.235) {
+			modifTime = 4L;
+			refreshRate = 17L;
+		} else if (currentSpeed >= 0.222) {
+			modifTime = 2L;
+			refreshRate = 9L;
+		} else if (currentSpeed >= 0.214) {
+			modifTime = 3L;
+			refreshRate = 14L;
+		} else if (currentSpeed >= 0.2) {
+			modifTime = 1L;
+			refreshRate = 5L;
+		} else if (currentSpeed >= 0.187) {
+			modifTime = 3L;
+			refreshRate = 16L;
+		} else if (currentSpeed >= 0.181) {
+			modifTime = 2L;
+			refreshRate = 11L;
+		} else if (currentSpeed >= 0.176) {
+			modifTime = 3L;
+			refreshRate = 17L;
+		} else if (currentSpeed >= 0.166) {
+			modifTime = 1L;
+			refreshRate = 6L;
+		} else if (currentSpeed >= 0.153) {
+			modifTime = 2L;
+			refreshRate = 13L;
+		} else if (currentSpeed >= 0.15) {
+			modifTime = 3L;
+			refreshRate = 20L;
+		} else if (currentSpeed >= 0.142) {
+			modifTime = 1L;
+			refreshRate = 7L;
+		} else if (currentSpeed >= 0.133) {
+			modifTime = 2L;
+			refreshRate = 15L;
+		} else if (currentSpeed >= 0.125) {
+			modifTime = 1L;
+			refreshRate = 8L;
+		} else if (currentSpeed >= 0.117) {
+			modifTime = 2L;
+			refreshRate = 17L;
+		} else if (currentSpeed >= 0.111) {
+			modifTime = 1L;
+			refreshRate = 9L;
 		} else if (currentSpeed >= 0.1) {
 			modifTime = 1L;
 			refreshRate = 10L;
-		} else if (currentSpeed >= 0.06) {
-			modifTime = 1L;
-			refreshRate = 15L;
-		} else if (currentSpeed >= 0.05) {
-			modifTime = 1L;
-			refreshRate = 20L;
-		} else if (currentSpeed >= 0.04) {
-			modifTime = 1L;
-			refreshRate = 25L;
-		} else if (currentSpeed >= 0.03) {
-			modifTime = 1L;
-			refreshRate = 30L;
-		} else if (currentSpeed >= 0.025) {
-			modifTime = 1L;
-			refreshRate = 40L;
-		} else if (currentSpeed >= 0.02) {
-			modifTime = 1L;
-			refreshRate = 50L;
-		} else if (currentSpeed >= 0.018) {
-			modifTime = 1L;
-			refreshRate = 55L;
-		} else if (currentSpeed >= 0.0165) {
-			modifTime = 1L;
-			refreshRate = 60L;
-		} else if (currentSpeed >= 0.015) {
-			modifTime = 1L;
-			refreshRate = 65L;
-		} else if (currentSpeed >= 0.0143) {
-			modifTime = 1L;
-			refreshRate = 70L;
-		} else if (currentSpeed >= 0.014) {
-			modifTime = 1L;
-			refreshRate = 71L;
-		} else if (currentSpeed < 0.014) {
-			modifTime = 1L;
-			refreshRate = 72L;
+		} else { // When numerator needs to be equal to 1
+		    double tolerance = 1.0E-6;
+		    double h1=1;
+		    double h2=0;
+		    double k1=0;
+		    double k2=1;
+		    double b = currentSpeed;
+		    do {
+		        double a = Math.floor(b);
+		        double aux = h1;
+		        h1 = a*h1+h2;
+		        h2 = aux;
+		        aux = k1;
+				k1 = a*k1+k2;
+				k2 = aux;
+		        b = 1/(b-a);
+		    } while (Math.abs(currentSpeed-h1/k1) > currentSpeed*tolerance);
+		    modifTime = 1L;
+		    refreshRate =  Math.round(k1/h1);
 		}
 		if (value.equalsIgnoreCase("modifTime")) return modifTime;
 		else if (value.equalsIgnoreCase("refreshRate")) return refreshRate;
@@ -321,14 +567,14 @@ public class ValuesConverter extends MainTM {
 	public static Long tickFromServerTime(String time) {
 		String[] splitedHms = time.split(":");
 		try {
-			long H = Long.parseLong(splitedHms[0]) % 24;
+			long h = Long.parseLong(splitedHms[0]) % 24;
 			long m = 0L;
 			long s = 0L;
 			if (splitedHms.length >= 2)
 				m = Long.parseLong(splitedHms[1]) % 60;
 			if (splitedHms.length >= 3)
 				s = Long.parseLong(splitedHms[2]) % 60;
-			Long calcTick = ((H * 72000) + (m * 1200) + (s * 20)) % 1728000;
+			Long calcTick = ((h * 72000) + (m * 1200) + (s * 20)) % 1728000;
 			return calcTick;
 		} catch (NumberFormatException nfe) {
 			MsgHandler.errorMsg(hourFormatMsg); // Console error msg
@@ -506,7 +752,7 @@ public class ValuesConverter extends MainTM {
 			return null;
 		}	
 	}
-	
+
 	/**
 	 * Gets and converts the current real date to a number of days
 	 * (returns a Long)
@@ -786,28 +1032,38 @@ public class ValuesConverter extends MainTM {
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSpeed(String world) {
-		double daySpeedNb;
 		String daySpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
-		double nightSpeedNb;
 		String nightSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
+		double daySpeedNb;
+		double nightSpeedNb;
 		if (daySpeed.equals("24") || daySpeed.equalsIgnoreCase("realtime") || nightSpeed.equals("24") || nightSpeed.equalsIgnoreCase("realtime")) {
 			daySpeedNb = realtimeSpeed;
 			nightSpeedNb = realtimeSpeed;
 		} else {
-			try { // Check if day value is a double
-				daySpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
-				daySpeedNb = correctSpeed(daySpeedNb);
-			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
-				MsgHandler.errorMsg(speedFormatMsg); // Console error msg
-				daySpeedNb = defSpeed;
+			if (!daySpeed.contains("d") && !daySpeed.contains("h") && !daySpeed.contains("m") && !daySpeed.contains("s")) {
+				try { // Check if day value is a double
+					daySpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
+					daySpeedNb = correctSpeed(daySpeedNb);
+				} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
+					MsgHandler.errorMsg(speedFormatMsg); // Console error msg
+					daySpeedNb = defSpeed;
+				}
+			} else { // Check if daySpeed is in 00d-00h-00m-00s format
+				daySpeed = correctDuration(daySpeed);
+				daySpeedNb = doubleFromFormatedTime(daySpeed, CMD_SET_D_DURATION);
 			}
-			try { // Check if night value is a double
-				nightSpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
-				nightSpeedNb = correctSpeed(nightSpeedNb);
-			} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
-				MsgHandler.errorMsg(speedFormatMsg); // Console error msg
-				nightSpeedNb = defSpeed;
-			} 
+			if (!nightSpeed.contains("d") && !nightSpeed.contains("h") && !nightSpeed.contains("m") && !nightSpeed.contains("s")) {
+				try { // Check if night value is a double
+					nightSpeedNb = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
+					nightSpeedNb = correctSpeed(nightSpeedNb);
+				} catch (NumberFormatException nfe) { // If not a double, use the default refresh value
+					MsgHandler.errorMsg(speedFormatMsg); // Console error msg
+					nightSpeedNb = defSpeed;
+				}
+			} else { // Check if nightSpeed is in 00d-00h-00m-00s format
+				nightSpeed = correctDuration(nightSpeed);
+				nightSpeedNb = doubleFromFormatedTime(nightSpeed, CMD_SET_N_DURATION);
+			}
 		}
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED, daySpeedNb);
 		MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED, nightSpeedNb);

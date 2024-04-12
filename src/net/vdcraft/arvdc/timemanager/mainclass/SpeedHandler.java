@@ -89,8 +89,12 @@ public class SpeedHandler extends MainTM {
 							MsgHandler.debugMsg("The world " + ChatColor.YELLOW + world + ChatColor.AQUA + " " + schedulerWillUseDebugMsg + schedulerAsyncDecreaseDebugMsg);
 							// Declare the world as having an active scheduler
 							asyncDecreaseSpeedSchedulerIsActive.add(world);
+							// Get the fraction that will be used
+							final Long modifTime = ValuesConverter.fractionFromDecimal(speed, "modifTime");
+							final Long refreshRate = ValuesConverter.fractionFromDecimal(speed, "refreshRate");
+							MsgHandler.debugMsg(schedulerFractionDebugMsg + ChatColor.YELLOW + modifTime + "/" + refreshRate); // Console debug msg
 							// Launch asynchronous decrease speed scheduler
-							asyncDecreaseSpeedScheduler(world, speed);
+							asyncDecreaseSpeedScheduler(world, speed, modifTime, refreshRate);
 					}
 					// #B.4.c. ... or if it is a normal speed world
 					else if (speed == 1.0 && !asyncNormalSpeedSchedulerIsActive.contains(world)) {
@@ -316,11 +320,8 @@ public class SpeedHandler extends MainTM {
 	/**
 	 * Decrease worlds speed asynchronously at a custom rate with an auto cancel/repeat capable scheduler
 	 */
-	public static void asyncDecreaseSpeedScheduler(String world, double currentSpeed) {
-
-		// Get the refresh rate
-		final Long decreaseRefreshRate = ValuesConverter.fractionFromDecimal(currentSpeed, "refreshRate");
-
+	public static void asyncDecreaseSpeedScheduler(String world, double currentSpeed, Long modifTime, Long refreshRate) {
+		
 		BukkitScheduler asyncSpeedDecreaseScheduler = MainTM.getInstance().getServer().getScheduler();
 		asyncSpeedDecreaseScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 			@Override
@@ -331,9 +332,9 @@ public class SpeedHandler extends MainTM {
 					Long currentTime = Bukkit.getWorld(world).getTime();
 					// Timer msg
 					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + schedulerIsRunningDebugMsg + schedulerAsyncDecreaseDebugMsg);
-					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + decreaseRefreshRate + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRate + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
 					// Calculate the new time
-					long newTime = currentTime + ValuesConverter.fractionFromDecimal(currentSpeed, "modifTime");
+					long newTime = currentTime + modifTime;
 					// Restrain too big and too small values
 					newTime = ValuesConverter.correctDailyTicks(newTime);
 					// Change the world's time
@@ -345,7 +346,14 @@ public class SpeedHandler extends MainTM {
 					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
 							&& (newSpeed > 0)
 							&& (newSpeed < 1)) {
-						asyncDecreaseSpeedScheduler(world, newSpeed);
+						if (currentSpeed != newSpeed) {
+							Long newModifTime = ValuesConverter.fractionFromDecimal(newSpeed, "modifTime");
+							Long newRefreshRate = ValuesConverter.fractionFromDecimal(newSpeed, "refreshRate");
+							MsgHandler.debugMsg(schedulerFractionDebugMsg + ChatColor.YELLOW + newModifTime + "/" + newRefreshRate); // Console debug msg
+							asyncDecreaseSpeedScheduler(world, newSpeed, newModifTime, newRefreshRate);
+						} else {
+							asyncDecreaseSpeedScheduler(world, newSpeed, modifTime, refreshRate);
+						}
 					} // ... or break the loop
 					else {
 						// Delete the world from the active scheduler list
@@ -357,7 +365,7 @@ public class SpeedHandler extends MainTM {
 				// If the world doesn't exist
 				} else speedScheduler(world);
 			}
-		}, decreaseRefreshRate);
+		}, refreshRate);
 	}
 
 	/**
