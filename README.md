@@ -141,6 +141,9 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set date \[today|yyyy-mm-dd] \[all|world]
   - /tm set debugMode \[true|false]
   - /tm set defLang \[true|false]
+  - /tm set duration \[00d-00h-00m-00s] \[all|world]
+  - /tm set durationDay \[00d-00h-00m-00s] \[all|world]
+  - /tm set durationNight \[00d-00h-00m-00s] \[all|world]
   - /tm set elapsedDays \[0 → ∞] \[all|world]
   - /tm set firstStartTime \[default|previous|start] \[all|world]
   - /tm set initialTick \[ticks|HH:mm:ss]
@@ -149,9 +152,9 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|player]
   - /tm set refreshRate \[ticks]
   - /tm set sleep \[true|false] \[all|world]
-  - /tm set speed \[multiplier] \[all|world]
-  - /tm set speedDay \[multiplier] \[all|world]
-  - /tm set speedNight \[multiplier] \[all|world]
+  - /tm set speed \[0.0 → 20.0] \[all|world]
+  - /tm set speedDay \[0.0 → 20.0] \[all|world]
+  - /tm set speedNight \[0.0 → 20.0] \[all|world]
   - /tm set start \[ticks|daypart|HH:mm:ss] \[all|world]
   - /tm set sync \[true|false] \[all|world]
   - /tm set time \[ticks|daypart|HH:mm:ss] \[all|world]
@@ -197,6 +200,7 @@ v1.9.0: MC 1.8.8 to 1.20.4
 * ~~Colors: Add hexadecimal color recognition.~~
 * ~~Placeholder: Permit players to use placeholders in chat messages.~~
 * ~~Placeholder: Permit external commands to use placeholders.~~
+* ~~Command: Add a '/tm set duration' command with a 00d-00h-00m-00s format.~~
 * Command: Allow players to display the list of placeholders.
 * Placeholder: Add new placeholders for the names of the seven days of the week.
 * Placeholder: Create signs where the placeholders constantly refresh.
