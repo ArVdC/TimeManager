@@ -84,7 +84,7 @@ public class PlaceholdersHandler extends MainTM {
 		// Returns the current day part for the player's world
 		case "{" + PH_PREFIX + PH_DAYPART + "}" :
 			String dayPart = ValuesConverter.getMCDayPart(t);
-			return MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + dayPart);
+			return MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + dayPart);
 
 		// Returns the current day # for the player's world
 		case "{" + PH_PREFIX + PH_C_DAY + "}" :
@@ -113,7 +113,7 @@ public class PlaceholdersHandler extends MainTM {
 		// Returns the current month's name for the player's world
 		case "{" + PH_PREFIX + PH_MONTHNAME + "}" :
 			String mm = "m" + ValuesConverter.dateFromElapsedDays(ed, "mm");
-			return MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + mm);
+			return MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + mm);
 
 		// Returns the current day in (00 format) for the player's world
 		case "{" + PH_PREFIX + PH_DD + "}" :

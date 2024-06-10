@@ -56,7 +56,7 @@ public class TmNow extends MainTM {
 				String lang = PlayerLangHandler.setLangToUse(p);
 				
 				// #4. Get the prefix from the lang.yml file
-				String prefix = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_PREFIX);
+				String prefix = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_PREFIX);
 				prefix = prefix.replace("&", "§");		
 				
 				// #5. Configure message content
@@ -65,19 +65,19 @@ public class TmNow extends MainTM {
 				switch (display) {
 				case ARG_MSG :		
 					if (world.contains(ARG_NETHER)) {
-						msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG);
+						msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_NETHERMSG);
 					} else if (world.contains(ARG_THEEND)) {
-						msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG);
+						msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ENDMSG);
 					} else {
-						msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);	
+						msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MSG);	
 					}
 					break;
 				case ARG_TITLE :
-					msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_TITLE);
-					subtitle = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE);
+					msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_TITLE);
+					subtitle = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_SUBTITLE);
 					break;
 				case ARG_ACTIONBAR :
-					msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR);
+					msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ACTIONBAR);
 					break;
 				}
 				

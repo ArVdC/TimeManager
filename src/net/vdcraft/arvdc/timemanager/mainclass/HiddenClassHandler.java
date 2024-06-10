@@ -11,6 +11,7 @@ public class HiddenClassHandler extends MsgHandler {
 	/**
 	 * Player action bar msg for Spigot and forks
 	 */
+	@SuppressWarnings("deprecation")
 	public static void playerActionbarMsg(Player p, String msg) {
 		// Spigot and forks up to MC 1.11
 		if (serverMcVersion < reqMcVForTxtCompLegacyMsg) {

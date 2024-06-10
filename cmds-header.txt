@@ -21,7 +21,7 @@ cmds.yml
     The Minecraft world that will be use as source for the placeholders described in lang.yml file.
     Only the {tm_player} doesn't not work with the scheduler, cause the command sender is the console.
   *time*
-    The time the command will be launched, formatted as 'hh:mm'.
+    The time the command will be launched, formatted as 'hh:mm'. Times greater than 00:59 MUST be enclosed in single quotes.
   *date*
     The next day the command will be launched, formatted as 'yyyy-mm-dd'. 'today' can also be used and will be automatically converted to a date.
   *repeatFreq*

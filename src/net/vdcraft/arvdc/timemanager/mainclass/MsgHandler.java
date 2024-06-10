@@ -89,9 +89,9 @@ public class MsgHandler extends MainTM {
 	 */
 	@SuppressWarnings("deprecation")
 	public static void playerTitleMsg(Player p, String title, String subtitle) {
-		int fadeIn = MainTM.getInstance().langConf.getInt(CF_TITLES + "." + CF_FADEIN);
-		int stay = MainTM.getInstance().langConf.getInt(CF_TITLES + "." + CF_STAY);
-		int fadeOut = MainTM.getInstance().langConf.getInt(CF_TITLES + "." + CF_FADEOUT);
+		int fadeIn = MainTM.getInstance().langConf.getInt(LG_TITLES + "." + LG_FADEIN);
+		int stay = MainTM.getInstance().langConf.getInt(LG_TITLES + "." + LG_STAY);
+		int fadeOut = MainTM.getInstance().langConf.getInt(LG_TITLES + "." + LG_FADEOUT);
 		if (serverMcVersion >= reqMcVForNewSendTitleMsg) p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 		else p.sendTitle(title, subtitle);
 	}

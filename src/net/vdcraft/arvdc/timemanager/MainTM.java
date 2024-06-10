@@ -162,51 +162,51 @@ public class MainTM extends JavaPlugin {
 	public static final String CF_PLACEHOLDER_CMDS = "inCommandsEnable";
 	
 	// Lang file keys
-	protected static final String CF_USEMULTILANG = "useMultiLang";
-	public static final String CF_DEFAULTLANG = "defaultLang";
-	protected static final String CF_DEFAULTDISPLAY = "defaultDisplay";
-	public static final String CF_LANGUAGES = "languages";
-	public static final String CF_TITLES = "titles";
-	public static final String CF_FADEIN = "fadeIn";
-	public static final String CF_STAY = "stay";
-	public static final String CF_FADEOUT = "fadeOut";
-	protected static final String CF_DEFAULT = "default";
-	protected static final String CF_PREFIX = "prefix";
-	protected static final String CF_MSG = "msg";
-	protected static final String CF_NETHERMSG = "netherMsg";
-	protected static final String CF_ENDMSG = "endMsg";
-	protected static final String CF_NOMSG = "noMsg";
-	protected static final String CF_TITLE = "title";
-	protected static final String CF_SUBTITLE = "subtitle";
-	protected static final String CF_ACTIONBAR = "actionbar";
-	public static final String CF_DAYPARTS = "dayparts";
-	protected static final String CF_DAY = "day";
-	protected static final String CF_DUSK = "dusk";
-	protected static final String CF_NIGHT = "night";
-	protected static final String CF_DAWN = "dawn";
-	public static final String CF_MONTHS = "months";
-	protected static final String CF_MONTH_01 = "m01";
-	protected static final String CF_MONTH_02 = "m02";
-	protected static final String CF_MONTH_03 = "m03";
-	protected static final String CF_MONTH_04 = "m04";
-	protected static final String CF_MONTH_05 = "m05";
-	protected static final String CF_MONTH_06 = "m06";
-	protected static final String CF_MONTH_07 = "m07";
-	protected static final String CF_MONTH_08 = "m08";
-	protected static final String CF_MONTH_09 = "m09";
-	protected static final String CF_MONTH_10 = "m10";
-	protected static final String CF_MONTH_11 = "m11";
-	protected static final String CF_MONTH_12 = "m12";
+	protected static final String LG_USEMULTILANG = "useMultiLang";
+	public static final String LG_DEFAULTLANG = "defaultLang";
+	protected static final String LG_DEFAULTDISPLAY = "defaultDisplay";
+	public static final String LG_LANGUAGES = "languages";
+	public static final String LG_TITLES = "titles";
+	public static final String LG_FADEIN = "fadeIn";
+	public static final String LG_STAY = "stay";
+	public static final String LG_FADEOUT = "fadeOut";
+	protected static final String LG_DEFAULT = "default";
+	protected static final String LG_PREFIX = "prefix";
+	protected static final String LG_MSG = "msg";
+	protected static final String LG_NETHERMSG = "netherMsg";
+	protected static final String LG_ENDMSG = "endMsg";
+	protected static final String LG_NOMSG = "noMsg";
+	protected static final String LG_TITLE = "title";
+	protected static final String LG_SUBTITLE = "subtitle";
+	protected static final String LG_ACTIONBAR = "actionbar";
+	public static final String LG_DAYPARTS = "dayparts";
+	protected static final String LG_DAY = "day";
+	protected static final String LG_DUSK = "dusk";
+	protected static final String LG_NIGHT = "night";
+	protected static final String LG_DAWN = "dawn";
+	public static final String LG_MONTHS = "months";
+	protected static final String LG_MONTH_01 = "m01";
+	protected static final String LG_MONTH_02 = "m02";
+	protected static final String LG_MONTH_03 = "m03";
+	protected static final String LG_MONTH_04 = "m04";
+	protected static final String LG_MONTH_05 = "m05";
+	protected static final String LG_MONTH_06 = "m06";
+	protected static final String LG_MONTH_07 = "m07";
+	protected static final String LG_MONTH_08 = "m08";
+	protected static final String LG_MONTH_09 = "m09";
+	protected static final String LG_MONTH_10 = "m10";
+	protected static final String LG_MONTH_11 = "m11";
+	protected static final String LG_MONTH_12 = "m12";
 	
 	// Cmds file keys
-	protected static final String CF_USECOMMANDS = "useCmds";
-	protected static final String CF_COMMANDSLIST = "cmdsList";
-	protected static final String CF_CMDS = "cmds";
-	protected static final String CF_REFTIME = "cmdsRefTime";
-	protected static final String CF_PHREFWOLRD = "plholderRefWorld";
-	protected static final String CF_TIME = "time";
-	protected static final String CF_DATE = "date";
-	protected static final String CF_REPEATFREQ = "repeatFreq";
+	protected static final String CMDS_USECOMMANDS = "useCmds";
+	protected static final String CMDS_COMMANDSLIST = "cmdsList";
+	protected static final String CMDS_CMDS = "cmds";
+	protected static final String CMDS_REFTIME = "cmdsRefTime";
+	protected static final String CMDS_PHREFWOLRD = "plholderRefWorld";
+	protected static final String CMDS_TIME = "time";
+	protected static final String CMDS_DATE = "date";
+	protected static final String CMDS_REPEATFREQ = "repeatFreq";
 
 	// Commands names
 	protected static final String CMD_TM = "tm";
@@ -278,6 +278,10 @@ public class MainTM extends JavaPlugin {
 	public static final String ARG_TODAY = "today";
 	public static final String ARG_ACTIVE = "active";
 	public static final String ARG_RESET = "reset";
+	protected static final String ARG_HOUR = "hour";
+	protected static final String ARG_DAY = "day";
+	protected static final String ARG_MONTH = "month";
+	protected static final String ARG_YEAR = "year";
 	
 	// Placeholders names
 	public static final String PH_IDENTIFIER = "tm";

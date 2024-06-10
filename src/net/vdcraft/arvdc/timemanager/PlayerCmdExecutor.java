@@ -46,7 +46,7 @@ public class PlayerCmdExecutor implements CommandExecutor {
 		Integer nbArgs = args.length;
 		Player p = ((Player) sender);
 		World w = p.getWorld(); // Set the world the player stands in as default value
-		String display = MainTM.getInstance().langConf.getString(MainTM.CF_DEFAULTDISPLAY);
+		String display = MainTM.getInstance().langConf.getString(MainTM.LG_DEFAULTDISPLAY);
 		List<String> displays = Arrays.asList(MainTM.ARG_MSG, MainTM.ARG_TITLE, MainTM.ARG_ACTIONBAR);
 		List<String> worlds = CfgFileHandler.setAnyListFromConfig(MainTM.CF_WORLDSLIST);
 

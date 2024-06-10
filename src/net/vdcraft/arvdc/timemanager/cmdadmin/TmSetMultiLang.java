@@ -15,7 +15,7 @@ public class TmSetMultiLang extends MainTM {
 
 		// Check if the argument matches what is expected
 		if (onOff.equalsIgnoreCase(ARG_TRUE) || onOff.equalsIgnoreCase(ARG_FALSE)) {
-			MainTM.getInstance().langConf.set(CF_USEMULTILANG, onOff);
+			MainTM.getInstance().langConf.set(LG_USEMULTILANG, onOff);
 			LgFileHandler.SaveLangYml();
 			if (onOff.equalsIgnoreCase(ARG_TRUE)) {
 				MsgHandler.infoMsg(multiLangIsOnMsg); // Console final msg (always)

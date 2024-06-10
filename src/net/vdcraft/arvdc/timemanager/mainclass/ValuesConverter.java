@@ -410,13 +410,13 @@ public class ValuesConverter extends MainTM {
 	public static String getMCDayPart(long tick) {
 		String wichPart;
 		if (tick >= dawnStart && tick < dayStart) {
-			wichPart = CF_DAWN;
+			wichPart = LG_DAWN;
 		} else if (tick >= dayStart && tick < duskStart) {
-			wichPart = CF_DAY;
+			wichPart = LG_DAY;
 		} else if (tick >= duskStart && tick < nightStart) {
-			wichPart = CF_DUSK;
+			wichPart = LG_DUSK;
 		} else {
-			wichPart = CF_NIGHT;
+			wichPart = LG_NIGHT;
 		}
 		return wichPart;
 	}
@@ -441,7 +441,7 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String wichSpeedParam(long tick) {
 		String speedParam;
-		if (getMCDayPart(tick).equalsIgnoreCase(CF_NIGHT)) {	    
+		if (getMCDayPart(tick).equalsIgnoreCase(LG_NIGHT)) {	    
 			speedParam = CF_N_SPEED;
 		} else {
 			speedParam = CF_D_SPEED;
@@ -607,7 +607,7 @@ public class ValuesConverter extends MainTM {
 		if (l.contains("_")) {
 			String[] splitLocale = l.split("_");
 			String lg_Locale = splitLocale[0] + "_";
-			List<String> existingLangList = LgFileHandler.setAnyListFromLang(CF_LANGUAGES);
+			List<String> existingLangList = LgFileHandler.setAnyListFromLang(LG_LANGUAGES);
 			for (String lang : existingLangList) {
 				if (lang.contains(lg_Locale)) {
 					nearestLocale = lang;

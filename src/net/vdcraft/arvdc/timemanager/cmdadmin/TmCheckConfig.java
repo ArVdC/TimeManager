@@ -27,18 +27,18 @@ public class TmCheckConfig extends MainTM {
 
 		// Multilanguage
 		String multiLangOnOff = "disabled";
-		if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase(ARG_TRUE)) {
+		if (MainTM.getInstance().langConf.getString(LG_USEMULTILANG).equalsIgnoreCase(ARG_TRUE)) {
 			multiLangOnOff = "enabled";
 		}
 		String multiLangMsg = "Multilanguage is " + multiLangOnOff + ".";
 		String colMultiLangMsg = "Multilanguage is §e" + multiLangOnOff + "§r.";
 
 		// Default language
-		String defLangMsg = "Default language is " + MainTM.getInstance().langConf.getString(CF_DEFAULTLANG) + ".";
-		String colDefLangMsg = "Default language is §e" + MainTM.getInstance().langConf.getString(CF_DEFAULTLANG) + "§r.";
+		String defLangMsg = "Default language is " + MainTM.getInstance().langConf.getString(LG_DEFAULTLANG) + ".";
+		String colDefLangMsg = "Default language is §e" + MainTM.getInstance().langConf.getString(LG_DEFAULTLANG) + "§r.";
 
 		// Available languages
-		List<String> availableLg = LgFileHandler.setAnyListFromLang(CF_LANGUAGES);
+		List<String> availableLg = LgFileHandler.setAnyListFromLang(LG_LANGUAGES);
 		String availableLangMsg = "Available languages are : " + availableLg + ".";
 		String colAvailableLangMsg = "Available languages are : §e" + availableLg + "§r.";
 

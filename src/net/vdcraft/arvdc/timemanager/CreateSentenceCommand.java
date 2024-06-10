@@ -69,7 +69,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	}
 	// Arguments list for '/tm set deflang'
 	List<String> tmDefLangArgsList() {
-		return LgFileHandler.setAnyListFromLang(MainTM.CF_LANGUAGES);
+		return LgFileHandler.setAnyListFromLang(MainTM.LG_LANGUAGES);
 	}
 	// Arguments list for '/tm set firstStartTime'
 	List<String> tmFirstStartTimeArgsList = Arrays.asList(MainTM.ARG_DEFAULT, MainTM.ARG_PREVIOUS, MainTM.ARG_START);

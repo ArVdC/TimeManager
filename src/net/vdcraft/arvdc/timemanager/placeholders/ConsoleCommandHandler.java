@@ -48,7 +48,7 @@ public class ConsoleCommandHandler implements Listener {
 					// #03.e. Get the world name
 					String world = w.getName();
 					// #03.f. Use server default language
-					String lang = MainTM.getInstance().langConf.getString(MainTM.CF_DEFAULTLANG);
+					String lang = MainTM.getInstance().langConf.getString(MainTM.LG_DEFAULTLANG);
 
 					// #04. Replace placeholders in the message
 					String newCmd = PlaceholdersHandler.replaceAllPlaceholders(cmd, world, lang, null);

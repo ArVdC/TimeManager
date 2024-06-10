@@ -28,7 +28,7 @@ public class CmdsScheduler extends MainTM {
 			@Override
 			public void run() {
 				// #1. Declare inactive and cancel repetition if useCmds is false
-				if (MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase(ARG_FALSE)) {
+				if (MainTM.getInstance().cmdsConf.getString(CMDS_USECOMMANDS).equalsIgnoreCase(ARG_FALSE)) {
 					commandsSchedulerIsActive.remove(ARG_ACTIVE);
 					stopCmdsScheduler();
 					MsgHandler.devMsg("The commands scheduler is stopped.");
@@ -41,17 +41,17 @@ public class CmdsScheduler extends MainTM {
 				MsgHandler.devMsg("The scheduler list is active and contains : " + commandsSchedulerIsActive);
 				MsgHandler.devMsg("==================");
 
-				for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
+				for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST).getKeys(false)) {
 
 					// #3. Get the time reference (MC world or UTC)
-					String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME);					
+					String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REFTIME);					
 
 					// #4. Get the repeat frequency
-					String repeatFreq = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ);
+					String repeatFreq = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REPEATFREQ);
 
 					// #5. Get the expected date and time
 					// #5.A. Get the date 
-					String eDate = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_DATE);
+					String eDate = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_DATE);
 					Integer expectedYear = 1;
 					Integer expectedMonth = 1;
 					Integer expectedDay = 1;					
@@ -64,12 +64,12 @@ public class CmdsScheduler extends MainTM {
 						MsgHandler.errorMsg(dateFormatMsg); // Console error msg
 					}
 					// #5.B. Get the time 
-					String eHour = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_TIME);
+					String eTime = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_TIME);
 					Integer expectedHour = 0;
 					Integer expectedMin = 0;
-					String[] eh = eHour.split(":");
-					expectedHour = Integer.parseInt(eh[0]);
-					expectedMin = Integer.parseInt(eh[1]);
+					String[] expectedTime = eTime.split(":");
+					expectedHour = Integer.parseInt(expectedTime[0]);
+					expectedMin = Integer.parseInt(expectedTime[1]);
 					
 					// #5.C. Also set a LocalDateTimeDateTime
 					LocalDateTime expectedDateTime = LocalDateTime.of(expectedYear, expectedMonth, expectedDay, expectedHour, expectedMin);
@@ -175,7 +175,7 @@ public class CmdsScheduler extends MainTM {
 					Boolean launchCmds = false;
 					if (!commandsSchedulerIsActive.contains(key)) {
 						switch (repeatFreq) {
-						case "none": // If there is no repetition, the whole date and hour must match
+						case ARG_NONE : // If there is no repetition, the whole date and hour must match
 							MsgHandler.devMsg("Years will now be checked :");
 							if ((eraUp && ((expectedYear == currentYear) && (expectedMonth <= currentMonth)) || ((currentYear == edgeYear) && (currentMonth <= edgeMonth))) // If there is a transition to the next era (only concern year edge)
 									|| (expectedYear <= currentYear && currentYear <= edgeYear)) {
@@ -184,7 +184,7 @@ public class CmdsScheduler extends MainTM {
 								MsgHandler.devMsg("The data of the year does not correspond, do nothing.");
 								break;
 							}
-						case "year": // If there is a yearly repetition, the year is ignored
+						case ARG_YEAR : // If there is a yearly repetition, the year is ignored
 							MsgHandler.devMsg("Months will now be checked :");
 							if ((yearUp && ((expectedMonth == currentMonth) && (expectedDay <= currentDay)) || ((currentMonth == edgeMonth) && (currentDay <= edgeDay))) // If there is a transition to the next year (only concern month edge)
 									|| (expectedMonth <= currentMonth && currentMonth <= edgeMonth)) {
@@ -193,7 +193,7 @@ public class CmdsScheduler extends MainTM {
 								MsgHandler.devMsg("The data of the month does not correspond, do nothing.");
 								break;
 							}
-						case "month" : // If there is a monthly repetition, year and month are ignored
+						case ARG_MONTH : // If there is a monthly repetition, year and month are ignored
 							MsgHandler.devMsg("Days will now be checked :");
 							if ((monthUp && ((expectedDay == currentDay) && (expectedHour <= currentHour)) || ((currentDay == edgeDay) && (currentHour <= edgeHour))) // If there is a transition to the next month (only concern day edge)
 									|| (expectedDay <= currentDay && currentDay <= edgeDay)) {
@@ -202,7 +202,7 @@ public class CmdsScheduler extends MainTM {
 								MsgHandler.devMsg("The data of the day does not correspond, do nothing.");
 								break;
 							}
-						case "day" : // If there is a daily repetition, year, month and day are ignored
+						case ARG_DAY : // If there is a daily repetition, year, month and day are ignored
 							MsgHandler.devMsg("Hours will now be checked :");
 							if ((dayUp && ((expectedHour == currentHour) && (expectedMin <= currentMin)) || ((currentHour == edgeHour) && (currentMin <= edgeMin))) // If there is a transition to the next day (only concern hour edge)
 									|| (expectedHour <= currentHour && expectedMin <= currentMin && currentHour <= edgeHour && currentMin <= edgeMin)) {
@@ -211,7 +211,7 @@ public class CmdsScheduler extends MainTM {
 								MsgHandler.devMsg("The data of the hour does not correspond, do nothing.");
 								break;
 							}
-						case "hour" : // If there is a hourly repetition, year, month, day and hour are ignored (Only minutes must be less than the edge)
+						case ARG_HOUR : // If there is a hourly repetition, year, month, day and hour are ignored (Only minutes must be less than the edge)
 							MsgHandler.devMsg("Minutes will now be checked :");
 							if ((hourUp && (expectedMin <= currentMin || currentMin < edgeMin)) // If there is a transition to the next hour (only concern minutes edge)
 									|| (expectedMin <= currentMin && currentMin < edgeMin)) {
@@ -232,14 +232,14 @@ public class CmdsScheduler extends MainTM {
 
 						// #11. Execute the command(s)
 						Long delay = 0L;
-						String lang = MainTM.getInstance().langConf.getString(CF_DEFAULTLANG);
+						String lang = MainTM.getInstance().langConf.getString(LG_DEFAULTLANG);
 						// #11.A. Search for each listed command
-						for (String commandNb : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST + "." + key + "." + CF_CMDS).getKeys(false)) {
+						for (String commandNb : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST + "." + key + "." + CMDS_CMDS).getKeys(false)) {
 							MsgHandler.devMsg("CommandNb : " + commandNb);
-							String command = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_CMDS + "." + commandNb);
+							String command = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_CMDS + "." + commandNb);
 							MsgHandler.devMsg("Command : " + command);
 							command = command.replace("/","").replace("&","§");
-							String world = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD);
+							String world = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_PHREFWOLRD);
 							// #11.B. Replace placeholders
 							if (command.contains("{" + PH_PREFIX)) {
 								String[] phSlipt1 = command.split("\\{");

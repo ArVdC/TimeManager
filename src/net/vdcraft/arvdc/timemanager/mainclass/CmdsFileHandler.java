@@ -32,7 +32,7 @@ public class CmdsFileHandler extends MainTM {
 			} else {		
 				MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
 			}
-			// #1.B. Load the header from the .txt file TODO 1.8.0
+			// #1.B. Load the header from the .txt file
 			// #1.B.a. Extract the file from the .jar
 			CopyFilesHandler.copyAnyFile(CMDSHEADERFILENAME, MainTM.getInstance().cmdsHeaderFileTxt);
 			// #1.B.b. Try to get the documentation text
@@ -66,39 +66,39 @@ public class CmdsFileHandler extends MainTM {
 		MainTM.getInstance().cmdsConf.set(CF_VERSION, versionTM());
 		
 		// #3.B. Is useCmds enable ? Set to false if doesn't exist or if invalid boolean
-		if (MainTM.getInstance().cmdsConf.getKeys(false).contains(CF_USECOMMANDS)) {
-			if (MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
+		if (MainTM.getInstance().cmdsConf.getKeys(false).contains(CMDS_USECOMMANDS)) {
+			if (MainTM.getInstance().cmdsConf.getString(CMDS_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
 				MsgHandler.infoMsg(cmdsIsOnMsg);
 			} else {
-				MainTM.getInstance().cmdsConf.set(CF_USECOMMANDS, ARG_FALSE);
+				MainTM.getInstance().cmdsConf.set(CMDS_USECOMMANDS, ARG_FALSE);
 				MsgHandler.infoMsg(cmdsIsOffMsg);
 			}
 		} else {
-			MainTM.getInstance().cmdsConf.set(CF_USEMULTILANG, ARG_FALSE);
+			MainTM.getInstance().cmdsConf.set(LG_USEMULTILANG, ARG_FALSE);
 			MsgHandler.infoMsg(cmdsIsOffMsg);
 		}
 		
 		// #3.C. Detect wrong worlds names
 		List<String> worlds = CfgFileHandler.setAnyListFromConfig(CF_WORLDSLIST);
-		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
-			String phWorld = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD);
-			String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME);
+		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST).getKeys(false)) {
+			String phWorld = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_PHREFWOLRD);
+			String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REFTIME);
 			String defWorld = Bukkit.getServer().getWorlds().get(0).getName();
 			if (!worlds.contains(phWorld)) {
-				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_PHREFWOLRD, defWorld);
+				MainTM.getInstance().cmdsConf.set(CMDS_COMMANDSLIST + "." + key + "." + CMDS_PHREFWOLRD, defWorld);
 				MsgHandler.debugMsg("cmd.yml: World §e" + phWorld + "§b " + cmdsWrongPHWorldDebugMsg + " §e" + defWorld + "§b.");
 			}
 			if (!worlds.contains(refTimeSrc)) {
 				if (!refTimeSrc.contains("UTC") || refTimeSrc.equalsIgnoreCase("")) {
-					MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME, defWorld);
+					MainTM.getInstance().cmdsConf.set(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REFTIME, defWorld);
 					MsgHandler.debugMsg("cmd.yml: §e" + refTimeSrc + "§b " + cmdsWrongTimeSrcDebugMsg + " §e" + defWorld + "§b.");
 				}
 			}
 		}
 		// #3.D. If the date is 'today', get the date and convert it into the cmds.yml file
-		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
-			String eDate = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_DATE);
-			String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REFTIME);
+		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST).getKeys(false)) {
+			String eDate = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_DATE);
+			String refTimeSrc = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REFTIME);
 			Integer year = 1;
 			Integer month = 1;
 			Integer day = 1;
@@ -115,39 +115,41 @@ public class CmdsFileHandler extends MainTM {
 					month = Calendar.getInstance().get(Calendar.MONTH) + 1;
 					day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
 				}
-				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_DATE, String.format("%04d", year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", day));
+				MainTM.getInstance().cmdsConf.set(CMDS_COMMANDSLIST + "." + key + "." + CMDS_DATE, String.format("%04d", year) + "-" + String.format("%02d", month) + "-" + String.format("%02d", day));
 			}
 		}
 		// #3.E. Ensure to save the time value as a string (Some wrong values ​​cannot be avoided because all yaml nodes are read before this code)
-		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
-			String time = "0" + MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_TIME);
-			String tPart1 = "00";
-			String tPart2 = "00";
+		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST).getKeys(false)) {
+			String time = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_TIME);
+			MsgHandler.errorMsg(time);
 			if (!time.contains(":")) {
 				time = time + ":00";
 			}
 			String[] timeParts = time.split(":");
 			Integer hours = 0;
 			Integer mins = 0;
-			try { // The date is supposed to be in correct format (HH:mm)
+			String tPart1 = timeParts[0];
+			String tPart2 = timeParts[1];
+			try { // The time is supposed to be in correct format (hh:mm)
 				hours = Integer.parseInt(timeParts[0]);
 				mins = Integer.parseInt(timeParts[1]);
 				hours = hours % 24;
 				mins = mins % 60;
+				DecimalFormat formater = new DecimalFormat("00"); // Converts the 2 integers to formatted strings (00)
+				tPart1 = "" + hours;
+				tPart2 = formater.format(mins);
 			} catch (NumberFormatException nfe) {
-				MsgHandler.errorMsg(hourFormatMsg + " The data found are not integers."); // Console error msg
+				MsgHandler.errorMsg(hourFormatMsg); // Console error msg
 			}
-			DecimalFormat formater = new DecimalFormat("00"); // Converts the 2 integers to formatted strings (00)
-			tPart1 = formater.format(hours);
-			tPart2 = formater.format(mins);		
-			MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_TIME, tPart1 + ":" + tPart2);
+			time = tPart1 + ":" + tPart2;
+			MainTM.getInstance().cmdsConf.set(CMDS_COMMANDSLIST + "." + key + "." + CMDS_TIME, time);
 		}
 
 		// #3.F. Adapt the repeatFreq key
-		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CF_COMMANDSLIST).getKeys(false)) {
-			String repeatFreq = MainTM.getInstance().cmdsConf.getString(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ);
-			if (repeatFreq.contains(ARG_FALSE) || repeatFreq.equalsIgnoreCase("no") || repeatFreq.equalsIgnoreCase(" ") || repeatFreq.equalsIgnoreCase("")) {
-				MainTM.getInstance().cmdsConf.set(CF_COMMANDSLIST + "." + key + "." + CF_REPEATFREQ, ARG_NONE);
+		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST).getKeys(false)) {
+			String repeatFreq = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REPEATFREQ);
+			if (!repeatFreq.equalsIgnoreCase(ARG_HOUR) && !repeatFreq.equalsIgnoreCase(ARG_DAY) && !repeatFreq.equalsIgnoreCase(ARG_MONTH) && !repeatFreq.equalsIgnoreCase(ARG_YEAR)) {
+				MainTM.getInstance().cmdsConf.set(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REPEATFREQ, ARG_NONE);
 			}
 		}
 
@@ -155,7 +157,7 @@ public class CmdsFileHandler extends MainTM {
 		SaveCmdsYml();
 		
 		// #3.H. Launch the scheduler if necessary
-		if (!commandsSchedulerIsActive.contains(ARG_ACTIVE) && MainTM.getInstance().cmdsConf.getString(CF_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
+		if (!commandsSchedulerIsActive.contains(ARG_ACTIVE) && MainTM.getInstance().cmdsConf.getString(CMDS_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
 			CmdsScheduler.commandsScheduler();
 		}
 		

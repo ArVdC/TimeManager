@@ -92,70 +92,70 @@ public class LgFileHandler extends MainTM {
 
 		// #3.A. Restore default values
 		MainTM.getInstance().langConf.set(CF_VERSION, MainTM.versionTM());
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_PREFIX, defaultPrefix);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MSG, defaultMsg);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_TITLE, defaultMsg);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_SUBTITLE, defaultMsg);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_ACTIONBAR, defaultMsg);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_NETHERMSG, defaultNoMsg);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_ENDMSG, defaultNoMsg);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_DAYPARTS + "." + CF_DAY, defaultDay);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_DAYPARTS + "." + CF_DUSK, defaultDusk);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_DAYPARTS + "." + CF_NIGHT, defaultNight);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_DAYPARTS + "." + CF_DAWN, defaultDawn);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_01, defaultM01);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_02, defaultM02);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_03, defaultM03);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_04, defaultM04);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_05, defaultM05);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_06, defaultM06);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_07, defaultM07);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_08, defaultM08);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_09, defaultM09);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_10, defaultM10);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_11, defaultM11);
-		MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_DEFAULT + "." + CF_MONTHS + "." + CF_MONTH_12, defaultM12);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_PREFIX, defaultPrefix);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MSG, defaultMsg);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_TITLE, defaultMsg);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_SUBTITLE, defaultMsg);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_ACTIONBAR, defaultMsg);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_NETHERMSG, defaultNoMsg);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_ENDMSG, defaultNoMsg);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYPARTS + "." + LG_DAY, defaultDay);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYPARTS + "." + LG_DUSK, defaultDusk);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYPARTS + "." + LG_NIGHT, defaultNight);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYPARTS + "." + LG_DAWN, defaultDawn);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_01, defaultM01);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_02, defaultM02);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_03, defaultM03);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_04, defaultM04);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_05, defaultM05);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_06, defaultM06);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_07, defaultM07);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_08, defaultM08);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_09, defaultM09);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_10, defaultM10);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_11, defaultM11);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_12, defaultM12);
 
 		// #3.B. Check 'defLang' integrity
 		checkDefLang();
 
 		// #3.C. Is multilanguage enable ? Set to false if doesn't exist or if invalid boolean
-		if (MainTM.getInstance().langConf.getKeys(false).contains(CF_USEMULTILANG)) {
+		if (MainTM.getInstance().langConf.getKeys(false).contains(LG_USEMULTILANG)) {
 			// If not existing and 'true', let it 'true'
-			if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase(ARG_TRUE)) {
+			if (MainTM.getInstance().langConf.getString(LG_USEMULTILANG).equalsIgnoreCase(ARG_TRUE)) {
 				MsgHandler.infoMsg(multiLangIsOnMsg);
 			} else { // If not 'true', set default 'false'
-				MainTM.getInstance().langConf.set(CF_USEMULTILANG, ARG_FALSE);
+				MainTM.getInstance().langConf.set(LG_USEMULTILANG, ARG_FALSE);
 				MsgHandler.infoMsg(multiLangIsOffMsg);
 			}
 		} else { // If not existing, set default 'false'
-			MainTM.getInstance().langConf.set(CF_USEMULTILANG, ARG_FALSE);
+			MainTM.getInstance().langConf.set(LG_USEMULTILANG, ARG_FALSE);
 			MsgHandler.infoMsg(multiLangIsOffMsg);
 		}
 
 		// #3.D. Check the defaultDisplay node
-		if (MainTM.getInstance().langConf.getKeys(false).contains(CF_DEFAULTDISPLAY)) {
-			if (MainTM.getInstance().langConf.getString(CF_DEFAULTDISPLAY).equals("") || MainTM.getInstance().langConf.getString(CF_DEFAULTDISPLAY).equals(" ")) {
-				MainTM.getInstance().langConf.set(CF_DEFAULTDISPLAY, ARG_MSG);
+		if (MainTM.getInstance().langConf.getKeys(false).contains(LG_DEFAULTDISPLAY)) {
+			if (MainTM.getInstance().langConf.getString(LG_DEFAULTDISPLAY).equals("") || MainTM.getInstance().langConf.getString(LG_DEFAULTDISPLAY).equals(" ")) {
+				MainTM.getInstance().langConf.set(LG_DEFAULTDISPLAY, ARG_MSG);
 			}
-		} else MainTM.getInstance().langConf.set(CF_DEFAULTDISPLAY, ARG_MSG);
+		} else MainTM.getInstance().langConf.set(LG_DEFAULTDISPLAY, ARG_MSG);
 
 		// #3.E. Check titles timers values
 		Boolean needToCreateTitlesTimers = false;
 		// If key does not exist, create it with default values
-		if (!MainTM.getInstance().langConf.getKeys(false).contains(CF_TITLES)) {
+		if (!MainTM.getInstance().langConf.getKeys(false).contains(LG_TITLES)) {
 			needToCreateTitlesTimers = true;
 		} else { // If key does exist, loop the sub-keys
-			for (String key : MainTM.getInstance().langConf.getConfigurationSection(CF_TITLES).getKeys(false)) {
-				String value = MainTM.getInstance().langConf.getString(CF_TITLES + "." + key);
+			for (String key : MainTM.getInstance().langConf.getConfigurationSection(LG_TITLES).getKeys(false)) {
+				String value = MainTM.getInstance().langConf.getString(LG_TITLES + "." + key);
 				// If a sub-key is empty, (re-)create it with default values
 				if (value.equals("") || value.equals(" ") || value.equals(null)) {
 					needToCreateTitlesTimers = true;
 				} else { // If a sub-key seems usable, try to get its value as an integer
 					try {
-						String s = MainTM.getInstance().langConf.getString(CF_TITLES + "." + key);
+						String s = MainTM.getInstance().langConf.getString(LG_TITLES + "." + key);
 						Integer i = Integer.parseInt(s);
-						MainTM.getInstance().langConf.set(CF_TITLES + "." + key, i);
+						MainTM.getInstance().langConf.set(LG_TITLES + "." + key, i);
 					} catch (NumberFormatException nfe) { // If the value is not an integer, use the default value
 						MsgHandler.errorMsg(titlesTimersFormatMsg); // Console error msg
 						needToCreateTitlesTimers = true;
@@ -164,9 +164,9 @@ public class LgFileHandler extends MainTM {
 			}
 		}
 		if (needToCreateTitlesTimers) {
-			MainTM.getInstance().langConf.set(CF_TITLES + "." + CF_FADEIN, defTitleFadeIn);
-			MainTM.getInstance().langConf.set(CF_TITLES + "." + CF_STAY, defTitleStay);
-			MainTM.getInstance().langConf.set(CF_TITLES + "." + CF_FADEOUT, defTitleFadeOut);
+			MainTM.getInstance().langConf.set(LG_TITLES + "." + LG_FADEIN, defTitleFadeIn);
+			MainTM.getInstance().langConf.set(LG_TITLES + "." + LG_STAY, defTitleStay);
+			MainTM.getInstance().langConf.set(LG_TITLES + "." + LG_FADEOUT, defTitleFadeOut);
 		}
 
 		// #3.F. Save the lang.yml file
@@ -183,51 +183,51 @@ public class LgFileHandler extends MainTM {
 	 */
 	// Check if 'defaultLang' key exists in yaml, if not create it and set it to default
 	private static void checkDefLang() {
-		if (!MainTM.getInstance().langConf.getKeys(false).contains(CF_DEFAULTLANG)) {
+		if (!MainTM.getInstance().langConf.getKeys(false).contains(LG_DEFAULTLANG)) {
 			restoreDefLang();
 		} else { // Else, if 'defaultLang' key exists but is void set it to default
-			if (MainTM.getInstance().langConf.getString(CF_DEFAULTLANG).equals("")) {
-				MainTM.getInstance().langConf.set(CF_DEFAULTLANG, CF_DEFAULT);
+			if (MainTM.getInstance().langConf.getString(LG_DEFAULTLANG).equals("")) {
+				MainTM.getInstance().langConf.set(LG_DEFAULTLANG, LG_DEFAULT);
 			}
 			// Then actualize the 'defaultLang' key from lang.yml file
-			serverLang = new String(MainTM.getInstance().langConf.getString(CF_DEFAULTLANG));
+			serverLang = new String(MainTM.getInstance().langConf.getString(LG_DEFAULTLANG));
 			MsgHandler.colorMsg(defLangCheckMsg + " §e" + serverLang + "§r."); // Console log msg
 			// Check if the 'defaultLang' value correspond to an existing language who contains every needed keys
-			MsgHandler.debugMsg(availableTranslationsDebugMsg + " §e" + setAnyListFromLang(CF_LANGUAGES)); // Console debug msg
+			MsgHandler.debugMsg(availableTranslationsDebugMsg + " §e" + setAnyListFromLang(LG_LANGUAGES)); // Console debug msg
 			MsgHandler.debugMsg("Does it contain the choosen language \"§e" + serverLang + "§b\" ?"); // Console debug msg
 		}
-		if (!MainTM.getInstance().langConf.getConfigurationSection(CF_LANGUAGES).getKeys(false).contains(serverLang)) {
+		if (!MainTM.getInstance().langConf.getConfigurationSection(LG_LANGUAGES).getKeys(false).contains(serverLang)) {
 			MsgHandler.debugMsg("No, §b\"§e" + serverLang + "§b\" wasn't found. The §edefaultLang §bvalue will be reseted."); // Console debug msg
 			restoreDefLang();
 		} else {
-			Set<String> langKeys = MainTM.getInstance().langConf.getConfigurationSection(CF_LANGUAGES + "." + serverLang).getKeys(true);
+			Set<String> langKeys = MainTM.getInstance().langConf.getConfigurationSection(LG_LANGUAGES + "." + serverLang).getKeys(true);
 			MsgHandler.debugMsg("Yes, \"§e" + serverLang + "§b\" was found, now let's check for the subkeys :"); // Console debug msg
 			MsgHandler.debugMsg("Does §b\"§e" + langKeys + "§b\" contain every needed keys ?"); // Console debug msg
-			if ((langKeys.contains(CF_PREFIX))
-					&& (langKeys.contains(CF_MSG))
-					&& (langKeys.contains(CF_NETHERMSG))
-					&& (langKeys.contains(CF_ENDMSG))
-					&& (langKeys.contains(CF_TITLE))
-					&& (langKeys.contains(CF_SUBTITLE))
-					&& (langKeys.contains(CF_ACTIONBAR))
-					&& (langKeys.contains(CF_DAYPARTS))
-					&& (langKeys.contains(CF_DAYPARTS + "." + CF_DAY))
-					&& (langKeys.contains(CF_DAYPARTS + "." + CF_DUSK))
-					&& (langKeys.contains(CF_DAYPARTS + "." + CF_NIGHT))
-					&& (langKeys.contains(CF_DAYPARTS + "." + CF_DAWN))
-					&& (langKeys.contains(CF_MONTHS))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_01))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_02))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_03))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_04))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_05))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_06))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_07))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_08))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_09))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_10))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_11))
-					&& (langKeys.contains(CF_MONTHS + "." + CF_MONTH_12))) {
+			if ((langKeys.contains(LG_PREFIX))
+					&& (langKeys.contains(LG_MSG))
+					&& (langKeys.contains(LG_NETHERMSG))
+					&& (langKeys.contains(LG_ENDMSG))
+					&& (langKeys.contains(LG_TITLE))
+					&& (langKeys.contains(LG_SUBTITLE))
+					&& (langKeys.contains(LG_ACTIONBAR))
+					&& (langKeys.contains(LG_DAYPARTS))
+					&& (langKeys.contains(LG_DAYPARTS + "." + LG_DAY))
+					&& (langKeys.contains(LG_DAYPARTS + "." + LG_DUSK))
+					&& (langKeys.contains(LG_DAYPARTS + "." + LG_NIGHT))
+					&& (langKeys.contains(LG_DAYPARTS + "." + LG_DAWN))
+					&& (langKeys.contains(LG_MONTHS))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_01))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_02))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_03))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_04))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_05))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_06))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_07))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_08))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_09))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_10))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_11))
+					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_12))) {
 				// If every key exists, keep actual 'defaultLang'
 				MsgHandler.debugMsg("Yes, all the subkeys where founded."); // Console debug msg
 				MsgHandler.colorMsg("§e" + serverLang + "§r " + defLangOkMsg); // Console log msg
@@ -244,8 +244,8 @@ public class LgFileHandler extends MainTM {
 	 */
 	private static void restoreDefLang() {
 		MsgHandler.colorMsg("§e" + serverLang + "§r " + defLangResetMsg); // Console log msg
-		MainTM.getInstance().langConf.set(CF_DEFAULTLANG, CF_DEFAULT);
-		serverLang = new String(MainTM.getInstance().langConf.getString(CF_DEFAULTLANG));
+		MainTM.getInstance().langConf.set(LG_DEFAULTLANG, LG_DEFAULT);
+		serverLang = new String(MainTM.getInstance().langConf.getString(LG_DEFAULTLANG));
 	}
 
 	/**
@@ -294,105 +294,105 @@ public class LgFileHandler extends MainTM {
 			
 			// #4. Copy the data from the old file to the new one
 			// #4.A. useMultiLang
-			String useMultiLang = MainTM.getInstance().langBckpConf.getString(CF_USEMULTILANG);
-			MainTM.getInstance().langConf.set(CF_USEMULTILANG, useMultiLang);
+			String useMultiLang = MainTM.getInstance().langBckpConf.getString(LG_USEMULTILANG);
+			MainTM.getInstance().langConf.set(LG_USEMULTILANG, useMultiLang);
 			// #4.B. defaultLang
-			String defaultLang = MainTM.getInstance().langBckpConf.getString(CF_DEFAULTLANG);
-			MainTM.getInstance().langConf.set(CF_DEFAULTLANG, defaultLang);
+			String defaultLang = MainTM.getInstance().langBckpConf.getString(LG_DEFAULTLANG);
+			MainTM.getInstance().langConf.set(LG_DEFAULTLANG, defaultLang);
 			// #4.C. defaultDisplay (v.1.5.0)
-			String defaultDisplay = MainTM.getInstance().langBckpConf.getString(CF_DEFAULTDISPLAY);
-			MainTM.getInstance().langConf.set(CF_DEFAULTDISPLAY, defaultDisplay);
+			String defaultDisplay = MainTM.getInstance().langBckpConf.getString(LG_DEFAULTDISPLAY);
+			MainTM.getInstance().langConf.set(LG_DEFAULTDISPLAY, defaultDisplay);
 			// #4.D. Titles timers values (v.1.5.0)
 			// #4.D.a. fadeIn
-			String fadein = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEIN);
-			MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEIN, fadein);
+			String fadein = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + LG_TITLES + "." + LG_FADEIN);
+			MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_TITLES + "." + LG_FADEIN, fadein);
 			// #4.D.b. stay
-			String stay = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_STAY);
-			MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_STAY, stay);
+			String stay = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + LG_TITLES + "." + LG_STAY);
+			MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_TITLES + "." + LG_STAY, stay);
 			// #4.D.c. fadeOut
-			String fadeout = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEOUT);
-			MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + CF_TITLES + "." + CF_FADEOUT, fadeout);
+			String fadeout = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + LG_TITLES + "." + LG_FADEOUT);
+			MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_TITLES + "." + LG_FADEOUT, fadeout);
 			// #4.E. Languages
-			for (String lang : MainTM.getInstance().langBckpConf.getConfigurationSection(CF_LANGUAGES).getKeys(false)) {
-				if (!lang.equalsIgnoreCase(CF_DEFAULT)) { // Ignore the default language
+			for (String lang : MainTM.getInstance().langBckpConf.getConfigurationSection(LG_LANGUAGES).getKeys(false)) {
+				if (!lang.equalsIgnoreCase(LG_DEFAULT)) { // Ignore the default language
 					// #4.E.a. prefix
-					String prefix = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_PREFIX);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_PREFIX, prefix);
+					String prefix = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_PREFIX);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_PREFIX, prefix);
 					// #4.E.b. msg
-					String msg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MSG, msg);
+					String msg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MSG);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MSG, msg);
 					// #4.E.c. nethermsg (v.1.6.0)
-					String netherMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG);
+					String netherMsg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_NETHERMSG);
 					if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 6, 0, 2, 0)) {
-						netherMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
+						netherMsg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_NOMSG);
 					}
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG, netherMsg);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_NETHERMSG, netherMsg);
 					// #4.E.d. endmsg (v.1.6.0
-					String endMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG);
+					String endMsg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ENDMSG);
 					if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 6, 0, 2, 0)) {
-						endMsg = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NOMSG);
+						endMsg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_NOMSG);
 					}
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG, endMsg);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_ENDMSG, endMsg);
 					// #4.E.e. dayParts
 					// #4.E.e.1. dawn
-					String dawn = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAWN);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAWN, dawn);
+					String dawn = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_DAWN);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_DAWN, dawn);
 					// #4.E.e.2. day
-					String day = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAY);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DAY, day);
+					String day = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_DAY);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_DAY, day);
 					// #4.E.e.3. dusk
-					String dusk = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DUSK);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_DUSK, dusk);
+					String dusk = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_DUSK);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_DUSK, dusk);
 					// #4.E.e.4. night
-					String night = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_NIGHT);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_DAYPARTS + "." + CF_NIGHT, night);
+					String night = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_NIGHT);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_NIGHT, night);
 					// #4.E.f. months
 					// #4.E.f.1. jan
-					String jan = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_01);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_01, jan);				
+					String jan = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_01);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_01, jan);				
 					// #4.E.f.2. feb
-					String feb = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_02);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_02, feb);
+					String feb = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_02);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_02, feb);
 					// #4.E.f.3. mar
-					String mar = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_03);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_03, mar);
+					String mar = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_03);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_03, mar);
 					// #4.E.f.4. apr
-					String apr = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_04);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_04, apr);
+					String apr = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_04);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_04, apr);
 					// #4.E.f.5. may
-					String may = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_05);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_05, may);
+					String may = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_05);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_05, may);
 					// #4.E.f.6. jun
-					String jun = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_06);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_06, jun);
+					String jun = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_06);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_06, jun);
 					// #4.E.f.7. jul
-					String jul = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_07);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_07, jul);
+					String jul = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_07);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_07, jul);
 					// #4.E.f.8. aug
-					String aug = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_08);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_08, aug);
+					String aug = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_08);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_08, aug);
 					// #4.E.f.9. sep
-					String sep = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_09);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_09, sep);
+					String sep = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_09);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_09, sep);
 					// #4.E.f.10. oct
-					String oct = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_10);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_10, oct);
+					String oct = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_10);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_10, oct);
 					// #4.E.f.11. nov
-					String nov = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_11);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_11, nov);
+					String nov = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_11);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_11, nov);
 					// #4.E.f.12. dec
-					String dec = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_12);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_MONTHS + "." + CF_MONTH_12, dec);
+					String dec = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_12);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_12, dec);
 					// #4.E.g. title, subtitle and action bar messages (v.1.5.0)
 					// #4.E.g.1. title
-					String title = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_TITLE);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_TITLE, title);
+					String title = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_TITLE);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_TITLE, title);
 					// #4.E.g.2. subtitle
-					String subtitle = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE, subtitle);
+					String subtitle = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_SUBTITLE);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_SUBTITLE, subtitle);
 					// #4.E.g.3. action bar
-					String actionbar = MainTM.getInstance().langBckpConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR);
-					MainTM.getInstance().langConf.set(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR, actionbar);					
+					String actionbar = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ACTIONBAR);
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_ACTIONBAR, actionbar);					
 				}
 			}		
 

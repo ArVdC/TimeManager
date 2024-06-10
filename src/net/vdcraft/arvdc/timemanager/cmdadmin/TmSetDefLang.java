@@ -14,8 +14,8 @@ public class TmSetDefLang extends MainTM {
 	public static void cmdDefLg(CommandSender sender, String newLang) {
 
 		// Check if the argument matches what is expected
-		if (MainTM.getInstance().langConf.getConfigurationSection(CF_LANGUAGES).getKeys(false).contains(newLang)) {
-			MainTM.getInstance().langConf.set(CF_DEFAULTLANG, newLang);
+		if (MainTM.getInstance().langConf.getConfigurationSection(LG_LANGUAGES).getKeys(false).contains(newLang)) {
+			MainTM.getInstance().langConf.set(LG_DEFAULTLANG, newLang);
 			LgFileHandler.SaveLangYml();
 			serverLang = newLang;
 			MsgHandler.infoMsg(defLangCheckMsg + " " + newLang + "."); // Console final msg (always)

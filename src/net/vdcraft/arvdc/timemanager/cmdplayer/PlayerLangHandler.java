@@ -17,7 +17,7 @@ public class PlayerLangHandler extends MainTM {
 	public static String setLangToUse(CommandSender sender) {
 		Player p = (Player) sender;
 		// If option is disable, use default language
-		if (MainTM.getInstance().langConf.getString(CF_USEMULTILANG).equalsIgnoreCase(ARG_FALSE)) {
+		if (MainTM.getInstance().langConf.getString(LG_USEMULTILANG).equalsIgnoreCase(ARG_FALSE)) {
 			return serverLang;
 		}
 		// Get player locale and format it
@@ -38,7 +38,7 @@ public class PlayerLangHandler extends MainTM {
 		MsgHandler.devMsg(foundLocaleDebugMsg + " §e" + sender.getName() + "§9 is §e" + playerLocale + "§b."); // Console dev msg
 
 		// If locale is unavailable in the yaml keys, try to use the first part to reach the nearest existing language
-		if (!(MainTM.getInstance().langConf.getConfigurationSection(CF_LANGUAGES).getKeys(false).contains(playerLocale))) {
+		if (!(MainTM.getInstance().langConf.getConfigurationSection(LG_LANGUAGES).getKeys(false).contains(playerLocale))) {
 			playerLocale = ValuesConverter.findNearestLang(playerLocale);
 		}
 

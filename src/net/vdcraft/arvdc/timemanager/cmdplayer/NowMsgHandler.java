@@ -15,7 +15,7 @@ public class NowMsgHandler extends MainTM {
 	 * CMD /now [<msg|title|actionbar>] [<world>] 
 	 */
 	public static boolean sendNowMsg(CommandSender sender) {
-		String display = MainTM.getInstance().langConf.getString(CF_DEFAULTDISPLAY);
+		String display = MainTM.getInstance().langConf.getString(LG_DEFAULTDISPLAY);
 		World w = ((Player) sender).getWorld();
 		sendNowMsg(sender, display, w);
 		return true;
@@ -26,7 +26,7 @@ public class NowMsgHandler extends MainTM {
 		return true;
 	}
 	public static boolean sendNowMsg(CommandSender sender, World w) {
-		String display = MainTM.getInstance().langConf.getString(CF_DEFAULTDISPLAY);
+		String display = MainTM.getInstance().langConf.getString(LG_DEFAULTDISPLAY);
 		sendNowMsg(sender, display, w);
 		return true;
 	}
@@ -41,26 +41,26 @@ public class NowMsgHandler extends MainTM {
 		String lang = PlayerLangHandler.setLangToUse(sender);
 		
 		// #3. Get and format the prefix from the lang.yml file
-		String prefix = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_PREFIX);
+		String prefix = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_PREFIX);
 		prefix = prefix.replace("&", "§");
 		
 		// #4. Configure message content
 		switch (display) {
 		case ARG_MSG :		
 			if (world.contains(ARG_NETHER)) {
-				msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_NETHERMSG);
+				msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_NETHERMSG);
 			} else if (world.contains(ARG_THEEND)) {
-				msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ENDMSG);
+				msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ENDMSG);
 			} else {
-				msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_MSG);	
+				msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MSG);	
 			}
 			break;
 		case ARG_TITLE :
-			msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_TITLE);
-			subtitle = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_SUBTITLE);
+			msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_TITLE);
+			subtitle = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_SUBTITLE);
 			break;
 		case ARG_ACTIONBAR :
-			msg = MainTM.getInstance().langConf.getString(CF_LANGUAGES + "." + lang + "." + CF_ACTIONBAR);
+			msg = MainTM.getInstance().langConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ACTIONBAR);
 			break;
 		}
 		// If the value in lang.yml file is empty, nothing will be send to the player
