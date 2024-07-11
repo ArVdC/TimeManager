@@ -40,17 +40,18 @@ The available placeholders are as follows :
 - {tm_player} : Displays the name of the player.
 - {tm_world} : Displays the name of the world.
 - {tm_tick} : Displays the current tick.
-- {tm_time12} : Displays the current time in hh:mm:ss format. (1 → 12)
-- {tm_time24} : Displays the current time in HH:mm:ss format. (0 → 23)
+- {tm_time12} : Displays the current time in hh:mm:ss format. (01:00:00 → 12:59:59)
+- {tm_time24} : Displays the current time in HH:mm:ss format. (00:00:00 → 23:59:59)
 - {tm_hours12} : Displays the current hour value in 2 digits. (1 → 12)
 - {tm_hours24} : Displays the current hour value in 2 digits. (0 → 23)
-- {tm_minutes} : Displays the current minutes value in 2 digits.
-- {tm_seconds} : Displays the current seconds value in 2 digits.
-- {tm_ampm} : Displays the current AM or PM part of the day.
+- {tm_minutes} : Displays the current minutes value in 2 digits. (0 → 59)
+- {tm_seconds} : Displays the current seconds value in 2 digits. (0 → 59)
+- {tm_ampm} : Displays the current *AM* or *PM* part of the day.
 - {tm_daypart} : Displays the name of the current part of the day, among the four existing ones, in each of the languages.
 - {tm_currentday} : Displays the number of the current day. (1 → ∞)
 - {tm_elapseddays} : Displays the number of elapsed day(s). (0 → ∞)
-- {tm_weekday} : Displays the number of the day in the year. (1 → 7)
+- {tm_weekday} : Displays the number of the day in the week. (1 → 7)
+- {tm_yearday} : Displays the number of the day in the year. (1 → 365)
 - {tm_yearweek} : Displays the number of the week in the year. (1 → 52)
 - {tm_week} : Displays the number of elapsed weeks. (1 → ∞)
 - {tm_monthname} : Displays the name of current month, based on entries in the lang.yml file.
@@ -178,7 +179,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.9.1: MC 1.8.8 to 1.20.6
+v1.9.1-b2: MC 1.8.8 to 1.20.6
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~

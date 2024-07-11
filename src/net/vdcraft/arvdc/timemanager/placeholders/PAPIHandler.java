@@ -176,9 +176,14 @@ public class PAPIHandler extends PlaceholderExpansion {
 			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
-     // %tm_weekdaynb%
+        // %tm_weekdaynb%
         if(identifier.equals(MainTM.PH_WEEKDAY)){
 			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+        } 
+
+        // %tm_yeardaynb%
+        if(identifier.equals(MainTM.PH_YEARDAY)){
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player); // TODO 1.9.1-b2
         }        
         
         // %tm_yearweek%

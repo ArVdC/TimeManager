@@ -143,6 +143,15 @@ public class MVdWPAPIHandler extends MainTM {
 			}
 		});
 
+		// Returns the number of the current day in the year for the player's world  // TODO 1.9.1-b2
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_YEARDAY, new PlaceholderReplacer() {
+			@Override
+			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
+				Player p = e.getPlayer();
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_YEARDAY + "}", p.getWorld().getName(), PlayerLangHandler.setLangToUse(p), p);
+			}
+		});
+
 		// Returns the number of the current week in the year for the player's world
 		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_YEARWEEK, new PlaceholderReplacer() {
 			@Override

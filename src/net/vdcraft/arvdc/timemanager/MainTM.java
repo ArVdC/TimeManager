@@ -280,6 +280,7 @@ public class MainTM extends JavaPlugin {
 	public static final String ARG_RESET = "reset";
 	protected static final String ARG_HOUR = "hour";
 	protected static final String ARG_DAY = "day";
+	protected static final String ARG_WEEK = "week";
 	protected static final String ARG_MONTH = "month";
 	protected static final String ARG_YEAR = "year";
 	
@@ -302,6 +303,7 @@ public class MainTM extends JavaPlugin {
 	public static final String PH_E_DAYS = "elapseddays";
 	public static final String PH_C_DAY = "currentday";
 	public static final String PH_WEEKDAY = "weekday";
+	public static final String PH_YEARDAY = "yearday";
 	public static final String PH_YEARWEEK = "yearweek";
 	public static final String PH_WEEK = "week";
 	public static final String PH_MONTHNAME = "monthname";

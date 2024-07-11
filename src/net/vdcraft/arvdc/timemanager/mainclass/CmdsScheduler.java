@@ -117,13 +117,15 @@ public class CmdsScheduler extends MainTM {
 						
 					} // #6.B. Else, the reference time is UTC
 					else {						
-						// Get the time shift
+						// Get and adapt the time shift
 						Integer timeShift = 0;
 						try {
 							timeShift = Integer.parseInt(refTimeSrc.replace("UTC+","").replace("UTC-","-"));
 						} catch (IllegalArgumentException nfe) {
 							MsgHandler.errorMsg(utcFormatMsg); // Console error msg
 						}
+						if (timeShift > 18) timeShift = 18;
+						if (timeShift < -18) timeShift = -18;
 						// Get the UTC time with shift
 						Date now = new Date();
 						LocalDateTime refDatetime = LocalDateTime.ofInstant(now.toInstant(),ZoneOffset.ofHours(timeShift));
@@ -194,13 +196,33 @@ public class CmdsScheduler extends MainTM {
 								break;
 							}
 						case ARG_MONTH : // If there is a monthly repetition, year and month are ignored
-							MsgHandler.devMsg("Days will now be checked :");
-							if ((monthUp && ((expectedDay == currentDay) && (expectedHour <= currentHour)) || ((currentDay == edgeDay) && (currentHour <= edgeHour))) // If there is a transition to the next month (only concern day edge)
-									|| (expectedDay <= currentDay && currentDay <= edgeDay)) {
-								MsgHandler.devMsg("The data of the days correspond, let's look further.");
-							} else {
-								MsgHandler.devMsg("The data of the day does not correspond, do nothing.");
-								break;
+						case ARG_WEEK : // If there is a weekly repetition, year and month are ignored
+							if (repeatFreq.equals(ARG_MONTH)) {
+								MsgHandler.devMsg("Day will now be checked :");
+								if ((monthUp && ((expectedDay == currentDay) && (expectedHour <= currentHour)) || ((currentDay == edgeDay) && (currentHour <= edgeHour))) // If there is a transition to the next month (only concern day edge)
+										|| (expectedDay <= currentDay && currentDay <= edgeDay)) {
+									MsgHandler.devMsg("The data of the day correspond, let's look further.");
+								} else {
+									MsgHandler.devMsg("The data of the day does not correspond, do nothing.");
+									break;
+								}
+							}
+							else if (repeatFreq.equals(ARG_WEEK)) { // TODO 1.9.1-b2
+								MsgHandler.devMsg("Day number in the week will now be checked :");
+								Long currentYDay = 0L;
+								Long expectedYDay = 0L;
+								if (!refTimeSrc.contains("UTC")) { // If non UTC time
+									currentYDay = ValuesConverter.yearDay(Bukkit.getWorld(refTimeSrc).getFullTime());
+									expectedYDay = ValuesConverter.tickFromFormattedTime(eDate);
+									if (currentYDay == expectedYDay) {
+										MsgHandler.devMsg("The data of the day number in the week correspond, let's look further.");
+									} else {
+										MsgHandler.devMsg("The data of the day number in the week does not correspond, do nothing.");
+										break;
+									}
+								} else { // If UTC time
+									// >>> do UTC case !!!
+								}
 							}
 						case ARG_DAY : // If there is a daily repetition, year, month and day are ignored
 							MsgHandler.devMsg("Hours will now be checked :");
@@ -238,7 +260,8 @@ public class CmdsScheduler extends MainTM {
 							MsgHandler.devMsg("CommandNb : " + commandNb);
 							String command = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_CMDS + "." + commandNb);
 							MsgHandler.devMsg("Command : " + command);
-							command = command.replace("/","").replace("&","§");
+							if (command.charAt(0) == '/') command = command.replaceFirst("/",""); // TODO 1.9.1-b2
+							command = command.replace("&","§");
 							String world = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_PHREFWOLRD);
 							// #11.B. Replace placeholders
 							if (command.contains("{" + PH_PREFIX)) {

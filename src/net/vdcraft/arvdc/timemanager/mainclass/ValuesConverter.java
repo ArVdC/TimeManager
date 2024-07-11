@@ -790,7 +790,15 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Gets and converts a tick (current Fulltime) to the number of the week (returns a Long)
+	 * Gets and converts a tick (current Fulltime) to the number of a day in the year (returns a Long)
+	 */
+	public static Long yearDay(long fulltime) {
+		long yDayNb = (elapsedDaysFromTick(fulltime) % 365)+ 1; // TODO 1.9.1-b2
+		return yDayNb;
+	}
+
+	/**
+	 * Gets and converts a tick (current Fulltime) to the total number of the week (returns a Long)
 	 */
 	public static Long weekFromTick(long fulltime) {
 		long daysNb = elapsedDaysFromTick(fulltime);

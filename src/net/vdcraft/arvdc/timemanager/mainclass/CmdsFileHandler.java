@@ -121,7 +121,6 @@ public class CmdsFileHandler extends MainTM {
 		// #3.E. Ensure to save the time value as a string (Some wrong values ​​cannot be avoided because all yaml nodes are read before this code)
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST).getKeys(false)) {
 			String time = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_TIME);
-			MsgHandler.errorMsg(time);
 			if (!time.contains(":")) {
 				time = time + ":00";
 			}

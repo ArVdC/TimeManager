@@ -100,6 +100,11 @@ public class PlaceholdersHandler extends MainTM {
 			Long wDay = ValuesConverter.weekDay(ft);
 			return wDay.toString();
 
+			// Returns the number of the current day in the week for the player's world
+			case "{" + PH_PREFIX + PH_YEARDAY + "}" :
+				Long yDay = ValuesConverter.yearDay(ft); // TODO 1.9.1-b2
+				return yDay.toString();
+
 		// Returns the number of the current week in the year for the player's world
 		case "{" + PH_PREFIX + PH_YEARWEEK + "}" :
 			Long yWeek = ValuesConverter.yearWeekFromTick(ft);
