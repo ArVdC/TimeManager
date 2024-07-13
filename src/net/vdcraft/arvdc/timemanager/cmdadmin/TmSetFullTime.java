@@ -37,7 +37,7 @@ public class TmSetFullTime extends MainTM {
 			w.setFullTime(tickToSet);
 			// Notifications
 			if (elapsedDays == 0 && t > 18000 && MainTM.getInstance().getConfig().getString(CF_NEWDAYAT).equalsIgnoreCase(newDayStartsAt_0h00)) {
-				String hour = ValuesConverter.formattedTimeFromTick(t);
+				String hour = ValuesConverter.formattedTimeFromTick(t, true);
 				MsgHandler.infoMsg(tooLateForDayZeroMsg1 + hour + tooLateForDayZeroMsg2); // Console final msg (always)
 				MsgHandler.playerAdminMsg(sender, tooLateForDayZeroMsg1 + "§e" + hour + "§r" + tooLateForDayZeroMsg2); // Console final msg (always)
 			}

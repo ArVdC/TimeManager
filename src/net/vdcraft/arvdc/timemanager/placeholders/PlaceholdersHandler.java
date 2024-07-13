@@ -48,32 +48,32 @@ public class PlaceholdersHandler extends MainTM {
 
 		// Returns the current time (in hh:mm:ss) for the player's world
 		case "{" + PH_PREFIX + PH_TIME12 + "}" :
-			String time12 = ValuesConverter.formattedTimeFromTick(t, PH_TIME12);
+			String time12 = ValuesConverter.formattedTimeFromTick(t, PH_TIME12, true);
 			return time12;
 			
 		// Returns the current time (in HH:mm:ss) for the player's world
 		case "{" + PH_PREFIX + PH_TIME24 + "}" :
-			String time24 = ValuesConverter.formattedTimeFromTick(t, PH_TIME24);
+			String time24 = ValuesConverter.formattedTimeFromTick(t, PH_TIME24, true);
 			return time24;
 
 		// Returns the current hours (in hh) for the player's world
 		case "{" + PH_PREFIX + PH_HOURS12 + "}" :
-			String hh12 = ValuesConverter.formattedTimeFromTick(t, PH_HOURS12);
+			String hh12 = ValuesConverter.formattedTimeFromTick(t, PH_HOURS12, true);
 			return hh12;
 
 		// Returns the current hours (in HH) for the player's world
 		case "{" + PH_PREFIX + PH_HOURS24 + "}" :
-			String hh24 = ValuesConverter.formattedTimeFromTick(t, PH_HOURS24);
+			String hh24 = ValuesConverter.formattedTimeFromTick(t, PH_HOURS24, true);
 			return hh24;
 
 		// Returns the current minutes (in mm) for the player's world
 		case "{" + PH_PREFIX + PH_MINUTES + "}" :
-			String minutes = ValuesConverter.formattedTimeFromTick(t, PH_MINUTES);
+			String minutes = ValuesConverter.formattedTimeFromTick(t, PH_MINUTES, true);
 			return minutes;
 
 		// Returns the current seconds (in ss) for the player's world
 		case "{" + PH_PREFIX + PH_SECONDS + "}" :
-			String seconds = ValuesConverter.formattedTimeFromTick(t, PH_SECONDS);
+			String seconds = ValuesConverter.formattedTimeFromTick(t, PH_SECONDS, true);
 			return seconds;
 
 		// Returns the part of day (AM or PM) for the player's world
@@ -100,9 +100,9 @@ public class PlaceholdersHandler extends MainTM {
 			Long wDay = ValuesConverter.weekDay(ft);
 			return wDay.toString();
 
-			// Returns the number of the current day in the week for the player's world
+			// Returns the number of the current day in the year for the player's world
 			case "{" + PH_PREFIX + PH_YEARDAY + "}" :
-				Long yDay = ValuesConverter.yearDay(ft); // TODO 1.9.1-b2
+				Long yDay = ValuesConverter.yearDay(ft); // TODO 1.9.1-b3
 				return yDay.toString();
 
 		// Returns the number of the current week in the year for the player's world

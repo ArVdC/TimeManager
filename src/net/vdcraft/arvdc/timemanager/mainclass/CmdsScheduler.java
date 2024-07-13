@@ -54,12 +54,14 @@ public class CmdsScheduler extends MainTM {
 					String eDate = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_DATE);
 					Integer expectedYear = 1;
 					Integer expectedMonth = 1;
-					Integer expectedDay = 1;					
+					Integer expectedDay = 1;
+					long expectedWDay = 1;	// TODO 1.9.1-b3
 					String[] ed = eDate.split("-");
 					try { // The date is supposed to be in correct format (yyyy-mm-dd)
 						expectedYear = Integer.parseInt(ed[0]);
 						expectedMonth = Integer.parseInt(ed[1]);
 						expectedDay = Integer.parseInt(ed[2]);
+						expectedWDay = ValuesConverter.weekDay(ValuesConverter.tickFromFormattedDate(eDate)); // TODO 1.9.1-b3
 					} catch (NumberFormatException nfe) {
 						MsgHandler.errorMsg(dateFormatMsg); // Console error msg
 					}
@@ -80,6 +82,7 @@ public class CmdsScheduler extends MainTM {
 					Integer currentYear = null;
 					Integer currentMonth = null;
 					Integer currentDay = null;
+					Long currentWDay = null; // TODO 1.9.1-b3
 					// Set a default delay
 					int minutesBeforeEnd = 1; // (=1min.)
 					long ticksBeforeEnd = 1200L; // (=1min.)
@@ -92,9 +95,10 @@ public class CmdsScheduler extends MainTM {
 						currentYear = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_YYYY));
 						currentMonth = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_MM));
 						currentDay = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_DD));
+						currentWDay = ValuesConverter.weekDay(currentFullTick); // TODO 1.9.1-b3
 						// Get the time
 						Long currentTick = Bukkit.getWorld(refTimeSrc).getTime();
-						String cHour = ValuesConverter.formattedTimeFromTick(currentTick);
+						String cHour = ValuesConverter.formattedTimeFromTick(currentTick, false);
 						String[] ch = cHour.split(":");
 						currentHour = Integer.parseInt(ch[0]);
 						currentMin = Integer.parseInt(ch[1]);
@@ -131,9 +135,10 @@ public class CmdsScheduler extends MainTM {
 						LocalDateTime refDatetime = LocalDateTime.ofInstant(now.toInstant(),ZoneOffset.ofHours(timeShift));
 						currentYear = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("yyyy")));
 						currentMonth = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("MM")));
-						currentDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));
+						currentDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));				
+						currentWDay = (long) (refDatetime.getDayOfWeek().getValue() - 1 ) % 7; // TODO 1.9.1-b3
 						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
-						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));
+						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));		
 					}
 					// #6.C. Also set a LocalDateTime
 					LocalDateTime currentDateTime = LocalDateTime.of(currentYear, currentMonth, currentDay, currentHour, currentMin);
@@ -196,8 +201,16 @@ public class CmdsScheduler extends MainTM {
 								break;
 							}
 						case ARG_MONTH : // If there is a monthly repetition, year and month are ignored
-						case ARG_WEEK : // If there is a weekly repetition, year and month are ignored
-							if (repeatFreq.equals(ARG_MONTH)) {
+						case ARG_WEEK : // If there is a weekly repetition, year and month are ignored // TODO 1.9.1-b3
+							if (repeatFreq.equals(ARG_WEEK)) { // Do this only for a weekly repetition
+								MsgHandler.devMsg("Day number in the week will now be checked :");
+								if (currentWDay == expectedWDay) {
+									MsgHandler.devMsg("The data of the day number in the week correspond, let's look further.");
+								} else {
+									MsgHandler.devMsg("The data of the day number in the week does not correspond, do nothing.");
+									break;
+								}
+							} else { // Normal process in all other cases
 								MsgHandler.devMsg("Day will now be checked :");
 								if ((monthUp && ((expectedDay == currentDay) && (expectedHour <= currentHour)) || ((currentDay == edgeDay) && (currentHour <= edgeHour))) // If there is a transition to the next month (only concern day edge)
 										|| (expectedDay <= currentDay && currentDay <= edgeDay)) {
@@ -205,23 +218,6 @@ public class CmdsScheduler extends MainTM {
 								} else {
 									MsgHandler.devMsg("The data of the day does not correspond, do nothing.");
 									break;
-								}
-							}
-							else if (repeatFreq.equals(ARG_WEEK)) { // TODO 1.9.1-b2
-								MsgHandler.devMsg("Day number in the week will now be checked :");
-								Long currentYDay = 0L;
-								Long expectedYDay = 0L;
-								if (!refTimeSrc.contains("UTC")) { // If non UTC time
-									currentYDay = ValuesConverter.yearDay(Bukkit.getWorld(refTimeSrc).getFullTime());
-									expectedYDay = ValuesConverter.tickFromFormattedTime(eDate);
-									if (currentYDay == expectedYDay) {
-										MsgHandler.devMsg("The data of the day number in the week correspond, let's look further.");
-									} else {
-										MsgHandler.devMsg("The data of the day number in the week does not correspond, do nothing.");
-										break;
-									}
-								} else { // If UTC time
-									// >>> do UTC case !!!
 								}
 							}
 						case ARG_DAY : // If there is a daily repetition, year, month and day are ignored
@@ -260,7 +256,7 @@ public class CmdsScheduler extends MainTM {
 							MsgHandler.devMsg("CommandNb : " + commandNb);
 							String command = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_CMDS + "." + commandNb);
 							MsgHandler.devMsg("Command : " + command);
-							if (command.charAt(0) == '/') command = command.replaceFirst("/",""); // TODO 1.9.1-b2
+							if (command.charAt(0) == '/') command = command.replaceFirst("/",""); // TODO 1.9.1-b3
 							command = command.replace("&","§");
 							String world = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_PHREFWOLRD);
 							// #11.B. Replace placeholders

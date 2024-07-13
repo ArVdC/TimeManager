@@ -34,7 +34,7 @@ public class TmSetPlayerOffset extends MainTM {
 					// Notifications
 					long tick = p.getPlayerTime();
 					tick = ValuesConverter.correctDailyTicks(tick);
-					String time = ValuesConverter.formattedTimeFromTick(tick);
+					String time = ValuesConverter.formattedTimeFromTick(tick, true);
 					if (timechange) {
 						MsgHandler.infoMsg(playerTimeChgMsg1 + " " + player + " " + playerTimeChgMsg2 + " tick #" + tick + " (" + time + ")."); // Console final msg (always)
 						MsgHandler.playerAdminMsg(sender, playerTimeChgMsg1 + " §e" + player + "§r " + playerTimeChgMsg2 + " §etick #" + tick + " §r(§e" + time + "§r)."); // Player final msg (in case)	

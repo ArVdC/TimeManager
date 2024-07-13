@@ -157,7 +157,7 @@ public class SleepHandler implements Listener {
 				// Change the doDaylightCycle value if it needs to be
 				DoDaylightCycleHandler.adjustDaylightCycle(world);
 				// Notify the console
-				MsgHandler.infoMsg(MainTM.sleepNewDayMsg + " "  + world + ", it is now tick #" + wakeUpTick + " (" + ValuesConverter.formattedTimeFromTick(wakeUpTick) + ")."); // Console final msg
+				MsgHandler.infoMsg(MainTM.sleepNewDayMsg + " "  + world + ", it is now tick #" + wakeUpTick + " (" + ValuesConverter.formattedTimeFromTick(wakeUpTick, true) + ")."); // Console final msg
 				// Check if other worlds timers must be change
 				String sleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP);
 				if (sleep.equalsIgnoreCase(MainTM.ARG_LINKED)) {

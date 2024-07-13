@@ -182,8 +182,8 @@ public class SyncHandler extends MainTM {
 			Bukkit.getWorld(world).setFullTime(nft);
 
 			// #2.K. Extra notifications (for each cases)
-			String listedWorldStartTime = ValuesConverter.formattedTimeFromTick(startAtTickNb);
-			String listedWorldCurrentTime = ValuesConverter.formattedTimeFromTick(newTime);
+			String listedWorldStartTime = ValuesConverter.formattedTimeFromTick(startAtTickNb, true);
+			String listedWorldCurrentTime = ValuesConverter.formattedTimeFromTick(newTime, true);
 			String formattedUTC = ValuesConverter.formattedUTCShiftfromTick(startAtTickNb);
 			String formattedUTCTick = ValuesConverter.tickUTCShiftfromTick(startAtTickNb);
 			String elapsedDays = initElapsedDays.toString();

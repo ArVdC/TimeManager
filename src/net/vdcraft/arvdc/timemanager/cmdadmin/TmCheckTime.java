@@ -56,10 +56,10 @@ public class TmCheckTime extends MainTM {
 		String date = ValuesConverter.dateFromElapsedDays(d, PH_YYYY) + "-" + ValuesConverter.dateFromElapsedDays(d, PH_MM) + "-" + ValuesConverter.dateFromElapsedDays(d, PH_DD);
 		long listedWorldStartTick = MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START);
 		long listedWorldCurrentTick = Bukkit.getServer().getWorld(world).getTime();
-		String listedWorldStartTime = ValuesConverter.formattedTimeFromTick(listedWorldStartTick);
+		String listedWorldStartTime = ValuesConverter.formattedTimeFromTick(listedWorldStartTick, true);
 		String formattedUTCTime = ValuesConverter.formattedUTCShiftfromTick(listedWorldStartTick);
 		String formattedUTCTick = ValuesConverter.tickUTCShiftfromTick(listedWorldStartTick);
-		String listedWorldCurrentTime = ValuesConverter.formattedTimeFromTick(listedWorldCurrentTick);
+		String listedWorldCurrentTime = ValuesConverter.formattedTimeFromTick(listedWorldCurrentTick, true);
 		double listedWorldDaySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
 		String listedWorldNightSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_N_SPEED);
 		String listedWorldSync = "";

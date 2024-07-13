@@ -55,7 +55,7 @@ public class TmSetTime extends MainTM {
 				// Adjust doDaylightCycle value
 				DoDaylightCycleHandler.adjustDaylightCycle(world);
 				// Notifications
-				String timeToSet = ValuesConverter.formattedTimeFromTick(tick);
+				String timeToSet = ValuesConverter.formattedTimeFromTick(tick, true);
 				MsgHandler.infoMsg(worldTimeChgMsg1 + " " + world + " " + worldTimeChgMsg2 + " tick #" + tick + " (" + timeToSet + ")."); // Console final msg (always)
 				MsgHandler.playerAdminMsg(sender, worldTimeChgMsg1 + " §e" + world + "§r " + worldTimeChgMsg2 + " §etick #" + tick + " §r(§e" + timeToSet + "§r)."); // Player final msg (in case)
 			}

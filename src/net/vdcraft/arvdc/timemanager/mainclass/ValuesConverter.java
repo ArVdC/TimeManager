@@ -621,10 +621,10 @@ public class ValuesConverter extends MainTM {
 	 * Gets and converts a MC tick (1/24000) to HH:mm:ss
 	 * (returns a String)
 	 */
-	public static String formattedTimeFromTick(long ticks) {
-		return formattedTimeFromTick(ticks, PH_TIME24);
+	public static String formattedTimeFromTick(long ticks, boolean msg) {
+		return formattedTimeFromTick(ticks, PH_TIME24, msg);
 	}
-	public static String formattedTimeFromTick(long ticks, String format) {
+	public static String formattedTimeFromTick(long ticks, String format, boolean msg) {
 		long newTicks = (ticks + 6000L) * 72L; // Adjust offset and go real time
 		newTicks = correctInitTicks(newTicks);
 		newTicks = newTicks / 20L; // x tick in 1 seconds
@@ -663,7 +663,7 @@ public class ValuesConverter extends MainTM {
 			output = String.format("%02d", ss);
 			break;
 		}
-		if (debugMode) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"" + ChatColor.YELLOW + ticks + ChatColor.AQUA + "\" was converted to \"" + ChatColor.YELLOW + output + ChatColor.AQUA + "\"."); // Console debug msg
+		if (debugMode && msg) Bukkit.getServer().getConsoleSender().sendMessage(prefixDebugMode + " Given tick \"" + ChatColor.YELLOW + ticks + ChatColor.AQUA + "\" was converted to \"" + ChatColor.YELLOW + output + ChatColor.AQUA + "\"."); // Console debug msg
 		return output;
 	}
 
@@ -782,23 +782,21 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Gets and converts a tick (current Fulltime) to the number of a day in the week (returns a Long)
+	 * Gets and converts a tick (current Fulltime) to the number of a day in the week (returns a long)
 	 */
 	public static Long weekDay(long fulltime) {
-		long wDayNb = (elapsedDaysFromTick(fulltime) % 7)+ 1;
-		return wDayNb;
+		return (elapsedDaysFromTick(fulltime) % 7) + 1;
 	}
 
 	/**
-	 * Gets and converts a tick (current Fulltime) to the number of a day in the year (returns a Long)
+	 * Gets and converts a tick (current Fulltime) to the number of a day in the year (returns a long)
 	 */
 	public static Long yearDay(long fulltime) {
-		long yDayNb = (elapsedDaysFromTick(fulltime) % 365)+ 1; // TODO 1.9.1-b2
-		return yDayNb;
+		return (elapsedDaysFromTick(fulltime) % 365) + 1; // TODO 1.9.1-b3
 	}
 
 	/**
-	 * Gets and converts a tick (current Fulltime) to the total number of the week (returns a Long)
+	 * Gets and converts a tick (current Fulltime) to the total number of the week (returns a long)
 	 */
 	public static Long weekFromTick(long fulltime) {
 		long daysNb = elapsedDaysFromTick(fulltime);
@@ -806,7 +804,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Gets and converts a tick (current Fulltime) to the number of the week in the year (returns a Long)
+	 * Gets and converts a tick (current Fulltime) to the number of the week in the year (returns a long)
 	 */
 	public static Long yearWeekFromTick(long fulltime) {
 		long daysNb = elapsedDaysFromTick(fulltime) % 365;

@@ -179,7 +179,7 @@ If a world is using the real time speed, the start value will determine the UTC 
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.9.1-b2: MC 1.8.8 to 1.20.6
+v1.9.1-b3: MC 1.8.8 to 1.21
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~

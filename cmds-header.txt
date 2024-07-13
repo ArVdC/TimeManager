@@ -25,7 +25,7 @@ cmds.yml
   *date*
     The next day the command will be launched, formatted as 'yyyy-mm-dd'. 'today' can also be used and will be automatically converted to a date.
   *repeatFreq*
-    The repetition frequency at which the command will be launched, possibly values are : [none|hour|day|month|year].
+    The repetition frequency at which the command will be launched, possibly values are : [none|hour|day|week|month|year].
 -----
 >>> Since version 1.8.0, this file supports hexadecimal colors. <<<
 -----
