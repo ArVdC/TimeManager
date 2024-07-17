@@ -183,7 +183,7 @@ public class PAPIHandler extends PlaceholderExpansion {
 
         // %tm_yeardaynb%
         if(identifier.equals(MainTM.PH_YEARDAY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player); // TODO 1.9.1-b2
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }        
         
         // %tm_yearweek%

@@ -55,13 +55,13 @@ public class CmdsScheduler extends MainTM {
 					Integer expectedYear = 1;
 					Integer expectedMonth = 1;
 					Integer expectedDay = 1;
-					long expectedWDay = 1;	// TODO 1.9.1-b3
+					long expectedWDay = 1;
 					String[] ed = eDate.split("-");
 					try { // The date is supposed to be in correct format (yyyy-mm-dd)
 						expectedYear = Integer.parseInt(ed[0]);
 						expectedMonth = Integer.parseInt(ed[1]);
 						expectedDay = Integer.parseInt(ed[2]);
-						expectedWDay = ValuesConverter.weekDay(ValuesConverter.tickFromFormattedDate(eDate)); // TODO 1.9.1-b3
+						expectedWDay = ValuesConverter.weekDay(ValuesConverter.tickFromFormattedDate(eDate));
 					} catch (NumberFormatException nfe) {
 						MsgHandler.errorMsg(dateFormatMsg); // Console error msg
 					}
@@ -82,7 +82,7 @@ public class CmdsScheduler extends MainTM {
 					Integer currentYear = null;
 					Integer currentMonth = null;
 					Integer currentDay = null;
-					Long currentWDay = null; // TODO 1.9.1-b3
+					Long currentWDay = null;
 					// Set a default delay
 					int minutesBeforeEnd = 1; // (=1min.)
 					long ticksBeforeEnd = 1200L; // (=1min.)
@@ -95,7 +95,7 @@ public class CmdsScheduler extends MainTM {
 						currentYear = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_YYYY));
 						currentMonth = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_MM));
 						currentDay = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_DD));
-						currentWDay = ValuesConverter.weekDay(currentFullTick); // TODO 1.9.1-b3
+						currentWDay = ValuesConverter.weekDay(currentFullTick);
 						// Get the time
 						Long currentTick = Bukkit.getWorld(refTimeSrc).getTime();
 						String cHour = ValuesConverter.formattedTimeFromTick(currentTick, false);
@@ -136,7 +136,7 @@ public class CmdsScheduler extends MainTM {
 						currentYear = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("yyyy")));
 						currentMonth = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("MM")));
 						currentDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));				
-						currentWDay = (long) (refDatetime.getDayOfWeek().getValue() - 1 ) % 7; // TODO 1.9.1-b3
+						currentWDay = (long) (refDatetime.getDayOfWeek().getValue() - 1 ) % 7;
 						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
 						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));		
 					}
@@ -201,7 +201,7 @@ public class CmdsScheduler extends MainTM {
 								break;
 							}
 						case ARG_MONTH : // If there is a monthly repetition, year and month are ignored
-						case ARG_WEEK : // If there is a weekly repetition, year and month are ignored // TODO 1.9.1-b3
+						case ARG_WEEK : // If there is a weekly repetition, year and month are ignored
 							if (repeatFreq.equals(ARG_WEEK)) { // Do this only for a weekly repetition
 								MsgHandler.devMsg("Day number in the week will now be checked :");
 								if (currentWDay == expectedWDay) {
@@ -256,7 +256,7 @@ public class CmdsScheduler extends MainTM {
 							MsgHandler.devMsg("CommandNb : " + commandNb);
 							String command = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_CMDS + "." + commandNb);
 							MsgHandler.devMsg("Command : " + command);
-							if (command.charAt(0) == '/') command = command.replaceFirst("/",""); // TODO 1.9.1-b3
+							if (command.charAt(0) == '/') command = command.replaceFirst("/","");
 							command = command.replace("&","§");
 							String world = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_PHREFWOLRD);
 							// #11.B. Replace placeholders

@@ -147,7 +147,7 @@ public class CmdsFileHandler extends MainTM {
 		// #3.F. Adapt the repeatFreq key
 		for (String key : MainTM.getInstance().cmdsConf.getConfigurationSection(CMDS_COMMANDSLIST).getKeys(false)) {
 			String repeatFreq = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REPEATFREQ);
-			if (!repeatFreq.equalsIgnoreCase(ARG_HOUR) && !repeatFreq.equalsIgnoreCase(ARG_DAY) && !repeatFreq.equalsIgnoreCase(ARG_WEEK)  && !repeatFreq.equalsIgnoreCase(ARG_MONTH) && !repeatFreq.equalsIgnoreCase(ARG_YEAR)) { // TODO 1.9.1-b3
+			if (!repeatFreq.equalsIgnoreCase(ARG_HOUR) && !repeatFreq.equalsIgnoreCase(ARG_DAY) && !repeatFreq.equalsIgnoreCase(ARG_WEEK)  && !repeatFreq.equalsIgnoreCase(ARG_MONTH) && !repeatFreq.equalsIgnoreCase(ARG_YEAR)) {
 				MainTM.getInstance().cmdsConf.set(CMDS_COMMANDSLIST + "." + key + "." + CMDS_REPEATFREQ, ARG_NONE);
 			}
 		}
