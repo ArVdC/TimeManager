@@ -175,11 +175,21 @@ If a world is using the real time speed, the start value will determine the UTC 
 
 **timemanager.now:** provide or deny access to /now subcommands with or without arguments.
 
+### YAML files
+Full descriptions can be found in the respective file headers.
+#### config.yml
+This file mainly contains information concerning each world as well as general options such as the reference tick, SQL database usage, placeholder activation, etc.
+#### lang.yml
+This file contains the different translations. It is possible to modify them and add new languages. It is also possible to activate automatic translation depending on each player's locale.
+#### cmds.yml
+This file allows you to schedule the execution of commands at specific times and dates, with the possibility of repeating them according to the chosen cycle.
+The reference time and date can be that of any world, or the actual time.
+
 ### TUTORIALS
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.9.1-b3: MC 1.8.8 to 1.21
+v1.9.1: MC 1.8.8 to 1.21
 
 ### TODO
 * ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
