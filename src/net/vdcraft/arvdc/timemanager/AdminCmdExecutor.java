@@ -441,9 +441,9 @@ public class AdminCmdExecutor implements CommandExecutor {
 						String tickString = args[2];
 						Long tickToSet;
 						if (!args[2].contains(":")) {
-							tickToSet = ValuesConverter.tickFromString(tickString); // Check if the value is a part of the day or a number
+							tickToSet = ValuesConverter.tickFromString(tickString); // If the value is a part of the day, a number or a UTC formatted value
 						} else {
-							tickToSet = ValuesConverter.tickFromFormattedTime(tickString); // Check if the value have an HH:mm:ss format
+							tickToSet = ValuesConverter.tickFromFormattedTime(tickString); // If the value have an HH:mm:ss format
 						}
 						TmSetStart.cmdSetStart(sender, tickToSet, concatWorldName);
 						return true;

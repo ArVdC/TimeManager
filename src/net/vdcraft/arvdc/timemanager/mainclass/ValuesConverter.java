@@ -460,7 +460,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Converts a listed word or any number to a tick value
+	 * Converts a listed dayPart or any number to a tick value
 	 * (returns a Long)
 	 */
 	public static Long tickFromString(String dayPart) {
@@ -479,6 +479,8 @@ public class ValuesConverter extends MainTM {
 		} else {
 			try { // If not a formatted hour neither a word, try to get a tick number
 				dayPart = dayPart.replace("#", "");
+				dayPart = dayPart.replace("UTC", "");
+				dayPart = dayPart.replace("+", "");
 				return Long.parseLong(dayPart);
 			} catch (NumberFormatException nfe) { // If not a Long, set a default value
 				MsgHandler.errorMsg(tickFormatMsg); // Console error msg
@@ -508,16 +510,16 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Formats a positive/negative number and return a formatted UTC+/-nh value
+	 * Formats a positive/negative number and return a formatted UTC+/-n value
 	 * (returns a String)
 	 */
 	public static String formattedUTCShiftfromTick(long tick) {
 		tick = getUTCShiftFromTick(tick);
 		String formattedUTC;
 		if (tick < 0) {
-			formattedUTC = "UTC" + tick + "h";
+			formattedUTC = "UTC" + tick;
 		} else {
-			formattedUTC = "UTC+" + tick + "h";
+			formattedUTC = "UTC+" + tick;
 		}
 		return formattedUTC;
 	}
@@ -1014,6 +1016,7 @@ public class ValuesConverter extends MainTM {
 	public static void restrainStart(String world) {
 		long t = Bukkit.getWorld(world).getTime();
 		String time = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_START);
+		if (time.contains("UTC")) time = time.replace("UTC", "");
 		if (time.contains("+")) time = time.replace("+", "");
 		time = tickFromString(time).toString(); // Check if value is a part of the day
 		String currentSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + wichSpeedParam(t));

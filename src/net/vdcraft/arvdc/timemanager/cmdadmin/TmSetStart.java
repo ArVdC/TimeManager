@@ -12,7 +12,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
 public class TmSetStart extends MainTM {
 
 	/**
-	 * CMD /tm set start [tick|daypart|HH:mm:ss] [world]
+	 * CMD /tm set start [tick|daypart|HH:mm:ss|timeShift] [world]
 	 */
 	public static void cmdSetStart(CommandSender sender, long tick, String world) {
 		
