@@ -1,7 +1,6 @@
 package net.vdcraft.arvdc.timemanager.cmdadmin;
 
 import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
@@ -28,14 +27,7 @@ public class TmSetStart extends MainTM {
 		// Else, if the string argument is a listed world, modify a single world
 		} else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 			// Adapt wrong values
-			World w = Bukkit.getWorld(world);
-			long t = w.getTime();
-			double currentSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(t));
-			if (currentSpeed == realtimeSpeed) {
-				tick = ValuesConverter.getUTCShiftFromTick(tick) * 1000;
-			} else {
-				tick = tick % 24000;
-			}
+			tick = ((tick % 24000) + 24000) % 24000;
 			// Modify and save the start tick in the config.yml
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_START, tick);
 			MainTM.getInstance().saveConfig();

@@ -504,8 +504,8 @@ public class ValuesConverter extends MainTM {
 	 * (returns a long)
 	 */
 	public static long getUTCShiftFromTick(long tick) {
-		if (tick >= 1000 || tick <= -1000) tick = (long) Math.floor(tick / 1000); // Use the 'start' value as an UTC modifier
-		return tick % 24;
+		if (tick >= 25 || tick <= -25) tick = (long)Math.floor(tick / 1000); // Use the 'start' value as an UTC modifier
+		return ((tick % 24) + 24) % 24;
 		
 	}
 
@@ -651,12 +651,12 @@ public class ValuesConverter extends MainTM {
 		case PH_TIME12 :
 			if (HH == 0) HH = 12;
 		case PH_TIME24 :
-			output = String.format("%02d:%02d:%02d", HH, mm, ss);
+			output = String.format("%d:%02d:%02d", HH, mm, ss);
 			break;
 		case PH_HOURS12 :
 			if (HH == 0) HH = 12;
 		case PH_HOURS24 :
-			output = String.format("%02d", HH);
+			output = String.format("%d", HH);
 			break;
 		case PH_MINUTES :
 			output = String.format("%02d", mm);
@@ -787,7 +787,7 @@ public class ValuesConverter extends MainTM {
 	 * Gets and converts a tick (current Fulltime) to the number of a day in the week (returns a Long)
 	 */
 	public static Long weekDay(long fulltime) {
-		return (elapsedDaysFromTick(fulltime) % 7) + 1;
+		return (elapsedDaysFromTick(fulltime) % 7) + 1; // TODO Permit to choose between Monday or Sunday
 	}
 
 	/**
@@ -1024,7 +1024,7 @@ public class ValuesConverter extends MainTM {
 		try { // Check if value is a long
 			tick = Long.parseLong(time);
 			if (currentSpeed.contains(realtimeSpeed.toString()) || currentSpeed.equalsIgnoreCase("realtime")) { // First if speed is 'realtime', use UTC
-				tick = getUTCShiftFromTick(tick) * 1000;
+				tick = getUTCShiftFromTick(tick) * 1000; // TODO
 			} else {
 				tick = correctDailyTicks(tick); // else, use ticks
 			}

@@ -4,6 +4,7 @@
 
 package net.vdcraft.arvdc.timemanager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -440,10 +441,14 @@ public class AdminCmdExecutor implements CommandExecutor {
 					} else {
 						String tickString = args[2];
 						Long tickToSet;
-						if (!args[2].contains(":")) {
-							tickToSet = ValuesConverter.tickFromString(tickString); // If the value is a part of the day, a number or a UTC formatted value
-						} else {
-							tickToSet = ValuesConverter.tickFromFormattedTime(tickString); // If the value have an HH:mm:ss format
+						double currentSpeed = MainTM.getInstance().getConfig().getDouble(MainTM.CF_WORLDSLIST + "." + concatWorldName + "." + ValuesConverter.wichSpeedParam(Bukkit.getWorld(concatWorldName).getTime()));
+						if (currentSpeed == MainTM.realtimeSpeed) { // If the value is a UTC time shift
+							tickToSet = ValuesConverter.getUTCShiftFromTick(ValuesConverter.tickFromString(tickString)) * 1000;
+						} else if (!args[2].contains(":")) { // If the value is a part of the day, a number or a UTC formatted value
+							tickToSet = ValuesConverter.tickFromString(tickString);
+						} else { // If the value have an HH:mm:ss format
+							tickToSet = ValuesConverter.tickFromFormattedTime(tickString);
+							
 						}
 						TmSetStart.cmdSetStart(sender, tickToSet, concatWorldName);
 						return true;
