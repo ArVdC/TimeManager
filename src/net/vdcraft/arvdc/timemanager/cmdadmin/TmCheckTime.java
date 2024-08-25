@@ -51,7 +51,7 @@ public class TmCheckTime extends MainTM {
 	 * Display a world time message
 	 */
 	private static void cmdDisplayTime(CommandSender sender, String world) {
-		Long d = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime());
+		Long d = ValuesConverter.daysFromTick(Bukkit.getWorld(world).getFullTime());
 		String elapsedDays = d.toString();
 		String date = ValuesConverter.dateFromElapsedDays(d, PH_YYYY) + "-" + ValuesConverter.dateFromElapsedDays(d, PH_MM) + "-" + ValuesConverter.dateFromElapsedDays(d, PH_DD);
 		long listedWorldStartTick = MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START);

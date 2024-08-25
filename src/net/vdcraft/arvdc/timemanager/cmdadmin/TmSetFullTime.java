@@ -41,7 +41,7 @@ public class TmSetFullTime extends MainTM {
 				MsgHandler.infoMsg(tooLateForDayZeroMsg1 + hour + tooLateForDayZeroMsg2); // Console final msg (always)
 				MsgHandler.playerAdminMsg(sender, tooLateForDayZeroMsg1 + "§e" + hour + "§r" + tooLateForDayZeroMsg2); // Console final msg (always)
 			}
-			elapsedDays = ValuesConverter.elapsedDaysFromTick(w.getFullTime());
+			elapsedDays = ValuesConverter.daysFromTick(w.getFullTime());
 			String date = ValuesConverter.dateFromElapsedDays(elapsedDays, PH_YYYY) + "-" + ValuesConverter.dateFromElapsedDays(elapsedDays, PH_MM) + "-" + ValuesConverter.dateFromElapsedDays(elapsedDays, PH_DD);
 			MsgHandler.infoMsg(worldFullTimeChgMsg + " " + world + " " + worldTimeChgMsg2 + " #" + elapsedDays + " (" + date + ")."); // Console final msg (always)
 			MsgHandler.playerAdminMsg(sender, worldFullTimeChgMsg + " §e" + world + "§r " + worldTimeChgMsg2 + " §e#" + elapsedDays + " §r(§e" + date + "§r)."); // Player final msg (in case)
@@ -65,7 +65,7 @@ public class TmSetFullTime extends MainTM {
 		// Else, if the string argument is a listed world, modify a single world
 		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 			Long tick = ValuesConverter.tickFromFormattedDate(date);
-			Long elapsedDays = ValuesConverter.elapsedDaysFromTick(tick);
+			Long elapsedDays = ValuesConverter.daysFromTick(tick);
 			cmdSetDay(sender, elapsedDays, world);
 		}
 		// Else, return an error and help message

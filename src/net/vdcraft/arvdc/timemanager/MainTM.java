@@ -184,6 +184,14 @@ public class MainTM extends JavaPlugin {
 	protected static final String LG_DUSK = "dusk";
 	protected static final String LG_NIGHT = "night";
 	protected static final String LG_DAWN = "dawn";
+	public static final String LG_DAYS = "days";
+	protected static final String LG_DAY_01 = "d01";
+	protected static final String LG_DAY_02 = "d02";
+	protected static final String LG_DAY_03 = "d03";
+	protected static final String LG_DAY_04 = "d04";
+	protected static final String LG_DAY_05 = "d05";
+	protected static final String LG_DAY_06 = "d06";
+	protected static final String LG_DAY_07 = "d07";
 	public static final String LG_MONTHS = "months";
 	protected static final String LG_MONTH_01 = "m01";
 	protected static final String LG_MONTH_02 = "m02";
@@ -249,7 +257,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_UPDATE = "update";
 	protected static final String CMD_SET_USECMDS = "useCmds";
 	
-	// Commands arguments names
+	// Commands arguments and YAML key names
 	public static final String ARG_TRUE = "true";
 	public static final String ARG_FALSE = "false";
 	protected static final String ARG_NONE = "none";
@@ -302,7 +310,7 @@ public class MainTM extends JavaPlugin {
 	public static final String PH_SECONDS = "seconds";
 	public static final String PH_E_DAYS = "elapseddays";
 	public static final String PH_C_DAY = "currentday";
-	public static final String PH_WEEKDAY = "weekday";
+	public static final String PH_DAYNAME = "dayname";
 	public static final String PH_YEARDAY = "yearday";
 	public static final String PH_YEARWEEK = "yearweek";
 	public static final String PH_WEEK = "week";

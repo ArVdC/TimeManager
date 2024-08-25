@@ -27,18 +27,25 @@ public class LgFileHandler extends MainTM {
 	private static String defaultDusk = "begin at 6.00 pm or tick #" + duskStart;
 	private static String defaultNight = "begin at 7.00 pm or tick #" + nightStart;
 	private static String defaultDawn = "begin at 6.00 am or tick #" + dawnStart;
-	private static String defaultM01 = "begin at #0 elapsedDays";
-	private static String defaultM02 = "begin at #31 elapsedDays";
-	private static String defaultM03 = "begin at #59 elapsedDays";
-	private static String defaultM04 = "begin at #90 elapsedDays";
-	private static String defaultM05 = "begin at #120 elapsedDays";
-	private static String defaultM06 = "begin at #151 elapsedDays";
-	private static String defaultM07 = "begin at #181 elapsedDays";
-	private static String defaultM08 = "begin at #212 elapsedDays";
-	private static String defaultM09 = "begin at #243 elapsedDays";
-	private static String defaultM10 = "begin at #273 elapsedDays";
-	private static String defaultM11 = "begin at #304 elapsedDays";
-	private static String defaultM12 = "begin at #334 elapsedDays";
+	private static String defaultD01 = "any Sunday translation";
+	private static String defaultD02 = "any Monday translation";
+	private static String defaultD03 = "any Tueday translation";
+	private static String defaultD04 = "any Wednesday translation";
+	private static String defaultD05 = "any Thirsday translation";
+	private static String defaultD06 = "any Friday translation";
+	private static String defaultD07 = "any Saturday translation";
+	private static String defaultM01 = "any January translation";
+	private static String defaultM02 = "any February translation";
+	private static String defaultM03 = "any March translation";
+	private static String defaultM04 = "any April translation";
+	private static String defaultM05 = "any May translation";
+	private static String defaultM06 = "any June translation";
+	private static String defaultM07 = "any July translation";
+	private static String defaultM08 = "any August translation";
+	private static String defaultM09 = "any September translation";
+	private static String defaultM10 = "any October translation";
+	private static String defaultM11 = "any November translation";
+	private static String defaultM12 = "any December translation";
 
 	/**
 	 * Activate or reload the language file
@@ -55,12 +62,12 @@ public class LgFileHandler extends MainTM {
 				// #1.A.b. Actualize values
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
-				// #1.A.c. Update the file if < 1.8.0
-				if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 8, 0, 4, 0)) { // TODO Only update this when lang file changes.
+				// #1.A.c. Update the file if < 1.10
+				if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 10, 0, 4, 0)) { // TODO Only update this when lang file changes.
 					updateLangFile();
 				} else MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
 			}
-			// #1.B. Load the header from the .txt file TODO 1.8.0
+			// #1.B. Load the header from the .txt file
 			// #1.B.a. Extract the file from the .jar
 			CopyFilesHandler.copyAnyFile(LANGHEADERFILENAME, MainTM.getInstance().langHeaderFileTxt);
 			// #1.B.b. Try to get the documentation text
@@ -103,6 +110,13 @@ public class LgFileHandler extends MainTM {
 		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYPARTS + "." + LG_DUSK, defaultDusk);
 		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYPARTS + "." + LG_NIGHT, defaultNight);
 		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYPARTS + "." + LG_DAWN, defaultDawn);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYS + "." + LG_DAY_01, defaultD01);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYS + "." + LG_DAY_02, defaultD02);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYS + "." + LG_DAY_03, defaultD03);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYS + "." + LG_DAY_04, defaultD04);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYS + "." + LG_DAY_05, defaultD05);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYS + "." + LG_DAY_06, defaultD06);
+		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_DAYS + "." + LG_DAY_07, defaultD07);
 		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_01, defaultM01);
 		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_02, defaultM02);
 		MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + LG_DEFAULT + "." + LG_MONTHS + "." + LG_MONTH_03, defaultM03);
@@ -215,6 +229,14 @@ public class LgFileHandler extends MainTM {
 					&& (langKeys.contains(LG_DAYPARTS + "." + LG_DUSK))
 					&& (langKeys.contains(LG_DAYPARTS + "." + LG_NIGHT))
 					&& (langKeys.contains(LG_DAYPARTS + "." + LG_DAWN))
+					&& (langKeys.contains(LG_DAYS))
+					&& (langKeys.contains(LG_DAYS + "." + LG_DAY_01))
+					&& (langKeys.contains(LG_DAYS + "." + LG_DAY_02))
+					&& (langKeys.contains(LG_DAYS + "." + LG_DAY_03))
+					&& (langKeys.contains(LG_DAYS + "." + LG_DAY_04))
+					&& (langKeys.contains(LG_DAYS + "." + LG_DAY_05))
+					&& (langKeys.contains(LG_DAYS + "." + LG_DAY_06))
+					&& (langKeys.contains(LG_DAYS + "." + LG_DAY_07))
 					&& (langKeys.contains(LG_MONTHS))
 					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_01))
 					&& (langKeys.contains(LG_MONTHS + "." + LG_MONTH_02))
@@ -327,7 +349,7 @@ public class LgFileHandler extends MainTM {
 						netherMsg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_NOMSG);
 					}
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_NETHERMSG, netherMsg);
-					// #4.E.d. endmsg (v.1.6.0
+					// #4.E.d. endmsg (v.1.6.0)
 					String endMsg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ENDMSG);
 					if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 6, 0, 2, 0)) {
 						endMsg = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_NOMSG);
@@ -345,52 +367,74 @@ public class LgFileHandler extends MainTM {
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_DUSK, dusk);
 					// #4.E.e.4. night
 					String night = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_NIGHT);
-					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_NIGHT, night);
-					// #4.E.f. months
-					// #4.E.f.1. jan
+					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_NIGHT, night);					
+					// #4.E.f. days (v.1.9.2) // TODO Next part to activate
+					// #4.E.f.1. Sunday
+					//String sun = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
+					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, sun);	
+					// #4.E.f.2. Monday
+					//String mon = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
+					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, mon);	
+					// #4.E.f.3. Tuesday
+					//String tue = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
+					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, tue);	
+					// #4.E.f.4. Wednesday
+					//String wed = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
+					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, wed);	
+					// #4.E.f.5. Thursday
+					//String thi = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
+					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, thi);	
+					// #4.E.f.6. Friday
+					//String fri = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
+					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, fri);	
+					// #4.E.f.7. Saturday
+					//String sat = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
+					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, sat);	
+					// #4.E.g. months
+					// #4.E.g.1. January
 					String jan = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_01);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_01, jan);				
-					// #4.E.f.2. feb
+					// #4.E.g.2. February
 					String feb = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_02);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_02, feb);
-					// #4.E.f.3. mar
+					// #4.E.g.3. March
 					String mar = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_03);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_03, mar);
-					// #4.E.f.4. apr
+					// #4.E.g.4. April
 					String apr = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_04);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_04, apr);
-					// #4.E.f.5. may
+					// #4.E.g.5. May
 					String may = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_05);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_05, may);
-					// #4.E.f.6. jun
+					// #4.E.g.6. June
 					String jun = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_06);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_06, jun);
-					// #4.E.f.7. jul
+					// #4.E.g.7. July
 					String jul = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_07);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_07, jul);
-					// #4.E.f.8. aug
+					// #4.E.g.8. August
 					String aug = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_08);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_08, aug);
-					// #4.E.f.9. sep
+					// #4.E.g.9. September
 					String sep = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_09);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_09, sep);
-					// #4.E.f.10. oct
+					// #4.E.g.10. October
 					String oct = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_10);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_10, oct);
-					// #4.E.f.11. nov
+					// #4.E.g.11. November
 					String nov = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_11);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_11, nov);
-					// #4.E.f.12. dec
+					// #4.E.g.12. December
 					String dec = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_12);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_MONTHS + "." + LG_MONTH_12, dec);
-					// #4.E.g. title, subtitle and action bar messages (v.1.5.0)
-					// #4.E.g.1. title
+					// #4.E.h. title, subtitle and action bar messages (v.1.5.0)
+					// #4.E.h.1. title
 					String title = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_TITLE);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_TITLE, title);
-					// #4.E.g.2. subtitle
+					// #4.E.h.2. subtitle
 					String subtitle = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_SUBTITLE);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_SUBTITLE, subtitle);
-					// #4.E.g.3. action bar
+					// #4.E.h.3. action bar
 					String actionbar = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_ACTIONBAR);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_ACTIONBAR, actionbar);					
 				}

@@ -50,7 +50,8 @@ The available placeholders are as follows :
 - {tm_daypart} : Displays the name of the current part of the day, among the four existing ones, in each of the languages.
 - {tm_currentday} : Displays the number of the current day. (1 → ∞)
 - {tm_elapseddays} : Displays the number of elapsed day(s). (0 → ∞)
-- {tm_weekday} : Displays the number of the day in the week. (1 → 7)
+- {tm_daynb} : Displays the number of the day in the week. (1 → 7)
+- {tm_dayname} : Displays the name of current day, based on entries in the lang.yml file.
 - {tm_yearday} : Displays the number of the day in the year. (1 → 365)
 - {tm_yearweek} : Displays the number of the week in the year. (1 → 52)
 - {tm_week} : Displays the number of elapsed weeks. (1 → ∞)
@@ -189,30 +190,30 @@ The reference time and date can be that of any world, or the actual time.
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.9.2-b: MC 1.8.8 to 1.21
+v1.9.10: MC 1.8.8 to 1.21.1
 
 ### TODO
-* ~~Command: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
-* ~~Command: Create a '/tm checkconfig' command that can display the summary of the current config (All the rest except the worlds details).~~
-* ~~Command: Create a '/tm set initialtick' command.~~
-* ~~Command: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.~~
-* ~~Command: Make an update message and associated commands.~~
+* ~~Commands: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
+* ~~Commands: Create a '/tm checkconfig' command that can display the summary of the current config (All the rest except the worlds details).~~
+* ~~Commands: Create a '/tm set initialtick' command.~~
+* ~~Commands: Permit 'HH:mm:ss' format for '/ tm set start', '/ tm set time' and '/ tm set initialtick' first argument.~~
+* ~~Commands: Make an update message and associated commands.~~
 * ~~Day & Night : Make a different speed multiplier for the day and the night.~~
 * ~~Calendar: Create new placeholders to display a count of elapsed days and the date in yyyy-mm-dd format.~~
 * ~~Scheduler: Create a scheduler allowing commands to be executed at specific times.~~
 * ~~Sleep/Sync: Provide the ability to synchronize a world to a specified one, detecting the coming of a new day after someone has slept.~~
 * ~~Tab completer: Try to improve the current hack that manages the spaces in worlds name. (Usefull until MC 1.12.2)~~
-* ~~Command: Allow players to individually set their time.~~
+* ~~Commands: Allow players to individually set their time.~~
 * ~~Worlds: Include _nether_ and _the end_ in the world list or link them to their reference world.~~
 * ~~Worlds: Add an per world option, for the behavior of timers when starting the server.~~
-* ~~Placeholder: Allow the use of placeholders in books and signs.~~
+* ~~Placeholders: Allow the use of placeholders in books and signs.~~
 * ~~cmds.yml file: Permit to use a 'pause' between commands lines.~~
-* ~~Placeholder: Add a placeholder to show current number of the day in the week.~~
+* ~~Placeholders: Add a placeholder to show current number of the day in the week.~~
 * ~~Colors: Add hexadecimal color recognition.~~
-* ~~Placeholder: Permit players to use placeholders in chat messages.~~
-* ~~Placeholder: Permit external commands to use placeholders.~~
+* ~~Placeholders: Permit players to use placeholders in chat messages.~~
+* ~~Placeholders: Permit external commands to use placeholders.~~
 * ~~Command: Add a '/tm set duration' command with a 00d-00h-00m-00s format.~~
-* Command: Allow players to display the list of placeholders.
-* Placeholder: Add new placeholders for the names of the seven days of the week.
-* Placeholder: Create signs where the placeholders constantly refresh.
-* Player Item: Create a custom item (and associated permissions and options) to use the '/now' command.
+* ~~Placeholders: Add new placeholders for the names of the seven days of the week.~~
+* Commands: Allow players to display the list of placeholders.
+* Placeholders: Create signs where the placeholders constantly refresh.
+* Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.

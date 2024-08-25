@@ -134,12 +134,12 @@ public class MVdWPAPIHandler extends MainTM {
 			}
 		});
 
-		// Returns the number of the current day in the week for the player's world
-		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_WEEKDAY, new PlaceholderReplacer() {
+		// Returns the name of the current day for the player's world
+		PlaceholderAPI.registerPlaceholder(instanceMainClass, PH_PREFIX + PH_DAYNAME, new PlaceholderReplacer() {
 			@Override
 			public String onPlaceholderReplace(PlaceholderReplaceEvent e) {
 				Player p = e.getPlayer();
-				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_WEEKDAY + "}", p.getWorld().getName(), PlayerLangHandler.setLangToUse(p), p);
+				return PlaceholdersHandler.replacePlaceholder("{" + PH_PREFIX + PH_DAYNAME + "}", p.getWorld().getName(), PlayerLangHandler.setLangToUse(p), p);
 			}
 		});
 

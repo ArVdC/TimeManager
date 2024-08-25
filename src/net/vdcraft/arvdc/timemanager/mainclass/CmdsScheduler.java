@@ -61,7 +61,7 @@ public class CmdsScheduler extends MainTM {
 						expectedYear = Integer.parseInt(ed[0]);
 						expectedMonth = Integer.parseInt(ed[1]);
 						expectedDay = Integer.parseInt(ed[2]);
-						expectedWDay = ValuesConverter.weekDay(ValuesConverter.tickFromFormattedDate(eDate));
+						expectedWDay = ValuesConverter.dayInWeek(ValuesConverter.tickFromFormattedDate(eDate));
 					} catch (NumberFormatException nfe) {
 						MsgHandler.errorMsg(dateFormatMsg); // Console error msg
 					}
@@ -82,7 +82,7 @@ public class CmdsScheduler extends MainTM {
 					Integer currentYear = null;
 					Integer currentMonth = null;
 					Integer currentDay = null;
-					Long currentWDay = null;
+					Integer currentWDay = ValuesConverter.dayInWeek(Bukkit.getWorld(refTimeSrc).getFullTime()); // TODO DayName update
 					// Set a default delay
 					int minutesBeforeEnd = 1; // (=1min.)
 					long ticksBeforeEnd = 1200L; // (=1min.)
@@ -91,11 +91,10 @@ public class CmdsScheduler extends MainTM {
 					if (!refTimeSrc.contains("UTC") && !refTimeSrc.equalsIgnoreCase("")) {
 						// Get the date
 						Long currentFullTick = Bukkit.getWorld(refTimeSrc).getFullTime();
-						Long cDate = ValuesConverter.elapsedDaysFromTick(currentFullTick);
+						Long cDate = ValuesConverter.daysFromTick(currentFullTick);
 						currentYear = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_YYYY));
 						currentMonth = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_MM));
 						currentDay = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_DD));
-						currentWDay = ValuesConverter.weekDay(currentFullTick);
 						// Get the time
 						Long currentTick = Bukkit.getWorld(refTimeSrc).getTime();
 						String cHour = ValuesConverter.formattedTimeFromTick(currentTick, false);
@@ -135,8 +134,7 @@ public class CmdsScheduler extends MainTM {
 						LocalDateTime refDatetime = LocalDateTime.ofInstant(now.toInstant(),ZoneOffset.ofHours(timeShift));
 						currentYear = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("yyyy")));
 						currentMonth = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("MM")));
-						currentDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));				
-						currentWDay = (long) (refDatetime.getDayOfWeek().getValue() - 1 ) % 7;
+						currentDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));
 						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
 						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));		
 					}

@@ -72,7 +72,7 @@ public class SyncHandler extends MainTM {
 
 		// #2. Re-synchronize a single world
 		} else {			
-			Long initElapsedDays = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime()); // Get the number of elapsed days
+			Long initElapsedDays = ValuesConverter.daysFromTick(Bukkit.getWorld(world).getFullTime()); // Get the number of elapsed days
 			long t = Bukkit.getWorld(world).getTime(); // Get the world's current time
 			startAtTickNb = (MainTM.getInstance().getConfig().getLong(CF_WORLDSLIST + "." + world + "." + CF_START)); // Get the world's 'start' value
 			speedAtStart = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(startAtTickNb)); // Get the world's speed value at server start

@@ -145,7 +145,7 @@ public class SleepHandler implements Listener {
 			public void run() {
 				String world = w.getName();
 				// Get the number of elapsed days
-				Long initElapsedDays = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime());
+				Long initElapsedDays = ValuesConverter.daysFromTick(Bukkit.getWorld(world).getFullTime());
 				// If sleeping was complete, waking up at a custom hour
 				w.setTime(wakeUpTick);
 				MsgHandler.debugMsg(MainTM.sleepProcessAdjustMorningTicksDebugMsg + " §e" + wakeUpTick + "§b."); // Console debug msg
@@ -165,7 +165,7 @@ public class SleepHandler implements Listener {
 						String linkedSleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + linkedWorld + "." + MainTM.CF_SLEEP);
 						if (linkedSleep.equalsIgnoreCase(MainTM.ARG_LINKED) && !linkedWorld.equalsIgnoreCase(world)) {
 							// Get the number of elapsed days
-							Long linkedInitElapsedDays = ValuesConverter.elapsedDaysFromTick(Bukkit.getWorld(world).getFullTime());
+							Long linkedInitElapsedDays = ValuesConverter.daysFromTick(Bukkit.getWorld(world).getFullTime());
 							// If sleeping was complete, waking up at a custom hour
 							Bukkit.getServer().getWorld(linkedWorld).setTime(wakeUpTick);
 							// Restore the number of elapsed days

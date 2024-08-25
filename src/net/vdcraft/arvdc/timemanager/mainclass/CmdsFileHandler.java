@@ -106,7 +106,7 @@ public class CmdsFileHandler extends MainTM {
 				// If the reference time is a MC world, get the world time
 				if (!refTimeSrc.contains("UTC") && !refTimeSrc.equalsIgnoreCase("")) {
 					Long ft = Bukkit.getWorld(refTimeSrc).getFullTime();
-					Long ed = ValuesConverter.elapsedDaysFromTick(ft);
+					Long ed = ValuesConverter.daysFromTick(ft);
 					year = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, PH_YYYY));
 					month = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, PH_MM));
 					day = Integer.parseInt(ValuesConverter.dateFromElapsedDays(ed, PH_DD));

@@ -19,14 +19,14 @@ public class PlaceholdersHandler extends MainTM {
 		World w = Bukkit.getServer().getWorld(world);
 		Long t = w.getTime();
 		Long ft = w.getFullTime();
-		Long ed = ValuesConverter.elapsedDaysFromTick(ft);
+		Long ed = ValuesConverter.daysFromTick(ft);
 
 		if (p != null) {
 			long o = p.getPlayerTimeOffset();
 			if (o != 0) {
 				ft = p.getPlayerTime();
 				t = ValuesConverter.correctDailyTicks(ft);
-				ed = ValuesConverter.elapsedDaysFromTick(ft);
+				ed = ValuesConverter.daysFromTick(ft);
 				MsgHandler.debugMsg("Player §e" + p.getName() + "§b has a time offset of §e" + o + "§b ticks."); // Console debug msg
 			}
 		}
@@ -88,31 +88,31 @@ public class PlaceholdersHandler extends MainTM {
 
 		// Returns the current day # for the player's world
 		case "{" + PH_PREFIX + PH_C_DAY + "}" :
-			Long currentDay = ValuesConverter.elapsedDaysFromTick(ft);
+			Long currentDay = ValuesConverter.daysFromTick(ft);
 			return (++currentDay).toString();
 
 		// Returns the total # of days elapsed for the player's world
 		case "{" + PH_PREFIX + PH_E_DAYS + "}" :
-			return ValuesConverter.elapsedDaysFromTick(ft).toString();
+			return ValuesConverter.daysFromTick(ft).toString();
 
-		// Returns the number of the current day in the week for the player's world
-		case "{" + PH_PREFIX + PH_WEEKDAY + "}" :
-			Long wDay = ValuesConverter.weekDay(ft);
-			return wDay.toString();
+		// Returns the name of the current day for the player's world
+		case "{" + PH_PREFIX + PH_DAYNAME + "}" :
+			String dayName = ValuesConverter.dayName(ft, lang);
+			return dayName;
 
 		// Returns the number of the current day in the year for the player's world
 		case "{" + PH_PREFIX + PH_YEARDAY + "}" :
-			Long yDay = ValuesConverter.yearDay(ft);
+			Long yDay = ValuesConverter.dayInYear(ft);
 			return yDay.toString();
 
 		// Returns the number of the current week in the year for the player's world
 		case "{" + PH_PREFIX + PH_YEARWEEK + "}" :
-			Long yWeek = ValuesConverter.yearWeekFromTick(ft);
+			Long yWeek = ValuesConverter.weekInYear(ft);
 			return yWeek.toString();
 
 		// Returns the number of elapsed weeks for the player's world
 		case "{" + PH_PREFIX + PH_WEEK + "}" :
-			Long week = ValuesConverter.weekFromTick(ft);
+			Long week = ValuesConverter.weeksFromTick(ft);
 			return week.toString();
 
 		// Returns the current month's name for the player's world

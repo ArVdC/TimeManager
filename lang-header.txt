@@ -44,7 +44,7 @@ lang.yml
    - {tm_mm} : Displays the month part of the date in 2 digits.
    - {tm_yy} : Displays the year part of the date in 2 digits.
    - {tm_yyyy} : Displays the year part of the date in 4 digits.
-  *dayparts* and *months*
+  *dayparts*, *days* and *months*
    These specific parts of the translation will appear in their corresponding placeholder.
 -----
 >>> Since v1.8.0-b, this file supports hexadecimal colors. <<<

@@ -20,19 +20,27 @@ languages:
       day: 'begin at 7.00 am or tick #1000'
       dusk: 'begin at 6.00 pm or tick #12000'
       night: 'begin at 7.00 pm or tick #13000'
+    days:
+      d01: 'any Sunday translation'
+      d02: 'any Monday translation'
+      d03: 'any Tuesday translation'
+      d04: 'any Wednesday translation'
+      d05: 'any Thursday translation'
+      d06: 'any Friday translation'
+      d07: 'any Saturday translation'
     months:
-      m01: 'begin at #0 elapsedDays'
-      m02: 'begin at #31 elapsedDays'
-      m03: 'begin at #59 elapsedDays'
-      m04: 'begin at #90 elapsedDays'
-      m05: 'begin at #120 elapsedDays'
-      m06: 'begin at #151 elapsedDays'
-      m07: 'begin at #181 elapsedDays'
-      m08: 'begin at #212 elapsedDays'
-      m09: 'begin at #243 elapsedDays'
-      m10: 'begin at #273 elapsedDays'
-      m11: 'begin at #304 elapsedDays'
-      m12: 'begin at #334 elapsedDays'
+      m01: 'any January translation'
+      m02: 'any February translation'
+      m03: 'any March translation'
+      m04: 'any April translation'
+      m05: 'any May translation'
+      m06: 'any June translation'
+      m07: 'any July translation'
+      m08: 'any August translation'
+      m09: 'any September translation'
+      m10: 'any October translation'
+      m11: 'any November translation'
+      m12: 'any December translation'
   de_DE:
     prefix: '&e&l[Stunde]'
     msg: Es &e{tm_time24}&r in der welt {tm_world}, das ist {tm_daypart}.
@@ -46,6 +54,14 @@ languages:
       dusk: die dämmerung
       night: die nacht
       dawn: die morgendämmerung
+    days:
+      d01: Sonntag
+      d02: Montag
+      d03: Dienstag
+      d04: Mittwoch
+      d05: Donnerstag
+      d06: Freitag
+      d07: Samstag
     months:
        m01: Januar
        m02: Februar
@@ -72,6 +88,14 @@ languages:
       dusk: the sunset
       night: the night
       dawn: the sunrise
+    days:
+      d01: Sunday
+      d02: Monday
+      d03: Tuesday
+      d04: Wednesday
+      d05: Thursday
+      d06: Friday
+      d07: Saturday
     months:
        m01: January
        m02: February
@@ -98,6 +122,14 @@ languages:
       dusk: el crepúsculo
       night: de noche
       dawn: el amanecer
+    days:
+      d01: Domingo
+      d02: Lunes
+      d03: Martes
+      d04: Miércoles
+      d05: Jueves
+      d06: Viernes
+      d07: Sábado
     months:
        m01: enero
        m02: febrero
@@ -124,6 +156,14 @@ languages:
       dusk: le crépuscule
       night: la nuit
       dawn: l'aurore
+    days:
+      d01: dimanche
+      d02: lundi
+      d03: mardi
+      d04: mercredi
+      d05: jeudi
+      d06: vendredi
+      d07 : samedi
     months:
       m01: janvier
       m02: février
@@ -150,6 +190,14 @@ languages:
       dusk: il tramonto
       night: la notte
       dawn: l'aurora
+    days:
+      d01: domenica
+      d02: lunedì
+      d03: martedì
+      d04: mercoledì
+      d05: giovedì
+      d06: venerdì
+      d07: sabato
     months:
        m01: gennaio
        m02: febbraio
@@ -176,6 +224,14 @@ languages:
       dusk: de schemering
       night: de avond
       dawn: de dageraad
+    days:
+      d01: zondag
+      d02: maandag
+      d03: dinsdag
+      d04: woensdag
+      d05: donderdag
+      d06: vrijdag
+      d07: zaterdag
     months:
        m01: januari
        m02: februari
@@ -202,6 +258,14 @@ languages:
       dusk: o crepúsculo
       night: a noite
       dawn: o amanhecer
+    days:
+      d01: 'domingo'
+      d02: 'segunda-feira'
+      d03: 'terça-feira'
+      d04: 'quarta-feira'
+      d05: 'quinta-feira'
+      d06: 'sexta-feira'
+      d07: 'sábado'
     months:
        m01: janeiro
        m02: fevereiro
