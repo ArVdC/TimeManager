@@ -6,12 +6,16 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
+import org.bukkit.Statistic;
 import org.bukkit.World;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
+import org.bukkit.event.world.TimeSkipEvent;
+import org.bukkit.event.world.TimeSkipEvent.SkipReason;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
@@ -77,7 +81,6 @@ public class SleepHandler implements Listener {
 	public static void sleepTicksCount(Player p, World w, String world, double currentSpeed, int sleepTicks, double ogDaySpeed, double ogNightSpeed, boolean nightCycleAnimation) {
 		BukkitScheduler sleepTicksCountSheduler = MainTM.getInstance().getServer().getScheduler();
 		sleepTicksCountSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
-			@SuppressWarnings("deprecation")
 			@Override
 			public void run() {					
 				// Get the world's name, time and nightCycleAnimation value
@@ -106,15 +109,28 @@ public class SleepHandler implements Listener {
 					}
 					
 					// #2.A.c. The 100 ticks stage has been reached
-					MsgHandler.debugMsg("Player §e" + p.getName() + MainTM.sleepProcess100TicksDebugMsg); // Console debug msg
+					MsgHandler.debugMsg("Player §e" + p.getName() + MainTM.sleepProcess100TicksDebugMsg + w.getTime() + "§b."); // Console debug msg
+					// In case, stop animation
 					if (nightCycleAnimation) stopSleepAnimation(world, ogDaySpeed, ogNightSpeed);
+					// Always clear weather
 					clearWeather(p, w);
-					if (ogNightSpeed < 1) { // Temporarily allow to move on to the next day
-						if (MainTM.serverMcVersion < MainTM.reqMcVForGamerules) w.setGameRuleValue("doDaylightCycle", MainTM.ARG_TRUE);
-						else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-					}
-					MsgHandler.debugMsg("Player §e" + p.getName() + "§b achieved sleeping at tick §e#" + w.getTime()); // Console debug msg
-					afterSleepingSettings(w, ogNightSpeed);
+					String world = w.getName();	
+					// Artificially change world's fulltime
+					long wakeUpTick = MainTM.getInstance().getConfig().getLong(MainTM.CF_WAKEUPTICK);
+					long ft = w.getFullTime();
+					w.setFullTime(ft - (ft % 24000) + 24000 + wakeUpTick);
+					MsgHandler.debugMsg(MainTM.sleepFulltimeTickDebugMsg + ft + "§b. New fulltime is §e#" + w.getFullTime() + "§b."); // Console debug msg
+					// Use relevant day speed in the world
+					SpeedHandler.speedScheduler(world);
+					MsgHandler.infoMsg(MainTM.sleepNewDayMsg + " "  + world + ", it is now tick #" + wakeUpTick + " (" + ValuesConverter.formattedTimeFromTick(wakeUpTick, true) + ")."); // Console final msg
+					// Check if other worlds timers must be change
+					String sleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP);
+					if (sleep.equalsIgnoreCase(MainTM.ARG_LINKED)) linkedSleep(world, w.getFullTime());
+					// Wake up everybody
+					w.getPlayers().stream().filter(LivingEntity::isSleeping).forEach(player -> player.wakeup(true));
+					// Reset players sleep statistics
+			        w.getPlayers().forEach(player -> player.setStatistic(Statistic.TIME_SINCE_REST, 0));
+
 					
 				// #2.B. If the player stops sleeping
 				} else {
@@ -123,28 +139,6 @@ public class SleepHandler implements Listener {
 				}
 			}
 		}, 1L);
-	}
-	
-	// #3. Adjust the time from 6:00 to 12:00 am, relaunch the speed scheduler
-	public static void afterSleepingSettings(World w, double ogNightSpeed) {
-		BukkitScheduler sleepTicksCountSheduler = MainTM.getInstance().getServer().getScheduler();
-		sleepTicksCountSheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				String world = w.getName();	
-				long wakeUpTick = MainTM.getInstance().getConfig().getLong(MainTM.CF_WAKEUPTICK);
-				long ft = w.getFullTime();
-				MsgHandler.debugMsg(MainTM.sleepFulltimeTickDebugMsg + ft + "§b."); // Console debug msg
-				w.setFullTime(ft - (ft % 24000) + wakeUpTick); // Change world's fulltime
-				MsgHandler.debugMsg("New fulltime is §e#" + w.getFullTime() + "§b."); // Console debug msg
-				MsgHandler.debugMsg(MainTM.sleepProcessAdjustMorningTicksDebugMsg + wakeUpTick + "§b."); // Console debug msg
-				SpeedHandler.speedScheduler(world);
-				MsgHandler.infoMsg(MainTM.sleepNewDayMsg + " "  + world + ", it is now tick #" + wakeUpTick + " (" + ValuesConverter.formattedTimeFromTick(wakeUpTick, true) + ")."); // Console final msg
-				// Check if other worlds timers must be change
-				String sleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP);
-				if (sleep.equalsIgnoreCase(MainTM.ARG_LINKED)) linkedSleep(world, w.getFullTime());
-			}
-		}, 2L);
 	}
 	
 	/**
@@ -206,8 +200,6 @@ public class SleepHandler implements Listener {
 		long t = w.getTime();
 		if (MainTM.animationIsInProgress.contains(w.getName()) && (t > 22500 || t < 10)) e.setCancelled(true);
 	}
-	
-
 
 	/**
 	 * Clears weather
@@ -230,6 +222,20 @@ public class SleepHandler implements Listener {
 			if (linkedSleep.equalsIgnoreCase(MainTM.ARG_LINKED) && !linkedWorld.equalsIgnoreCase(world)) Bukkit.getWorld(linkedWorld).setFullTime(refFulltime);
 			// Notify the console
 			MsgHandler.infoMsg("The world " + linkedWorld + " " + MainTM.sleepLinkedNewDayMsg); // Console final msg
+		}
+	}
+	
+	/**
+	 * When a player finishes sleeping, prohibit automatic night shift
+	 */
+	@EventHandler
+	public void whenNightIsSkipped(TimeSkipEvent e) throws InterruptedException {
+		World w = e.getWorld();
+		Enum<SkipReason> reason = e.getSkipReason();
+		long t = w.getTime();
+		if (reason.equals(SkipReason.NIGHT_SKIP)) {
+			MsgHandler.debugMsg("Night skip in world §e" + w.getName() + " §bwas cancelled at tick §e#" + t + "§b.");
+			e.setCancelled(true);
 		}
 	}
 	

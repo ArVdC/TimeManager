@@ -564,7 +564,7 @@ public class MainTM extends JavaPlugin {
 	protected static String LatestVersionPart2DebugMsg = "and you are running the";
 	public static String sleepProcessStartsDebugMsg = "§b starts to sleep (0/100 ticks).";
 	public static String sleepProcessInterruptedDebugMsg = "Someone left the bed before the end of the night.";
-	public static String sleepProcess100TicksDebugMsg = "§b's sleep time is achieved (100/100 ticks).";
+	public static String sleepProcess100TicksDebugMsg = "§b's sleep time is achieved (100/100 ticks) at tick §e#";
 	public static String sleepProcessAdjustMorningTicksDebugMsg = "The morning tick was adjusted to §e#";
 	public static String sleepProcessForbiddenDebugMsg = "Sleeping is forbid in the world";
 	public static String sleepProcessImpossibleDebugMsg = "Sleeping is impossible in the world";
