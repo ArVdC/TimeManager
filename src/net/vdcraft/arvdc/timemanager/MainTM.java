@@ -65,7 +65,7 @@ public class MainTM extends JavaPlugin {
 	protected static Double reqMcVToLoadPlugin = 4.06;
 	protected static Double reqMcVForUpdate = 8.08;
 	public static Double reqMcVToGetLocale = 12.0;
-	public static Double reqMcVForDaylightCycle = 13.0;
+	public static Double reqMcVForGamerules = 13.0;
 	public static Double reqMcVForActionbarMsg = 9.0;
 	public static Double reqMcVForTxtCompLegacyMsg = 12.0;
 	public static Double reqMcVForNewSendTitleMsg = 16.0;
@@ -80,6 +80,7 @@ public class MainTM extends JavaPlugin {
 	protected static String defSleep = "true";
 	protected static String defSync = "false";
 	protected static String defFirstStartTime = "default";
+	protected static String defNightCycleAnim = "false";
 	protected static String defUpdateMsgSrc = "none";
 	protected static int defTitleFadeIn = 20;
 	protected static int defTitleStay = 60;
@@ -96,14 +97,14 @@ public class MainTM extends JavaPlugin {
 	protected static Integer refreshRateInt;
 	public static Long refreshRateLong;
 
-	// Max speed modifier (Min need to be 0)
+	// Max speed modifier (Min needs to be 0)
 	protected static Double speedMax = 20.0;
 
 	// Number who make time turn real
-	protected static Double realtimeSpeed = 24.0;
+	public static Double realtimeSpeed = 24.0;
 
 	// DayParts in ticks
-	protected static Long dawnStart = 0L;
+	public static Long dawnStart = 23000L;
 	protected static Long dayStart = 1000L;
 	protected static Long duskStart = 12000L;
 	protected static Long nightStart = 13000L;
@@ -112,6 +113,9 @@ public class MainTM extends JavaPlugin {
 	// Expected time for the date change
 	protected static String newDayStartsAt_0h00 = "00:00";
 	protected static String newDayStartsAt_6h00 = "06:00";
+
+	// Add world's name in a list when a night cycle animation is in progress
+	public static List<String> animationIsInProgress = new ArrayList<String>();
 	
 	// Add each active schedule in corresponding list
 	public static List<String> realSpeedSchedulerIsActive = new ArrayList<String>();
@@ -140,6 +144,7 @@ public class MainTM extends JavaPlugin {
 	public static final String CF_SLEEP = "sleep";
 	public static final String CF_SYNC = "sync";
 	public static final String CF_FIRSTSTARTTIME = "firstStartTime";
+	public static final String CF_NIGHTCYCLEANIM = "nightCycleAnimation";
 	protected static final String CF_INITIALTICK = "initialTick";
 	protected static final String CF_INITIALTICKNB = "initialTickNb";
 	protected static final String CF_RESETONSTARTUP = "resetOnStartup";
@@ -466,6 +471,7 @@ public class MainTM extends JavaPlugin {
 	protected static String worldPreviousTimeResetMsg = "has been reset to its last known time.";
 	protected static String worldStartTimeResetMsg = "has been reset to its default start time.";
 	protected static String worldSyncSleepChgMsg = "'sleep' option was forced to 'false', cause of its new synchronization value.";
+	protected static String worldSyncAnimChgMsg = "'nightCycleAnimation' option was forced to 'false', cause of its new synchronization value.";
 	protected static String worldSyncfirstTimeStartChgMsg = "'firstTimeStart' option was forced to 'default', cause of its new synchronization value.";
 
 	// Cmd set time
@@ -538,6 +544,7 @@ public class MainTM extends JavaPlugin {
 	protected static String syncAdjustFalseDebugMsg = "The §esync§b option is forced to §cfalse§b for the world";
 	protected static String sleepAdjustFalseDebugMsg = "The §esleep§b option is forced to §cfalse§b for the world";
 	protected static String firstStartTimeAdjustDefaultDebugMsg = "The §efirstStartTime§b option is forced to §cdefault§b for the world";
+	protected static String nightCycleAnimationAdjustFalseDebugMsg = "The §enightCycleAnimation§b option is forced to §cfalset§b for the world";
 	protected static String availableTranslationsDebugMsg = "Available translations are:";
 	public static String daylightTrueDebugMsg = "The §edoDaylightCycle§b value is now set to §atrue§b for the world";
 	protected static String daylightFalseDebugMsg = "The §edoDaylightCycle§b value is now set to §cfalse§b for the world";
@@ -555,16 +562,20 @@ public class MainTM extends JavaPlugin {
 	protected static String wrongVersionNumberDebugMsg = "Your MC version doesn't correspond to any decimal number:";
 	protected static String LatestVersionPart1DebugMsg = "Last version on";
 	protected static String LatestVersionPart2DebugMsg = "and you are running the";
-	public static String sleepProcessStartsDebugMsg = "§b is sleeping now (1/100 ticks).";
-	public static String sleepProcess99TicksDebugMsg = "Sleep time is almost reached (99/100 ticks).";
-	public static String sleepProcess100TicksDebugMsg = "Sleep time is achieved (100/100 ticks).";
-	public static String sleepProcessWaitMorningTicksDebugMsg = "From now on, waiting for the morning.";
-	public static String sleepProcessAdjustMorningTicksDebugMsg = "The morning tick was adjusted to";
-	public static String sleepProcessSleepForbid1DebugMsg = "Sleeping is forbid in the world";
-	public static String sleepProcessSleepForbid2DebugMsg = "The process ends here.";
+	public static String sleepProcessStartsDebugMsg = "§b starts to sleep (0/100 ticks).";
+	public static String sleepProcessInterruptedDebugMsg = "Someone left the bed before the end of the night.";
+	public static String sleepProcess100TicksDebugMsg = "§b's sleep time is achieved (100/100 ticks).";
+	public static String sleepProcessAdjustMorningTicksDebugMsg = "The morning tick was adjusted to §e#";
+	public static String sleepProcessForbiddenDebugMsg = "Sleeping is forbid in the world";
+	public static String sleepProcessImpossibleDebugMsg = "Sleeping is impossible in the world";
+	public static String sleepProcessSyncActiveDebugMsg = "Sync is active in the world";
+	public static String sleepProcessTimeFrozenDebugMsg = "Time is frozen in the world";
+	public static String sleepProcessItIsDayDebugMsg = "It's daytime in the world";
+	public static String sleepProcessEndsDebugMsg = "'s sleep process ends here.";
 	public static String sleepProcessAwakeNoSleepDebugMsg = "without having been able to sleep.";
-	public static String sleepOkMorningDebugMsg = "§aWake up, it's morning !!!";
-	public static String sleepNoMorningDebugMsg = "§cToo late...  morning might never come.";
+	public static String sleepAnimationDefaultSpeedDebugMsg = "Only a few ticks to skip in 100 ticks. Night cylce animation'll use a default speed of §e5 §b.";
+	public static String sleepAnimationSpeedCalculationDebugMsg = " ticks to skip in 100 ticks. Night cylce animation'll use a speed of §e";
+	public static String sleepFulltimeTickDebugMsg = "Player achieved sleeping at fulltime §e#";
 	public static String cmdsWrongPHWorldDebugMsg = "does not exist. It was replaced by the default value";
 	public static String cmdsWrongTimeSrcDebugMsg = "is neither a world or an UTC time. It was replaced by the default value";
 	public static String schedulerOffDebugMsg = "will no longer use any scheduler.";

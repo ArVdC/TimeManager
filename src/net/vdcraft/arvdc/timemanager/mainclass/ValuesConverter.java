@@ -310,7 +310,7 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String getMCDayPart(long tick) {
 		String wichPart;
-		if (tick >= dawnStart && tick < dayStart) {
+		if (tick >= dawnStart || tick < dayStart) {
 			wichPart = LG_DAWN;
 		} else if (tick >= dayStart && tick < duskStart) {
 			wichPart = LG_DAY;
@@ -1074,14 +1074,21 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * If a world gets a speed of '24', force 'sleep' to 'false'
-	 * Force 'sync' to false if 'sleep' is 'true' or 'linked'
+	 * Restrains sleep modifiers
+	 * Forces 'sleep' to 'false' if any expected string is not recognized
+	 * Forces 'sleep' to 'false' for the synchronized and frozen worlds
+	 * Forbids 'sleep' to be 'true' in Nether and the End worlds
+	 * Forces 'sync' to false if 'sleep' is 'true' or 'linked'
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSleep(String world) {
 		String sleep = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SLEEP);
 		double currentSpeed = getCurrentSpeed(world);
-		if (currentSpeed == 24.0 || (!sleep.equalsIgnoreCase(ARG_TRUE) && !sleep.equalsIgnoreCase(ARG_LINKED))) {
+		if ((!sleep.equalsIgnoreCase(ARG_TRUE) && !sleep.equalsIgnoreCase(ARG_LINKED))
+				|| currentSpeed == 24.0
+				|| currentSpeed == 0.0
+				|| (world.contains(ARG_NETHER) && sleep.equalsIgnoreCase(ARG_TRUE))
+				|| (world.contains(ARG_THEEND) && sleep.equalsIgnoreCase(ARG_TRUE))) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, ARG_FALSE);
 			MsgHandler.debugMsg(sleepAdjustFalseDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		} else if (sleep.equalsIgnoreCase(ARG_TRUE) || sleep.equalsIgnoreCase(ARG_LINKED)) {
@@ -1091,8 +1098,9 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Force 'sync' to 'true' for the 24.0 speed, then 'false' when change to another speed ratio
-	 * Force 'sync' to 'false' for the 0.0 speed
+	 * Restrains sync modifiers
+	 * Forces 'sync' to 'true' for the 24.0 speed, then 'false' when change to another speed ratio
+	 * Forces 'sync' to 'false' for the 0.0 speed
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSync(String world, double oldSpeed) {
@@ -1110,8 +1118,9 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Force 'firstStartTime' to 'default' if any expected string is not recognized
-	 * Force 'firstStartTime' to 'default' for the synchronized worlds
+	 * Restrains FirstStartTime modifiers
+	 * Forces 'firstStartTime' to 'default' if any expected string is not recognized
+	 * Forces 'firstStartTime' to 'default' for the synchronized worlds
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainFirstStartTime(String world) {
@@ -1125,6 +1134,27 @@ public class ValuesConverter extends MainTM {
 		if (sync.equalsIgnoreCase(ARG_TRUE) || currentSpeed == 0.0) {
 			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, ARG_DEFAULT);
 			MsgHandler.debugMsg(firstStartTimeAdjustDefaultDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
+		}
+	}
+
+	/**
+	 * Restrains nightCycleAnimation modifiers
+	 * Forces 'nightCycleAnimation' to 'false' if any expected string is not recognized
+	 * Forces 'nightCycleAnimation' to 'false' for the synchronized and frozen worlds
+	 * Forces 'nightCycleAnimation' to 'false' for Nether and the End worlds
+	 * (modifies the configuration without saving the file)
+	 */
+	public static void restrainNightCycleAnimation(String world) {
+		String nightCycleAnimation = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM);
+		String sync = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC);
+		double currentSpeed = getCurrentSpeed(world);
+		if (!nightCycleAnimation.equalsIgnoreCase(ARG_TRUE)
+				|| sync.equalsIgnoreCase(ARG_TRUE)
+				|| currentSpeed == 0.0
+				|| world.contains(ARG_NETHER)
+				|| world.contains(ARG_THEEND)) {
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM, ARG_FALSE);
+			MsgHandler.debugMsg(nightCycleAnimationAdjustFalseDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		}
 	}
 

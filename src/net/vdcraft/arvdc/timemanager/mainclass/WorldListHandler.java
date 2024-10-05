@@ -38,6 +38,7 @@ public class WorldListHandler extends MainTM {
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SLEEP, defSleep);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_SYNC, defSync);
 				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, defFirstStartTime);
+				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM, defNightCycleAnim);
 			} // If a world already exists, check its 'start', 'daySpeed', 'nightSpeed', 'sleep' and 'sync' keys
 			else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
 				// Check if 'start' exists
@@ -63,6 +64,10 @@ public class WorldListHandler extends MainTM {
 				// Check if 'firstStartTime' exists
 				if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_FIRSTSTARTTIME))) { // If not, add it in the list with default parameters
 					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_FIRSTSTARTTIME, defFirstStartTime);
+				}
+				// Check if 'nightCycleAnimation' exists
+				if (!(MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST + "." + world).getKeys(false).contains(CF_NIGHTCYCLEANIM))) { // If not, add it in the list with default parameters
+					MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM, defNightCycleAnim);
 				}
 			}
 		}

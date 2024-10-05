@@ -284,6 +284,7 @@ public class SpeedHandler extends MainTM {
 				if (!Bukkit.getWorld(world).equals(null)) {
 					// Get the refresh rate
 					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
+					refreshRateInt = MainTM.getInstance().getConfig().getInt(CF_REFRESHRATE);
 					// Get the world's current time
 					Long currentTime = Bukkit.getWorld(world).getTime();
 					// Timer msg
@@ -301,7 +302,7 @@ public class SpeedHandler extends MainTM {
 					// While the world is not cancelled, asynchronous and with a speed bigger than 1, launch the loop again ...
 					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
 							&& (newSpeed > 1)
-							&& (newSpeed <= speedMax)) {
+							&& (newSpeed != realtimeSpeed)) {
 						asyncIncreaseSpeedScheduler(world, newSpeed);
 					} // ... or break the loop
 					else {

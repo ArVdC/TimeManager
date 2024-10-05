@@ -104,17 +104,19 @@ public class CfgFileHandler extends MainTM {
 		MsgHandler.debugMsg(cfgOptionsCheckDebugMsg); // Console debug msg
 		WorldListHandler.listLoadedWorlds();
 		// #9.B. For each world
-		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
+		for (String world : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 			// #9.A. Restrain the start times
-			ValuesConverter.restrainStart(w);
+			ValuesConverter.restrainStart(world);
 			// #9.B. Restrain the speed modifiers
-			ValuesConverter.restrainSpeed(w);
+			ValuesConverter.restrainSpeed(world);
 			// #9.C. Restrain the sleep value
-			ValuesConverter.restrainSleep(w);
+			ValuesConverter.restrainSleep(world);
 			// #9.D. Restrain the sync value
-			ValuesConverter.restrainSync(w, 0.1);
+			ValuesConverter.restrainSync(world, 0.1);
 			// #9.E. Restrain the firstStartTime value
-			ValuesConverter.restrainFirstStartTime(w);
+			ValuesConverter.restrainFirstStartTime(world);
+			// #9.F. Restrain the nightCycleAnimation value
+			ValuesConverter.restrainNightCycleAnimation(world);
 		}		
 
 		// #10. Manage initial tick

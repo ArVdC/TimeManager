@@ -35,7 +35,7 @@ lang.yml
    - {tm_daypart} : Displays the name of the current part of the day, among the four existing ones, in each of the languages.
    - {tm_currentday} : Displays the number of the current day. (1 → ∞)
    - {tm_elapseddays} : Displays the number of elapsed day(s). (0 → ∞)
-   - {tm_weekday} : Displays the number of the day in the week. (1 → 7)
+   - {tm_dayname} : Displays the name of current day, based on entries in the lang.yml file.
    - {tm_yearday} : Displays the number of the day in the year. (1 → 365)
    - {tm_yearweek} : Displays the number of the week in the year. (1 → 52)
    - {tm_week} : Displays the number of elapsed weeks. (1 → ∞)
