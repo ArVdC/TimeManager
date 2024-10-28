@@ -26,15 +26,12 @@ public class DoDaylightCycleHandler extends MainTM {
 			double speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST +"." + worldToSet + "." + ValuesConverter.wichSpeedParam(t));
 			// If the speed of the world is freeze, decreased or normal & sync 
 			if (speedModifier == realtimeSpeed || speedModifier < 1.0 || (speedModifier == 1.0 && MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE))) {
-				if (serverMcVersion < reqMcVForGamerules) w.setGameRuleValue("doDaylightCycle", ARG_FALSE);
+				if (serverMcVersion < reqMcVForGamerules) w.setGameRuleValue(GR_DO_DAYLIGHT_CYCLE, ARG_FALSE); // Check if MC version is at least 1.13.0
 				else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 				MsgHandler.debugMsg(daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			} else { // If the speed of the world is increased or normal & async
-				if (serverMcVersion < reqMcVForGamerules) {
-					w.setGameRuleValue("doDaylightCycle", ARG_TRUE);
-				} else {
-					w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
-				}
+				if (serverMcVersion < reqMcVForGamerules) w.setGameRuleValue(GR_DO_DAYLIGHT_CYCLE, ARG_TRUE); // Check if MC version is at least 1.13.0
+				else w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
 				MsgHandler.debugMsg(daylightTrueDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			}
 		}

@@ -832,16 +832,18 @@ public class ValuesConverter extends MainTM {
 	 */	
 	// Define hexadecimal colors pattern
 	public static String replaceAllHexColors(String txt) {
-		Pattern hexpattern = Pattern.compile("#[a-fA-F0-9]{6}");
-		Matcher match = hexpattern.matcher(txt);
-		while (match.find()) {
-			MsgHandler.devMsg("The matcher found an hexadecimal color in the §e/now §9message");	
-			String color = match.group(); // Get the first hexadecimal color found
-			ChatColor cColor = ChatColor.of(color);
-			MsgHandler.devMsg("This hexadecimal color number is " + ChatColor.YELLOW + color);
-			MsgHandler.devMsg("The corresponding color is " + ChatColor.translateAlternateColorCodes('&', cColor.toString()) + cColor.getColor());
-			txt = txt.replace(color, cColor.toString()); // Convert it to the corresponding ChatColor
-		}		
+		if (serverMcVersion >= reqMcVForHexColors) { // Check if MC version is at least 1.16.0
+			Pattern hexpattern = Pattern.compile("#[a-fA-F0-9]{6}");
+			Matcher match = hexpattern.matcher(txt);
+			while (match.find()) {
+				MsgHandler.devMsg("The matcher found an hexadecimal color in the §e/now §9message");	
+				String color = match.group(); // Get the first hexadecimal color found
+				ChatColor cColor = ChatColor.of(color);
+				MsgHandler.devMsg("This hexadecimal color number is " + ChatColor.YELLOW + color);
+				MsgHandler.devMsg("The corresponding color is " + ChatColor.translateAlternateColorCodes('&', cColor.toString()) + cColor.getColor());
+				txt = txt.replace(color, cColor.toString()); // Convert it to the corresponding ChatColor
+			}		
+		}
 		return txt;
 	}
 	
@@ -958,7 +960,7 @@ public class ValuesConverter extends MainTM {
 	// ========== YAML nodes restraining Methods ==========
 
 	/**
-	 * Restrains initial tick
+	 * Restrains the value of the 'initialTick' key
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainInitTick() {
@@ -974,7 +976,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains refresh rate
+	 * Restrains the value of the 'refreshRate' key
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainRate() {
@@ -988,7 +990,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains wakeUpTick tick
+	 * Restrains the value of the 'wakeUpTick' key
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainWakeUpTick() {
@@ -1003,7 +1005,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains start timers
+	 * Restrains the value of the 'world.start' key
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainStart(String world) {
@@ -1030,7 +1032,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains speed modifiers
+	 * Restrains the value of 'daySpeed' and 'nightSpeed' keys
 	 * (modifies the configuration without saving the file)
 	 */
 	public static void restrainSpeed(String world) {
@@ -1074,7 +1076,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains sleep modifiers
+	 * Restrains the value of the 'world.sleep' key
 	 * Forces 'sleep' to 'false' if any expected string is not recognized
 	 * Forces 'sleep' to 'false' for the synchronized and frozen worlds
 	 * Forbids 'sleep' to be 'true' in Nether and the End worlds
@@ -1098,7 +1100,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains sync modifiers
+	 * Restrains the value of the 'world.sync' key
 	 * Forces 'sync' to 'true' for the 24.0 speed, then 'false' when change to another speed ratio
 	 * Forces 'sync' to 'false' for the 0.0 speed
 	 * (modifies the configuration without saving the file)
@@ -1118,7 +1120,7 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains FirstStartTime modifiers
+	 * Restrains the value of the 'world.firstStartTime' key
 	 * Forces 'firstStartTime' to 'default' if any expected string is not recognized
 	 * Forces 'firstStartTime' to 'default' for the synchronized worlds
 	 * (modifies the configuration without saving the file)
@@ -1138,24 +1140,47 @@ public class ValuesConverter extends MainTM {
 	}
 
 	/**
-	 * Restrains nightCycleAnimation modifiers
-	 * Forces 'nightCycleAnimation' to 'false' if any expected string is not recognized
-	 * Forces 'nightCycleAnimation' to 'false' for the synchronized and frozen worlds
-	 * Forces 'nightCycleAnimation' to 'false' for Nether and the End worlds
+	 * Restrains the value of the 'nightSkipMode' key
+	 * Forces 'nightSkipSpeed' to 'default' if any expected string is not recognized
+	 * Forces 'nightSkipSpeed' to 'default' for the synchronized and frozen worlds
+	 * Forces 'nightSkipSpeed' to 'default' for Nether and the End worlds
 	 * (modifies the configuration without saving the file)
 	 */
-	public static void restrainNightCycleAnimation(String world) {
-		String nightCycleAnimation = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM);
+	public static void restrainNightSkipMode(String world) {
+		String nightSkipSpeed = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_NIGHTSKIP_MODE);
 		String sync = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC);
 		double currentSpeed = getCurrentSpeed(world);
-		if (!nightCycleAnimation.equalsIgnoreCase(ARG_TRUE)
+		if ((!nightSkipSpeed.equalsIgnoreCase(ARG_INSTANT) && !nightSkipSpeed.equalsIgnoreCase(ARG_ANIMATION))
 				|| sync.equalsIgnoreCase(ARG_TRUE)
 				|| currentSpeed == 0.0
 				|| world.contains(ARG_NETHER)
 				|| world.contains(ARG_THEEND)) {
-			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM, ARG_FALSE);
-			MsgHandler.debugMsg(nightCycleAnimationAdjustFalseDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTSKIP_MODE, ARG_DEFAULT);
+			MsgHandler.debugMsg(nightSkipNbPlayersAdjustDefaultDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg
 		}
 	}
 
+	/**
+	 * Restrains the value of the 'nightSkipRequiredPlayers' key
+	 * Forces 'nightSkipRequiredPlayers' to '100%' if no integer can be retrieved
+	 * (modifies the configuration without saving the file)
+	 */
+	public static void restrainNightSkipRequiredPlayers(String world) {
+		String nightSkipNbPlayers = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_NIGHTSKIP_REQUIREDPLAYERS);
+		try { // Check if day value is a double
+			if (nightSkipNbPlayers.contains("%")) {
+				nightSkipNbPlayers = nightSkipNbPlayers.replace("%", "");
+				@SuppressWarnings("unused")
+				double requiredPlayers = Double.parseDouble(nightSkipNbPlayers);
+			} else {
+				double requiredPlayers = Double.parseDouble(nightSkipNbPlayers);
+				int rp = (int) Math.round(requiredPlayers);
+				MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTSKIP_REQUIREDPLAYERS, rp);
+			}
+		} catch (NumberFormatException nfe) { // If not a double, use the default 100% value
+			MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTSKIP_REQUIREDPLAYERS, ARG_100PERCENT);
+			MsgHandler.errorMsg(nbPlayersMustBeIntMsg); // Console error msg
+			MsgHandler.debugMsg(nightSkipNbPlayersAdjustDefaultDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + "."); // Console debug msg			
+		}
+	}
 };

@@ -19,7 +19,9 @@ public class ChatHandler implements Listener {
 		
 		// #01. Check in the config file if function is activated
 		String chat = MainTM.getInstance().getConfig().getString(MainTM.CF_PLACEHOLDERS + "." + MainTM.CF_PLACEHOLDER_CHAT);
-		if (chat.equalsIgnoreCase(MainTM.ARG_TRUE)) {
+		if (chat.equalsIgnoreCase(MainTM.ARG_TRUE)
+				&& e.getPlayer().hasPermission(MainTM.PERM_PLACEHOLDERS)
+				) {
 		
 			// #02. Check if the message contains some placeholder
 			String msg = e.getMessage();

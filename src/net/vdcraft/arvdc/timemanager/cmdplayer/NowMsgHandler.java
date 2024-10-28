@@ -77,16 +77,14 @@ public class NowMsgHandler extends MainTM {
 		}
 		
 		// #6. Replace hexadecimal colors by ChatColors
-		if (serverMcVersion >= reqMcVForHexColors){ // Check if MC version is at least 1.16.0
-			msg = ValuesConverter.replaceAllHexColors(msg);
-			switch (display) {
-			case ARG_MSG :
-				prefix = ValuesConverter.replaceAllHexColors(prefix);
-				break;
-			case ARG_TITLE :
-				subtitle = ValuesConverter.replaceAllHexColors(subtitle);
-				break;
-			}
+		msg = ValuesConverter.replaceAllHexColors(msg);
+		switch (display) {
+		case ARG_MSG :
+			prefix = ValuesConverter.replaceAllHexColors(prefix);
+			break;
+		case ARG_TITLE :
+			subtitle = ValuesConverter.replaceAllHexColors(subtitle);
+			break;
 		}
 		
 		// #7. Configure and send command

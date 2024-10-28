@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.10
+version: 1.10.0
 api-version: 1.13
 author: ArVdC
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -14,8 +14,6 @@ permissions:
     children:
       timemanager.admin:
         default: op
-      timemanager.placeholders:
-        default: true
       timemanager.now.*:
         default: false
         children:
@@ -25,6 +23,15 @@ permissions:
             default: false
           timemanager.now.world:
             default: false
+      timemanager.placeholders:
+        default: true
+      timemanager.sleep.*:
+        default: true
+        children:
+          timemanager.sleep.allowed:
+            default: true
+          timemanager.sleep.counted:
+            default: true
 commands:
   tm:
     permission: timemanager.admin

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+//import org.bukkit.GameRule;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -23,6 +24,7 @@ import net.vdcraft.arvdc.timemanager.Metrics;
 import net.vdcraft.arvdc.timemanager.mainclass.BooksHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.HiddenListenerHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
@@ -45,10 +47,14 @@ public class MainTM extends JavaPlugin {
 	 *****************/
 
 	// Main class
-	protected static MainTM instanceMainClass;
+	public static MainTM instanceMainClass;
 
+	// Plugin name
+	public static String nameTM() {
+		return instanceMainClass.getDescription().getName().toString();
+	}
 	// Plugin version
-	protected static String versionTM() {
+	public static String versionTM() {
 		return instanceMainClass.getDescription().getVersion().toString();
 	}
 
@@ -62,15 +68,23 @@ public class MainTM extends JavaPlugin {
 	public static String serverType;
 	
 	// Minimal required Minecraft server version decimals "x.xx" (without the "1." and eventually with a "x.0x" format - to permit comparisons)
-	protected static Double reqMcVToLoadPlugin = 4.06;
-	protected static Double reqMcVForUpdate = 8.08;
-	public static Double reqMcVToGetLocale = 12.0;
-	public static Double reqMcVForGamerules = 13.0;
-	public static Double reqMcVForActionbarMsg = 9.0;
-	public static Double reqMcVForTxtCompLegacyMsg = 12.0;
-	public static Double reqMcVForNewSendTitleMsg = 16.0;
-	public static Double maxMcVForTabCompHack = 13.02;
-	public static Double reqMcVForHexColors = 16.0;
+	protected static Double reqMcVToLoadPlugin = 4.06;  // Timemanager can only be loaded with MC 1.4.6 +
+	protected static Double reqMcVForUpdate = 8.08; // Timemanager update message is only available since MC 1.8.8
+	public static Double reqMcVForActionbarMsg = 9.0; // Actionbar appeared with MC 1.9.0
+	public static Double reqMcVForTxtCompLegacyMsg = 12.0; // Actionbar had differences between bukkit and spigot until MC 1.9.0
+	public static Double reqMcVToGetLocale = 12.0; // Locale detection is only available since MC 1.12.0
+	public static Double reqMcVForGamerules = 13.0; // Gamerules syntax has been changed since MC 1.13.0
+	public static Double reqMcVForStatistics = 13.0; // New statistics were added in MC 1.13.0
+	public static Double maxMcVForTabCompHack = 13.02;  // Tab completion needed a hack to handle spaces in worlds names until MC 1.13.2
+	public static Double reqMcVForSounds = 14.0; // New sounds were added in MC 1.14.0
+	public static Double reqMcVForWakeup = 14.0; // HumanEntity.wakeup() method added in MC 1.14.0
+	public static Double reqMcVForTimeSkipEvent = 15.0; // New TimeSkipEvent appeared in MC 1.15.0
+	public static Double reqMcVForNewSendTitleMsg = 16.0; // Title's syntax changed in MC 1.16.0
+	public static Double reqMcVForHexColors = 16.0; // Hexa colors recognition appeared with MC 1.16.0
+	public static Double reqMcVForDustTransition = 17.0; // Particle DustTransition appeared with MC 1.17.0
+	public static Double reqMcVForCancelLeaveBedEvent = 17.0; // PlayerBedLeaveEvent was not cancellable before MC 1.17.0
+	public static Double reqMcVForWorldIsBedWorks = 18.0; // World interface changed in MC 1.18
+	public static Double reqMcVForConfigFile = 19.0; // ConfigFile options changed in MC 1.19
 
 	// Default config files values
 	protected static long defWakeUpTick = 0L;
@@ -80,7 +94,8 @@ public class MainTM extends JavaPlugin {
 	protected static String defSleep = "true";
 	protected static String defSync = "false";
 	protected static String defFirstStartTime = "default";
-	protected static String defNightCycleAnim = "false";
+	protected static String defNightSkipMode = "default";
+	protected static String defNightSkipNbPlayers = "100%";
 	protected static String defUpdateMsgSrc = "none";
 	protected static int defTitleFadeIn = 20;
 	protected static int defTitleStay = 60;
@@ -113,9 +128,6 @@ public class MainTM extends JavaPlugin {
 	// Expected time for the date change
 	protected static String newDayStartsAt_0h00 = "00:00";
 	protected static String newDayStartsAt_6h00 = "06:00";
-
-	// Add world's name in a list when a night cycle animation is in progress
-	public static List<String> animationIsInProgress = new ArrayList<String>();
 	
 	// Add each active schedule in corresponding list
 	public static List<String> realSpeedSchedulerIsActive = new ArrayList<String>();
@@ -144,7 +156,9 @@ public class MainTM extends JavaPlugin {
 	public static final String CF_SLEEP = "sleep";
 	public static final String CF_SYNC = "sync";
 	public static final String CF_FIRSTSTARTTIME = "firstStartTime";
-	public static final String CF_NIGHTCYCLEANIM = "nightCycleAnimation";
+	public static final String CF_NIGHTSKIP_MODE = "nightSkipMode";
+	public static final String CF_NIGHTSKIP_REQUIREDPLAYERS = "nightSkipRequiredPlayers";
+	public static final String CF_NIGHTSKIP_LEGACYPERCENTAGE = "nightSkipLegacyPercentage";
 	protected static final String CF_INITIALTICK = "initialTick";
 	protected static final String CF_INITIALTICKNB = "initialTickNb";
 	protected static final String CF_RESETONSTARTUP = "resetOnStartup";
@@ -280,6 +294,9 @@ public class MainTM extends JavaPlugin {
 	protected static final String ARG_ACTIONBAR = "actionbar";
 	protected static final String ARG_TITLE = "title";
 	protected static final String ARG_MSG = "msg";
+	public static final String ARG_INSTANT = "instant";
+	public static final String ARG_ANIMATION = "animation";
+	protected static final String ARG_100PERCENT = "100%";
 	protected static final String ARG_SERVER = "server";
 	protected static final String ARG_BUKKIT = "bukkit";
 	protected static final String ARG_CURSE = "curse";
@@ -330,6 +347,9 @@ public class MainTM extends JavaPlugin {
 	protected static final String PERM_NOW = "timemanager.now.cmd";
 	protected static final String PERM_NOW_DISPLAY = "timemanager.now.display";
 	protected static final String PERM_NOW_WORLD = "timemanager.now.world";
+	public static final String PERM_PLACEHOLDERS = "timemanager.placeholders";
+	public static final String PERM_SLEEP_ALLOWED = "timemanager.sleep.allowed";
+	public static final String PERM_SLEEP_COUNTED = "timemanager.sleep.counted";
 	
 	// Files names
 	protected static final String CONFIGFILENAME = "config.yml";
@@ -339,7 +359,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMDSFILENAME = "cmds.yml";
 	protected static final String CMDSHEADERFILENAME = "cmds-header.txt";
 
-	// Config and Lang files targets
+	// YAML files targets
 	public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
 	public File configHeaderFileTxt = new File(this.getDataFolder(), CONFIGHEADERFILENAME);
 	public File langFileYaml = new File(this.getDataFolder(), LANGFILENAME);
@@ -353,6 +373,12 @@ public class MainTM extends JavaPlugin {
 	protected final static String LANGBCKPFILENAME = "lang_backup.yml";
 	public File langBckpFileYaml = new File(this.getDataFolder(), LANGBCKPFILENAME);
 	public FileConfiguration langBckpConf = YamlConfiguration.loadConfiguration(langBckpFileYaml);
+	
+	// GameRules
+	public static final String GR_DO_DAYLIGHT_CYCLE = "doDaylightCycle" ;
+	public static final String GR_PLAYERS_SLEEPING_PERCENTAGE = "playersSleepingPercentage" ;
+	public static final String GR_PLAYERS_SLEEPING_IGNORED = "sleepingIgnored" ;
+	public static final String GR_SEND_COMMAND_FEEDBACK = "sendCommandFeedback" ;
 	
 	/********************
 	 ***** MESSAGES *****
@@ -372,9 +398,9 @@ public class MainTM extends JavaPlugin {
 	protected static String cfgFileExistMsg = "The configuration file already exists.";
 	protected static String lgFileExistMsg = "The language file already exists.";
 	protected static String cmdsFileExistMsg = "The commands file already exists.";
-	protected static String cfgVersionMsg = "Enabled " + MainTM.CONFIGFILENAME + " v";
-	protected static String lgVersionMsg = "Enabled " + MainTM.LANGFILENAME + " v";
-	protected static String cmdsVersionMsg = "Enabled " + MainTM.CMDSFILENAME + " v";
+	protected static String cfgVersionMsg = "Enabled " + CONFIGFILENAME + " v";
+	protected static String lgVersionMsg = "Enabled " + LANGFILENAME + " v";
+	protected static String cmdsVersionMsg = "Enabled " + CMDSFILENAME + " v";
 	protected static String cfgFileTryReloadMsg = "Reloading the configuration file.";
 	protected static String cfgFileReloadMsg = "The configuration file was reloaded.";
 	protected static String lgFileTryReloadMsg = "Reloading the language file.";
@@ -387,10 +413,10 @@ public class MainTM extends JavaPlugin {
 	protected static String multiLangDoesntWork = "Multilanguage is not supported by CraftBukkit under the 1.12 version. Upgrade or try with Spigot, Paper, ...";
 	protected static String defLangCheckMsg = "Default translation is actually set to";
 	protected static String defLangResetMsg = "is missing or corrupt, back to the default parameter.";
-	protected static String defLangOkMsg = "exists in " + MainTM.LANGFILENAME + ", keep it as default translation.";
-	protected static String defLangNonOkMsg = "Your " + MainTM.LANGFILENAME + " is partially corrupt. You should make a backup of your file by renaming it, then reload the lang file with the command.";
-	protected static String LangFileNonOkMsg = "Your " + MainTM.LANGFILENAME + " couldn't be updated. You should make a backup of your file by renaming it, then reload the lang file with the command.";
-	protected static String langFileUpdateMsg = "Your " + MainTM.LANGFILENAME + " was renamed " + MainTM.LANGBCKPFILENAME + ". A new file was created and automatically completed with your old data.";
+	protected static String defLangOkMsg = "exists in " + LANGFILENAME + ", keep it as default translation.";
+	protected static String defLangNonOkMsg = "Your " + LANGFILENAME + " is partially corrupt. You should make a backup of your file by renaming it, then reload the lang file with the command.";
+	protected static String LangFileNonOkMsg = "Your " + LANGFILENAME + " couldn't be updated. You should make a backup of your file by renaming it, then reload the lang file with the command.";
+	protected static String langFileUpdateMsg = "Your " + LANGFILENAME + " was renamed " + LANGBCKPFILENAME + ". A new file was created and automatically completed with your old data.";
 	protected static String resyncIntroMsg = "All worlds have been syncronized to the server time. If you want to keep them synchronized, set their 'sync' option to true.";
 	protected static String cmdsIsOnMsg = "The commands scheduler is enable.";
 	protected static String cmdsIsOffMsg = "The commands scheduler is disable.";
@@ -449,7 +475,7 @@ public class MainTM extends JavaPlugin {
 	protected static String worldSleepLinkedChgMsg = "This world will now react to any sleep event in the other linked worlds.";
 	protected static String worldSleepFalseChgMsg = "It is forbidden to sleep until the dawn in the world";
 	protected static String worldSleepNoChgMsg = "Impossible to change the 'sleep' option cause of the actual speed setting for the world";
-	protected static String sleepWorldSyncChgMsg = "'sync' option was forced to false in order to allow players to sleep until the dawn.";
+	protected static String sleepWorldSyncChgMsg = "'sync' option was forced to 'false' in order to allow players to sleep until the dawn.";
 
 	// Cmd set speed
 	protected static String worldSpeedChgIntro = "The speed of the world";
@@ -514,9 +540,10 @@ public class MainTM extends JavaPlugin {
 	protected static String wrongLangMsg = "The language you just typed does not exist in lang.yml file.";
 	protected static String wrongYmlMsg = "The name of the yaml file you just typed does not exist.";
 	protected static String missingArgMsg = "This command requires one or more additional argument(s).";
-	protected static String isNotBooleanMsg = "This command requires a boolean argument, true or false.";
-	protected static String couldNotSaveLang = "File " + MainTM.LANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
-	protected static String couldNotSaveCmds = "File " + MainTM.CMDSFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
+	protected static String isNotBooleanMsg = "This command requires a boolean argument, 'true' or 'false'.";
+	protected static String nbPlayersMustBeIntMsg = "The " + CF_NIGHTSKIP_REQUIREDPLAYERS + " value must be an integer or a percentage. Default value will be used.";
+	protected static String couldNotSaveLang = "File " + LANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
+	protected static String couldNotSaveCmds = "File " + CMDSFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
 	protected static String checkLogMsg = "Please check the console or log file.";
 	protected static String versionMCFormatMsg = "Unable to correctly determine your server MC version, the plugin will consider it is an old one.";
 	protected static String versionTMFormatMsg = "Unable to correctly determine the plugin version.";
@@ -537,17 +564,18 @@ public class MainTM extends JavaPlugin {
 	protected static String worldsFormatListDebugMsg = "Name's list of all loaded worlds:";
 	protected static String worldsCfgListDebugMsg = "Worlds list from the config.yml:";
 	protected static String delWorldDebugMsg = "was deleted from the config list.";
-	protected static String daySpeedAdjustDebugMsg = "The §edaySpeed§b option value was converted from";
-	protected static String nightSpeedAdjustDebugMsg = "The §enightSpeed§b option value was converted from";
-	protected static String startAdjustDebugMsg = "The §estart§b option value was converted from";
-	protected static String syncAdjustTrueDebugMsg = "The §esync§b option is forced to §atrue§b for the world";
-	protected static String syncAdjustFalseDebugMsg = "The §esync§b option is forced to §cfalse§b for the world";
-	protected static String sleepAdjustFalseDebugMsg = "The §esleep§b option is forced to §cfalse§b for the world";
-	protected static String firstStartTimeAdjustDefaultDebugMsg = "The §efirstStartTime§b option is forced to §cdefault§b for the world";
-	protected static String nightCycleAnimationAdjustFalseDebugMsg = "The §enightCycleAnimation§b option is forced to §cfalset§b for the world";
+	protected static String daySpeedAdjustDebugMsg = "The §e" + CF_D_SPEED + "§b option value was converted from";
+	protected static String nightSpeedAdjustDebugMsg = "The §e" + CF_N_SPEED + "§b option value was converted from";
+	protected static String startAdjustDebugMsg = "The §e" + CF_START + "§b option value was converted from";
+	protected static String syncAdjustTrueDebugMsg = "The §e" + CF_SYNC + "§b option is forced to §a" + ARG_TRUE + "§b for the world";
+	protected static String syncAdjustFalseDebugMsg = "The §e" + CF_SYNC + "§b option is forced to §c" + ARG_FALSE + "§b for the world";
+	protected static String sleepAdjustFalseDebugMsg = "The §e" + CF_SLEEP + "§b option is forced to §c" + ARG_FALSE + "§b for the world";
+	protected static String firstStartTimeAdjustDefaultDebugMsg = "The §e" + CF_FIRSTSTARTTIME + "§b option is forced to §e" + ARG_DEFAULT + "§b for the world";
+	protected static String nightSkipModeAdjustDefaultDebugMsg = "The §e" + CF_NIGHTSKIP_MODE + "§b option is forced to §e" + ARG_DEFAULT + "§b for the world";
+	protected static String nightSkipNbPlayersAdjustDefaultDebugMsg = "The §e" + CF_NIGHTSKIP_REQUIREDPLAYERS + "§b option is forced to §e" + ARG_100PERCENT + "§b for the world";
 	protected static String availableTranslationsDebugMsg = "Available translations are:";
-	public static String daylightTrueDebugMsg = "The §edoDaylightCycle§b value is now set to §atrue§b for the world";
-	protected static String daylightFalseDebugMsg = "The §edoDaylightCycle§b value is now set to §cfalse§b for the world";
+	public static String daylightTrueDebugMsg = "The §e" + GR_DO_DAYLIGHT_CYCLE + "§b value is now set to §a" + ARG_TRUE + "§b for the world";
+	protected static String daylightFalseDebugMsg = "The §e" + GR_DO_DAYLIGHT_CYCLE + "§b value is now set to §c" + ARG_FALSE + "§b for the world";
 	protected static String mcLocaleDebugMsg = "The locale will be determined by the Minecraft client.";
 	protected static String pcLocaleDebugMsg = "The locale will be determined by the computer and §onot §bby the Minecraft client.";
 	protected static String foundLocaleDebugMsg = "The locale found for the player";
@@ -571,11 +599,17 @@ public class MainTM extends JavaPlugin {
 	public static String sleepProcessSyncActiveDebugMsg = "Sync is active in the world";
 	public static String sleepProcessTimeFrozenDebugMsg = "Time is frozen in the world";
 	public static String sleepProcessItIsDayDebugMsg = "It's daytime in the world";
+	public static String sleepProcessNoSleepPermDebugMsg = "The permission §e" + PERM_SLEEP_ALLOWED + "§b is set to §c" + ARG_FALSE + "§b for this player.";
+	public static String sleepProcessNoCountPermDebugMsg = "The permission §e" + PERM_SLEEP_COUNTED + "§b is set to §c" + ARG_FALSE + "§b for this player.";
+	public static String sleepProcessWaitingBetweenTwoBedsDebugMsg = "Players must wait 25 ticks before entering a bed again.";
+	public static String sleepProcessIgnoredDebugMsg = "The GameRule §e" + GR_PLAYERS_SLEEPING_IGNORED + "§b is set to §a" + ARG_TRUE + "§b for this player.";
 	public static String sleepProcessEndsDebugMsg = "'s sleep process ends here.";
 	public static String sleepProcessAwakeNoSleepDebugMsg = "without having been able to sleep.";
-	public static String sleepAnimationDefaultSpeedDebugMsg = "Only a few ticks to skip in 100 ticks. Night cylce animation'll use a default speed of §e5 §b.";
-	public static String sleepAnimationSpeedCalculationDebugMsg = " ticks to skip in 100 ticks. Night cylce animation'll use a speed of §e";
+	public static String sleepAnimationDefaultSpeedDebugMsg = "Only a few ticks to skip in 100 ticks. Night cycle animation will use a default speed of §e5 §b.";
+	public static String sleepAnimationSpeedCalculationDebugMsg = " ticks to skip in 100 ticks. Night cycle animation'll use a speed of §e";
 	public static String sleepFulltimeTickDebugMsg = "Player achieved sleeping at fulltime §e#";
+	public static String sleepGameRulePart1DebugMsg = "The §e" + GR_PLAYERS_SLEEPING_PERCENTAGE + "§b GameRule is set so that §e";
+	public static String sleepGameRulePart2DebugMsg = "% §bof players must be sleeping simultaneously to skip the night in the world";
 	public static String cmdsWrongPHWorldDebugMsg = "does not exist. It was replaced by the default value";
 	public static String cmdsWrongTimeSrcDebugMsg = "is neither a world or an UTC time. It was replaced by the default value";
 	public static String schedulerOffDebugMsg = "will no longer use any scheduler.";
@@ -639,7 +673,7 @@ public class MainTM extends JavaPlugin {
 
 	// mySQL errors messages
 	protected static String tryReachHostMsg = "Trying to reach the provided mySQL host";
-	protected static String checkConfigMsg = "Please check the " + MainTM.CONFIGFILENAME + " file and set the debugMode to true to see error details.";
+	protected static String checkConfigMsg = "Please check the " + CONFIGFILENAME + " file and set the debugMode to true to see error details.";
 	protected static String connectionFailMsg = "Something prevented to establish a connection with provided host";
 	protected static String dbCreationFailMsg = "Something prevented the database creation.";
 	protected static String tableCreationFailMsg = "Something prevented the table creation.";
@@ -701,8 +735,10 @@ public class MainTM extends JavaPlugin {
 			// #7. Activate tab completion for players commands
 			getCommand(CMD_NOW).setTabCompleter(new CreateSentenceCommand());
 
-			// #8. Listen to sleep events
+			// #8.A. Listen to sleep events
 			getServer().getPluginManager().registerEvents(new SleepHandler(), this);
+			// #8.B. Hidden listener (Check if MC version is at least 1.15.0)
+			if (serverMcVersion >= reqMcVForTimeSkipEvent) getServer().getPluginManager().registerEvents(new HiddenListenerHandler(), this);
 
 			// #9. Listen to books events
 			getServer().getPluginManager().registerEvents(new BooksHandler(), this);
@@ -712,7 +748,7 @@ public class MainTM extends JavaPlugin {
 
 			// #11. Listen to chat events
 			getServer().getPluginManager().registerEvents(new ChatHandler(), this);
-
+			
 			// #12. Listen to commands events
 			getServer().getPluginManager().registerEvents(new PlayerCommandHandler(), this);
 			getServer().getPluginManager().registerEvents(new ConsoleCommandHandler(), this);			
@@ -756,6 +792,8 @@ public class MainTM extends JavaPlugin {
 		} else {
 
 			// #1. Save YAMLs
+			if (MainTM.serverMcVersion < MainTM.reqMcVForGamerules)
+				Bukkit.getServer().getWorlds().stream().forEach(world -> MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world.getName() + "." + CF_NIGHTSKIP_LEGACYPERCENTAGE, null));
 			this.saveConfig();
 			LgFileHandler.SaveLangYml();
 

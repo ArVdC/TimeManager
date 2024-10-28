@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
-//import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
+
 public class PAPIHandler extends PlaceholderExpansion {
 	
 	/**

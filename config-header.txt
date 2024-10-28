@@ -41,8 +41,10 @@ config.yml
    The 'default' value enables resynchronization on startup set by 'resetOnStartup' (see below for details).
    The 'previous' value returns the time in the world before the server was shut down.
    The 'start' value forces the world to start at the time specified in the world's 'start' node.
-  *nightCycleAnimation*
-   This option enables an acceleration of time from the moment players sleep until morning.
+  *nightSkipMode*
+   This option enables an acceleration of time from the moment players sleep until morning. ('default', 'instant' or 'animation')
+  *nightSkipRequiredPlayers*
+   Amount or percentage of players in a world who should sleep, depending on whether the "%" symbol is used or not.
 -----
 *initialTick*
   *initialTickNb*

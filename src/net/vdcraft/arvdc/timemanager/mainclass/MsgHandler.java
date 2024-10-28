@@ -85,31 +85,45 @@ public class MsgHandler extends MainTM {
 	}
 
 	/**
-	 * Player title msg
+	 * Player title msg (with config.yml values)
 	 */
-	@SuppressWarnings("deprecation")
 	public static void playerTitleMsg(Player p, String title, String subtitle) {
 		int fadeIn = MainTM.getInstance().langConf.getInt(LG_TITLES + "." + LG_FADEIN);
 		int stay = MainTM.getInstance().langConf.getInt(LG_TITLES + "." + LG_STAY);
 		int fadeOut = MainTM.getInstance().langConf.getInt(LG_TITLES + "." + LG_FADEOUT);
-		if (serverMcVersion >= reqMcVForNewSendTitleMsg) p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
-		else p.sendTitle(title, subtitle);
+		playerTitleMsg(p, title, subtitle, fadeIn, stay, fadeOut);
+	}
+
+	/**
+	 * Player title msg (with custom values)
+	 */
+	@SuppressWarnings("deprecation")
+	public static void playerTitleMsg(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {		
+		if (serverMcVersion >= reqMcVForNewSendTitleMsg) { // Check if MC version is at least 1.16.0
+			p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+		} else {
+			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
+			String commandTitleTimes = "title " + p.getName() + " times " + fadeIn + " " + stay + " " + fadeOut;
+			String scfb = p.getWorld().getGameRuleValue(GR_SEND_COMMAND_FEEDBACK);
+			if (scfb.equalsIgnoreCase(ARG_TRUE)) p.getWorld().setGameRuleValue(GR_SEND_COMMAND_FEEDBACK, ARG_FALSE);
+			Bukkit.dispatchCommand(console, commandTitleTimes);
+			p.sendTitle(title, subtitle);
+			if (scfb.equalsIgnoreCase(ARG_TRUE)) p.getWorld().setGameRuleValue(GR_SEND_COMMAND_FEEDBACK, ARG_TRUE);
+		}
 	}
 	
 	/**
 	 * Player action bar msg
 	 */
 	public static void playerActionbarMsg(Player p, String msg) {
-		// Up to MC 1.8
-		if (serverMcVersion < reqMcVForActionbarMsg) {
+		if (serverMcVersion < reqMcVForActionbarMsg) { // Check if MC version is at least 1.8.0
 			MsgHandler.infoMsg(noActionbarMsg);
-		// CraftBukkit since MC 1.9
-		} else if (serverType.equalsIgnoreCase(ARG_BUKKIT)) {
+		
+		} else if (serverType.equalsIgnoreCase(ARG_BUKKIT)) { // ... or CraftBukkit since MC 1.9
 			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
 			String command = ARG_TITLE + " " + p.getName() + " " + ARG_ACTIONBAR + " \"" + msg + "\"";
 			Bukkit.dispatchCommand(console, command);
-		// Spigot and forks since MC 1.9
-		} else {
+		} else { // ... or Spigot and forks since MC 1.9
 			HiddenClassHandler.playerActionbarMsg(p, msg);
 		}
 	}

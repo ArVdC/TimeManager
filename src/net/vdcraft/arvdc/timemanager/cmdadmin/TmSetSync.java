@@ -53,8 +53,8 @@ public class TmSetSync extends MainTM {
 						MsgHandler.playerAdminMsg(sender, "The world §e" + world + "§r " + worldSyncfirstTimeStartChgMsg); // Player warn msg (in case)
 					}
 					// Avoid night cycle animation in a synchronized world
-					if (!MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM).equals(ARG_FALSE)) {
-						MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTCYCLEANIM, ARG_FALSE);
+					if (!MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_NIGHTSKIP_MODE).equals(ARG_FALSE)) {
+						MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world + "." + CF_NIGHTSKIP_MODE, ARG_FALSE);
 						MsgHandler.infoMsg("The world " + world + " " + worldSyncAnimChgMsg); // Console warn msg (always)
 						MsgHandler.playerAdminMsg(sender, "The world §e" + world + "§r " + worldSyncAnimChgMsg); // Player warn msg (in case)
 					}

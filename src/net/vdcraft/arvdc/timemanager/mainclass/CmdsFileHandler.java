@@ -18,6 +18,7 @@ public class CmdsFileHandler extends MainTM {
 	/**
 	 * Activate or reload the commands file
 	 */
+	@SuppressWarnings("deprecation")
 	public static void loadCmds(String firstOrRe) {
 
 		// #1. When it is the server startup
@@ -46,7 +47,13 @@ public class CmdsFileHandler extends MainTM {
 			// #1.B.c. Delete the txt file
 			MainTM.getInstance().cmdsHeaderFileTxt.delete();
 			// #1.B.d. Set the header into the yml file
-			MainTM.getInstance().cmdsConf.options().setHeader(header);
+			if (serverMcVersion < reqMcVForConfigFile) { // Check if MC version is at least 1.19.0
+				String concatHeader = "";
+				for (String s : header) {
+					concatHeader = concatHeader + s + "\n";
+				}
+				MainTM.getInstance().cmdsConf.options().header(concatHeader);
+			} else MainTM.getInstance().cmdsConf.options().setHeader(header); // Check if MC version is at least 1.19.0
 		}
 
 		// #2. When using the admin command /tm reload

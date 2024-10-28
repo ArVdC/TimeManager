@@ -22,6 +22,9 @@ TimeManager can schedule commands that run at a time specified in the cmds.yml f
 
 This plugin override the vanilla '/time' command. The command to change a single world timer is '/tm set time \[ticks|daypart|HH:mm:ss] \[world]'.
 
+### SLEEP MANAGING FUNCTIONALITIES
+TimeManager allows you to manage sleep: number of players required, animation during night skip, synchronization between worlds when waking up, etc.
+
 ### PLAYER COMMAND /now \<display> \<world>
 A single command is used to display a custom message with the time, the date, the number of elapsed days or weeks, or many other placeholders.
 
@@ -170,10 +173,17 @@ If a world is using the real time speed, the start value will determine the UTC 
     - timemanager.now.cmd
     - timemanager.now.display
     - timemanager.now.world
+  - timemanager.sleep.*
+    - timemanager.sleep.allowed
+    - timemanager.sleep.counted
 
 **timemanager.admin:** provide or deny access to /tm subcommands with all arguments.
 
 **timemanager.now:** provide or deny access to /now subcommands with or without arguments.
+
+**timemanager.placeholders:** provide or deny access to /now subcommands with or without arguments.TODO TODO TODO TODO TODO 
+
+**timemanager.sleep:** provide or deny access to /now subcommands with or without arguments. TODO TODO TODO TODO TODO TODO 
 
 ### YAML files
 Full descriptions can be found in the respective file headers.
@@ -189,7 +199,34 @@ The reference time and date can be that of any world, or the actual time.
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.9.10: MC 1.8.8 to 1.21.1
+v1.10: MC 1.8.8 to 1.21.3
+
+### API
+Although the plugin is not intended to be an API, it is possible to use the different placeholders by importing the PlaceholdersHandler class in your Java code :
+
+```Java
+import net.vdcraft.arvdc.timemanager.mainclass.PlaceholdersHandler
+```
+Then use one of the following methods to transform one or more placeholders in any string :
+
+```Java
+String replaceAllPlaceholders(String msg, String world, String lang, Player p)
+String replaceAllPlaceholders(String msg, String world, String lang)
+String replaceAllPlaceholders(String msg, World w, String lang, Player p)
+String replaceAllPlaceholders(String msg, World w, String lang)
+```
+
+It is possible to retrieve the client language by importing the following class :
+
+```Java
+import net.vdcraft.arvdc.timemanager.mainclass.PlayerLangHandler
+```
+Then use one of the following of the following methods :
+
+```java
+String setLangToUse(CommandSender sender)
+String setLangToUse(Player p)
+```
 
 ### TODO
 * ~~Commands: Add to '/tm checktime' an argument [all|world] to display the details for a single world.~~
@@ -213,6 +250,9 @@ v1.9.10: MC 1.8.8 to 1.21.1
 * ~~Placeholders: Permit external commands to use placeholders.~~
 * ~~Command: Add a '/tm set duration' command with a 00d-00h-00m-00s format.~~
 * ~~Placeholders: Add new placeholders for the names of the seven days of the week.~~
+* ~~Sleep: Add some features to manage sleep as the plugin doesn't work well with most sleep management plugins.~~
 * Commands: Allow players to display the list of placeholders.
 * Placeholders: Create signs where the placeholders constantly refresh.
 * Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.
+
+Please open an issue on GitHub if you want a specific improvement or encounter any bugs.

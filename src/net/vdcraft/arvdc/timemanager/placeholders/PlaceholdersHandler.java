@@ -164,4 +164,28 @@ public class PlaceholdersHandler extends MainTM {
 		}
 		return msg;
 	}
+
+	/**
+	 * Replaces all placeholders found in a String
+	 * (returns a String)
+	 */
+	public static String replaceAllPlaceholders(String msg, String world, String lang) {
+		return replaceAllPlaceholders(msg, world, lang, null);		
+	}
+
+	/**
+	 * Replaces all placeholders found in a String
+	 * (returns a String)
+	 */
+	public static String replaceAllPlaceholders(String msg, World w, String lang, Player p) {
+		return replaceAllPlaceholders(msg, w.getName(), lang, p);		
+	}
+
+	/**
+	 * Replaces all placeholders found in a String
+	 * (returns a String)
+	 */
+	public static String replaceAllPlaceholders(String msg, World w, String lang) {
+		return replaceAllPlaceholders(msg, w.getName(), lang, null);		
+	}
 };

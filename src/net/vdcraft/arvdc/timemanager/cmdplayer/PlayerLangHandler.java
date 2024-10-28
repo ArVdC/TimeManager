@@ -13,6 +13,7 @@ public class PlayerLangHandler extends MainTM {
 
 	/**
 	 * Define the language to use, in regards to the locale and parameters
+	 * (returns a String)
 	 */
 	public static String setLangToUse(CommandSender sender) {
 		Player p = (Player) sender;
@@ -45,6 +46,15 @@ public class PlayerLangHandler extends MainTM {
 		MsgHandler.debugMsg(useLocaleDebugMsg + " §e" + sender.getName() + "§b is §e" + playerLocale + "§b."); // Console debug msg
 
 		return playerLocale;
+	}
+	
+	/**
+	 * Call the method with a 'Player' arg instead of 'CommandSender'
+	 * (returns a String)
+	 */	
+	public static String setLangToUse(Player p) {
+		CommandSender sender = (CommandSender) p;
+		return setLangToUse(sender);
 	}
 
 };

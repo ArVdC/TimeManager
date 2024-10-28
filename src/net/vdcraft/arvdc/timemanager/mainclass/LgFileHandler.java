@@ -50,6 +50,7 @@ public class LgFileHandler extends MainTM {
 	/**
 	 * Activate or reload the language file
 	 */
+	@SuppressWarnings("deprecation")
 	public static void loadLang(String firstOrRe) {
 
 		// #1. When it is the server startup
@@ -81,7 +82,13 @@ public class LgFileHandler extends MainTM {
 			// #1.B.c. Delete the txt file
 			MainTM.getInstance().langHeaderFileTxt.delete();
 			// #1.B.d. Set the header into the yml file
-			MainTM.getInstance().langConf.options().setHeader(header);
+			if (serverMcVersion < reqMcVForConfigFile) { // Check if MC version is at least 1.19.0
+				String concatHeader = "";
+				for (String s : header) {
+					concatHeader = concatHeader + s + "\n";
+				}
+				MainTM.getInstance().langConf.options().header(concatHeader);
+			} else MainTM.getInstance().langConf.options().setHeader(header);
 		}
 
 		// #2. When using the admin command /tm reload
@@ -368,7 +375,7 @@ public class LgFileHandler extends MainTM {
 					// #4.E.e.4. night
 					String night = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_NIGHT);
 					MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYPARTS + "." + LG_NIGHT, night);					
-					// #4.E.f. days (v.1.9.2) // TODO Next part to activate
+					// #4.E.f. days (added in v.1.10.0) // TODO Next part to activate
 					// #4.E.f.1. Sunday
 					//String sun = MainTM.getInstance().langBckpConf.getString(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01);
 					//MainTM.getInstance().langConf.set(LG_LANGUAGES + "." + lang + "." + LG_DAYS + "." + LG_DAY_01, sun);	
@@ -444,7 +451,7 @@ public class LgFileHandler extends MainTM {
 			MainTM.getInstance().langConf.set(CF_VERSION, versionTM());
 			
 			//  #6. Delete the backup file >>> TODO ???
-			// MainTM.getInstance().langBckpFileYaml.delete();
+			MainTM.getInstance().langBckpFileYaml.delete();
 			
 			MsgHandler.infoMsg(langFileUpdateMsg); // Console log msg
 		} catch (IOException e) {

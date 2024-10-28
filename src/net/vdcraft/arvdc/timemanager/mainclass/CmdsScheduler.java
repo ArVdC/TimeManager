@@ -275,9 +275,7 @@ public class CmdsScheduler extends MainTM {
 								}
 							}
 							// #11.C Replace hexadecimal colors by ChatColors
-							if (serverMcVersion >= reqMcVForHexColors){ // Check if MC version is at least 1.16.0
-								command = ValuesConverter.replaceAllHexColors(command);
-							}
+							command = ValuesConverter.replaceAllHexColors(command);
 							// #11.D. Check if a waiting time is asked
 							if (command.contains("wait ") || command.contains("pause ") ) {							
 								String[] pauseSlipt = command.split(" ");

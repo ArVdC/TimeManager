@@ -13,9 +13,10 @@ public class CfgFileHandler extends MainTM {
 	/**
 	 * Activate or reload the configuration file
 	 */
+	@SuppressWarnings("deprecation")
 	public static void loadConfig(String firstOrRe) {
 		
-		MainTM.getInstance().getConfig().options().parseComments(true);
+		if (serverMcVersion >= reqMcVForConfigFile) MainTM.getInstance().getConfig().options().parseComments(true); // Check if MC version is at least 1.19.0
 		
 		// #1. Only at the server startup:
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
@@ -47,7 +48,14 @@ public class CfgFileHandler extends MainTM {
 			// #1.D.c. Delete the txt file
 			MainTM.getInstance().configHeaderFileTxt.delete();
 			// #1.D.d. Set the header into the yml file
-			MainTM.getInstance().getConfig().options().setHeader(header);
+			if (serverMcVersion < reqMcVForConfigFile) { // Check if MC version is at least 1.19.0
+				String concatHeader = "";
+				for (String s : header) {
+					concatHeader = concatHeader + s + "\n";
+				}
+				MainTM.getInstance().getConfig().options().header(concatHeader);
+			} else MainTM.getInstance().getConfig().options().setHeader(header);
+			
 		}
 		
 		// # 2. Get the previous initial tick value (before the reload)
@@ -115,8 +123,11 @@ public class CfgFileHandler extends MainTM {
 			ValuesConverter.restrainSync(world, 0.1);
 			// #9.E. Restrain the firstStartTime value
 			ValuesConverter.restrainFirstStartTime(world);
-			// #9.F. Restrain the nightCycleAnimation value
-			ValuesConverter.restrainNightCycleAnimation(world);
+			// #9.F. Restrain the nightSkipMode value
+			ValuesConverter.restrainNightSkipMode(world);
+			// #9.G. Restrain the nightSkipRequiredPlayers value
+			ValuesConverter.restrainNightSkipRequiredPlayers(world);
+			SleepHandler.setSleepingPlayersNeeded(world);
 		}		
 
 		// #10. Manage initial tick
