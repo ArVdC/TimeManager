@@ -181,9 +181,11 @@ If a world is using the real time speed, the start value will determine the UTC 
 
 **timemanager.now:** provide or deny access to /now subcommands with or without arguments.
 
-**timemanager.placeholders:** provide or deny access to /now subcommands with or without arguments.TODO TODO TODO TODO TODO 
+**timemanager.placeholders:** Allows the use of placeholders in chat.
 
-**timemanager.sleep:** provide or deny access to /now subcommands with or without arguments. TODO TODO TODO TODO TODO TODO 
+**timemanager.sleep.allowed :** Specifies whether the player is allowed to enter a bed (but saving the spawn point is still possible).
+
+**timemanager.sleep.counted :** Specifies whether the player is counted for the night skip.
 
 ### YAML files
 Full descriptions can be found in the respective file headers.
@@ -199,7 +201,7 @@ The reference time and date can be that of any world, or the actual time.
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.10: MC 1.8.8 to 1.21.3
+v1.10: MC 1.9.4 to 1.21.3
 
 ### API
 Although the plugin is not intended to be an API, it is possible to use the different placeholders by importing the PlaceholdersHandler class in your Java code :
@@ -254,5 +256,6 @@ String setLangToUse(Player p)
 * Commands: Allow players to display the list of placeholders.
 * Placeholders: Create signs where the placeholders constantly refresh.
 * Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.
+* Sleep : Improve particles displayed during sleep animation.
 
 Please open an issue on GitHub if you want a specific improvement or encounter any bugs.
