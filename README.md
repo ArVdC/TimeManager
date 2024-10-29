@@ -14,8 +14,6 @@ Worlds list is actualized and timers are synchronized on each server startup and
 
 Time and speed can be modified with in-game commands or reloading after manually changes.
 
-Sleep can be authorized, forbidden or linked with some other worlds.
-
 A specific time offset can be defined for each player.
 
 TimeManager can schedule commands that run at a time specified in the cmds.yml file. Scheduled commands can use the placeholders described below, with the exception of {tm_player}.
@@ -24,6 +22,8 @@ This plugin override the vanilla '/time' command. The command to change a single
 
 ### SLEEP MANAGING FUNCTIONALITIES
 TimeManager allows you to manage sleep: number of players required, animation during night skip, synchronization between worlds when waking up, etc.
+Sleep can be authorized, forbidden or linked with some other worlds.
+individual permissions can also be used.
 
 ### PLAYER COMMAND /now \<display> \<world>
 A single command is used to display a custom message with the time, the date, the number of elapsed days or weeks, or many other placeholders.
