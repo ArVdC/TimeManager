@@ -173,6 +173,7 @@ If a world is using the real time speed, the start value will determine the UTC 
     - timemanager.now.cmd
     - timemanager.now.display
     - timemanager.now.world
+  - timemanager.placeholders
   - timemanager.sleep.*
     - timemanager.sleep.allowed
     - timemanager.sleep.counted
