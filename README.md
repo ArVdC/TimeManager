@@ -1,6 +1,6 @@
 ![TimeManager](http://imageshack.com/a/img922/9061/ECwdWj.png "TimeManager")
 
-## Bukkit plugin for time management and display
+## Spigot plugin for time management and display
 
 
 ### TIME MANAGING FUNCTIONALITIES
@@ -32,7 +32,7 @@ A single command is used to display a custom message with the time, the date, th
 
 Using the permissions, you can permit players to choose the display and/or the world argument or neither of the two.
 
-Display argument can be : 'msg', 'title' or 'actionbar'.
+Display argument can be: 'msg', 'title' or 'actionbar'.
 
 Nether and the End worlds could have a specific message.
 
@@ -184,9 +184,9 @@ If a world is using the real time speed, the start value will determine the UTC 
 
 **timemanager.placeholders:** Allows the use of placeholders in chat.
 
-**timemanager.sleep.allowed :** Specifies whether the player is allowed to enter a bed (but saving the spawn point is still possible).
+**timemanager.sleep.allowed:** Specifies whether the player is allowed to enter a bed (but saving the spawn point is still possible).
 
-**timemanager.sleep.counted :** Specifies whether the player is counted for the night skip.
+**timemanager.sleep.counted:** Specifies whether the player is counted for the night skip.
 
 ### YAML files
 Full descriptions can be found in the respective file headers.
@@ -257,6 +257,6 @@ String setLangToUse(Player p)
 * Commands: Allow players to display the list of placeholders.
 * Placeholders: Create signs where the placeholders constantly refresh.
 * Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.
-* Sleep : Improve particles displayed during sleep animation.
+* Sleep: Improve particles displayed during sleep animation.
 
 Please open an issue on GitHub if you want a specific improvement or encounter any bugs.
