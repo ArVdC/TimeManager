@@ -67,7 +67,7 @@ Please note that these placeholders are case sensitive.
 
 They can be used in lang and cmds YAML files, but also in signs, books, chat messages and commands.
 
-#### DEPEDENCIES
+#### DEPENDENCIES
 TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245) and [MVdWPlaceholderAPI](www.spigotmc.org/resources/mvdwplaceholderapi.11182). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
 
 ### ADMIN COMMAND /tm
