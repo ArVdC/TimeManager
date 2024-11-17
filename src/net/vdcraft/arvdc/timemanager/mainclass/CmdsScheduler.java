@@ -82,7 +82,7 @@ public class CmdsScheduler extends MainTM {
 					Integer currentYear = null;
 					Integer currentMonth = null;
 					Integer currentDay = null;
-					Integer currentWDay = ValuesConverter.dayInWeek(Bukkit.getWorld(refTimeSrc).getFullTime()); // TODO DayName update
+					Integer currentWDay = null;
 					// Set a default delay
 					int minutesBeforeEnd = 1; // (=1min.)
 					long ticksBeforeEnd = 1200L; // (=1min.)
@@ -95,6 +95,8 @@ public class CmdsScheduler extends MainTM {
 						currentYear = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_YYYY));
 						currentMonth = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_MM));
 						currentDay = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_DD));
+						// Get the week day number
+						currentWDay = ValuesConverter.dayInWeek(Bukkit.getWorld(refTimeSrc).getFullTime());
 						// Get the time
 						Long currentTick = Bukkit.getWorld(refTimeSrc).getTime();
 						String cHour = ValuesConverter.formattedTimeFromTick(currentTick, false);
@@ -119,7 +121,7 @@ public class CmdsScheduler extends MainTM {
 						}
 						
 					} // #6.B. Else, the reference time is UTC
-					else {						
+					else {
 						// Get and adapt the time shift
 						Integer timeShift = 0;
 						try {
@@ -136,7 +138,9 @@ public class CmdsScheduler extends MainTM {
 						currentMonth = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("MM")));
 						currentDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));
 						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
-						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));		
+						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));
+						// Get the current week day number
+						currentWDay = refDatetime.getDayOfWeek().getValue();
 					}
 					// #6.C. Also set a LocalDateTime
 					LocalDateTime currentDateTime = LocalDateTime.of(currentYear, currentMonth, currentDay, currentHour, currentMin);

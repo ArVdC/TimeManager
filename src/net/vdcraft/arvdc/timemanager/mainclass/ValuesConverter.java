@@ -521,8 +521,8 @@ public class ValuesConverter extends MainTM {
 			int maxLength = ym.lengthOfMonth();
 			if (day < 1) day = 1;
 			if (day > maxLength) day = maxLength;
-			LocalDate currentLdt = LocalDate.of(year, month, day);
-			LocalDate zeroLdt = LocalDate.of(1, 1, 1);
+			LocalDateTime currentLdt = LocalDateTime.of(year, month, day, 0, 0, 0);
+			LocalDateTime zeroLdt = LocalDateTime.of(0001, 01, 01, 0, 0, 0);
 			Duration d = Duration.between(zeroLdt, currentLdt);
 			Long elapsedDays = TimeUnit.DAYS.convert(d);
 			Long fulltime = elapsedDays * 24000; // (= 20m * 60s * 20t)
@@ -623,8 +623,8 @@ public class ValuesConverter extends MainTM {
 	 * (returns a Integer)
 	 */
 	public static Integer dayInWeek(long fulltime) {
-		LocalDate ldt = dateFromTick(fulltime);
-		DayOfWeek dow = DayOfWeek.from(ldt);
+		LocalDate ld = dateFromTick(fulltime);
+		DayOfWeek dow = DayOfWeek.from(ld);
 		Integer dayNb = dow.getValue() + 1;
 		if (dayNb == 8) dayNb = 1;
 		return dayNb;

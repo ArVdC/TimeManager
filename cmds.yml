@@ -26,7 +26,7 @@ cmdsList:
   03:
     cmds:
       '1': /title @a subtitle {"text":"Happy new year @a !!!","color":"red"}  
-      '2': /title @a {"text":"{tm_yyyy}","color":"white"}  
+      '2': /title @a title {"text":"{tm_yyyy}","color":"white"}  
     cmdsRefTime: 'UTC+1'
     plholderRefWorld: 'world' 
     time: '00:00'
