@@ -3,7 +3,7 @@
 ## Spigot plugin for time management and display
 
 
-### TIME MANAGING FUNCTIONALITIES
+### TIME MANAGEMENT FUNCTIONALITIES
 Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
 
 Speed could be increased/decreased up to 20 times or match UTC time with offset to local time.
@@ -20,7 +20,7 @@ TimeManager can schedule commands that run at a time specified in the cmds.yml f
 
 This plugin override the vanilla '/time' command. The command to change a single world timer is '/tm set time \[ticks|daypart|HH:mm:ss] \[world]'.
 
-### SLEEP MANAGING FUNCTIONALITIES
+### SLEEP MANAGEMENT FUNCTIONALITIES
 TimeManager allows you to manage sleep: number of players required, animation during night skip, synchronization between worlds when waking up, etc.
 Sleep can be authorized, forbidden or linked with some other worlds.
 individual permissions can also be used.
@@ -202,7 +202,7 @@ The reference time and date can be that of any world, or the actual time.
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.10: MC 1.9.4 to 1.21.3
+v1.10.1: MC 1.9.4 to 1.21.3
 
 ### API
 Although the plugin is not intended to be an API, it is possible to use the different placeholders by importing the PlaceholdersHandler class in your Java code :
