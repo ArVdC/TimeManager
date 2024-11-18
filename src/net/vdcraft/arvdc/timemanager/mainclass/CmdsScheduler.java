@@ -140,7 +140,8 @@ public class CmdsScheduler extends MainTM {
 						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
 						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));
 						// Get the current week day number
-						currentWDay = refDatetime.getDayOfWeek().getValue();
+						currentWDay = refDatetime.getDayOfWeek().getValue() + 1;
+						if (currentWDay == 8) currentWDay = 1;
 					}
 					// #6.C. Also set a LocalDateTime
 					LocalDateTime currentDateTime = LocalDateTime.of(currentYear, currentMonth, currentDay, currentHour, currentMin);
@@ -312,7 +313,7 @@ public class CmdsScheduler extends MainTM {
 			@Override
 			public void run() {
 				ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-				MsgHandler.devMsg("The command '" + command + "' will now be dispatched."); // Console dev msg
+				MsgHandler.devMsg("The command '" + command + "§9' will now be dispatched."); // Console dev msg
 				Bukkit.dispatchCommand(console, command);
 			}
 		}, delay);
