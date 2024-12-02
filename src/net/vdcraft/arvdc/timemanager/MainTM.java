@@ -81,6 +81,7 @@ public class MainTM extends JavaPlugin {
 	public static Double reqMcVForTimeSkipEvent = 15.0; // New TimeSkipEvent appeared in MC 1.15.0
 	public static Double reqMcVForNewSendTitleMsg = 16.0; // Title's syntax changed in MC 1.16.0
 	public static Double reqMcVForHexColors = 16.0; // Hexa colors recognition appeared with MC 1.16.0
+	public static Double reqMcVForSleepPercentage = 17.0; // PLAYERS_SLEEPING_PERCENTAGE was added in 1.17.0
 	public static Double reqMcVForDustTransition = 17.0; // Particle DustTransition appeared with MC 1.17.0
 	public static Double reqMcVForCancelLeaveBedEvent = 17.0; // PlayerBedLeaveEvent was not cancellable before MC 1.17.0
 	public static Double reqMcVForWorldIsBedWorks = 18.0; // World interface changed in MC 1.18
@@ -792,7 +793,7 @@ public class MainTM extends JavaPlugin {
 		} else {
 
 			// #1. Save YAMLs
-			if (MainTM.serverMcVersion < MainTM.reqMcVForGamerules)
+			if (MainTM.serverMcVersion < MainTM.reqMcVForSleepPercentage)
 				Bukkit.getServer().getWorlds().stream().forEach(world -> MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world.getName() + "." + CF_NIGHTSKIP_LEGACYPERCENTAGE, null));
 			this.saveConfig();
 			LgFileHandler.SaveLangYml();

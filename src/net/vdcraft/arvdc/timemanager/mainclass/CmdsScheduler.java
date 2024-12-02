@@ -20,8 +20,8 @@ public class CmdsScheduler extends MainTM {
 	public static void commandsScheduler() {
 
 		BukkitScheduler commandsScheduler = MainTM.getInstance().getServer().getScheduler();
-			
-		long refreshRate = 30L;
+
+		long refreshRate = 5L;
 		
 		cmdsTask = commandsScheduler.scheduleSyncRepeatingTask(MainTM.getInstance(), new Runnable() {
 
@@ -54,17 +54,15 @@ public class CmdsScheduler extends MainTM {
 					String eDate = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_DATE);
 					Integer expectedYear = 1;
 					Integer expectedMonth = 1;
-					Integer expectedDay = 1;
-					long expectedWDay = 1;
+					Integer expectedMDay = 1;
+					Integer expectedWDay = 1;
 					String[] ed = eDate.split("-");
 					try { // The date is supposed to be in correct format (yyyy-mm-dd)
 						expectedYear = Integer.parseInt(ed[0]);
 						expectedMonth = Integer.parseInt(ed[1]);
-						expectedDay = Integer.parseInt(ed[2]);
+						expectedMDay = Integer.parseInt(ed[2]);
 						expectedWDay = ValuesConverter.dayInWeek(ValuesConverter.tickFromFormattedDate(eDate));
-					} catch (NumberFormatException nfe) {
-						MsgHandler.errorMsg(dateFormatMsg); // Console error msg
-					}
+					} catch (NumberFormatException nfe) { MsgHandler.errorMsg(dateFormatMsg); } // Console error msg
 					// #5.B. Get the time 
 					String eTime = MainTM.getInstance().cmdsConf.getString(CMDS_COMMANDSLIST + "." + key + "." + CMDS_TIME);
 					Integer expectedHour = 0;
@@ -74,18 +72,18 @@ public class CmdsScheduler extends MainTM {
 					expectedMin = Integer.parseInt(expectedTime[1]);
 					
 					// #5.C. Also set a LocalDateTimeDateTime
-					LocalDateTime expectedDateTime = LocalDateTime.of(expectedYear, expectedMonth, expectedDay, expectedHour, expectedMin);
+					LocalDateTime expectedDateTime = LocalDateTime.of(expectedYear, expectedMonth, expectedMDay, expectedHour, expectedMin);
 
 					// #6. Get the current date and time
-					Integer currentHour = null;
-					Integer currentMin = null;
 					Integer currentYear = null;
 					Integer currentMonth = null;
-					Integer currentDay = null;
+					Integer currentMDay = null;
 					Integer currentWDay = null;
+					Integer currentHour = null;
+					Integer currentMin = null;
 					// Set a default delay
-					int minutesBeforeEnd = 1; // (=1min.)
-					long ticksBeforeEnd = 1200L; // (=1min.)
+					int minutesBeforeEnd = 1; // (= 1 real minute before the edge time)
+					long ticksBeforeEnd = minutesBeforeEnd * 1200L; // (= 1 * 1 real minute before be erased from the active list)
 					
 					// #6.A. If the reference time is an MC world
 					if (!refTimeSrc.contains("UTC") && !refTimeSrc.equalsIgnoreCase("")) {
@@ -94,7 +92,7 @@ public class CmdsScheduler extends MainTM {
 						Long cDate = ValuesConverter.daysFromTick(currentFullTick);
 						currentYear = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_YYYY));
 						currentMonth = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_MM));
-						currentDay = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_DD));
+						currentMDay = Integer.parseInt(ValuesConverter.dateFromElapsedDays(cDate, PH_DD));
 						// Get the week day number
 						currentWDay = ValuesConverter.dayInWeek(Bukkit.getWorld(refTimeSrc).getFullTime());
 						// Get the time
@@ -106,21 +104,11 @@ public class CmdsScheduler extends MainTM {
 						// Set the active delay length
 						String speedParam = ValuesConverter.wichSpeedParam(Bukkit.getWorld(refTimeSrc).getTime());
 						Double speed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + refTimeSrc + "." + speedParam);
-						if (speed > 0.0 && speed <= 0.5) {
-							minutesBeforeEnd = 5;
-							ticksBeforeEnd = (long) (84 / speed);
-						} else if (speed > 0.5 && speed <= 1.0) {
-							minutesBeforeEnd = 10;
-							ticksBeforeEnd = (long) (167 / speed);
-						} else if (speed > 1.0 && speed <= 5.0) {
-							minutesBeforeEnd = 15;
-							ticksBeforeEnd = (long) (250 / speed);
-						} else if (speed > 5.0 && speed <= MainTM.speedMax) {
-							minutesBeforeEnd = 20;
-							ticksBeforeEnd = (long) (334 / speed);
-						}
+						Double ticksPerMinute = (1000 / 60) / speed;
+						minutesBeforeEnd = (int) (Math.ceil(refreshRate / ticksPerMinute) * 2) - 1; // MC minutes before the edge time = at less 2 * refreshRate cycle
+						ticksBeforeEnd = (long) (Math.ceil((minutesBeforeEnd * ticksPerMinute) * 2.3)); // Number of ticks before the key is deleted from the active list (multiply by 2.3 permit to stay under a complete hour even at speed 20)
 						
-					} // #6.B. Else, the reference time is UTC
+					} // #6.B. Else, if the reference time is UTC
 					else {
 						// Get and adapt the time shift
 						Integer timeShift = 0;
@@ -136,15 +124,14 @@ public class CmdsScheduler extends MainTM {
 						LocalDateTime refDatetime = LocalDateTime.ofInstant(now.toInstant(),ZoneOffset.ofHours(timeShift));
 						currentYear = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("yyyy")));
 						currentMonth = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("MM")));
-						currentDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));
-						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
-						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));
-						// Get the current week day number
+						currentMDay = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("dd")));
 						currentWDay = refDatetime.getDayOfWeek().getValue() + 1;
 						if (currentWDay == 8) currentWDay = 1;
+						currentHour = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("HH")));
+						currentMin = Integer.parseInt(refDatetime.format(DateTimeFormatter.ofPattern("mm")));
 					}
 					// #6.C. Also set a LocalDateTime
-					LocalDateTime currentDateTime = LocalDateTime.of(currentYear, currentMonth, currentDay, currentHour, currentMin);
+					LocalDateTime currentDateTime = LocalDateTime.of(currentYear, currentMonth, currentMDay, currentHour, currentMin);
 
 					// #7. Get the edge date and time
 					// Apply the active delay length to a LocalDateTime
@@ -152,17 +139,17 @@ public class CmdsScheduler extends MainTM {
 					// Set all the Integer variables
 					Integer edgeYear = Integer.parseInt(edgeDateTime.format(DateTimeFormatter.ofPattern("yyyy")));
 					Integer edgeMonth = Integer.parseInt(edgeDateTime.format(DateTimeFormatter.ofPattern("MM")));
-					Integer edgeDay = Integer.parseInt(edgeDateTime.format(DateTimeFormatter.ofPattern("dd")));
+					Integer edgeMDay = Integer.parseInt(edgeDateTime.format(DateTimeFormatter.ofPattern("dd")));
+					Integer edgeWDay = edgeDateTime.getDayOfWeek().getValue() + 1;
+					if (edgeWDay == 8) edgeWDay = 1;
 					Integer edgeHour = Integer.parseInt(edgeDateTime.format(DateTimeFormatter.ofPattern("HH")));
 					Integer edgeMin = Integer.parseInt(edgeDateTime.format(DateTimeFormatter.ofPattern("mm")));
-					Boolean eraUp = false;
 					Boolean yearUp = false;
 					Boolean monthUp = false;
 					Boolean dayUp = false;
 					Boolean hourUp = false;
-					if (edgeYear == 1) eraUp = true;
 					if (edgeMonth == 1) yearUp = true;
-					if (edgeDay == 1) monthUp = true;
+					if (edgeMDay == 1) monthUp = true;
 					if (edgeHour == 0) dayUp = true;
 					if (edgeMin == (minutesBeforeEnd + expectedMin - 60)) hourUp = true;
 
@@ -187,63 +174,81 @@ public class CmdsScheduler extends MainTM {
 						switch (repeatFreq) {
 						case ARG_NONE : // If there is no repetition, the whole date and hour must match
 							MsgHandler.devMsg("Years will now be checked :");
-							if ((eraUp && ((expectedYear == currentYear) && (expectedMonth <= currentMonth)) || ((currentYear == edgeYear) && (currentMonth <= edgeMonth))) // If there is a transition to the next era (only concern year edge)
-									|| (expectedYear <= currentYear && currentYear <= edgeYear)) {
-								MsgHandler.devMsg("The data of the years correspond, let's look further.");
+							if ((yearUp && currentMonth >= expectedMonth && currentYear.equals(expectedYear))
+									|| (yearUp && currentMonth < expectedMonth && currentYear.equals(edgeYear))
+									|| (!yearUp && currentYear.equals(expectedYear))) {
+								MsgHandler.devMsg("The data of the year corresponds, let's look further.");
 							} else {
 								MsgHandler.devMsg("The data of the year does not correspond, do nothing.");
 								break;
 							}
 						case ARG_YEAR : // If there is a yearly repetition, the year is ignored
 							MsgHandler.devMsg("Months will now be checked :");
-							if ((yearUp && ((expectedMonth == currentMonth) && (expectedDay <= currentDay)) || ((currentMonth == edgeMonth) && (currentDay <= edgeDay))) // If there is a transition to the next year (only concern month edge)
-									|| (expectedMonth <= currentMonth && currentMonth <= edgeMonth)) {
-								MsgHandler.devMsg("The data of the month correspond, let's look further.");
+							if ((monthUp && currentMDay >= expectedMDay && currentMonth.equals(expectedMonth))
+									|| (monthUp && currentMDay < expectedMDay && currentMonth.equals(edgeMonth))
+									|| (!monthUp && currentMonth.equals(expectedMonth))) {
+								MsgHandler.devMsg("The data of the month corresponds, let's look further.");
 							} else {
 								MsgHandler.devMsg("The data of the month does not correspond, do nothing.");
 								break;
 							}
-						case ARG_MONTH : // If there is a monthly repetition, year and month are ignored
-						case ARG_WEEK : // If there is a weekly repetition, year and month are ignored
-							if (repeatFreq.equals(ARG_WEEK)) { // Do this only for a weekly repetition
+						case ARG_MONTH : // If there is a monthly or weekly repetition, year and month/week are ignored
+						case ARG_WEEK :
+							if (repeatFreq.equals(ARG_WEEK)) { // -> Do this only for a weekly repetition
 								MsgHandler.devMsg("Day number in the week will now be checked :");
-								if (currentWDay == expectedWDay) {
-									MsgHandler.devMsg("The data of the day number in the week correspond, let's look further.");
+								if ((dayUp && currentHour >= expectedHour && currentWDay.equals(expectedWDay))
+										|| (dayUp && currentHour < edgeHour && currentWDay.equals(edgeWDay))
+										|| (!dayUp && currentWDay.equals(expectedWDay))) {
+									MsgHandler.devMsg("The data of the day number in the week corresponds, let's look further.");
 								} else {
 									MsgHandler.devMsg("The data of the day number in the week does not correspond, do nothing.");
 									break;
 								}
-							} else { // Normal process in all other cases
-								MsgHandler.devMsg("Day will now be checked :");
-								if ((monthUp && ((expectedDay == currentDay) && (expectedHour <= currentHour)) || ((currentDay == edgeDay) && (currentHour <= edgeHour))) // If there is a transition to the next month (only concern day edge)
-										|| (expectedDay <= currentDay && currentDay <= edgeDay)) {
-									MsgHandler.devMsg("The data of the day correspond, let's look further.");
+							} else { // -> Or do a monthly repetition in all other cases
+								MsgHandler.devMsg("Day number in the month will now be checked :");
+								if ((dayUp && currentHour >= expectedHour && currentMDay.equals(expectedMDay))
+										|| (dayUp && currentHour < edgeHour && currentMDay.equals(edgeMDay))
+										|| (!dayUp && currentMDay.equals(expectedMDay))) {
+									MsgHandler.devMsg("The data of the day number in the month corresponds, let's look further.");
 								} else {
-									MsgHandler.devMsg("The data of the day does not correspond, do nothing.");
+									MsgHandler.devMsg("The data of the day number in the month does not correspond, do nothing.");
 									break;
 								}
 							}
-						case ARG_DAY : // If there is a daily repetition, year, month and day are ignored
+						case ARG_DAY : // If there is a daily repetition, year, month/week and day are ignored
 							MsgHandler.devMsg("Hours will now be checked :");
-							if ((dayUp && ((expectedHour == currentHour) && (expectedMin <= currentMin)) || ((currentHour == edgeHour) && (currentMin <= edgeMin))) // If there is a transition to the next day (only concern hour edge)
-									|| (expectedHour <= currentHour && expectedMin <= currentMin && currentHour <= edgeHour && currentMin <= edgeMin)) {
-								MsgHandler.devMsg("The data of the hours correspond, let's look further.");
+							if ((hourUp && currentMin >= expectedMin && currentHour.equals(expectedHour))
+									|| (hourUp && currentMin < edgeMin && currentHour.equals(edgeHour))
+									|| (!hourUp && currentHour.equals(expectedHour))) {
+								MsgHandler.devMsg("§bThe data of the hours corresponds, let's look further.");
 							} else {
-								MsgHandler.devMsg("The data of the hour does not correspond, do nothing.");
+								MsgHandler.devMsg("The data of the hours does not correspond, do nothing.");
 								break;
 							}
-						case ARG_HOUR : // If there is a hourly repetition, year, month, day and hour are ignored (Only minutes must be less than the edge)
-							MsgHandler.devMsg("Minutes will now be checked :");
-							if ((hourUp && (expectedMin <= currentMin || currentMin < edgeMin)) // If there is a transition to the next hour (only concern minutes edge)
-									|| (expectedMin <= currentMin && currentMin < edgeMin)) {
-								MsgHandler.devMsg("The data of the minutes correspond, let's launch commands.");
-								launchCmds = true;
-							} else MsgHandler.devMsg("The data of the minutes does not correspond, do nothing.");
+						case ARG_HOUR : // If there is a hourly repetition, year, month/week, day and hour are ignored
+							if (!refTimeSrc.contains("UTC") && !refTimeSrc.equalsIgnoreCase("")) {
+								if ((hourUp && (currentMin >= expectedMin || currentMin <= edgeMin))
+										|| (!hourUp && currentMin >= expectedMin && currentMin <= edgeMin)) {
+									MsgHandler.devMsg("§bThe data of the minutes corresponds, let's launch commands.");
+									launchCmds = true;
+								} else {
+									MsgHandler.devMsg("The data of the minutes does not correspond, do nothing.");
+									break;
+								}
+							} else {
+								if (currentMin == expectedMin) { // Les minutes actuelles doivent être égales à celles attendues.
+									MsgHandler.devMsg("§bThe data of the minutes corresponds, let's launch commands.");
+									launchCmds = true;
+								} else {
+									MsgHandler.devMsg("The data of the minutes does not correspond, do nothing.");
+									break;
+								}
+							}
 						}
 					}
 					if (launchCmds) {
 						// #10. Declare the key as having an active scheduler
-						commandsSchedulerIsActive.add(key);
+						if (!commandsSchedulerIsActive.contains(key)) commandsSchedulerIsActive.add(key);
 						MsgHandler.devMsg("Added the key " + key + " at the scheduler list : " + commandsSchedulerIsActive);
 						MsgHandler.devMsg("=================="); 
 						// After the delay, delete the key from the active scheduler list

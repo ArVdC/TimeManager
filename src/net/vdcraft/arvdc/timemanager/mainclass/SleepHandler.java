@@ -544,7 +544,7 @@ public class SleepHandler implements Listener {
 		if (intPlayersRequired < 0) intPlayersRequired = 0; // Avoid negative numbers
 		if (intPlayersRequired > 100) intPlayersRequired = 100;	// Avoid too big numbers
 		stringPlayersRequired = intPlayersRequired.toString();
-		if (MainTM.serverMcVersion < MainTM.reqMcVForGamerules) // Check if MC version is at least 1.13.0
+		if (MainTM.serverMcVersion < MainTM.reqMcVForSleepPercentage) // Check if MC version is at least 1.17.0
 			MainTM.getInstance().getConfig().set(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_NIGHTSKIP_LEGACYPERCENTAGE, stringPlayersRequired);
 		else {
 			w.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE, intPlayersRequired); // arg needs to be an integer

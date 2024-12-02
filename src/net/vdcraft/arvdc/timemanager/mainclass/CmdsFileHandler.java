@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
@@ -163,9 +164,15 @@ public class CmdsFileHandler extends MainTM {
 		SaveCmdsYml();
 		
 		// #3.H. Launch the scheduler if necessary
-		if (!commandsSchedulerIsActive.contains(ARG_ACTIVE) && MainTM.getInstance().cmdsConf.getString(CMDS_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
-			CmdsScheduler.commandsScheduler();
-		}
+		BukkitScheduler launchCommandsScheduler = MainTM.getInstance().getServer().getScheduler();
+		launchCommandsScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
+			@Override
+			public void run() {
+				if (!commandsSchedulerIsActive.contains(ARG_ACTIVE) && MainTM.getInstance().cmdsConf.getString(CMDS_USECOMMANDS).equalsIgnoreCase(ARG_TRUE)) {
+					CmdsScheduler.commandsScheduler();		
+				}
+			}
+		}, 100L);
 		
 		// 3.I. Notifications
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
