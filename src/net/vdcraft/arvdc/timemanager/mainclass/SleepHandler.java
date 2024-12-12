@@ -214,7 +214,7 @@ public class SleepHandler implements Listener {
 		int rpNb = sleepInvolvedPlayersCount(w); // Get the total number of relevant players
 		int spNb = sleepingPlayersCount(w) + preSleeper; // Get the total number of sleeping players, including the pre-sleeper one
 		int spPercent; // Get the required percentage of sleeping players
-		if (MainTM.serverMcVersion < MainTM.reqMcVForGamerules) {				
+		if (MainTM.serverMcVersion < MainTM.reqMcVForSleepPercentage) {				
 			String LegacyPercent = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + w.getName() + "." + MainTM.CF_NIGHTSKIP_LEGACYPERCENTAGE);
 			spPercent = Integer.parseInt(LegacyPercent);		
 		} else spPercent = w.getGameRuleValue(GameRule.PLAYERS_SLEEPING_PERCENTAGE);
