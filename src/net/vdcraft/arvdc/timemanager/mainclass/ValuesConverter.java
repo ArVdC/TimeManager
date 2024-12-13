@@ -749,10 +749,12 @@ public class ValuesConverter extends MainTM {
 		int currentMajor = 0;
 		int currentMinor = 0;
 		int currentPatch = 0;
-		int currentRelease = 4;
+		int currentRelease = 4; // 4 correspond to a final release
 		int currentDev = 0;
 		// Check current version
 		if (srcFile.equalsIgnoreCase("lg")) {
+			if (!MainTM.getInstance().langConf.getKeys(false).contains(CF_VERSION)) MainTM.getInstance().langConf.set(CF_VERSION, versionTM());
+			if (MainTM.getInstance().langConf.getString(CF_VERSION) == null) MainTM.getInstance().langConf.set(CF_VERSION, versionTM());
 			currentVersion = MainTM.getInstance().langConf.getString(CF_VERSION);
 		} else {
 			currentVersion = versionTM();

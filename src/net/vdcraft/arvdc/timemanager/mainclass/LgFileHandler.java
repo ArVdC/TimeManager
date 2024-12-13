@@ -63,7 +63,7 @@ public class LgFileHandler extends MainTM {
 				// #1.A.b. Actualize values
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
-				// #1.A.c. Update the file if < 1.10
+				// #1.A.c. Update the file if < 1.10.0
 				if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 10, 0, 4, 0)) { // TODO Only update this when lang file changes.
 					updateLangFile();
 				} else MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
@@ -195,7 +195,7 @@ public class LgFileHandler extends MainTM {
 
 		// #3.G. Notifications
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
-			MsgHandler.infoMsg(lgVersionMsg + MainTM.getInstance().langConf.getString("version") + ".");
+			MsgHandler.infoMsg(lgVersionMsg + MainTM.getInstance().langConf.getString(CF_VERSION) + ".");
 		}
 	}
 
