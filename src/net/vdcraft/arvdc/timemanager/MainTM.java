@@ -18,6 +18,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.vdcraft.arvdc.timemanager.Metrics;
@@ -31,6 +32,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SignsHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.WorldListHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SleepHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.ChatHandler;
@@ -89,14 +91,14 @@ public class MainTM extends JavaPlugin {
 
 	// Default config files values
 	protected static long defWakeUpTick = 0L;
-	protected static long defStart = 0L;
+	public static long defStart = 0L;
 	protected static Integer defRefresh = 10;
-	protected static Double defSpeed = 1.0;
-	protected static String defSleep = "true";
-	protected static String defSync = "false";
-	protected static String defFirstStartTime = "default";
-	protected static String defNightSkipMode = "default";
-	protected static String defNightSkipNbPlayers = "100%";
+	public static Double defSpeed = 1.0;
+	public static String defSleep = "true";
+	public static String defSync = "false";
+	public static String defFirstStartTime = "default";
+	public static String defNightSkipMode = "default";
+	public static String defNightSkipNbPlayers = "100%";
 	protected static String defUpdateMsgSrc = "none";
 	protected static int defTitleFadeIn = 20;
 	protected static int defTitleStay = 60;
@@ -408,7 +410,7 @@ public class MainTM extends JavaPlugin {
 	protected static String lgFileReloadMsg = "The language file was reloaded.";
 	protected static String cmdsFileTryReloadMsg = "Reloading the commands file.";
 	protected static String cmdsFileReloadMsg = "The commands file was reloaded.";
-	protected static String worldsCheckMsg = "The worlds list was actualized.";
+	public static String worldsCheckMsg = "The worlds list was actualized.";
 	protected static String multiLangIsOnMsg = "Multilanguage support is enable.";
 	protected static String multiLangIsOffMsg = "Multilanguage support is disable.";
 	protected static String multiLangDoesntWork = "Multilanguage is not supported by CraftBukkit under the 1.12 version. Upgrade or try with Spigot, Paper, ...";
@@ -560,11 +562,11 @@ public class MainTM extends JavaPlugin {
 	protected static String enableTimerModeDebugMsg = "The timer mode is §aenabled§b.";
 	protected static String disableTimerModeDebugMsg = "The timer mode is §cdisabled§b.";
 	protected static String cfgOptionsCheckDebugMsg = "The options will be now checked for each world.";
-	protected static String refrehWorldsListDebugMsg = "Refreshing the §eworldsList§b keys in config.yml.";
-	protected static String worldsRawListDebugMsg = "Raw list of all loaded worlds:";
-	protected static String worldsFormatListDebugMsg = "Name's list of all loaded worlds:";
-	protected static String worldsCfgListDebugMsg = "Worlds list from the config.yml:";
-	protected static String delWorldDebugMsg = "was deleted from the config list.";
+	public static String refrehWorldsListDebugMsg = "Refreshing the §eworldsList§b keys in config.yml.";
+	public static String worldsRawListDebugMsg = "Raw list of all loaded worlds:";
+	public static String worldsFormatListDebugMsg = "Name's list of all loaded worlds:";
+	public static String worldsCfgListDebugMsg = "Worlds list from the config.yml:";
+	public static String delWorldDebugMsg = "was deleted from the config list.";
 	protected static String daySpeedAdjustDebugMsg = "The §e" + CF_D_SPEED + "§b option value was converted from";
 	protected static String nightSpeedAdjustDebugMsg = "The §e" + CF_N_SPEED + "§b option value was converted from";
 	protected static String startAdjustDebugMsg = "The §e" + CF_START + "§b option value was converted from";
@@ -624,6 +626,8 @@ public class MainTM extends JavaPlugin {
 	public static String schedulerIsRunningDebugMsg = "is running in ";
 	public static String schedulerFractionDebugMsg = "The fraction used as a time modifier from the decimal is : ";
 	public static String durationToFractionDebugMsg = "The calculation of the duration as a speed multiplier is : ";
+	public static String addNewWorldDebugMsg = " §bdoes not exist yet, it will be added to the Timemanager worlds list.";
+	public static String deleteUnknowWorldDebugMsg = " §bdoes not exist anymore, it will be deleted from the Timemanager worlds list.";
 	
 	// Debug Calculation for timer synchronization (with colors)
 	protected static String actualTimeVar = "§c[actualTime]§b";
@@ -752,12 +756,15 @@ public class MainTM extends JavaPlugin {
 			
 			// #12. Listen to commands events
 			getServer().getPluginManager().registerEvents(new PlayerCommandHandler(), this);
-			getServer().getPluginManager().registerEvents(new ConsoleCommandHandler(), this);			
+			getServer().getPluginManager().registerEvents(new ConsoleCommandHandler(), this);	
+			
+			// #13. Listen to worlds events
+			getServer().getPluginManager().registerEvents(new WorldListHandler(), this);	 // TODO		
 
-			// #13. Synchronize worlds and create scheduled task for faking the time increase/decrease
+			// #14. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();
 
-			// #14. Activate (or not) the placeholder APIs
+			// #15. Activate (or not) the placeholder APIs
 			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
@@ -769,14 +776,14 @@ public class MainTM extends JavaPlugin {
 				MVdWPAPIHandler.loadMVdWPlaceholderAPI();
 			}
 			
-			// #15. bStats
+			// #16. bStats
 			int pluginId = 10412;
 	        Metrics metrics = new Metrics(this, pluginId);
 
-			// #16. Confirm activation in console
+			// #17. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
-			// #17. Check for an update
+			// #18. Check for an update
 			if (serverMcVersion >= MainTM.reqMcVForUpdate)
 				UpdateHandler.delayCheckForUpdate();
 			else MsgHandler.warnMsg(updateCommandsDisabledMsg + reqMcVForUpdate.toString().replace(".0", "."));

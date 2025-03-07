@@ -668,23 +668,33 @@ public class SleepHandler implements Listener {
 	@EventHandler // #2. On world change
 	private void changeRequiredPercentage(PlayerChangedWorldEvent e) {
 		Player p = e.getPlayer();
-		World oldWorld = e.getFrom();
-		World newWorld = p.getWorld();
-		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + oldWorld.getName() + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%"))
-			setSleepingPlayersNeeded(oldWorld.getName());
-		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + newWorld.getName() + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%"))
-			setSleepingPlayersNeeded(newWorld.getName());
+		String oldWorld = e.getFrom().getName();
+		String newWorld = p.getWorld().getName();
+		if (!WorldListHandler.worldExistsInConfig(newWorld)) {
+			MsgHandler.debugMsg("World §e" + newWorld + MainTM.addNewWorldDebugMsg); // Console debug msg
+			WorldListHandler.listLoadedWorlds();
+			MainTM.getInstance().saveConfig();
+		}
+		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + oldWorld + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%"))
+			setSleepingPlayersNeeded(oldWorld);
+		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + newWorld + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%"))
+			setSleepingPlayersNeeded(newWorld);
 	}
 	@EventHandler // #3. On quit
 	private void changeRequiredPercentage(PlayerQuitEvent e) throws InterruptedException {
 		Player p = e.getPlayer();
-		World w = p.getWorld();
-		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + w.getName() + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%")) {
+		String world = p.getWorld().getName();
+		if (!WorldListHandler.worldExistsInConfig(world)) {
+			MsgHandler.debugMsg("World §e" + world + MainTM.addNewWorldDebugMsg); // Console debug msg
+			WorldListHandler.listLoadedWorlds();
+			MainTM.getInstance().saveConfig();
+		}
+		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%")) {
 			BukkitScheduler changeRequiredPercentageOnquitScheduler = MainTM.getInstance().getServer().getScheduler();
 			changeRequiredPercentageOnquitScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 				@Override
 				public void run() {
-					if (Bukkit.getPluginManager().getPlugin(MainTM.nameTM()) != null) setSleepingPlayersNeeded(w.getName());
+					if (Bukkit.getPluginManager().getPlugin(MainTM.nameTM()) != null) setSleepingPlayersNeeded(world);
 				}
 			}, 10L);
 		}

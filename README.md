@@ -202,7 +202,7 @@ The reference time and date can be that of any world, or the actual time.
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.10.1: MC 1.9.4 to 1.21.3
+v1.10.2: MC 1.9.4 to 1.21.4
 
 ### API
 Although the plugin is not intended to be an API, it is possible to use the different placeholders by importing the PlaceholdersHandler class in your Java code :

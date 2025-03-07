@@ -119,7 +119,7 @@ public class SpeedHandler extends MainTM {
 			@Override
 			public void run() {
 				// If the world exists
-				if (!Bukkit.getWorld(world).equals(null)) {
+				if (WorldListHandler.worldExistsInConfig(world) && WorldListHandler.worldExistsOnServer(world)) {
 					// Get the world's current time
 					Long currentTime = Bukkit.getWorld(world).getTime();
 					// Timer msg
@@ -150,7 +150,14 @@ public class SpeedHandler extends MainTM {
 						speedScheduler(world);
 					}
 				// If the world doesn't exist
-				} else speedScheduler(world);
+				} else {
+					// Delete the world from the active scheduler list
+					if (realSpeedSchedulerIsActive.contains(world)) realSpeedSchedulerIsActive.remove(world);
+					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + scheduler24DebugMsg);
+					MsgHandler.debugMsg("World §e" + world + deleteUnknowWorldDebugMsg); // Console debug msg
+					WorldListHandler.listLoadedWorlds();
+					MainTM.getInstance().saveConfig();
+				}
 			}
 		}, 72L);
 	}
@@ -165,7 +172,7 @@ public class SpeedHandler extends MainTM {
 			@Override
 			public void run() {
 				// If the world exists
-				if (!Bukkit.getWorld(world).equals(null)) {
+				if (WorldListHandler.worldExistsInConfig(world) && WorldListHandler.worldExistsOnServer(world)) {
 					// Get the refresh rate
 					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
 					// Get the world's current time
@@ -207,7 +214,15 @@ public class SpeedHandler extends MainTM {
 						speedScheduler(world);
 					}
 				// If the world doesn't exist
-				} else speedScheduler(world);
+				} else {
+					if (syncConstantSpeedSchedulerIsActive.contains(world)) {
+						syncConstantSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerConstantSyncDebugMsg);
+					}
+					MsgHandler.debugMsg("World §e" + world + deleteUnknowWorldDebugMsg); // Console debug msg
+					WorldListHandler.listLoadedWorlds();
+					MainTM.getInstance().saveConfig();
+				}
 			}
 		}, refreshRateLong);
 	}
@@ -222,7 +237,7 @@ public class SpeedHandler extends MainTM {
 			@Override
 			public void run() {
 				// If the world exists
-				if (!Bukkit.getWorld(world).equals(null)) {
+				if (WorldListHandler.worldExistsInConfig(world) && WorldListHandler.worldExistsOnServer(world)) {
 					// Get the refresh rate
 					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
 					// Get the world's current time
@@ -266,7 +281,15 @@ public class SpeedHandler extends MainTM {
 						speedScheduler(world);
 					}
 				// If the world doesn't exist
-				} else speedScheduler(world);
+				} else {
+					if (syncVariableSpeedSchedulerIsActive.contains(world)) {
+						syncVariableSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerConstantSyncDebugMsg);
+					}
+					MsgHandler.debugMsg("World §e" + world + deleteUnknowWorldDebugMsg); // Console debug msg
+					WorldListHandler.listLoadedWorlds();
+					MainTM.getInstance().saveConfig();
+				}
 			}
 		}, refreshRateLong);
 	}
@@ -281,7 +304,7 @@ public class SpeedHandler extends MainTM {
 			@Override
 			public void run() {
 				// If the world exists
-				if (!Bukkit.getWorld(world).equals(null)) {
+				if (WorldListHandler.worldExistsInConfig(world) && WorldListHandler.worldExistsOnServer(world)) {
 					// Get the refresh rate
 					refreshRateLong = MainTM.getInstance().getConfig().getLong(CF_REFRESHRATE);
 					refreshRateInt = MainTM.getInstance().getConfig().getInt(CF_REFRESHRATE);
@@ -313,7 +336,15 @@ public class SpeedHandler extends MainTM {
 						speedScheduler(world);						
 					}
 				// If the world doesn't exist
-				} else speedScheduler(world);
+				} else {
+					if (asyncIncreaseSpeedSchedulerIsActive.contains(world))  {
+						asyncIncreaseSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncIncreaseDebugMsg);
+					}
+					MsgHandler.debugMsg("World §e" + world + deleteUnknowWorldDebugMsg); // Console debug msg
+					WorldListHandler.listLoadedWorlds();
+					MainTM.getInstance().saveConfig();
+				}
 			}
 		}, refreshRateLong);
 	}
@@ -328,7 +359,7 @@ public class SpeedHandler extends MainTM {
 			@Override
 			public void run() {
 				// If the world exists
-				if (!Bukkit.getWorld(world).equals(null)) {
+				if (WorldListHandler.worldExistsInConfig(world) && WorldListHandler.worldExistsOnServer(world)) {
 					// Get the world's current time
 					Long currentTime = Bukkit.getWorld(world).getTime();
 					// Timer msg
@@ -364,7 +395,14 @@ public class SpeedHandler extends MainTM {
 						speedScheduler(world);
 					}
 				// If the world doesn't exist
-				} else speedScheduler(world);
+				} else {
+					if (asyncDecreaseSpeedSchedulerIsActive.contains(world)) {
+						asyncDecreaseSpeedSchedulerIsActive.remove(world); MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncDecreaseDebugMsg);
+					}				
+					MsgHandler.debugMsg("World §e" + world + deleteUnknowWorldDebugMsg); // Console debug msg
+					WorldListHandler.listLoadedWorlds();
+					MainTM.getInstance().saveConfig();
+				}
 			}
 		}, refreshRate);
 	}
@@ -379,7 +417,7 @@ public class SpeedHandler extends MainTM {
 			@Override
 			public void run() {
 				// If the world exists
-				if (!Bukkit.getWorld(world).equals(null)) {
+				if (WorldListHandler.worldExistsInConfig(world) && WorldListHandler.worldExistsOnServer(world)) {
 					// Get the world's current time
 					Long currentTime = Bukkit.getWorld(world).getTime();
 					// Get the refresh rate
@@ -403,7 +441,15 @@ public class SpeedHandler extends MainTM {
 						speedScheduler(world);
 					}
 				// If the world doesn't exist
-				} else speedScheduler(world);
+				} else {
+					if (asyncNormalSpeedSchedulerIsActive.contains(world)) {
+						asyncNormalSpeedSchedulerIsActive.remove(world);
+						MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE  + "is " + ChatColor.DARK_RED + "cancelled " + ChatColor.DARK_PURPLE + "from " + schedulerAsyncNormalDebugMsg);
+					}
+					MsgHandler.debugMsg("World §e" + world + deleteUnknowWorldDebugMsg); // Console debug msg
+					WorldListHandler.listLoadedWorlds();
+					MainTM.getInstance().saveConfig();
+				}
 			}
 		}, refreshRateLong);
 	}
