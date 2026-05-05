@@ -146,8 +146,7 @@ public class UpdateHandler extends MainTM {
 			String[] list = reader.readLine().replace("]", "").replace("[", "").replace("},{", "}," + splitMarker + "{").split(splitMarker);
 			response = list[list.length - 1];
 			reader.close();
-			@SuppressWarnings("deprecation")
-			JsonObject o = (JsonObject) new JsonParser().parse(response);
+			JsonObject o = JsonParser.parseString(response).getAsJsonObject();
 			JsonElement e = (JsonElement) o.get("name");
 			latestVersion = e.toString().replaceFirst("TimeManager v", "").replace("\"", "");
 			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_BUKKIT + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
@@ -180,8 +179,7 @@ public class UpdateHandler extends MainTM {
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(connec.getInputStream()));
 			response = reader.readLine();
 			reader.close();
-			@SuppressWarnings("deprecation")
-			JsonObject o = (JsonObject) new JsonParser().parse(response);
+			JsonObject o = JsonParser.parseString(response).getAsJsonObject();
 			JsonElement e = (JsonElement) o.get("tag_name");
 			latestVersion = e.toString().replaceFirst("v", "").replace("\"", "");
 			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_GITHUB + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
@@ -195,9 +193,9 @@ public class UpdateHandler extends MainTM {
 	 */
 	private static boolean getURL(String url) {
 		try {
-			checkURL = new URL(url);
+			checkURL = java.net.URI.create(url).toURL();
 			return true;
-		} catch (MalformedURLException e) {
+		} catch (IllegalArgumentException | MalformedURLException e) {
 			MsgHandler.errorMsg(urlFailMsg); // Console error msg
 			return false;
 		}

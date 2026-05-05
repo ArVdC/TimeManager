@@ -13,10 +13,9 @@ public class CfgFileHandler extends MainTM {
 	/**
 	 * Activate or reload the configuration file
 	 */
-	@SuppressWarnings("deprecation")
 	public static void loadConfig(String firstOrRe) {
 		
-		if (serverMcVersion >= reqMcVForConfigFile) MainTM.getInstance().getConfig().options().parseComments(true); // Check if MC version is at least 1.19.0
+		MainTM.getInstance().getConfig().options().parseComments(true);
 		
 		// #1. Only at the server startup:
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
@@ -48,13 +47,7 @@ public class CfgFileHandler extends MainTM {
 			// #1.D.c. Delete the txt file
 			MainTM.getInstance().configHeaderFileTxt.delete();
 			// #1.D.d. Set the header into the yml file
-			if (serverMcVersion < reqMcVForConfigFile) { // Check if MC version is at least 1.19.0
-				String concatHeader = "";
-				for (String s : header) {
-					concatHeader = concatHeader + s + "\n";
-				}
-				MainTM.getInstance().getConfig().options().header(concatHeader);
-			} else MainTM.getInstance().getConfig().options().setHeader(header);
+			MainTM.getInstance().getConfig().options().setHeader(header);
 			
 		}
 		

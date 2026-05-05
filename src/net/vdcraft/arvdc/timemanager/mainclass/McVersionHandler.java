@@ -10,31 +10,10 @@ public class McVersionHandler extends MainTM {
 	 * Get the version of the server and return only the type (Bukkit/Spigot/Paper/...)
 	 */
 	public static String KeepTypeOfServer() {
-		MsgHandler.debugMsg(serverTypeQueryDebugMsg); // Console debug msg
-		String splitMarker = "\u2063";
-		String[] split1;
-		String split2;
-		String[] split3;
-		String serverType;
-		String completeServerVersion = Bukkit.getVersion().toLowerCase();
-		if (completeServerVersion.contains("git-")) { // If the syntax is normal
-			completeServerVersion = completeServerVersion.replace("git-", splitMarker);
-			split1 = completeServerVersion.split(splitMarker);
-			if (devMode) { // Dev msg start
-				MsgHandler.devMsg("Version string was split into: §e" + split1.length + "§9 part(s)."); // Console dev msg
-				Integer count = 0;
-				for (String split : split1) {
-					MsgHandler.devMsg("[" + count + "]: §e" + split); // Console dev msg
-					count++;
-				}
-			} // Dev msg end
-			split2 = split1[1]; // Keep only what is after the "git-"
-			split2 = split2.replace("-", splitMarker); // Tag the character "-" after the version value
-			split3 = split2.split(splitMarker); // Keep only what was before the first "-" character
-			serverType = split3[0].substring(0, 1).toUpperCase() + split3[0].substring(1).toLowerCase(); // Keep the name part of the version and capitalize it
-		} else { // In case 'git' string doesn't exist
-			serverType = "other type of";
-		}
+		MsgHandler.debugMsg(serverTypeQueryDebugMsg);
+		String name = Bukkit.getName();
+		if (name == null || name.isEmpty()) name = "Bukkit";
+		String serverType = name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase();
 		MsgHandler.devMsg(serverTypeResultDebugMsg + " §e" + serverType + " §9server.");
 		return serverType;
 	}
@@ -43,84 +22,79 @@ public class McVersionHandler extends MainTM {
 	 * Get the version of the server and return only the MC decimal part
 	 */
 	public static Double KeepDecimalOfMcVersion() {
-		MsgHandler.debugMsg(serverMcVersionQueryDebugMsg); // Console debug msg
-		String splitMarker = "\u2063";
-		String[] split1;
-		String split2;
-		String[] split3;
-		String[] split4;
-		String mcVersionString;
-		Double mcVersion;
-		String completeServerVersion = Bukkit.getVersion().toLowerCase();
-		MsgHandler.debugMsg(completeVersionDebugMsg + " §e" + completeServerVersion); // Console debug msg
-		if (completeServerVersion.contains("(mc: 1.")) { // For usual version syntax
-			completeServerVersion = completeServerVersion.replace("(mc: 1.", splitMarker);
-			split1 = completeServerVersion.split(splitMarker);
-			if (devMode == true) { // Dev msg start
-				MsgHandler.devMsg("Lenght of list: §e" + split1.length); // Console dev msg
-				Integer count = 0;
-				for (String split : split1) {
-					MsgHandler.devMsg("[" + count + "]: §e" + split); // Console dev msg
-					count++;
-				}
-				String completeServerType = split1[0];
-				if (completeServerType.contains("-")) {
-					String[] serverType = completeServerType.split("-");
-					if (serverType.length >= 2) MsgHandler.devMsg("The server type is: §e"+ serverType[1]);
-					MsgHandler.devMsg("The server version is: §e"+ split1[1].replace(")", ""));
-				}
-			} // Dev msg end
-			split2 = split1[1]; // Keep only what is after the "(mc: 1."
-			split2 = split2.replace(")", splitMarker); // Tag the character ")" after the version value
+		MsgHandler.debugMsg(serverMcVersionQueryDebugMsg);
+		String completeServerVersion = Bukkit.getVersion();
+		MsgHandler.debugMsg(completeVersionDebugMsg + " §e" + completeServerVersion);
 
-		} else if (completeServerVersion.contains("1.")) { // For other type of syntax (less specific format, so it could crash sometimes)
-			completeServerVersion = completeServerVersion.replace("1.", splitMarker);
-			split1 = completeServerVersion.split(splitMarker);
-			if (devMode == true) { // Dev msg start
-				MsgHandler.devMsg("Lenght of list: §e" + split1.length); // Console dev msg
-				Integer count = 0;
-				for (String split : split1) {
-					MsgHandler.devMsg("[" + count + "]: §e" + split); // Console dev msg
-					count++;
-				}
-				String completeServerType = split1[0];
-				if (completeServerType.contains("-")) {
-					String[] serverType = completeServerType.split("-");
-					if (serverType.length >= 2) MsgHandler.devMsg("The server type is: §e"+ serverType[1]);
-					MsgHandler.devMsg("The server version is: §e"+ split1[1].replace(")", ""));
-				}
-			} // Dev msg end
-			split2 = split1[1];
-			split2 = split2.replace(")", splitMarker).replace("]", splitMarker).replace("-", splitMarker).replace("_", splitMarker).replace(" ", splitMarker);
-		} else { // Use the latest version of MC
-			MsgHandler.debugMsg(noVersionNumberDebugMsg + " '" + completeServerVersion + "'."); // Console debug msg
-			mcVersion = reqMcVToLoadPlugin;
-			MsgHandler.warnMsg("1. " + versionMCFormatMsg); // Console warn msg
-			return mcVersion;
-		}
-		// Then, for the 2 first cases
-		split3 = split2.split(splitMarker); // Keep only what was before a ")", "]", "-", "_" or " " character
-		mcVersionString = split3[0]; // If version is in a " 1.x" format, keep it
-		if (mcVersionString.contains(".")) { // But if version is in a " 1.x.x" format, check if a "0" needs to be add before the last number
-			String mcVersionSplit = mcVersionString.replace(".", splitMarker);
-			split4 = mcVersionSplit.split(splitMarker);
-			String firstPart = split4[0];
-			String secondPart = split4[1];
-			if (secondPart.length() == 1) {
-				secondPart = "0" + secondPart;
+		String mcRaw = extractMcVersion(completeServerVersion);
+		if (mcRaw == null) {
+			Double bukkitFallback = parseBukkitVersion();
+			if (bukkitFallback != null) {
+				MsgHandler.debugMsg(serverMcVersionResultDebugMsg + " §e" + bukkitFallback + " §bMC version.");
+				return bukkitFallback;
 			}
-			MsgHandler.devMsg("Needed to adjust the decimal to compare them correctly: §e1." + mcVersionString + "§9 = §e1." + firstPart + "." + secondPart + "§9."); // Console dev msg
-			mcVersionString = firstPart + "." + secondPart;
+			MsgHandler.debugMsg(noVersionNumberDebugMsg + " '" + completeServerVersion + "'.");
+			MsgHandler.warnMsg("1. " + versionMCFormatMsg);
+			return reqMcVToLoadPlugin;
 		}
-		try { // Check if value could be parsed as a double
-			mcVersion = Double.parseDouble(mcVersionString);
-		} catch (NumberFormatException nfe) { // If not possible, use the latest version of MC
-			MsgHandler.debugMsg(wrongVersionNumberDebugMsg + "\n" + nfe);
-			mcVersion = reqMcVToLoadPlugin;
-			MsgHandler.warnMsg(versionMCFormatMsg); // Console warn msg
+
+		Double parsed = mcVersionToDouble(mcRaw);
+		if (parsed == null) {
+			MsgHandler.debugMsg(wrongVersionNumberDebugMsg);
+			MsgHandler.warnMsg(versionMCFormatMsg);
+			return reqMcVToLoadPlugin;
 		}
-		MsgHandler.debugMsg(serverMcVersionResultDebugMsg + " §e1." + split3[0] + " §bMC version.");
-		return mcVersion;
+		MsgHandler.debugMsg(serverMcVersionResultDebugMsg + " §e" + mcRaw + " §bMC version.");
+		return parsed;
+	}
+
+	private static String extractMcVersion(String completeServerVersion) {
+		if (completeServerVersion == null) return null;
+		String s = completeServerVersion.toLowerCase();
+		int idx = s.indexOf("(mc:");
+		if (idx >= 0) {
+			int end = s.indexOf(')', idx);
+			if (end < 0) end = s.length();
+			return s.substring(idx + 4, end).trim();
+		}
+		return null;
+	}
+
+	private static Double parseBukkitVersion() {
+		try {
+			String bv = Bukkit.getBukkitVersion();
+			if (bv == null) return null;
+			int dash = bv.indexOf('-');
+			String head = dash > 0 ? bv.substring(0, dash) : bv;
+			return mcVersionToDouble(head);
+		} catch (Throwable t) {
+			return null;
+		}
+	}
+
+	private static Double mcVersionToDouble(String raw) {
+		if (raw == null) return null;
+		String v = raw.trim();
+		if (v.startsWith("v")) v = v.substring(1);
+		String[] parts = v.split("\\.");
+		try {
+			int major = Integer.parseInt(parts[0]);
+			int minor = parts.length > 1 ? Integer.parseInt(parts[1]) : 0;
+			int patch = parts.length > 2 ? Integer.parseInt(parts[2]) : 0;
+			if (major == 1) {
+				String patchPart = String.valueOf(patch);
+				if (patchPart.length() == 1) patchPart = "0" + patchPart;
+				return Double.parseDouble(minor + "." + patchPart);
+			}
+			if (major >= 26) {
+				return 99.99;
+			}
+			String minorPart = String.valueOf(minor);
+			if (minorPart.length() == 1) minorPart = "0" + minorPart;
+			return Double.parseDouble(major + "." + minorPart);
+		} catch (NumberFormatException nfe) {
+			return null;
+		}
 	}
 
 };

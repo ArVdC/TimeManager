@@ -50,7 +50,6 @@ public class LgFileHandler extends MainTM {
 	/**
 	 * Activate or reload the language file
 	 */
-	@SuppressWarnings("deprecation")
 	public static void loadLang(String firstOrRe) {
 
 		// #1. When it is the server startup
@@ -82,13 +81,7 @@ public class LgFileHandler extends MainTM {
 			// #1.B.c. Delete the txt file
 			MainTM.getInstance().langHeaderFileTxt.delete();
 			// #1.B.d. Set the header into the yml file
-			if (serverMcVersion < reqMcVForConfigFile) { // Check if MC version is at least 1.19.0
-				String concatHeader = "";
-				for (String s : header) {
-					concatHeader = concatHeader + s + "\n";
-				}
-				MainTM.getInstance().langConf.options().header(concatHeader);
-			} else MainTM.getInstance().langConf.options().setHeader(header);
+			MainTM.getInstance().langConf.options().setHeader(header);
 		}
 
 		// #2. When using the admin command /tm reload

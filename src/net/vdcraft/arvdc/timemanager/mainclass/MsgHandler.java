@@ -5,7 +5,6 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.CommandBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
@@ -97,35 +96,15 @@ public class MsgHandler extends MainTM {
 	/**
 	 * Player title msg (with custom values)
 	 */
-	@SuppressWarnings("deprecation")
 	public static void playerTitleMsg(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {		
-		if (serverMcVersion >= reqMcVForNewSendTitleMsg) { // Check if MC version is at least 1.16.0
-			p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
-		} else {
-			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-			String commandTitleTimes = "title " + p.getName() + " times " + fadeIn + " " + stay + " " + fadeOut;
-			String scfb = p.getWorld().getGameRuleValue(GR_SEND_COMMAND_FEEDBACK);
-			if (scfb.equalsIgnoreCase(ARG_TRUE)) p.getWorld().setGameRuleValue(GR_SEND_COMMAND_FEEDBACK, ARG_FALSE);
-			Bukkit.dispatchCommand(console, commandTitleTimes);
-			p.sendTitle(title, subtitle);
-			if (scfb.equalsIgnoreCase(ARG_TRUE)) p.getWorld().setGameRuleValue(GR_SEND_COMMAND_FEEDBACK, ARG_TRUE);
-		}
+		p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 	}
 	
 	/**
 	 * Player action bar msg
 	 */
 	public static void playerActionbarMsg(Player p, String msg) {
-		if (serverMcVersion < reqMcVForActionbarMsg) { // Check if MC version is at least 1.8.0
-			MsgHandler.infoMsg(noActionbarMsg);
-		
-		} else if (serverType.equalsIgnoreCase(ARG_BUKKIT)) { // ... or CraftBukkit since MC 1.9
-			ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-			String command = ARG_TITLE + " " + p.getName() + " " + ARG_ACTIONBAR + " \"" + msg + "\"";
-			Bukkit.dispatchCommand(console, command);
-		} else { // ... or Spigot and forks since MC 1.9
-			HiddenClassHandler.playerActionbarMsg(p, msg);
-		}
+		HiddenClassHandler.playerActionbarMsg(p, msg);
 	}
 
 };

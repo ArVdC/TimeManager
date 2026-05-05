@@ -21,7 +21,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import net.vdcraft.arvdc.timemanager.Metrics;
+import org.bstats.bukkit.Metrics;
 import net.vdcraft.arvdc.timemanager.mainclass.BooksHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
@@ -38,7 +38,6 @@ import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.ChatHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.ConsoleCommandHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PlayerCommandHandler;
-import net.vdcraft.arvdc.timemanager.placeholders.MVdWPAPIHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PAPIHandler;
 
 @SuppressWarnings("unused")
@@ -712,7 +711,7 @@ public class MainTM extends JavaPlugin {
 		serverMcVersion = McVersionHandler.KeepDecimalOfMcVersion();
 		serverType = McVersionHandler.KeepTypeOfServer();
 		if (serverMcVersion < reqMcVToLoadPlugin) {
-			MsgHandler.colorMsg("§c" + plBadVersionMsg + "1." + serverMcVersion + " server.");
+			MsgHandler.colorMsg("§c" + plBadVersionMsg + Bukkit.getVersion());
 		} else {
 
 			// #1. Initiate this main class as the contain of the instance
@@ -769,11 +768,6 @@ public class MainTM extends JavaPlugin {
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
 				new PAPIHandler(this).register();
-			}
-			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_MVDWPAPI).equalsIgnoreCase(ARG_TRUE)
-					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_MVDWPAPI) != null) {
-				MsgHandler.debugMsg(CF_PLACEHOLDER_MVDWPAPI + " detected.");
-				MVdWPAPIHandler.loadMVdWPlaceholderAPI();
 			}
 			
 			// #16. bStats
