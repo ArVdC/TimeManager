@@ -26,12 +26,10 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.ServerCommandEvent;
-import org.bukkit.material.Bed;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
-@SuppressWarnings("deprecation")
 public class SleepHandler implements Listener {
 
 	// Add world's name in a list when a night cycle animation is in progress
@@ -69,7 +67,7 @@ public class SleepHandler implements Listener {
 				return; // If it's a world where sleep is impossible (Nether, etc.)
 			}
 		}
-		if (sync.equalsIgnoreCase(MainTM.ARG_TRUE)) {
+		if (sync != null && sync.equalsIgnoreCase(MainTM.ARG_TRUE)) {
 			MsgHandler.debugMsg(MainTM.sleepProcessSyncActiveDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + ". " + player + MainTM.sleepProcessEndsDebugMsg); // Console debug msg
 			e.setCancelled(true);
 			return; // If it's a synchronized world
@@ -79,7 +77,8 @@ public class SleepHandler implements Listener {
 			e.setCancelled(true);
 			return; // If it's a frozen time world
 		}
-		if (MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP).equalsIgnoreCase(MainTM.ARG_FALSE)) {
+		String sleepCfg = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_SLEEP);
+		if (sleepCfg != null && sleepCfg.equalsIgnoreCase(MainTM.ARG_FALSE)) {
 			MsgHandler.debugMsg(MainTM.sleepProcessForbiddenDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + ". " + player + MainTM.sleepProcessEndsDebugMsg); // Console debug msg
 			e.setCancelled(true);
 			return; // If it's a world where sleep is forbid
@@ -351,21 +350,7 @@ public class SleepHandler implements Listener {
 		 */
 		private static String findBedDirection(Block bedBlock) {
 			String facing;
-        // Check if the block is a bed
-        if (bedBlock.getType().toString().equalsIgnoreCase("BED_BLOCK")) { // Legacy API
-            Bed bed = (Bed) bedBlock.getState().getData();
-            String bedsss = bed.toString();
-            bedsss = bedsss.replace(")", "XX").replace("(", "XX");
-            String[] bedByte = bedsss.split("XX");
-            String bData  = bedByte[1];
-            switch (bData) {
-	            case "12": facing = "NORTH"; break;
-	            case "13": facing = "EAST"; break;
-	            case "14": facing = "SOUTH"; break;
-	            case "15": facing = "WEST"; break;
-	            default: facing = "UNKNOW"; break;
-            }
-        } else if (bedBlock.getType().toString().endsWith("_BED")){ // Current API
+        if (bedBlock.getType().toString().endsWith("_BED")){
         	Directional blockDirection = (Directional) bedBlock.getBlockData();
         	facing = blockDirection.getFacing().toString();
         } else facing = "UNKNOW";
@@ -504,12 +489,8 @@ public class SleepHandler implements Listener {
 	 * Clears weather
 	 */
 	private static void clearWeather(World w) {
-		if (MainTM.serverMcVersion < MainTM.reqMcVForGamerules) {
-			w.setGameRuleValue("WeatherType", "clear"); // Check if MC version is at least 1.13.0
-		} else {
-			w.setStorm(false);
-			w.setThundering(false);
-		}
+		w.setStorm(false);
+		w.setThundering(false);
 	}
 	
 	/**
@@ -655,7 +636,8 @@ public class SleepHandler implements Listener {
 	private void changeRequiredPercentage(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		World w = p.getWorld();
-		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + w.getName() + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%")) {
+		String requiredPlayers = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + w.getName() + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS);
+		if (requiredPlayers != null && !requiredPlayers.contains("%")) {
 			BukkitScheduler changeRequiredPercentageOnjoinScheduler = MainTM.getInstance().getServer().getScheduler();
 			changeRequiredPercentageOnjoinScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 				@Override
@@ -675,9 +657,11 @@ public class SleepHandler implements Listener {
 			WorldListHandler.listLoadedWorlds();
 			MainTM.getInstance().saveConfig();
 		}
-		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + oldWorld + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%"))
+		String oldRequired = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + oldWorld + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS);
+		if (oldRequired != null && !oldRequired.contains("%"))
 			setSleepingPlayersNeeded(oldWorld);
-		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + newWorld + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%"))
+		String newRequired = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + newWorld + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS);
+		if (newRequired != null && !newRequired.contains("%"))
 			setSleepingPlayersNeeded(newWorld);
 	}
 	@EventHandler // #3. On quit
@@ -689,7 +673,8 @@ public class SleepHandler implements Listener {
 			WorldListHandler.listLoadedWorlds();
 			MainTM.getInstance().saveConfig();
 		}
-		if (!MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS).contains("%")) {
+		String quitRequired = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_NIGHTSKIP_REQUIREDPLAYERS);
+		if (quitRequired != null && !quitRequired.contains("%")) {
 			BukkitScheduler changeRequiredPercentageOnquitScheduler = MainTM.getInstance().getServer().getScheduler();
 			changeRequiredPercentageOnquitScheduler.scheduleSyncDelayedTask(MainTM.getInstance(), new Runnable() {
 				@Override

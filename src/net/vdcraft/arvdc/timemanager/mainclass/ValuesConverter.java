@@ -1172,8 +1172,7 @@ public class ValuesConverter extends MainTM {
 		try { // Check if day value is a double
 			if (nightSkipNbPlayers.contains("%")) {
 				nightSkipNbPlayers = nightSkipNbPlayers.replace("%", "");
-				@SuppressWarnings("unused")
-				double requiredPlayers = Double.parseDouble(nightSkipNbPlayers);
+				Double.parseDouble(nightSkipNbPlayers);
 			} else {
 				double requiredPlayers = Double.parseDouble(nightSkipNbPlayers);
 				int rp = (int) Math.round(requiredPlayers);
