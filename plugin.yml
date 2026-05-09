@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.12.0
+version: 1.12.1
 api-version: '1.21'
 authors: [ArVdC]
 main: net.vdcraft.arvdc.timemanager.MainTM

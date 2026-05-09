@@ -199,8 +199,9 @@ public class LgFileHandler extends MainTM {
 	private static void checkDefLang() {
 		if (!MainTM.getInstance().langConf.getKeys(false).contains(LG_DEFAULTLANG)) {
 			restoreDefLang();
-		} else { // Else, if 'defaultLang' key exists but is void set it to the fallback language
-			if (MainTM.getInstance().langConf.getString(LG_DEFAULTLANG).equals("")) {
+		} else { // Else, if 'defaultLang' key is void or still points to the placeholder, set it to the fallback language
+			String current = MainTM.getInstance().langConf.getString(LG_DEFAULTLANG);
+			if (current == null || current.equals("") || current.equalsIgnoreCase(LG_DEFAULT)) {
 				MainTM.getInstance().langConf.set(LG_DEFAULTLANG, pickFallbackLang());
 			}
 			// Then actualize the 'defaultLang' key from lang.yml file
