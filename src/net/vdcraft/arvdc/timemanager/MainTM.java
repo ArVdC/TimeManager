@@ -192,6 +192,7 @@ public class MainTM extends JavaPlugin {
 	public static final String LG_STAY = "stay";
 	public static final String LG_FADEOUT = "fadeOut";
 	protected static final String LG_DEFAULT = "default";
+	protected static final String LG_FALLBACK_LANG = "en_US";
 	protected static final String LG_PREFIX = "prefix";
 	protected static final String LG_MSG = "msg";
 	protected static final String LG_NETHERMSG = "netherMsg";

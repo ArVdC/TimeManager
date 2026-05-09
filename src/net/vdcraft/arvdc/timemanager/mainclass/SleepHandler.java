@@ -63,8 +63,7 @@ public class SleepHandler implements Listener {
 		if (MainTM.serverMcVersion >= MainTM.reqMcVForWorldIsBedWorks) {
 			if (!w.isBedWorks()) {
 				MsgHandler.debugMsg(MainTM.sleepProcessImpossibleDebugMsg + " " + ChatColor.YELLOW + world + ChatColor.AQUA + ". " + player + MainTM.sleepProcessEndsDebugMsg); // Console debug msg
-				e.setCancelled(true);
-				return; // If it's a world where sleep is impossible (Nether, etc.)
+				return; // Vanilla handles bed-explosion in worlds where sleep is impossible (Nether, End)
 			}
 		}
 		if (sync != null && sync.equalsIgnoreCase(MainTM.ARG_TRUE)) {
@@ -217,8 +216,8 @@ public class SleepHandler implements Listener {
 			String LegacyPercent = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + w.getName() + "." + MainTM.CF_NIGHTSKIP_LEGACYPERCENTAGE);
 			spPercent = Integer.parseInt(LegacyPercent);		
 		} else spPercent = w.getGameRuleValue(GameRule.PLAYERS_SLEEPING_PERCENTAGE);
-		if (debugMsg) MsgHandler.debugMsg(spNb / rpNb * 100 + "% of relevant players are sleeping now (" + spNb + "/" + rpNb + ") and " + spPercent + "% is required."); // Console debug msg
-		if (spNb >= rpNb * (spPercent / 100)) return true; // If the percentage is reached, return true
+		if (debugMsg) MsgHandler.debugMsg((rpNb == 0 ? 0 : spNb * 100 / rpNb) + "% of relevant players are sleeping now (" + spNb + "/" + rpNb + ") and " + spPercent + "% is required."); // Console debug msg
+		if (spNb * 100 >= rpNb * spPercent) return true; // If the percentage is reached, return true
 		else return false;
 	}
 	
@@ -353,9 +352,9 @@ public class SleepHandler implements Listener {
         if (bedBlock.getType().toString().endsWith("_BED")){
         	Directional blockDirection = (Directional) bedBlock.getBlockData();
         	facing = blockDirection.getFacing().toString();
-        } else facing = "UNKNOW";
+        } else facing = "UNKNOWN";
     return facing;
-	}	
+	}
 	
 	/**
 	 * Adjusts particles position depending on the orientation of the bed
@@ -389,7 +388,7 @@ public class SleepHandler implements Listener {
                 adjustedLoc.add(-1.5, 0.5, 0.0);
                 adjustedLoc.setYaw(270f);
                 break;
-            case "UNKNOW":   	
+            case "UNKNOWN":
                 adjustedLoc.add(0.0, 0.5, 0.0);
                 adjustedLoc.setYaw(0f);
                 break;
@@ -406,19 +405,19 @@ public class SleepHandler implements Listener {
 		default:
 		case 4 :
 			p.spawnParticle(Particle.CLOUD, loc, 10, 1, 1, 1);
-			MsgHandler.errorMsg("100 " + Particle.CLOUD + " was displayed at location : " + loc);
+			MsgHandler.debugMsg("10 " + Particle.CLOUD + " was displayed at location : " + loc);
 			break;
 		case 3 :
 			p.spawnParticle(Particle.CLOUD, loc, 50, 1, 1, 1);
-			MsgHandler.errorMsg("50 " + Particle.CLOUD + " was displayed at location : " + loc);
+			MsgHandler.debugMsg("50 " + Particle.CLOUD + " was displayed at location : " + loc);
 			break;
 		case 2 :
 			p.spawnParticle(Particle.CLOUD, loc, 100, 1, 1, 1);
-			MsgHandler.errorMsg("10 " + Particle.CLOUD + " was displayed at location : " + loc);
+			MsgHandler.debugMsg("100 " + Particle.CLOUD + " was displayed at location : " + loc);
 			break;
 		case 1 :
 			p.spawnParticle(Particle.CLOUD, loc, 500, 1, 1, 1);
-			MsgHandler.errorMsg("1 " + Particle.CLOUD + " was displayed at location : " + loc);
+			MsgHandler.debugMsg("500 " + Particle.CLOUD + " was displayed at location : " + loc);
 			break;
 		}
 	}
