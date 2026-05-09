@@ -195,13 +195,14 @@ public class LgFileHandler extends MainTM {
 	/**
 	 * Check 'defaultLang' integrity in lang.yml
 	 */
-	// Check if 'defaultLang' key exists in yaml, if not create it and set it to default
+	// Check if 'defaultLang' key exists in yaml, if not create it and set it to a usable fallback
 	private static void checkDefLang() {
 		if (!MainTM.getInstance().langConf.getKeys(false).contains(LG_DEFAULTLANG)) {
 			restoreDefLang();
-		} else { // Else, if 'defaultLang' key exists but is void set it to default
-			if (MainTM.getInstance().langConf.getString(LG_DEFAULTLANG).equals("")) {
-				MainTM.getInstance().langConf.set(LG_DEFAULTLANG, LG_DEFAULT);
+		} else { // Else, if 'defaultLang' key is void or still points to the placeholder, set it to the fallback language
+			String current = MainTM.getInstance().langConf.getString(LG_DEFAULTLANG);
+			if (current == null || current.equals("") || current.equalsIgnoreCase(LG_DEFAULT)) {
+				MainTM.getInstance().langConf.set(LG_DEFAULTLANG, pickFallbackLang());
 			}
 			// Then actualize the 'defaultLang' key from lang.yml file
 			serverLang = new String(MainTM.getInstance().langConf.getString(LG_DEFAULTLANG));
@@ -266,8 +267,18 @@ public class LgFileHandler extends MainTM {
 	 */
 	private static void restoreDefLang() {
 		MsgHandler.colorMsg("§e" + serverLang + "§r " + defLangResetMsg); // Console log msg
-		MainTM.getInstance().langConf.set(LG_DEFAULTLANG, LG_DEFAULT);
+		MainTM.getInstance().langConf.set(LG_DEFAULTLANG, pickFallbackLang());
 		serverLang = new String(MainTM.getInstance().langConf.getString(LG_DEFAULTLANG));
+	}
+
+	/**
+	 * Picks the safest fallback language: prefer LG_FALLBACK_LANG (en_US) when
+	 * present in lang.yml, otherwise fall back to the placeholder LG_DEFAULT.
+	 */
+	private static String pickFallbackLang() {
+		org.bukkit.configuration.ConfigurationSection langs = MainTM.getInstance().langConf.getConfigurationSection(LG_LANGUAGES);
+		if (langs != null && langs.getKeys(false).contains(LG_FALLBACK_LANG)) return LG_FALLBACK_LANG;
+		return LG_DEFAULT;
 	}
 
 	/**

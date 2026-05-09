@@ -1,5 +1,6 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -84,29 +85,23 @@ public class WorldListHandler implements Listener {
 		
 		// #4. Remove 'Example' and inexistent worlds if they are present in the config list
 		List<World> loadedWorlds = Bukkit.getServer().getWorlds();
+		List<String> loadedWorldsNames = new ArrayList<String>();
+		for (World lw : loadedWorlds) loadedWorldsNames.add(lw.getName());
 		MsgHandler.debugMsg(MainTM.refrehWorldsListDebugMsg); // Console debug msg
 		MsgHandler.debugMsg(MainTM.worldsRawListDebugMsg + " §e" + loadedWorlds); // Console debug msg
-		String loadedWorldsNames = "" + loadedWorlds;
-		loadedWorldsNames = loadedWorldsNames.replace("},", ",").replace("CraftWorld{name=", "");
-		loadedWorldsNames = loadedWorldsNames.substring(0, loadedWorldsNames.length() - 2);
-		loadedWorldsNames = loadedWorldsNames.substring(1, loadedWorldsNames.length());
-		MsgHandler.debugMsg(MainTM.worldsFormatListDebugMsg + " [" + loadedWorldsNames + "]"); // Console debug msg
+		MsgHandler.debugMsg(MainTM.worldsFormatListDebugMsg + " " + loadedWorldsNames); // Console debug msg
 		MsgHandler.debugMsg(MainTM.worldsCfgListDebugMsg + " " + CfgFileHandler.setAnyListFromConfig(MainTM.CF_WORLDSLIST)); // Console debug msg
-		for (String w : MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST).getKeys(false)) {
-			Boolean eraseWorld = false;
+		List<String> configuredWorlds = new ArrayList<String>(MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST).getKeys(false));
+		for (String w : configuredWorlds) {
 			if (w.equalsIgnoreCase(example) || !loadedWorldsNames.contains(w)) {
-				eraseWorld = true;
-			}
-			MainTM.waitTime(200);
-			if (eraseWorld == true) {
-				MsgHandler.debugMsg("The world §e" + eraseWorld + "§b " + MainTM.delWorldDebugMsg); // Console debug msg
+				MsgHandler.debugMsg("The world §e" + w + "§b " + MainTM.delWorldDebugMsg); // Console debug msg
 				MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST).set(w, null);
 			}
 		}
-		
+
 		MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST).set(example, null);
-		
-		// #6. Notification
+
+		// #5. Notification
 		MsgHandler.infoMsg(MainTM.worldsCheckMsg); // Final console msg
 	}
 
