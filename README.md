@@ -266,9 +266,9 @@ String setLangToUse(Player p)
 * ~~Command: Add a '/tm set duration' command with a 00d-00h-00m-00s format.~~
 * ~~Placeholders: Add new placeholders for the names of the seven days of the week.~~
 * ~~Sleep: Add some features to manage sleep as the plugin doesn't work well with most sleep management plugins.~~
-* Commands: Allow players to display the list of placeholders.
-* Placeholders: Create signs where the placeholders constantly refresh.
-* Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.
-* Sleep: Improve particles displayed during sleep animation.
+* ~~Commands: Allow players to display the list of placeholders.~~
+* ~~Placeholders: Create signs where the placeholders constantly refresh.~~
+* ~~Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.~~
+* ~~Sleep: Improve particles displayed during sleep animation.~~
 
 Please open an issue on GitHub if you want a specific improvement or encounter any bugs.
