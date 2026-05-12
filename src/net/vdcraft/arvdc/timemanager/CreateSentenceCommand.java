@@ -27,8 +27,8 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	// List of admin sub-commands
 	List<String> tmCmdArgsList() {
-		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
-		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET);
+		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
+		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
 	}
 	// List of admin sub-commands having a 'help'
 	List<String> tmHelpArgsList() {

@@ -33,6 +33,8 @@ import net.vdcraft.arvdc.timemanager.mainclass.SignsHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldListHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.NowItemHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.RefreshingSignHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SleepHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.ChatHandler;
@@ -96,7 +98,7 @@ public class MainTM extends JavaPlugin {
 	public static String defSleep = "true";
 	public static String defSync = "false";
 	public static String defFirstStartTime = "default";
-	public static String defNightSkipMode = "default";
+	public static String defNightSkipMode = "animation";
 	public static String defNightSkipNbPlayers = "100%";
 	protected static String defUpdateMsgSrc = "none";
 	protected static int defTitleFadeIn = 20;
@@ -143,6 +145,23 @@ public class MainTM extends JavaPlugin {
 
 	// Initialize server tick
 	protected static Long initialTick;
+
+	/** Public read-only accessor for the server's reference tick. Useful for
+	 *  external integrations (PAPI expansion, dashboard plugins) that should
+	 *  not have direct write access. */
+	public static Long getInitialTick() {
+		return initialTick;
+	}
+
+	/** Server's "first ever" reference tick — persisted ONCE on the very
+	 *  first plugin enable, never overwritten. Used by {@code %tm_serverday%}
+	 *  to count days from the moment TimeManager was first installed,
+	 *  independently of the resetOnStartup behaviour for {@link #initialTick}. */
+	public static Long getFirstEverTick() {
+		Long v = MainTM.getInstance().getConfig().getLong(CF_INITIALTICK + "." + CF_FIRSTEVERTICK, -1L);
+		if (v == null || v < 0) return initialTick;
+		return v;
+	}
 	protected static String initialTime;
 
 	// Config file keys
@@ -158,11 +177,13 @@ public class MainTM extends JavaPlugin {
 	public static final String CF_SLEEP = "sleep";
 	public static final String CF_SYNC = "sync";
 	public static final String CF_FIRSTSTARTTIME = "firstStartTime";
+	public static final String CF_LOCKTIME = "lock-time";
 	public static final String CF_NIGHTSKIP_MODE = "nightSkipMode";
 	public static final String CF_NIGHTSKIP_REQUIREDPLAYERS = "nightSkipRequiredPlayers";
 	public static final String CF_NIGHTSKIP_LEGACYPERCENTAGE = "nightSkipLegacyPercentage";
 	protected static final String CF_INITIALTICK = "initialTick";
 	protected static final String CF_INITIALTICKNB = "initialTickNb";
+	protected static final String CF_FIRSTEVERTICK = "firstEverTickNb";
 	protected static final String CF_RESETONSTARTUP = "resetOnStartup";
 	protected static final String CF_USEMYSQL = "useMySql";
 	protected static final String CF_MYSQL = "mySql";
@@ -252,6 +273,12 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_RESYNC = "resync";
 	protected static final String CMD_SET = "set";
 	protected static final String CMD_TMNOW = "now";
+	protected static final String CMD_LOCK = "lock";
+	protected static final String CMD_UNLOCK = "unlock";
+	protected static final String CMD_PLACEHOLDERS = "placeholders";
+	protected static final String CMD_HUD = "hud";
+	protected static final String CMD_NOWITEM = "nowitem";
+	protected static final String CMD_ANIMATION = "animation";
 
 	// "/tm set" sub-commands names
 	protected static final String CMD_SET_DATE = "date";
@@ -344,7 +371,8 @@ public class MainTM extends JavaPlugin {
 	public static final String PH_MM = "mm";
 	public static final String PH_YY = "yy";
 	public static final String PH_YYYY = "yyyy";
-	
+	public static final String PH_SERVERDAY = "serverday";
+
 	// Permissions names
 	protected static final String PERM_TM = "timemanager.admin";
 	protected static final String PERM_NOW = "timemanager.now.cmd";
@@ -759,7 +787,15 @@ public class MainTM extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new ConsoleCommandHandler(), this);	
 			
 			// #13. Listen to worlds events
-			getServer().getPluginManager().registerEvents(new WorldListHandler(), this);	 // TODO		
+			getServer().getPluginManager().registerEvents(new WorldListHandler(), this);	 // TODO
+
+			// #13.A. Refreshing signs ([tm] marker) — listener + scheduler
+			getServer().getPluginManager().registerEvents(new RefreshingSignHandler(), this);
+			RefreshingSignHandler.init();
+
+			// #13.B. Pocket-watch /now item — listener + config defaults
+			NowItemHandler.ensureDefaults();
+			getServer().getPluginManager().registerEvents(new NowItemHandler(), this);
 
 			// #14. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();

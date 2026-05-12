@@ -136,6 +136,14 @@ public class PlaceholdersHandler extends MainTM {
 		case "{" + PH_PREFIX + PH_YYYY + "}" :
 			return ValuesConverter.dateFromElapsedDays(ed, "yyyy");
 
+		// Returns the server-wide elapsed days since TimeManager was first
+		// installed (firstEverTickNb, written once on first enable and never
+		// reset). Independent of the resetOnStartup behaviour for initialTick.
+		case "{" + PH_PREFIX + PH_SERVERDAY + "}" :
+			long serverDays = (ValuesConverter.getServerTick() - MainTM.getFirstEverTick()) / 24000L;
+			if (serverDays < 0) serverDays = 0;
+			return String.valueOf(serverDays);
+
 		default :
 			return placeholder;
 		}

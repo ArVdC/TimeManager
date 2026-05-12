@@ -172,14 +172,26 @@ public class SyncHandler extends MainTM {
 
 			// #2.H. Apply modifications
 			newTime = ValuesConverter.correctDailyTicks(newTime);
-			Bukkit.getServer().getWorld(world).setTime(newTime);
+			// Skip the setTime/setFullTime calls when the world is frozen and
+			// already sitting at the target tick — they would be no-ops anyway,
+			// but on Paper builds where the world's tick rate manager is not
+			// running normally (datapack dimension, /tick freeze, etc.) the
+			// call throws IllegalArgumentException("Cannot set time in world
+			// without world clock"). safeSetTime() handles that fallback.
+			long worldCurrentTime = Bukkit.getServer().getWorld(world).getTime();
+			boolean alreadyLocked = (speed == 0.0 && worldCurrentTime == newTime);
+
+			if (!alreadyLocked) {
+				safeSetTime(world, newTime);
+			}
 
 			// #2.I. Adjust doDaylightCycle value
 			DoDaylightCycleHandler.adjustDaylightCycle(world);
-			
+
 			// #2.J. Restore the number of elapsed days
-			Long nft = (initElapsedDays * 24000) + newTime;
-			Bukkit.getWorld(world).setFullTime(nft);
+			if (!alreadyLocked) {
+				safeSetFullTime(world, (initElapsedDays * 24000) + newTime);
+			}
 
 			// #2.K. Extra notifications (for each cases)
 			String listedWorldStartTime = ValuesConverter.formattedTimeFromTick(startAtTickNb, true);
@@ -299,6 +311,38 @@ public class SyncHandler extends MainTM {
 			}
 		} 
 		return newTime;
+	}
+
+	/**
+	 * Bukkit's setTime() / setFullTime() throw IllegalArgumentException
+	 * ("Cannot set time in world without world clock") on Paper when the
+	 * world's tick rate manager is not running normally — e.g. datapack
+	 * dimensions, /tick freeze, or worlds whose doDaylightCycle gamerule has
+	 * been forced off in a way that disables the clock entirely.
+	 *
+	 * Our scheduler / sync paths call these every refresh cycle, so a thrown
+	 * exception would spam the console (and kill the BukkitScheduler task on
+	 * first throw). Wrap the calls so we degrade gracefully: log only in
+	 * debug mode, otherwise stay silent.
+	 */
+	public static void safeSetTime(String world, long tick) {
+		World w = Bukkit.getWorld(world);
+		if (w == null) return;
+		try {
+			w.setTime(tick);
+		} catch (IllegalArgumentException e) {
+			MsgHandler.debugMsg("Skipping setTime for §e" + world + "§b: " + e.getMessage());
+		}
+	}
+
+	public static void safeSetFullTime(String world, long fullTime) {
+		World w = Bukkit.getWorld(world);
+		if (w == null) return;
+		try {
+			w.setFullTime(fullTime);
+		} catch (IllegalArgumentException e) {
+			MsgHandler.debugMsg("Skipping setFullTime for §e" + world + "§b: " + e.getMessage());
+		}
 	}
 
 	/**

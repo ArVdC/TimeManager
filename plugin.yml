@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.12.1
+version: 1.12.2
 api-version: '1.21'
 authors: [ArVdC]
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -32,6 +32,15 @@ permissions:
             default: true
           timemanager.sleep.counted:
             default: true
+      timemanager.signs.create:
+        description: Create [tm] refreshing signs
+        default: op
+      timemanager.now-item.use:
+        description: Right-click the pocket-watch /now item
+        default: true
+      timemanager.hud.toggle:
+        description: Toggle the personal ActionBar HUD via /tm hud
+        default: true
 commands:
   tm:
     permission: timemanager.admin
@@ -67,6 +76,11 @@ commands:
             /<command> set time [ticks|daypart|HH:mm:ss] [all|world]
             /<command> set update [none|bukkit|curse|spigot|github]
             /<command> set useCmds [true|false]
+            /<command> lock <world> [time|here|realtime]
+            /<command> unlock <world>
+            /<command> placeholders
+            /<command> hud [on|off|toggle]
+            /<command> nowitem [player]
     aliases:
       - tmanag
       - timemanag

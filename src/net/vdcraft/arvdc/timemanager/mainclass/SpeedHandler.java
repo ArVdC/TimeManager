@@ -137,7 +137,7 @@ public class SpeedHandler extends MainTM {
 					// Restrain too big and too small values
 					newTime = ValuesConverter.correctDailyTicks(newTime);				
 					// Change world's timer
-					Bukkit.getWorld(world).setTime(newTime);
+					SyncHandler.safeSetTime(world, newTime);
 					// While the world is not cancelled and the speed still 24h, launch the loop again ...
 					if (speed == realtimeSpeed) {
 						realSpeedScheduler(world);
@@ -191,7 +191,7 @@ public class SpeedHandler extends MainTM {
 					// Restrain too big and too small values
 					newTime = ValuesConverter.correctDailyTicks(newTime);
 					// Change the world's time
-					Bukkit.getWorld(world).setTime(newTime);
+					SyncHandler.safeSetTime(world, newTime);
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 					if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
@@ -262,7 +262,7 @@ public class SpeedHandler extends MainTM {
 					// Restrain too big and too small values
 					newTime = ValuesConverter.correctDailyTicks(newTime);
 					// Change the world's time
-					Bukkit.getWorld(world).setTime(newTime);
+					SyncHandler.safeSetTime(world, newTime);
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 					if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
@@ -318,7 +318,7 @@ public class SpeedHandler extends MainTM {
 					// Restrain too big and too small values
 					newTime = ValuesConverter.correctDailyTicks(newTime);
 					// Change the world's time
-					Bukkit.getWorld(world).setTime(newTime);
+					SyncHandler.safeSetTime(world, newTime);
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 					if (newSpeed < 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
@@ -370,7 +370,7 @@ public class SpeedHandler extends MainTM {
 					// Restrain too big and too small values
 					newTime = ValuesConverter.correctDailyTicks(newTime);
 					// Change the world's time
-					Bukkit.getWorld(world).setTime(newTime);
+					SyncHandler.safeSetTime(world, newTime);
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 					if (newSpeed >= 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
