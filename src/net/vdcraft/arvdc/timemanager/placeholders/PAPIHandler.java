@@ -220,7 +220,18 @@ public class PAPIHandler extends PlaceholderExpansion {
         if(identifier.equals(MainTM.PH_YYYY)){
 			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
- 
+
+        // %tm_serverday% — total whole days since the server's reference tick
+        // (kept across restarts via initialTickNb in config or MySQL). This is
+        // a server-wide counter, distinct from %tm_elapseddays% which is per
+        // world / based on World#getFullTime.
+        if(identifier.equals(MainTM.PH_SERVERDAY)){
+            long currentTick = net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter.getServerTick();
+            long days = (currentTick - MainTM.getFirstEverTick()) / 24000L;
+            if (days < 0) days = 0;
+            return String.valueOf(days);
+        }
+
         // We return null if an invalid placeholder (f.e. %someplugin_placeholder3%) was provided
         return null;
     }

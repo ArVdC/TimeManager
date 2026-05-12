@@ -181,7 +181,7 @@ public class SleepHandler implements Listener {
 		// Artificially change world's fulltime
 		long wakeUpTick = MainTM.getInstance().getConfig().getLong(MainTM.CF_WAKEUPTICK);
 		long ft = w.getFullTime();
-		w.setFullTime(ft - (ft % 24000) + 24000 + wakeUpTick);
+		SyncHandler.safeSetFullTime(w.getName(), ft - (ft % 24000) + 24000 + wakeUpTick);
 		MsgHandler.debugMsg(MainTM.sleepFulltimeTickDebugMsg + ft + "§b. New fulltime is §e#" + w.getFullTime() + "§b."); // Console debug msg
 		// Use relevant day speed in the world
 		SpeedHandler.speedScheduler(world);
@@ -440,6 +440,34 @@ public class SleepHandler implements Listener {
 				break;
 		}
 		p.spawnParticle(Particle.DUST_COLOR_TRANSITION, loc, 60, 1, 1, 1, dustTransition);
+
+		// Sleep-animation enhancements — additional particle layers per phase
+		// so the wake-up climax feels visually distinct from early sleep dust.
+		// Wrapped in a flag so admins who liked the old subtle look can keep it.
+		if (!MainTM.getInstance().getConfig().getBoolean("sleep.enhanced-particles", true)) return;
+		try {
+			switch (iterationNb) {
+				default:
+				case 4 : // early sleep — gentle floating sparkles
+					p.spawnParticle(Particle.END_ROD, loc, 6, 0.4, 0.4, 0.4, 0.005);
+					break;
+				case 3 : // middle — denser sparkles
+					p.spawnParticle(Particle.END_ROD, loc, 15, 0.6, 0.6, 0.6, 0.01);
+					break;
+				case 2 : // pre-climax — sparkle cloud
+					p.spawnParticle(Particle.END_ROD, loc, 30, 0.9, 0.9, 0.9, 0.02);
+					p.spawnParticle(Particle.GLOW, loc, 10, 0.7, 0.7, 0.7, 0.0);
+					break;
+				case 1 : // wake-up climax — bigger burst + firework dust
+					p.spawnParticle(Particle.END_ROD, loc, 60, 1.0, 1.0, 1.0, 0.05);
+					p.spawnParticle(Particle.FIREWORK, loc, 25, 0.8, 0.8, 0.8, 0.12);
+					p.spawnParticle(Particle.GLOW, loc, 20, 1.0, 1.0, 1.0, 0.0);
+					break;
+			}
+		} catch (Throwable t) {
+			// Older Bukkit builds may not have GLOW or rename particles —
+			// fall back silently. The base DUST_COLOR_TRANSITION already ran.
+		}
 	}
 	
 	/**
@@ -498,7 +526,7 @@ public class SleepHandler implements Listener {
 	private static void linkedSleep(String world, Long refFulltime) {
 		for (String linkedWorld : MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST).getKeys(false)) {
 			String linkedSleep = MainTM.getInstance().getConfig().getString(MainTM.CF_WORLDSLIST + "." + linkedWorld + "." + MainTM.CF_SLEEP);
-			if (linkedSleep.equalsIgnoreCase(MainTM.ARG_LINKED) && !linkedWorld.equalsIgnoreCase(world)) Bukkit.getWorld(linkedWorld).setFullTime(refFulltime);
+			if (linkedSleep.equalsIgnoreCase(MainTM.ARG_LINKED) && !linkedWorld.equalsIgnoreCase(world)) SyncHandler.safeSetFullTime(linkedWorld, refFulltime);
 			// Notify the console
 			MsgHandler.infoMsg("The world " + linkedWorld + " " + MainTM.sleepLinkedNewDayMsg); // Console final msg
 		}

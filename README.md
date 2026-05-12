@@ -3,6 +3,18 @@
 ## Spigot plugin for time management and display
 
 
+### WHAT'S NEW IN 1.12.2
+- **`lock-time:` shortcut** (per world) — `noon`, `dawn`, an `HH:mm`, a raw tick, or `realtime`. Plugin internally rewrites `start`, `daySpeed`, `nightSpeed`, `firstStartTime` for you.
+- **`/tm lock <world> [time]`** / **`/tm unlock <world>`** — toggle a lock at runtime without editing config.
+- **`/tm placeholders`** — list every placeholder the plugin exposes.
+- **`%tm_serverday%`** — server-wide elapsed day counter that survives restarts (uses the existing `initialTickNb`).
+- **Refreshing signs** — place a sign whose first line is `[tm]` (configurable marker) and the next 3 lines may contain `{tm_*}` placeholders; the plugin keeps them up-to-date. Persisted to `signs.yml`.
+- **Pocket-watch /now item** — `/tm nowitem [player]` gives a custom CLOCK item that runs `/now` on right-click.
+- **ActionBar HUD** — opt-in (`hud.actionbar.enabled: false` by default), per-player toggle via `/tm hud on|off`.
+- **Sleep particle enhancements** — END_ROD / GLOW / FIREWORK layers on top of the existing dust transition. Toggle with `sleep.enhanced-particles: false` to keep the original look.
+- **`/tm reload` no longer throws** on frozen worlds — `setTime` / `setFullTime` calls are wrapped so Paper builds that lock the tick rate (datapack dimensions, `/tick freeze`, etc.) silently skip instead of spamming the console.
+
+
 ### TIME MANAGEMENT FUNCTIONALITIES
 Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
 

@@ -106,6 +106,11 @@ public class CfgFileHandler extends MainTM {
 		WorldListHandler.listLoadedWorlds();
 		// #9.B. For each world
 		for (String world : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
+			// #9.A.0. Expand `lock-time` shortcut into the underlying
+			//         (start, daySpeed, nightSpeed, firstStartTime) tuple.
+			//         Must run BEFORE the restrain* calls so the derived
+			//         values get validated/clamped like manually-set ones.
+			LockTimeHandler.applyLockTime(world);
 			// #9.A. Restrain the start times
 			ValuesConverter.restrainStart(world);
 			// #9.B. Restrain the speed modifiers
@@ -132,6 +137,17 @@ public class CfgFileHandler extends MainTM {
 			}
 		} else {
 			MainTM.getInstance().getConfig().set(CF_INITIALTICK + "." + CF_RESETONSTARTUP, ARG_TRUE);
+		}
+
+		// #10.A.a-bis. firstEverTickNb — written ONCE on first plugin enable and
+		//   never reset thereafter. Used by %tm_serverday%. We deliberately
+		//   ignore resetOnStartup for this value, so admins can keep their
+		//   existing initialTick reset behaviour but still get a meaningful
+		//   "days since I installed TimeManager" counter.
+		if (!MainTM.getInstance().getConfig().contains(CF_INITIALTICK + "." + CF_FIRSTEVERTICK)) {
+			MainTM.getInstance().getConfig().set(
+					CF_INITIALTICK + "." + CF_FIRSTEVERTICK,
+					ValuesConverter.getServerTick());
 		}
 
 		// #10.A.b. useMySql value
@@ -187,6 +203,10 @@ public class CfgFileHandler extends MainTM {
 		} else {
 			MainTM.getInstance().getConfig().set(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_CMDS, ARG_FALSE);
 		}
+
+		// #13.B. Ensure ActionBar HUD defaults exist + (re)start its task
+		ActionBarHandler.ensureDefaults();
+		ActionBarHandler.startOrRestart();
 
 		// #14. Restore debugMode node location
 		DebugModeHandler.debugModeNodeRelocate();

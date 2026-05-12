@@ -81,3 +81,49 @@ config.yml
 *debugMode*
  Set true to enable colored verbose messages in the console. Useful to understand some mechanisms of this plugin.
 -----
+*lock-time* (per-world, optional)
+ Shortcut for "freeze this world at a specific time" or "follow real time".
+ When set, the plugin internally rewrites start, daySpeed, nightSpeed and
+ firstStartTime for that world. Removing the key (or setting it to 'false')
+ restores admin control of those four values.
+ Accepted values:
+  - noon, midday, dusk, sunset, evening, dawn, sunrise, morning, day, night,
+    midnight                 -> freeze at the matching tick
+  - 0 to 23999                -> freeze at this raw tick
+  - HH:mm or HH:mm:ss         -> freeze at the matching tick
+  - realtime                  -> run at speed 24.0 (1 mc day = 1 real day, UTC)
+  - false / off / none        -> no override (default)
+-----
+*signs* (root section)
+ Refreshing signs. Players place a sign whose first line is the configured
+ 'marker' (default '[tm]'), the next 3 lines may contain plain text + {tm_*}
+ placeholders. The plugin then rewrites the sign's text on the configured
+ refresh interval. Coordinates are persisted to signs.yml across restarts.
+  *enabled* (default true)   - master switch for the feature
+  *refresh-rate* (ticks)     - how often each tracked sign is redrawn
+  *marker*                   - first-line text that turns a sign into a TM sign
+ Permission to create signs: timemanager.signs.create (op by default).
+-----
+*now-item* (root section)
+ Pocket-watch item that triggers the /now action on right-click.
+ Admins give one with /tm nowitem [player].
+  *enabled* (default true)   - master switch
+  *display-name*             - item display name (legacy '&' colors supported)
+  *lore*                     - list of lore lines
+  *cooldown-ticks*           - client cooldown after each right-click
+ Permission to use: timemanager.now-item.use (default true).
+-----
+*hud.actionbar* (root section)
+ Optional per-player ActionBar display of placeholders. Disabled by default.
+  *enabled* (default false)  - global switch
+  *refresh-rate* (ticks)     - how often the action bar is rewritten
+  *format*                   - template with {tm_*} placeholders + legacy colors
+  *worlds*                   - empty list = every world; otherwise a whitelist
+ Players opt out individually with /tm hud off. Per-player state is in-memory
+ and resets at server restart by design.
+-----
+*sleep.enhanced-particles* (boolean, default true)
+ Adds END_ROD, GLOW and FIREWORK particle layers on top of the existing
+ DUST_COLOR_TRANSITION during the sleep / night-skip animation. Set to false
+ to keep the original (subtler) particle look.
+-----

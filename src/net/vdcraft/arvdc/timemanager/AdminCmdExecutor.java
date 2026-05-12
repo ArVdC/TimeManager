@@ -14,6 +14,12 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHelp;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmAnimation;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmHud;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmLock;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmNowItem;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmPlaceholders;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmUnlock;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmNow;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckConfig;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmCheckSql;
@@ -139,6 +145,43 @@ public class AdminCmdExecutor implements CommandExecutor {
 					TmReload.cmdReload(sender, args[1]);
 					return true;
 				}
+			}
+			// List all placeholders the plugin exposes
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_PLACEHOLDERS)) {
+				TmPlaceholders.cmdPlaceholders(sender);
+				return true;
+			}
+			// Toggle the ActionBar HUD for the player
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_HUD)) {
+				String onOff = (nbArgs >= 2) ? args[1] : null;
+				TmHud.cmdHud(sender, onOff);
+				return true;
+			}
+			// Give a "pocket watch" /now item
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_NOWITEM)) {
+				String target = (nbArgs >= 2) ? args[1] : null;
+				TmNowItem.cmdNowItem(sender, target);
+				return true;
+			}
+			// Toggle sleep animation (nightSkipMode) for a world
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_ANIMATION)) {
+				String w = (nbArgs >= 2) ? args[1] : defaultWorld;
+				String onOff = (nbArgs >= 3) ? args[2] : null;
+				TmAnimation.cmdAnimation(sender, w, onOff);
+				return true;
+			}
+			// Lock a world's time at a given tick (or current tick if omitted)
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_LOCK)) {
+				String w = (nbArgs >= 2) ? args[1] : defaultWorld;
+				String timeArg = (nbArgs >= 3) ? args[2] : null;
+				TmLock.cmdLock(sender, w, timeArg);
+				return true;
+			}
+			// Unlock a world (remove its lock-time)
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_UNLOCK)) {
+				String w = (nbArgs >= 2) ? args[1] : defaultWorld;
+				TmUnlock.cmdUnlock(sender, w);
+				return true;
 			}
 			// Synchronize all worlds timers based on server initial time
 			else if (args[0].equalsIgnoreCase(MainTM.CMD_RESYNC)) {
