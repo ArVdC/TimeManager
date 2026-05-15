@@ -270,5 +270,6 @@ String setLangToUse(Player p)
 * ~~Placeholders: Create signs where the placeholders constantly refresh.~~
 * ~~Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.~~
 * ~~Sleep: Improve particles displayed during sleep animation.~~
+* Backward compatibility: Make a 2.0 version with no backward compatibility, because of the new gamerule 'ADVANCE_TIME' that replace 'DAYLIGHT_CYCLE'.
 
 Please open an issue on GitHub if you want a specific improvement or encounter any bugs.
