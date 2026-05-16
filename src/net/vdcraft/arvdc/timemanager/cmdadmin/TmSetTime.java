@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
-import net.vdcraft.arvdc.timemanager.mainclass.DoDaylightCycleHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.AdvanceTimeHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SpeedHandler;
 
 public class TmSetTime extends MainTM {
@@ -53,7 +53,7 @@ public class TmSetTime extends MainTM {
 				// Detect if this world needs to change its speed value
 				SpeedHandler.speedScheduler(world);
 				// Adjust doDaylightCycle value
-				DoDaylightCycleHandler.adjustDaylightCycle(world);
+				AdvanceTimeHandler.adjustDaylightCycle(world);
 				// Notifications
 				String timeToSet = ValuesConverter.formattedTimeFromTick(tick, true);
 				MsgHandler.infoMsg(worldTimeChgMsg1 + " " + world + " " + worldTimeChgMsg2 + " tick #" + tick + " (" + timeToSet + ")."); // Console final msg (always)

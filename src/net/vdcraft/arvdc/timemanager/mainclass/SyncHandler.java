@@ -186,7 +186,7 @@ public class SyncHandler extends MainTM {
 			}
 
 			// #2.I. Adjust doDaylightCycle value
-			DoDaylightCycleHandler.adjustDaylightCycle(world);
+			AdvanceTimeHandler.adjustDaylightCycle(world);
 
 			// #2.J. Restore the number of elapsed days
 			if (!alreadyLocked) {

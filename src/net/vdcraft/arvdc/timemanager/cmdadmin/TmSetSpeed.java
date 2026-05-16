@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.DoDaylightCycleHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.AdvanceTimeHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 import net.vdcraft.arvdc.timemanager.mainclass.SpeedHandler;
@@ -53,7 +53,7 @@ public class TmSetSpeed extends MainTM {
 			// Restrain the firstStartTime value
 			ValuesConverter.restrainFirstStartTime(world);
 			// Do daylightCycle change if needed
-			DoDaylightCycleHandler.adjustDaylightCycle(world);
+			AdvanceTimeHandler.adjustDaylightCycle(world);
 			// Save the config
 			MainTM.getInstance().saveConfig();
 			// Detect if this world needs to change its speed value

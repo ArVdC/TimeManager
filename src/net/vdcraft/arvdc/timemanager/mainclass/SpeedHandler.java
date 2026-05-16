@@ -33,7 +33,7 @@ public class SpeedHandler extends MainTM {
 			// Get the current 'sync' value
 			String sync = MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC);
 			// Do a first daylightCycle to avoid mistakes
-			DoDaylightCycleHandler.adjustDaylightCycle(world);
+			AdvanceTimeHandler.adjustDaylightCycle(world);
 
 			// #B.1. Do not treat frozen worlds
 			if (speed == 0.0) {
@@ -195,7 +195,7 @@ public class SpeedHandler extends MainTM {
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 					if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
-						DoDaylightCycleHandler.adjustDaylightCycle(world);
+						AdvanceTimeHandler.adjustDaylightCycle(world);
 					// Get the world's 'daySpeed' value
 					double daySpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + CF_D_SPEED);
 					// Get the world's 'nightSpeed' value
@@ -266,7 +266,7 @@ public class SpeedHandler extends MainTM {
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
 					if ((currentSpeed <= 1 && newSpeed > 1) || (currentSpeed > 1 && newSpeed <= 1))
-						DoDaylightCycleHandler.adjustDaylightCycle(world);
+						AdvanceTimeHandler.adjustDaylightCycle(world);
 					// While the world is not cancelled and still variable synchronous, launch the loop again ...
 					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE)
 							&& (newSpeed != realtimeSpeed)
@@ -321,7 +321,7 @@ public class SpeedHandler extends MainTM {
 					SyncHandler.safeSetTime(world, newTime);
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
-					if (newSpeed < 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
+					if (newSpeed < 1) AdvanceTimeHandler.adjustDaylightCycle(world);
 					// While the world is not cancelled, asynchronous and with a speed bigger than 1, launch the loop again ...
 					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
 							&& (newSpeed > 1)
@@ -373,7 +373,7 @@ public class SpeedHandler extends MainTM {
 					SyncHandler.safeSetTime(world, newTime);
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(newTime));
-					if (newSpeed >= 1) DoDaylightCycleHandler.adjustDaylightCycle(world);
+					if (newSpeed >= 1) AdvanceTimeHandler.adjustDaylightCycle(world);
 					// While the world is not cancelled, asynchronous and with a speed between 0 and 1, launch the loop again ...
 					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
 							&& (newSpeed > 0)
@@ -427,7 +427,7 @@ public class SpeedHandler extends MainTM {
 					MsgHandler.timerMsg("The world " + ChatColor.YELLOW + world + " " + ChatColor.DARK_PURPLE + "speed = " + ChatColor.YELLOW + currentSpeed + ChatColor.DARK_PURPLE + " (" + ValuesConverter.wichSpeedParam(currentTime) + ") | refreshRate = " + ChatColor.YELLOW + refreshRateLong + ChatColor.DARK_PURPLE + " | tick = " + ChatColor.YELLOW + Bukkit.getWorld(world).getTime());
 					// Change the doDaylightCycle gamerule if it is needed
 					double newSpeed = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST + "." + world + "." + ValuesConverter.wichSpeedParam(currentTime));
-					if (newSpeed != 1 ) DoDaylightCycleHandler.adjustDaylightCycle(world);
+					if (newSpeed != 1 ) AdvanceTimeHandler.adjustDaylightCycle(world);
 					// While the world is not cancelled, asynchronous and with a speed = 1, launch the loop again ...
 					if (MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + world + "." + CF_SYNC).equalsIgnoreCase(ARG_FALSE)
 							&& (newSpeed == 1)) { //
