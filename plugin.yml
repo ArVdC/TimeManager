@@ -1,6 +1,12 @@
 name: TimeManager
 version: 1.12.3
-api-version: '1.21'
+# api-version '1.13' is the lowest field value modern Paper accepts; pre-1.13
+# servers don't know the field and silently ignore it, so the jar still loads
+# back to 1.9.4. Setting it to 1.13 also tells 1.13+ Paper "skip the legacy
+# Material rewriter" — important because TM references Material.CLOCK (added
+# in 1.13) which the rewriter otherwise can't map back to the pre-flattening
+# Material.WATCH.
+api-version: '1.13'
 authors: [ArVdC]
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdcraft.net
