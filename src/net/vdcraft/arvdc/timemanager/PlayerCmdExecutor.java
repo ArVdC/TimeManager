@@ -64,6 +64,35 @@ public class PlayerCmdExecutor implements CommandExecutor {
 		int n = 0;
 		while (n < nbArgs) MsgHandler.devMsg("[" + (n) + "] : §e" + args[n++]); // Console dev msg
 
+		// #5.5. Vanilla-style admin routing.
+		// /time set <X> | /time add <X> | /time query <X>  → delegate to the
+		// vanilla 'minecraft:time' command so the classic Essentials/vanilla
+		// muscle memory keeps working. Without this the /time alias would
+		// always go to /now (display) and admins' arguments would be ignored.
+		// Gate on op or the matching vanilla permission so regular players
+		// can't bypass /tm restrictions.
+		if (nbArgs >= 1 && (sender.isOp() || sender.hasPermission("minecraft.command.time"))) {
+			String first = args[0].toLowerCase();
+			if (first.equals("set") || first.equals("add") || first.equals("query")) {
+				StringBuilder vanilla = new StringBuilder("minecraft:time");
+				for (String a : args) vanilla.append(' ').append(a);
+				if (Bukkit.dispatchCommand(sender, vanilla.toString())) {
+					return true;
+				}
+				// 'minecraft:' namespace not available on some very old
+				// servers — cover the common "set <daypart>" case via our
+				// own /tm set time logic so admins still get a usable
+				// command back from the same syntax.
+				if (first.equals("set") && args.length >= 2) {
+					Bukkit.dispatchCommand(sender,
+							MainTM.CMD_TM + " set time " + args[1]
+									+ (args.length > 2 ? " " + args[2] : " all"));
+					return true;
+				}
+				return true;
+			}
+		}
+
 		// #6. If there is no argument, send default arguments
 		if (nbArgs == 0) {
 			NowMsgHandler.sendNowMsg(sender);
