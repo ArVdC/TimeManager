@@ -23,14 +23,29 @@ public class DoDaylightCycleHandler extends MainTM {
 			World w = Bukkit.getWorld(worldToSet);
 			long t = w.getTime();
 			double speedModifier = MainTM.getInstance().getConfig().getDouble(CF_WORLDSLIST +"." + worldToSet + "." + ValuesConverter.wichSpeedParam(t));
-			// If the speed of the world is freeze, decreased or normal & sync 
+			// If the speed of the world is freeze, decreased or normal & sync
 			if (speedModifier == realtimeSpeed || speedModifier < 1.0 || (speedModifier == 1.0 && MainTM.getInstance().getConfig().getString(CF_WORLDSLIST + "." + worldToSet + "." + CF_SYNC).equalsIgnoreCase(ARG_TRUE))) {
-				w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+				setDoDaylightCycle(w, false);
 				MsgHandler.debugMsg(daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			} else { // If the speed of the world is increased or normal & async
-				w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+				setDoDaylightCycle(w, true);
 				MsgHandler.debugMsg(daylightTrueDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			}
+		}
+	}
+
+	/**
+	 * GameRule API bridge. Pre-1.13 servers don't have the org.bukkit.GameRule
+	 * class at all (gamerules were string-keyed), so we fall back to the
+	 * legacy setGameRuleValue(String, String) overload — still present on
+	 * modern Paper for back-compat, just deprecated.
+	 */
+	@SuppressWarnings("deprecation")
+	private static void setDoDaylightCycle(World w, boolean value) {
+		if (serverMcVersion >= reqMcVForGamerules) {
+			w.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, value);
+		} else {
+			w.setGameRuleValue("doDaylightCycle", String.valueOf(value));
 		}
 	}
 
