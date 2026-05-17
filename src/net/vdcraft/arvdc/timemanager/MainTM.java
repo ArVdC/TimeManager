@@ -793,9 +793,15 @@ public class MainTM extends JavaPlugin {
 			getServer().getPluginManager().registerEvents(new RefreshingSignHandler(), this);
 			RefreshingSignHandler.init();
 
-			// #13.B. Pocket-watch /now item — listener + config defaults
-			NowItemHandler.ensureDefaults();
-			getServer().getPluginManager().registerEvents(new NowItemHandler(), this);
+			// #13.B. Pocket-watch /now item — listener + config defaults.
+			// NowItemHandler uses NamespacedKey + PersistentDataContainer
+			// (both 1.13+ APIs). Skip the feature entirely on legacy servers
+			// — the listener registration would otherwise warn at startup
+			// with "NamespacedKey does not exist" and never fire anyway.
+			if (serverMcVersion >= reqMcVForGamerules) {
+				NowItemHandler.ensureDefaults();
+				getServer().getPluginManager().registerEvents(new NowItemHandler(), this);
+			}
 
 			// #14. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();
