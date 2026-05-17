@@ -80,8 +80,10 @@ public class LgFileHandler extends MainTM {
 			MsgHandler.devMsg("The §eheader§9 of " + LANGFILENAME + " file contents : §e" + header); // Console dev msg
 			// #1.B.c. Delete the txt file
 			MainTM.getInstance().langHeaderFileTxt.delete();
-			// #1.B.d. Set the header into the yml file
-			MainTM.getInstance().langConf.options().setHeader(header);
+			// #1.B.d. Set the header into the yml file (1.19+ API only).
+			if (serverMcVersion != null && serverMcVersion >= reqMcVForConfigFile) {
+				MainTM.getInstance().langConf.options().setHeader(header);
+			}
 		}
 
 		// #2. When using the admin command /tm reload
