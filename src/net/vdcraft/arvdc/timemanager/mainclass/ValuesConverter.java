@@ -786,6 +786,10 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String replaceChars(String version) {
 		MsgHandler.devMsg("Plugin version to convert : " + version);
+		if (version == null || version.isEmpty()) {
+			MsgHandler.errorMsg(versionTMFormatMsg);
+			return null;
+		}
 		version = version.replace("dev", "d")
 				.replace("alpha", "a")
 				.replace("beta", "b")
@@ -797,7 +801,28 @@ public class ValuesConverter extends MainTM {
 				.replace("-", ".")
 				.replace("...", ".")
 				.replace("..", ".");
+		// Drop trailing build/qualifier tokens (e.g. "1.12.3.legacy",
+		// "1.12.2.snapshot.1"). The version comparator only looks at
+		// MAJOR.MINOR.PATCH.RELEASE.DEV — anything past the last numeric
+		// segment is noise and would crash Integer.parseInt below.
+		String[] parts = version.split("[.]");
+		StringBuilder cleaned = new StringBuilder();
+		for (String part : parts) {
+			if (part.isEmpty()) continue;
+			try {
+				Integer.parseInt(part);
+			} catch (NumberFormatException nfe) {
+				break;
+			}
+			if (cleaned.length() > 0) cleaned.append('.');
+			cleaned.append(part);
+		}
+		version = cleaned.toString();
 		MsgHandler.devMsg("Plugin version converted : " + version);
+		if (version.isEmpty()) {
+			MsgHandler.errorMsg(versionTMFormatMsg);
+			return null;
+		}
 		try {
 			String versionIntTest = version.replace(".", "");
 			Integer.parseInt(versionIntTest); // Prevent all other parse errors
