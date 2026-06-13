@@ -3,6 +3,23 @@
 ## Spigot plugin for time management and display
 
 
+### WHAT'S NEW IN 2.12.3
+- **Seasons engine** — day and night length sweep through the year like they do on Earth. Six latitude-style presets (Equatorial, Mediterranean, Temperate, Subarctic, Arctic, Custom), a north/south hemisphere switch, sinusoidal sweep between solstices, configurable year length (default 32 MC days). Off by default; opt in with `seasons.enabled: true`. Nether and End are auto-excluded since they have no daylight cycle. Drives the existing `daySpeed` / `nightSpeed` machinery on every MC day boundary, so the rest of TimeManager picks up the new values transparently.
+- **`/tm gui`** — three-page in-game admin panel with click feedback, currently-selected options glow, and a Reset-to-vanilla button on every page. Server / World / Seasons tabs. Aliases: `/tm admin`, `/tm panel`, `/tm menu`, `/tm settings`. Shown below.
+- **`/tm season`** — console-driven admin: `status | enable | disable | preset <NAME> | year <days> | apply | list`.
+- **10 GUI languages** — the in-game admin panel translates alongside `/now`. Currently shipped: English, Turkish, German, Spanish (Spain), Spanish (Latin America), French, Italian, Dutch, Portuguese, Hebrew. Strings live under `languages.<code>.gui.*` in `lang.yml` and fall back to English when missing.
+- **Five new season placeholders** — `%tm_season%`, `%tm_season_preset%`, `%tm_season_dayofyear%`, `%tm_season_daylight%`, `%tm_season_hemisphere%`. Listed in `/tm placeholders` like the existing set.
+- **`/now` season suffix** — when the seasons engine is enabled and the player is in the overworld, the chat `/now` output ends with a small `(SEASON • XX% daylight)` line. Translatable via the `now-season-suffix` key in `lang.yml`; clear it to opt out.
+- **Smart `/time` routing for ops** — `/time set <day | noon | tick | HH:mm>` now goes through TimeManager so the response uses TM's chat format instead of vanilla output. `/time add` and `/time query` stay vanilla. Tab completion surfaces vanilla's set/add/query verbs and daypart options.
+
+Existing 1.12.2 configs load unchanged.
+
+#### Admin GUI screenshots
+| Server | World | Seasons |
+| --- | --- | --- |
+| ![Server tab](docs/screenshots/gui-server.png) | ![World tab](docs/screenshots/gui-world.png) | ![Seasons tab](docs/screenshots/gui-seasons.png) |
+
+
 ### WHAT'S NEW IN 1.12.2
 - **`lock-time:` shortcut** (per world) — `noon`, `dawn`, an `HH:mm`, a raw tick, or `realtime`. Plugin internally rewrites `start`, `daySpeed`, `nightSpeed`, `firstStartTime` for you.
 - **`/tm lock <world> [time]`** / **`/tm unlock <world>`** — toggle a lock at runtime without editing config.
@@ -74,6 +91,11 @@ The available placeholders are as follows :
 - {tm_mm} : Displays the month part of the date in 2 digits.
 - {tm_yy} : Displays the year part of the date in 2 digits.
 - {tm_yyyy} : Displays the year part of the date in 4 digits.
+- {tm_season} : Current season for the player's world — WINTER / SPRING / SUMMER / FALL (or "off" when the seasons engine is disabled).
+- {tm_season_preset} : Active season preset — TEMPERATE / ARCTIC / CUSTOM / etc.
+- {tm_season_dayofyear} : Day of the season-year, 0 to year-length minus 1.
+- {tm_season_daylight} : Daylight share for this MC day formatted with a percent sign, e.g. `47%`.
+- {tm_season_hemisphere} : `north` or `south`.
 
 Please note that these placeholders are case sensitive.
 
