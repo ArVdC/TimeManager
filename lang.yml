@@ -1,46 +1,46 @@
-version: ''
-useMultiLang: ''
-defaultLang: ''
-defaultDisplay: ''
+version: 1.12.2
+useMultiLang: 'true'
+defaultLang: en_US
+defaultDisplay: msg
 titles:
-  fadeIn: ''
-  stay: ''
-  fadeOut: ''
+  fadeIn: 20
+  stay: 60
+  fadeOut: 20
 languages:
   default:
     prefix: '&8&l[&6&lTimeManager&8&l]'
-    msg: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
-    netherMsg: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
-    endMsg: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
-    title: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
-    subtitle: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
-    actionbar: Please ask an admin to properly define the default language in the lang.yml file then reload the file.
+    msg: Please ask an admin to properly define the default language in the lang.yml file then reload this plugin.
+    netherMsg: There is no day-night cycle in the Nether and the End dimensions.
+    endMsg: There is no day-night cycle in the Nether and the End dimensions.
+    title: Please ask an admin to properly define the default language in the lang.yml file then reload this plugin.
+    subtitle: Please ask an admin to properly define the default language in the lang.yml file then reload this plugin.
+    actionbar: Please ask an admin to properly define the default language in the lang.yml file then reload this plugin.
     dayparts:
-      dawn: 'begin at 6.00 am or tick #0'
+      dawn: 'begin at 6.00 am or tick #23000'
       day: 'begin at 7.00 am or tick #1000'
       dusk: 'begin at 6.00 pm or tick #12000'
       night: 'begin at 7.00 pm or tick #13000'
     days:
-      d01: 'any Sunday translation'
-      d02: 'any Monday translation'
-      d03: 'any Tuesday translation'
-      d04: 'any Wednesday translation'
-      d05: 'any Thursday translation'
-      d06: 'any Friday translation'
-      d07: 'any Saturday translation'
+      d01: any Sunday translation
+      d02: any Monday translation
+      d03: any Tueday translation
+      d04: any Wednesday translation
+      d05: any Thirsday translation
+      d06: any Friday translation
+      d07: any Saturday translation
     months:
-      m01: 'any January translation'
-      m02: 'any February translation'
-      m03: 'any March translation'
-      m04: 'any April translation'
-      m05: 'any May translation'
-      m06: 'any June translation'
-      m07: 'any July translation'
-      m08: 'any August translation'
-      m09: 'any September translation'
-      m10: 'any October translation'
-      m11: 'any November translation'
-      m12: 'any December translation'
+      m01: any January translation
+      m02: any February translation
+      m03: any March translation
+      m04: any April translation
+      m05: any May translation
+      m06: any June translation
+      m07: any July translation
+      m08: any August translation
+      m09: any September translation
+      m10: any October translation
+      m11: any November translation
+      m12: any December translation
   de_DE:
     prefix: '&e&l[Stunde]'
     msg: Es &e{tm_time24}&r in der welt {tm_world}, das ist {tm_daypart}.
@@ -63,18 +63,118 @@ languages:
       d06: Freitag
       d07: Samstag
     months:
-       m01: Januar
-       m02: Februar
-       m03: März
-       m04: April
-       m05: Mai
-       m06: Juni
-       m07: Juli
-       m08: August
-       m09: September
-       m10: Oktober
-       m11: November
-       m12: Dezember
+      m01: Januar
+      m02: Februar
+      m03: März
+      m04: April
+      m05: Mai
+      m06: Juni
+      m07: Juli
+      m08: August
+      m09: September
+      m10: Oktober
+      m11: November
+      m12: Dezember
+    gui:
+      page-server: Server
+      page-world: Welt
+      page-seasons: Jahreszeiten
+      nav-prev: '&7← Zurück'
+      nav-next: '&7Weiter →'
+      click-apply: '&eKlicken zum Anwenden'
+      click-toggle: '&eKlicken zum Umschalten'
+      click-set: '&eKlicken zum Setzen'
+      click-jump: '&aKlicken zum Springen'
+      admin-only: '&8(nur Admin)'
+      error-in-game-only: GUI nur im Spiel verfügbar.
+      error-admin-only: '[TM] GUI nur für Admins.'
+      reset-button: '&c&lAuf Vanilla zurücksetzen'
+      reset-msg: '&a[TM] Alle Einstellungen auf Vanilla zurückgesetzt.'
+      reset-lore:
+      - '&7Stellt alles auf Standard zurück:'
+      - '&8• &7daySpeed / nightSpeed = &f1.0'
+      - '&8• &7sync, sleep AN, lock AUS'
+      - '&8• &7animation = standard'
+      - '&8• &7Jahreszeiten-Motor AUS'
+      - '&8• &7debug / multi-lang / cmds AUS'
+      - ''
+      - '&c&lKlicken um alle Änderungen zu löschen'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aAN'
+      off-text: '&7AUS'
+      section-reload: '&e&lNeu laden'
+      section-checks: '&b&lChecks'
+      section-toggles: '&6&lSchalter'
+      section-refresh-rate: '&d&lAktualisierungsrate'
+      reload-all: '&eAlles neu laden'
+      reload-config: '&eConfig neu laden'
+      reload-lang: '&eSprache neu laden'
+      reload-cmds: '&eCmds neu laden'
+      check-config: '&aConfig prüfen'
+      check-time: '&aZeit prüfen'
+      check-update: '&5Update prüfen'
+      show-placeholders: '&dPlaceholder anzeigen'
+      debug-on: '&aDebug-Modus: AN'
+      debug-off: '&7Debug-Modus: AUS'
+      multilang-on: '&aMehrsprachig: AN'
+      multilang-off: '&7Mehrsprachig: AUS'
+      usecmds-on: '&aGeplante Cmds: AN'
+      usecmds-off: '&7Geplante Cmds: AUS'
+      give-pocket-watch: '&6Taschenuhr geben'
+      broadcast-time: '&aZeit senden'
+      world-header: '&b&lWelt: &f{0}'
+      lock-active: '&aAKTIV'
+      lock-off: '&7aus'
+      anim-vanilla: '&7vanilla'
+      section-speed: '&eGeschwindigkeit'
+      sync-on: '&aSync: AN'
+      sync-off: '&cSync: AUS'
+      sleep-on: '&aSchlaf: AN'
+      sleep-off: '&cSchlaf: AUS'
+      anim-on: '&aSchlaf-Animation: AN'
+      anim-off: '&7Schlaf-Animation: vanilla'
+      lock-world: '&dWeltzeit sperren'
+      unlock-world: '&dWeltzeit freigeben'
+      set-date-today: '&aDatum: heute'
+      reset-elapsed: '&cVergangene Tage zurücksetzen'
+      resync-world: '&bMit Serverzeit synchronisieren'
+      check-this-world: '&dDiese Welt prüfen'
+      quick-jumps: '&dSchnelle Zeitsprünge'
+      time-dawn: '&6Morgendämmerung'
+      time-morning: '&eMorgen'
+      time-noon: '&fMittag'
+      time-sunset: '&6Sonnenuntergang'
+      time-night: '&8Nacht'
+      time-midnight: '&5Mitternacht'
+      now-button: '&b/now'
+      speed-suffix: × Tempo
+      seasons-header: '&6&lJahreszeiten {0}'
+      seasons-active: '&aAKTIV'
+      seasons-disabled: '&cdeaktiviert'
+      enable-seasons: '&aJahreszeiten aktivieren'
+      disable-seasons: '&cJahreszeiten deaktivieren'
+      force-apply: '&eJetzt erzwingen'
+      preset-suffix-southern: '&7&osüdhemisphären Kalender'
+      year-button: '&fJahr: &e{0} MC Tage'
+      speed-label-half: '&7Half speed'
+      speed-label-vanilla: '&7Vanilla'
+      speed-label-double: '&7Double speed'
+      speed-label-quad: '&7Quad speed'
+      speed-label-octuple: '&7Octuple speed'
+      speed-label-custom: '&7Custom speed'
+      hemisphere-north: '&aNorthern hemisphere'
+      hemisphere-south: '&bSouthern hemisphere'
+      hemisphere-north-desc: Summer in June, winter in December.
+      hemisphere-south-desc: Summer in December, winter in June.
+      header-lore-1: '&7Admin settings panel.'
+      header-lore-refresh: '&7Refresh rate: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-language: {0}'
+      header-lore-usecmds: '&7Use commands: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} Tageslicht&8)'
+      chat-applied: '&aAngewendet: &f{0}'
+      chat-toggled: '&aUmgeschaltet: &f{0}'
+      chat-reloaded: '&aNeu geladen: &f{0}'
   en_US:
     prefix: '&e&l[Time]'
     msg: It is &e{tm_time24}&r in world {tm_world}, this is {tm_daypart}.
@@ -97,18 +197,440 @@ languages:
       d06: Friday
       d07: Saturday
     months:
-       m01: January
-       m02: February
-       m03: March
-       m04: April
-       m05: May
-       m06: June
-       m07: July
-       m08: August
-       m09: September
-       m10: October
-       m11: November
-       m12: December
+      m01: January
+      m02: February
+      m03: March
+      m04: April
+      m05: May
+      m06: June
+      m07: July
+      m08: August
+      m09: September
+      m10: October
+      m11: November
+      m12: December
+    gui:
+      page-server: Server
+      page-world: World
+      page-seasons: Seasons
+      nav-prev: '&7← Previous'
+      nav-next: '&7Next →'
+      click-apply: '&eClick to apply'
+      click-toggle: '&eClick to toggle'
+      click-set: '&eClick to set'
+      click-jump: '&aClick to jump'
+      admin-only: '&8(admin only)'
+      error-in-game-only: GUI is for in-game players only.
+      error-admin-only: '[TM] GUI is admin-only.'
+      reset-button: '&c&lReset to vanilla'
+      reset-msg: '&a[TM] All settings reset to vanilla defaults.'
+      reset-lore:
+      - '&7Restores every setting to default:'
+      - '&8• &7daySpeed / nightSpeed = &f1.0'
+      - '&8• &7sync, sleep ON, lock OFF'
+      - '&8• &7animation = default'
+      - '&8• &7seasons engine OFF'
+      - '&8• &7debug / multi-lang / cmds OFF'
+      - ''
+      - '&c&lClick to wipe all changes'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aON'
+      off-text: '&7OFF'
+      section-reload: '&e&lReload'
+      section-checks: '&b&lChecks'
+      section-toggles: '&6&lToggles'
+      section-refresh-rate: '&d&lRefresh rate'
+      reload-all: '&eReload all'
+      reload-config: '&eReload config'
+      reload-lang: '&eReload lang'
+      reload-cmds: '&eReload cmds'
+      check-config: '&aCheck config'
+      check-time: '&aCheck time'
+      check-update: '&5Check update'
+      show-placeholders: '&dShow placeholders'
+      debug-on: '&aDebug mode: ON'
+      debug-off: '&7Debug mode: OFF'
+      multilang-on: '&aMulti-language: ON'
+      multilang-off: '&7Multi-language: OFF'
+      usecmds-on: '&aScheduled commands: ON'
+      usecmds-off: '&7Scheduled commands: OFF'
+      give-pocket-watch: '&6Give Pocket-Watch'
+      broadcast-time: '&aBroadcast time'
+      world-header: '&b&lWorld: &f{0}'
+      lock-active: '&aACTIVE'
+      lock-off: '&7off'
+      anim-vanilla: '&7vanilla'
+      section-speed: '&eSpeed'
+      sync-on: '&aSync: ON'
+      sync-off: '&cSync: OFF'
+      sleep-on: '&aSleep: ON'
+      sleep-off: '&cSleep: OFF'
+      anim-on: '&aSleep animation: ON'
+      anim-off: '&7Sleep animation: vanilla'
+      lock-world: '&dLock world time'
+      unlock-world: '&dUnlock world time'
+      set-date-today: '&aSet date: today'
+      reset-elapsed: '&cReset elapsed days'
+      resync-world: '&bResync to server time'
+      check-this-world: '&dCheck this world'
+      quick-jumps: '&dQuick time jumps'
+      time-dawn: '&6Dawn'
+      time-morning: '&eMorning'
+      time-noon: '&fNoon'
+      time-sunset: '&6Sunset'
+      time-night: '&8Night'
+      time-midnight: '&5Midnight'
+      now-button: '&b/now'
+      speed-suffix: ' × speed'
+      seasons-header: '&6&lSeasons {0}'
+      seasons-active: '&aACTIVE'
+      seasons-disabled: '&cdisabled'
+      enable-seasons: '&aEnable seasons'
+      disable-seasons: '&cDisable seasons'
+      force-apply: '&eForce apply now'
+      preset-suffix-southern: '&7&osouthern hemisphere calendar'
+      year-button: '&fYear: &e{0} MC days'
+      speed-label-half: '&7Half speed'
+      speed-label-vanilla: '&7Vanilla'
+      speed-label-double: '&7Double speed'
+      speed-label-quad: '&7Quad speed'
+      speed-label-octuple: '&7Octuple speed'
+      speed-label-custom: '&7Custom speed'
+      hemisphere-north: '&aNorthern hemisphere'
+      hemisphere-south: '&bSouthern hemisphere'
+      hemisphere-north-desc: Summer in June, winter in December.
+      hemisphere-south-desc: Summer in December, winter in June.
+      header-lore-1: '&7Admin settings panel.'
+      header-lore-refresh: '&7Refresh rate: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-language: {0}'
+      header-lore-usecmds: '&7Use commands: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} daylight&8)'
+      chat-applied: '&aApplied: &f{0}'
+      chat-toggled: '&aToggled: &f{0}'
+      chat-reloaded: '&aReloaded: &f{0}'
+      overview-title: '&b&lOverview'
+      overview-real-time: '&7Real time: &f{0}'
+      overview-world-time: '&7{0} time: &f{1}'
+      overview-speeds: '&7Day / Night speed: &f{0} &7/ &f{1}'
+      overview-season-on: '&7Season: &f{0} &8({1}% daylight)'
+      overview-season-off: '&7Season: &8off'
+      overview-info-line: '&8&oInformational — not clickable'
+      world-day-speed: '&7Day speed: &f{0}'
+      world-night-speed: '&7Night speed: &f{0}'
+      world-sync-line: '&7Sync: {0}'
+      world-sleep-line: '&7Sleep: {0}'
+      world-lock-line: '&7Lock: {0}'
+      world-anim-line: '&7Animation: {0}'
+      season-current-preset: '&7Current preset: &f{0}'
+      season-year-length: '&7Year length: &f{0} MC days'
+      season-status-line: '&7Status: &f{0}'
+      preset-winter-daylight: '&7winter: &f{0}%'
+      preset-summer-daylight: '&7summer: &f{0}%'
+  he_IL:
+    prefix: '&e&l[זמן]'
+    msg: '&e{tm_time24}&r בעולם {tm_world}, זה {tm_daypart}.'
+    netherMsg: אין מחזור יום-לילה במימד הזה!
+    endMsg: אין מחזור יום-לילה במימד הזה!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
+    dayparts:
+      day: יום
+      dusk: שקיעה
+      night: לילה
+      dawn: שחר
+    days:
+      d01: ראשון
+      d02: שני
+      d03: שלישי
+      d04: רביעי
+      d05: חמישי
+      d06: שישי
+      d07: שבת
+    months:
+      m01: ינואר
+      m02: פברואר
+      m03: מרץ
+      m04: אפריל
+      m05: מאי
+      m06: יוני
+      m07: יולי
+      m08: אוגוסט
+      m09: ספטמבר
+      m10: אוקטובר
+      m11: נובמבר
+      m12: דצמבר
+    gui:
+      page-server: שרת
+      page-world: עולם
+      page-seasons: עונות
+      nav-prev: '&7← הקודם'
+      nav-next: '&7הבא →'
+      click-apply: '&eלחץ כדי להחיל'
+      click-toggle: '&eלחץ כדי להחליף'
+      click-set: '&eלחץ כדי להגדיר'
+      click-jump: '&aלחץ כדי לקפוץ'
+      admin-only: '&8(למנהלים בלבד)'
+      error-in-game-only: הממשק זמין רק בתוך המשחק.
+      error-admin-only: '[TM] הממשק זמין רק למנהלים.'
+      reset-button: '&c&lאיפוס לברירת מחדל'
+      reset-msg: '&a[TM] כל ההגדרות אופסו לברירת המחדל.'
+      reset-lore:
+      - '&7משחזר את כל ההגדרות למצב ההתחלתי:'
+      - '&8• &7מהירות יום / לילה = &f1.0'
+      - '&8• &7סנכרון, שינה פעילים; נעילה כבויה'
+      - '&8• &7אנימציה = ברירת מחדל'
+      - '&8• &7מנוע העונות כבוי'
+      - '&8• &7Debug / רב-לשוני / cmds כבויים'
+      - ''
+      - '&c&lלחיצה תמחק את כל השינויים'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aפעיל'
+      off-text: '&7כבוי'
+      section-reload: '&e&lטעינה מחדש'
+      section-checks: '&b&lבדיקות'
+      section-toggles: '&6&lהגדרות'
+      section-refresh-rate: '&d&lקצב רענון'
+      reload-all: '&eטען הכל מחדש'
+      reload-config: '&eטען config מחדש'
+      reload-lang: '&eטען שפה מחדש'
+      reload-cmds: '&eטען cmds מחדש'
+      check-config: '&aבדוק config'
+      check-time: '&aבדוק זמן'
+      check-update: '&5בדוק עדכון'
+      show-placeholders: '&dהצג placeholders'
+      debug-on: '&aמצב Debug: פעיל'
+      debug-off: '&7מצב Debug: כבוי'
+      multilang-on: '&aרב-לשוני: פעיל'
+      multilang-off: '&7רב-לשוני: כבוי'
+      usecmds-on: '&aפקודות מתוזמנות: פעילות'
+      usecmds-off: '&7פקודות מתוזמנות: כבויות'
+      give-pocket-watch: '&6תן שעון כיס'
+      broadcast-time: '&aהכרז זמן'
+      world-header: '&b&lעולם: &f{0}'
+      lock-active: '&aפעיל'
+      lock-off: '&7כבוי'
+      anim-vanilla: '&7ברירת מחדל'
+      section-speed: '&eמהירות'
+      sync-on: '&aסנכרון: פעיל'
+      sync-off: '&cסנכרון: כבוי'
+      sleep-on: '&aשינה: פעילה'
+      sleep-off: '&cשינה: כבויה'
+      anim-on: '&aאנימציית שינה: פעילה'
+      anim-off: '&7אנימציית שינה: ברירת מחדל'
+      lock-world: '&dנעל את זמן העולם'
+      unlock-world: '&dשחרר את זמן העולם'
+      set-date-today: '&aהיום'
+      reset-elapsed: '&cאפס ימים שעברו'
+      resync-world: '&bסנכרן לזמן השרת'
+      check-this-world: '&dבדוק את העולם הזה'
+      quick-jumps: '&dקפיצות זמן'
+      time-dawn: '&6שחר'
+      time-morning: '&eבוקר'
+      time-noon: '&fצהריים'
+      time-sunset: '&6שקיעה'
+      time-night: '&8לילה'
+      time-midnight: '&5חצות'
+      now-button: '&b/now'
+      speed-suffix: × מהירות
+      seasons-header: '&6&lעונות {0}'
+      seasons-active: '&aפעילות'
+      seasons-disabled: '&cכבויות'
+      enable-seasons: '&aהפעל עונות'
+      disable-seasons: '&cכבה עונות'
+      force-apply: '&eהחל עכשיו'
+      preset-suffix-southern: '&7&oלוח שנה דרומי'
+      year-button: '&fשנה: &e{0} ימי MC'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} אור יום&8)'
+      chat-applied: '&aהוחל: &f{0}'
+      chat-toggled: '&aהוחלף: &f{0}'
+      chat-reloaded: '&aנטען מחדש: &f{0}'
+      speed-label-half: '&7חצי מהירות'
+      speed-label-vanilla: '&7ברירת מחדל'
+      speed-label-double: '&7פי 2'
+      speed-label-quad: '&7פי 4'
+      speed-label-octuple: '&7פי 8'
+      speed-label-custom: '&7מהירות מותאמת'
+      hemisphere-north: '&aחצי כדור צפוני'
+      hemisphere-south: '&bחצי כדור דרומי'
+      hemisphere-north-desc: קיץ ביוני, חורף בדצמבר.
+      hemisphere-south-desc: קיץ בדצמבר, חורף ביוני.
+      header-lore-1: '&7פאנל הגדרות מנהל.'
+      header-lore-refresh: '&7קצב רענון: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7רב-לשוני: {0}'
+      header-lore-usecmds: '&7שימוש בפקודות: {0}'
+      overview-title: '&b&lסקירה'
+      overview-real-time: '&7זמן אמיתי: &f{0}'
+      overview-world-time: '&7זמן {0}: &f{1}'
+      overview-speeds: '&7יום / לילה: &f{0} &7/ &f{1}'
+      overview-season-on: '&7עונה: &f{0} &8({1}% אור יום)'
+      overview-season-off: '&7עונה: &8כבוי'
+      overview-info-line: '&8&oמידע — לא ניתן ללחיצה'
+      world-day-speed: '&7מהירות יום: &f{0}'
+      world-night-speed: '&7מהירות לילה: &f{0}'
+      world-sync-line: '&7סנכרון: {0}'
+      world-sleep-line: '&7שינה: {0}'
+      world-lock-line: '&7נעילה: {0}'
+      world-anim-line: '&7אנימציה: {0}'
+      season-current-preset: '&7Preset נוכחי: &f{0}'
+      season-year-length: '&7אורך שנה: &f{0} ימי MC'
+      season-status-line: '&7סטטוס: &f{0}'
+      preset-winter-daylight: '&7חורף: &f{0}%'
+      preset-summer-daylight: '&7קיץ: &f{0}%'
+  tr_TR:
+    prefix: '&e&l[Zaman]'
+    msg: '&e{tm_time24}&r, {tm_world} dünyasında, şu an {tm_daypart}.'
+    netherMsg: Bu boyutta gündüz-gece döngüsü yok!
+    endMsg: Bu boyutta gündüz-gece döngüsü yok!
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
+    dayparts:
+      day: gündüz
+      dusk: gün batımı
+      night: gece
+      dawn: gün doğumu
+    days:
+      d01: Pazar
+      d02: Pazartesi
+      d03: Salı
+      d04: Çarşamba
+      d05: Perşembe
+      d06: Cuma
+      d07: Cumartesi
+    months:
+      m01: Ocak
+      m02: Şubat
+      m03: Mart
+      m04: Nisan
+      m05: Mayıs
+      m06: Haziran
+      m07: Temmuz
+      m08: Ağustos
+      m09: Eylül
+      m10: Ekim
+      m11: Kasım
+      m12: Aralık
+    gui:
+      page-server: Sunucu
+      page-world: Dünya
+      page-seasons: Mevsimler
+      nav-prev: '&7← Geri'
+      nav-next: '&7İleri →'
+      click-apply: '&eUygulamak için tıkla'
+      click-toggle: '&eDeğiştirmek için tıkla'
+      click-set: '&eSeçmek için tıkla'
+      click-jump: '&aGitmek için tıkla'
+      admin-only: '&8(yalnızca yönetici)'
+      error-in-game-only: Bu menü sadece oyun içinde açılabilir.
+      error-admin-only: '[TM] Bu menü yönetici izni gerektirir.'
+      reset-button: '&c&lVarsayılana döndür'
+      reset-msg: '&a[TM] Tüm ayarlar varsayılana döndürüldü.'
+      reset-lore:
+      - '&7Tüm ayarları sıfırlar:'
+      - '&8• &7gündüz / gece hızı = &f1.0'
+      - '&8• &7eşitleme + uyku AÇIK, kilit KAPALI'
+      - '&8• &7uyku animasyonu = varsayılan'
+      - '&8• &7mevsim motoru KAPALI'
+      - '&8• &7hata ayıklama / çoklu dil / komutlar KAPALI'
+      - ''
+      - '&c&lTıkla → tüm değişiklikler silinir'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aAÇIK'
+      off-text: '&7KAPALI'
+      section-reload: '&e&lYeniden yükle'
+      section-checks: '&b&lDurum kontrolü'
+      section-toggles: '&6&lAyarlar'
+      section-refresh-rate: '&d&lYenileme aralığı'
+      reload-all: '&eHepsini yenile'
+      reload-config: '&eAyarları yenile'
+      reload-lang: '&eDili yenile'
+      reload-cmds: '&eKomutları yenile'
+      check-config: '&aAyarları kontrol et'
+      check-time: '&aZamanı kontrol et'
+      check-update: '&5Güncelleme kontrol'
+      show-placeholders: '&dPlaceholder listesi'
+      debug-on: '&aHata ayıklama: AÇIK'
+      debug-off: '&7Hata ayıklama: KAPALI'
+      multilang-on: '&aÇoklu dil: AÇIK'
+      multilang-off: '&7Çoklu dil: KAPALI'
+      usecmds-on: '&aZamanlı komutlar: AÇIK'
+      usecmds-off: '&7Zamanlı komutlar: KAPALI'
+      give-pocket-watch: '&6Cep saati ver'
+      broadcast-time: '&aSaati duyur'
+      world-header: '&b&lDünya: &f{0}'
+      lock-active: '&aETKİN'
+      lock-off: '&7yok'
+      anim-vanilla: '&7varsayılan'
+      section-speed: '&eHız'
+      sync-on: '&aEşitleme: AÇIK'
+      sync-off: '&cEşitleme: KAPALI'
+      sleep-on: '&aUyku: AÇIK'
+      sleep-off: '&cUyku: KAPALI'
+      anim-on: '&aUyku animasyonu: AÇIK'
+      anim-off: '&7Uyku animasyonu: yok'
+      lock-world: '&dDünyayı kilitle'
+      unlock-world: '&dKilidi çöz'
+      set-date-today: '&aBugüne ayarla'
+      reset-elapsed: '&cGün sayısını sıfırla'
+      resync-world: '&bSunucu zamanına eşitle'
+      check-this-world: '&dBu dünyayı incele'
+      quick-jumps: '&dHızlı zaman atlama'
+      time-dawn: '&6Şafak'
+      time-morning: '&eSabah'
+      time-noon: '&fÖğle'
+      time-sunset: '&6Akşam'
+      time-night: '&8Gece'
+      time-midnight: '&5Gece yarısı'
+      now-button: '&b/now'
+      speed-suffix: × hız
+      seasons-header: '&6&lMevsimler {0}'
+      seasons-active: '&aETKİN'
+      seasons-disabled: '&ckapalı'
+      enable-seasons: '&aMevsimleri aç'
+      disable-seasons: '&cMevsimleri kapat'
+      force-apply: '&eŞimdi uygula'
+      preset-suffix-southern: '&7&oGüney yarımküre takvimi'
+      year-button: '&fYıl: &e{0} MC gün'
+      speed-label-half: '&7yarı hız'
+      speed-label-vanilla: '&7varsayılan'
+      speed-label-double: '&7iki kat'
+      speed-label-quad: '&7dört kat'
+      speed-label-octuple: '&7sekiz kat'
+      speed-label-custom: '&7özel hız'
+      hemisphere-north: '&aKuzey yarımküre'
+      hemisphere-south: '&bGüney yarımküre'
+      hemisphere-north-desc: Yaz Haziran’da, kış Aralık’ta.
+      hemisphere-south-desc: Yaz Aralık’ta, kış Haziran’da.
+      header-lore-1: '&7Yönetici ayar paneli.'
+      header-lore-refresh: '&7Yenileme: &f{0} tick'
+      header-lore-debug: '&7Hata ayıklama: {0}'
+      header-lore-multilang: '&7Çoklu dil: {0}'
+      header-lore-usecmds: '&7Zamanlı komutlar: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} gündüz&8)'
+      chat-applied: '&aUygulandı: &f{0}'
+      chat-toggled: '&aDeğiştirildi: &f{0}'
+      chat-reloaded: '&aYenilendi: &f{0}'
+      overview-title: '&b&lÖzet'
+      overview-real-time: '&7Gerçek saat: &f{0}'
+      overview-world-time: '&7{0} saati: &f{1}'
+      overview-speeds: '&7Gündüz / Gece hızı: &f{0} &7/ &f{1}'
+      overview-season-on: '&7Mevsim: &f{0} &8({1}% gündüz)'
+      overview-season-off: '&7Mevsim: &8kapalı'
+      overview-info-line: '&8&oBilgi amaçlı — tıklanamaz'
+      world-day-speed: '&7Gündüz hızı: &f{0}'
+      world-night-speed: '&7Gece hızı: &f{0}'
+      world-sync-line: '&7Eşitleme: {0}'
+      world-sleep-line: '&7Uyku: {0}'
+      world-lock-line: '&7Kilit: {0}'
+      world-anim-line: '&7Animasyon: {0}'
+      season-current-preset: '&7Aktif preset: &f{0}'
+      season-year-length: '&7Yıl uzunluğu: &f{0} MC gün'
+      season-status-line: '&7Durum: &f{0}'
+      preset-winter-daylight: '&7kış: &f{0}%'
+      preset-summer-daylight: '&7yaz: &f{0}%'
   es_ES:
     prefix: '&e&l[Hora]'
     msg: Son las &e{tm_time24}&r en el mundo {tm_world}, es {tm_daypart}.
@@ -131,18 +653,270 @@ languages:
       d06: Viernes
       d07: Sábado
     months:
-       m01: enero
-       m02: febrero
-       m03: marzo
-       m04: abril
-       m05: mayo
-       m06: junio
-       m07: julio
-       m08: agosto
-       m09: septiembre
-       m10: octubre
-       m11: noviembre
-       m12: diciembre
+      m01: enero
+      m02: febrero
+      m03: marzo
+      m04: abril
+      m05: mayo
+      m06: junio
+      m07: julio
+      m08: agosto
+      m09: septiembre
+      m10: octubre
+      m11: noviembre
+      m12: diciembre
+    gui:
+      page-server: Servidor
+      page-world: Mundo
+      page-seasons: Estaciones
+      nav-prev: '&7← Anterior'
+      nav-next: '&7Siguiente →'
+      click-apply: '&eClic para aplicar'
+      click-toggle: '&eClic para alternar'
+      click-set: '&eClic para establecer'
+      click-jump: '&aClic para saltar'
+      admin-only: '&8(sólo admin)'
+      error-in-game-only: GUI solo desde el juego.
+      error-admin-only: '[TM] GUI solo para administradores.'
+      reset-button: '&c&lRestablecer a vanilla'
+      reset-msg: '&a[TM] Todos los ajustes restablecidos a vanilla.'
+      reset-lore:
+      - '&7Restaura todo a los valores por defecto:'
+      - '&8• &7daySpeed / nightSpeed = &f1.0'
+      - '&8• &7sync, sleep ON, lock OFF'
+      - '&8• &7animación = default'
+      - '&8• &7motor de estaciones OFF'
+      - '&8• &7debug / multi-lang / cmds OFF'
+      - ''
+      - '&c&lClic para borrar todos los cambios'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aON'
+      off-text: '&7OFF'
+      section-reload: '&e&lRecargar'
+      section-checks: '&b&lComprobar'
+      section-toggles: '&6&lInterruptores'
+      section-refresh-rate: '&d&lTasa de refresco'
+      reload-all: '&eRecargar todo'
+      reload-config: '&eRecargar config'
+      reload-lang: '&eRecargar idioma'
+      reload-cmds: '&eRecargar cmds'
+      check-config: '&aComprobar config'
+      check-time: '&aComprobar tiempo'
+      check-update: '&5Comprobar actualización'
+      show-placeholders: '&dMostrar placeholders'
+      debug-on: '&aModo debug: ON'
+      debug-off: '&7Modo debug: OFF'
+      multilang-on: '&aMultilingüe: ON'
+      multilang-off: '&7Multilingüe: OFF'
+      usecmds-on: '&aCmds programados: ON'
+      usecmds-off: '&7Cmds programados: OFF'
+      give-pocket-watch: '&6Dar reloj de bolsillo'
+      broadcast-time: '&aDifundir hora'
+      world-header: '&b&lMundo: &f{0}'
+      lock-active: '&aACTIVO'
+      lock-off: '&7off'
+      anim-vanilla: '&7vanilla'
+      section-speed: '&eVelocidad'
+      sync-on: '&aSync: ON'
+      sync-off: '&cSync: OFF'
+      sleep-on: '&aDormir: ON'
+      sleep-off: '&cDormir: OFF'
+      anim-on: '&aAnimación de sueño: ON'
+      anim-off: '&7Animación de sueño: vanilla'
+      lock-world: '&dBloquear hora del mundo'
+      unlock-world: '&dDesbloquear hora del mundo'
+      set-date-today: '&aFecha: hoy'
+      reset-elapsed: '&cReiniciar días transcurridos'
+      resync-world: '&bResincronizar con servidor'
+      check-this-world: '&dComprobar este mundo'
+      quick-jumps: '&dSaltos rápidos de tiempo'
+      time-dawn: '&6Amanecer'
+      time-morning: '&eMañana'
+      time-noon: '&fMediodía'
+      time-sunset: '&6Anochecer'
+      time-night: '&8Noche'
+      time-midnight: '&5Medianoche'
+      now-button: '&b/now'
+      speed-suffix: × velocidad
+      seasons-header: '&6&lEstaciones {0}'
+      seasons-active: '&aACTIVO'
+      seasons-disabled: '&cdesactivado'
+      enable-seasons: '&aActivar estaciones'
+      disable-seasons: '&cDesactivar estaciones'
+      force-apply: '&eAplicar ahora'
+      preset-suffix-southern: '&7&ocalendario hemisferio sur'
+      year-button: '&fAño: &e{0} días MC'
+      speed-label-half: '&7Half speed'
+      speed-label-vanilla: '&7Vanilla'
+      speed-label-double: '&7Double speed'
+      speed-label-quad: '&7Quad speed'
+      speed-label-octuple: '&7Octuple speed'
+      speed-label-custom: '&7Custom speed'
+      hemisphere-north: '&aNorthern hemisphere'
+      hemisphere-south: '&bSouthern hemisphere'
+      hemisphere-north-desc: Summer in June, winter in December.
+      hemisphere-south-desc: Summer in December, winter in June.
+      header-lore-1: '&7Admin settings panel.'
+      header-lore-refresh: '&7Refresh rate: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-language: {0}'
+      header-lore-usecmds: '&7Use commands: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} luz solar&8)'
+      chat-applied: '&aAplicado: &f{0}'
+      chat-toggled: '&aAlternado: &f{0}'
+      chat-reloaded: '&aRecargado: &f{0}'
+  es_MX:
+    prefix: '&e&l[Hora]'
+    msg: 'Son las &e{tm_time24}&r en el mundo {tm_world}, es {tm_daypart}.'
+    netherMsg: '¡No hay ciclo día-noche en esta dimensión!'
+    endMsg: '¡No hay ciclo día-noche en esta dimensión!'
+    title: '&f{tm_yyyy}'
+    subtitle: '&e{tm_time24}'
+    actionbar: '&e&l{tm_time12} {tm_ampm}'
+    dayparts:
+      day: el día
+      dusk: el atardecer
+      night: la noche
+      dawn: el amanecer
+    days:
+      d01: Domingo
+      d02: Lunes
+      d03: Martes
+      d04: Miércoles
+      d05: Jueves
+      d06: Viernes
+      d07: Sábado
+    months:
+      m01: Enero
+      m02: Febrero
+      m03: Marzo
+      m04: Abril
+      m05: Mayo
+      m06: Junio
+      m07: Julio
+      m08: Agosto
+      m09: Septiembre
+      m10: Octubre
+      m11: Noviembre
+      m12: Diciembre
+    gui:
+      page-server: Servidor
+      page-world: Mundo
+      page-seasons: Estaciones
+      nav-prev: '&7← Anterior'
+      nav-next: '&7Siguiente →'
+      click-apply: '&eHaz clic para aplicar'
+      click-toggle: '&eHaz clic para cambiar'
+      click-set: '&eHaz clic para ajustar'
+      click-jump: '&aHaz clic para saltar'
+      admin-only: '&8(solo admin)'
+      error-in-game-only: Este menú solo está disponible dentro del juego.
+      error-admin-only: '[TM] Este menú es solo para administradores.'
+      reset-button: '&c&lRestaurar a vanilla'
+      reset-msg: '&a[TM] Todos los ajustes fueron restaurados a los valores por defecto.'
+      reset-lore:
+      - '&7Restaura todos los ajustes a su estado inicial:'
+      - '&8• &7velocidad día / noche = &f1.0'
+      - '&8• &7sync y sleep activados, lock desactivado'
+      - '&8• &7animación = por defecto'
+      - '&8• &7motor de estaciones desactivado'
+      - '&8• &7debug / multi-idioma / cmds desactivados'
+      - 
+      - '&c&lHaz clic para borrar todos los cambios'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aACTIVO'
+      off-text: '&7APAGADO'
+      section-reload: '&e&lRecargar'
+      section-checks: '&b&lDiagnóstico'
+      section-toggles: '&6&lAjustes'
+      section-refresh-rate: '&d&lFrecuencia de actualización'
+      reload-all: '&eRecargar todo'
+      reload-config: '&eRecargar config'
+      reload-lang: '&eRecargar idioma'
+      reload-cmds: '&eRecargar cmds'
+      check-config: '&aRevisar config'
+      check-time: '&aRevisar tiempo'
+      check-update: '&5Revisar actualización'
+      show-placeholders: '&dMostrar placeholders'
+      debug-on: '&aDebug: ACTIVO'
+      debug-off: '&7Debug: APAGADO'
+      multilang-on: '&aMulti-idioma: ACTIVO'
+      multilang-off: '&7Multi-idioma: APAGADO'
+      usecmds-on: '&aCmds programados: ACTIVOS'
+      usecmds-off: '&7Cmds programados: APAGADOS'
+      give-pocket-watch: '&6Dar reloj de bolsillo'
+      broadcast-time: '&aAnunciar hora'
+      world-header: '&b&lMundo: &f{0}'
+      lock-active: '&aACTIVO'
+      lock-off: '&7apagado'
+      anim-vanilla: '&7por defecto'
+      section-speed: '&eVelocidad'
+      sync-on: '&aSync: ACTIVO'
+      sync-off: '&cSync: APAGADO'
+      sleep-on: '&aSleep: ACTIVO'
+      sleep-off: '&cSleep: APAGADO'
+      anim-on: '&aAnimación de sueño: ACTIVA'
+      anim-off: '&7Animación de sueño: por defecto'
+      lock-world: '&dBloquear hora del mundo'
+      unlock-world: '&dDesbloquear hora del mundo'
+      set-date-today: '&aFecha: hoy'
+      reset-elapsed: '&cReiniciar días transcurridos'
+      resync-world: '&bSincronizar con la hora del servidor'
+      check-this-world: '&dRevisar este mundo'
+      quick-jumps: '&dSaltos rápidos de tiempo'
+      time-dawn: '&6Amanecer'
+      time-morning: '&eMañana'
+      time-noon: '&fMediodía'
+      time-sunset: '&6Atardecer'
+      time-night: '&8Noche'
+      time-midnight: '&5Medianoche'
+      now-button: '&b/now'
+      speed-suffix: × velocidad
+      seasons-header: '&6&lEstaciones {0}'
+      seasons-active: '&aACTIVAS'
+      seasons-disabled: '&capagadas'
+      enable-seasons: '&aActivar estaciones'
+      disable-seasons: '&cDesactivar estaciones'
+      force-apply: '&eAplicar ahora'
+      preset-suffix-southern: '&7&ocalendario del hemisferio sur'
+      year-button: '&fAño: &e{0} días MC'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} luz solar&8)'
+      chat-applied: '&aAplicado: &f{0}'
+      chat-toggled: '&aCambiado: &f{0}'
+      chat-reloaded: '&aRecargado: &f{0}'
+      speed-label-half: '&7media velocidad'
+      speed-label-vanilla: '&7por defecto'
+      speed-label-double: '&7doble'
+      speed-label-quad: '&7cuádruple'
+      speed-label-octuple: '&7óctuple'
+      speed-label-custom: '&7velocidad personalizada'
+      hemisphere-north: '&aHemisferio norte'
+      hemisphere-south: '&bHemisferio sur'
+      hemisphere-north-desc: 'Verano en junio, invierno en diciembre.'
+      hemisphere-south-desc: 'Verano en diciembre, invierno en junio.'
+      header-lore-1: '&7Panel de configuración del admin.'
+      header-lore-refresh: '&7Frecuencia: &f{0} ticks'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-idioma: {0}'
+      header-lore-usecmds: '&7Cmds programados: {0}'
+      overview-title: '&b&lResumen'
+      overview-real-time: '&7Hora real: &f{0}'
+      overview-world-time: '&7Hora de {0}: &f{1}'
+      overview-speeds: '&7Velocidad día / noche: &f{0} &7/ &f{1}'
+      overview-season-on: '&7Estación: &f{0} &8({1}% luz solar)'
+      overview-season-off: '&7Estación: &8apagada'
+      overview-info-line: '&8&oInformativo — no se puede hacer clic'
+      world-day-speed: '&7Velocidad de día: &f{0}'
+      world-night-speed: '&7Velocidad de noche: &f{0}'
+      world-sync-line: '&7Sync: {0}'
+      world-sleep-line: '&7Sleep: {0}'
+      world-lock-line: '&7Lock: {0}'
+      world-anim-line: '&7Animación: {0}'
+      season-current-preset: '&7Preset actual: &f{0}'
+      season-year-length: '&7Duración del año: &f{0} días MC'
+      season-status-line: '&7Estado: &f{0}'
+      preset-winter-daylight: '&7invierno: &f{0}%'
+      preset-summer-daylight: '&7verano: &f{0}%'
   fr_FR:
     prefix: '&e&l[Heure]'
     msg: Il est &e{tm_time24}&r dans le monde {tm_world}, c'est {tm_daypart}.
@@ -163,7 +937,7 @@ languages:
       d04: mercredi
       d05: jeudi
       d06: vendredi
-      d07 : samedi
+      d07: samedi
     months:
       m01: janvier
       m02: février
@@ -177,6 +951,106 @@ languages:
       m10: octobre
       m11: novembre
       m12: décembre
+    gui:
+      page-server: Serveur
+      page-world: Monde
+      page-seasons: Saisons
+      nav-prev: '&7← Précédent'
+      nav-next: '&7Suivant →'
+      click-apply: '&eCliquer pour appliquer'
+      click-toggle: '&eCliquer pour basculer'
+      click-set: '&eCliquer pour définir'
+      click-jump: '&aCliquer pour sauter'
+      admin-only: '&8(admin uniquement)'
+      error-in-game-only: GUI uniquement en jeu.
+      error-admin-only: '[TM] GUI réservée aux admins.'
+      reset-button: '&c&lRéinitialiser au vanilla'
+      reset-msg: '&a[TM] Tous les paramètres remis à zéro.'
+      reset-lore:
+      - '&7Restaure tous les paramètres par défaut :'
+      - '&8• &7daySpeed / nightSpeed = &f1.0'
+      - '&8• &7sync, sleep ON, lock OFF'
+      - '&8• &7animation = default'
+      - '&8• &7moteur des saisons OFF'
+      - '&8• &7debug / multi-lang / cmds OFF'
+      - ''
+      - '&c&lCliquer pour tout effacer'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aON'
+      off-text: '&7OFF'
+      section-reload: '&e&lRecharger'
+      section-checks: '&b&lVérifications'
+      section-toggles: '&6&lOptions'
+      section-refresh-rate: '&d&lTaux de rafraîchissement'
+      reload-all: '&eTout recharger'
+      reload-config: '&eRecharger config'
+      reload-lang: '&eRecharger langue'
+      reload-cmds: '&eRecharger cmds'
+      check-config: '&aVérifier config'
+      check-time: '&aVérifier temps'
+      check-update: '&5Vérifier mises à jour'
+      show-placeholders: '&dAfficher placeholders'
+      debug-on: '&aMode debug : ON'
+      debug-off: '&7Mode debug : OFF'
+      multilang-on: '&aMulti-langue : ON'
+      multilang-off: '&7Multi-langue : OFF'
+      usecmds-on: '&aCmds planifiées : ON'
+      usecmds-off: '&7Cmds planifiées : OFF'
+      give-pocket-watch: '&6Donner Montre de poche'
+      broadcast-time: '&aDiffuser heure'
+      world-header: '&b&lMonde : &f{0}'
+      lock-active: '&aACTIF'
+      lock-off: '&7off'
+      anim-vanilla: '&7vanilla'
+      section-speed: '&eVitesse'
+      sync-on: '&aSync : ON'
+      sync-off: '&cSync : OFF'
+      sleep-on: '&aSommeil : ON'
+      sleep-off: '&cSommeil : OFF'
+      anim-on: '&aAnimation sommeil : ON'
+      anim-off: '&7Animation sommeil : vanilla'
+      lock-world: '&dVerrouiller l''heure'
+      unlock-world: '&dDéverrouiller l''heure'
+      set-date-today: '&aDate : aujourd''hui'
+      reset-elapsed: '&cRéinitialiser jours écoulés'
+      resync-world: '&bResynchroniser au serveur'
+      check-this-world: '&dVérifier ce monde'
+      quick-jumps: '&dSauts rapides'
+      time-dawn: '&6Aube'
+      time-morning: '&eMatin'
+      time-noon: '&fMidi'
+      time-sunset: '&6Coucher de soleil'
+      time-night: '&8Nuit'
+      time-midnight: '&5Minuit'
+      now-button: '&b/now'
+      speed-suffix: × vitesse
+      seasons-header: '&6&lSaisons {0}'
+      seasons-active: '&aACTIF'
+      seasons-disabled: '&cdésactivé'
+      enable-seasons: '&aActiver saisons'
+      disable-seasons: '&cDésactiver saisons'
+      force-apply: '&eForcer maintenant'
+      preset-suffix-southern: '&7&ocalendrier hémisphère sud'
+      year-button: '&fAnnée : &e{0} jours MC'
+      speed-label-half: '&7Half speed'
+      speed-label-vanilla: '&7Vanilla'
+      speed-label-double: '&7Double speed'
+      speed-label-quad: '&7Quad speed'
+      speed-label-octuple: '&7Octuple speed'
+      speed-label-custom: '&7Custom speed'
+      hemisphere-north: '&aNorthern hemisphere'
+      hemisphere-south: '&bSouthern hemisphere'
+      hemisphere-north-desc: Summer in June, winter in December.
+      hemisphere-south-desc: Summer in December, winter in June.
+      header-lore-1: '&7Admin settings panel.'
+      header-lore-refresh: '&7Refresh rate: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-language: {0}'
+      header-lore-usecmds: '&7Use commands: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} ensoleillement&8)'
+      chat-applied: '&aAppliqué : &f{0}'
+      chat-toggled: '&aBasculé : &f{0}'
+      chat-reloaded: '&aRechargé : &f{0}'
   it_IT:
     prefix: '&e&l[Ora]'
     msg: È &e{tm_time24}&r in del monde {tm_world}, è {tm_daypart}.
@@ -199,18 +1073,118 @@ languages:
       d06: venerdì
       d07: sabato
     months:
-       m01: gennaio
-       m02: febbraio
-       m03: marzo
-       m04: aprile
-       m05: maggio
-       m06: giugno
-       m07: luglio
-       m08: agosto
-       m09: settembre
-       m10: ottobre
-       m11: novembre
-       m12: dicembre
+      m01: gennaio
+      m02: febbraio
+      m03: marzo
+      m04: aprile
+      m05: maggio
+      m06: giugno
+      m07: luglio
+      m08: agosto
+      m09: settembre
+      m10: ottobre
+      m11: novembre
+      m12: dicembre
+    gui:
+      page-server: Server
+      page-world: Mondo
+      page-seasons: Stagioni
+      nav-prev: '&7← Precedente'
+      nav-next: '&7Successivo →'
+      click-apply: '&eClicca per applicare'
+      click-toggle: '&eClicca per cambiare'
+      click-set: '&eClicca per impostare'
+      click-jump: '&aClicca per saltare'
+      admin-only: '&8(solo admin)'
+      error-in-game-only: GUI solo in gioco.
+      error-admin-only: '[TM] GUI solo per gli admin.'
+      reset-button: '&c&lRipristina vanilla'
+      reset-msg: '&a[TM] Tutte le impostazioni ripristinate.'
+      reset-lore:
+      - '&7Ripristina tutto ai valori predefiniti:'
+      - '&8• &7daySpeed / nightSpeed = &f1.0'
+      - '&8• &7sync, sleep ON, lock OFF'
+      - '&8• &7animation = default'
+      - '&8• &7motore stagioni OFF'
+      - '&8• &7debug / multi-lang / cmds OFF'
+      - ''
+      - '&c&lClicca per cancellare tutto'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aON'
+      off-text: '&7OFF'
+      section-reload: '&e&lRicarica'
+      section-checks: '&b&lControlli'
+      section-toggles: '&6&lInterruttori'
+      section-refresh-rate: '&d&lFrequenza aggiornamento'
+      reload-all: '&eRicarica tutto'
+      reload-config: '&eRicarica config'
+      reload-lang: '&eRicarica lingua'
+      reload-cmds: '&eRicarica cmds'
+      check-config: '&aControlla config'
+      check-time: '&aControlla tempo'
+      check-update: '&5Controlla aggiornamento'
+      show-placeholders: '&dMostra placeholder'
+      debug-on: '&aDebug: ON'
+      debug-off: '&7Debug: OFF'
+      multilang-on: '&aMultilingua: ON'
+      multilang-off: '&7Multilingua: OFF'
+      usecmds-on: '&aCmds programmati: ON'
+      usecmds-off: '&7Cmds programmati: OFF'
+      give-pocket-watch: '&6Dai Orologio'
+      broadcast-time: '&aTrasmetti orario'
+      world-header: '&b&lMondo: &f{0}'
+      lock-active: '&aATTIVO'
+      lock-off: '&7off'
+      anim-vanilla: '&7vanilla'
+      section-speed: '&eVelocità'
+      sync-on: '&aSync: ON'
+      sync-off: '&cSync: OFF'
+      sleep-on: '&aSonno: ON'
+      sleep-off: '&cSonno: OFF'
+      anim-on: '&aAnimazione sonno: ON'
+      anim-off: '&7Animazione sonno: vanilla'
+      lock-world: '&dBlocca tempo del mondo'
+      unlock-world: '&dSblocca tempo del mondo'
+      set-date-today: '&aData: oggi'
+      reset-elapsed: '&cAzzera giorni trascorsi'
+      resync-world: '&bRisincronizza al server'
+      check-this-world: '&dControlla questo mondo'
+      quick-jumps: '&dSalti rapidi'
+      time-dawn: '&6Alba'
+      time-morning: '&eMattina'
+      time-noon: '&fMezzogiorno'
+      time-sunset: '&6Tramonto'
+      time-night: '&8Notte'
+      time-midnight: '&5Mezzanotte'
+      now-button: '&b/now'
+      speed-suffix: × velocità
+      seasons-header: '&6&lStagioni {0}'
+      seasons-active: '&aATTIVO'
+      seasons-disabled: '&cdisattivato'
+      enable-seasons: '&aAttiva stagioni'
+      disable-seasons: '&cDisattiva stagioni'
+      force-apply: '&eApplica ora'
+      preset-suffix-southern: '&7&ocalendario emisfero sud'
+      year-button: '&fAnno: &e{0} giorni MC'
+      speed-label-half: '&7Half speed'
+      speed-label-vanilla: '&7Vanilla'
+      speed-label-double: '&7Double speed'
+      speed-label-quad: '&7Quad speed'
+      speed-label-octuple: '&7Octuple speed'
+      speed-label-custom: '&7Custom speed'
+      hemisphere-north: '&aNorthern hemisphere'
+      hemisphere-south: '&bSouthern hemisphere'
+      hemisphere-north-desc: Summer in June, winter in December.
+      hemisphere-south-desc: Summer in December, winter in June.
+      header-lore-1: '&7Admin settings panel.'
+      header-lore-refresh: '&7Refresh rate: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-language: {0}'
+      header-lore-usecmds: '&7Use commands: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} luce solare&8)'
+      chat-applied: '&aApplicato: &f{0}'
+      chat-toggled: '&aCambiato: &f{0}'
+      chat-reloaded: '&aRicaricato: &f{0}'
   nl_NL:
     prefix: '&e&l[Uur]'
     msg: Het is &e{tm_time24}&r in wereld {tm_world}, dit is {tm_daypart} nu.
@@ -233,18 +1207,118 @@ languages:
       d06: vrijdag
       d07: zaterdag
     months:
-       m01: januari
-       m02: februari
-       m03: maart
-       m04: april
-       m05: mei
-       m06: juni
-       m07: juli
-       m08: augustus
-       m09: september
-       m10: oktober
-       m11: november
-       m12: december
+      m01: januari
+      m02: februari
+      m03: maart
+      m04: april
+      m05: mei
+      m06: juni
+      m07: juli
+      m08: augustus
+      m09: september
+      m10: oktober
+      m11: november
+      m12: december
+    gui:
+      page-server: Server
+      page-world: Wereld
+      page-seasons: Seizoenen
+      nav-prev: '&7← Vorige'
+      nav-next: '&7Volgende →'
+      click-apply: '&eKlik om toe te passen'
+      click-toggle: '&eKlik om te wisselen'
+      click-set: '&eKlik om in te stellen'
+      click-jump: '&aKlik om te springen'
+      admin-only: '&8(alleen admin)'
+      error-in-game-only: GUI alleen in spel.
+      error-admin-only: '[TM] GUI alleen voor admins.'
+      reset-button: '&c&lTerug naar vanilla'
+      reset-msg: '&a[TM] Alle instellingen teruggezet naar standaard.'
+      reset-lore:
+      - '&7Zet alles terug naar standaard:'
+      - '&8• &7daySpeed / nightSpeed = &f1.0'
+      - '&8• &7sync, sleep AAN, lock UIT'
+      - '&8• &7animatie = standaard'
+      - '&8• &7seizoenen-motor UIT'
+      - '&8• &7debug / multi-lang / cmds UIT'
+      - ''
+      - '&c&lKlik om alles te wissen'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aAAN'
+      off-text: '&7UIT'
+      section-reload: '&e&lHerladen'
+      section-checks: '&b&lControles'
+      section-toggles: '&6&lSchakelaars'
+      section-refresh-rate: '&d&lVernieuwsnelheid'
+      reload-all: '&eAlles herladen'
+      reload-config: '&eConfig herladen'
+      reload-lang: '&eTaal herladen'
+      reload-cmds: '&eCmds herladen'
+      check-config: '&aControleer config'
+      check-time: '&aControleer tijd'
+      check-update: '&5Controleer update'
+      show-placeholders: '&dToon placeholders'
+      debug-on: '&aDebug: AAN'
+      debug-off: '&7Debug: UIT'
+      multilang-on: '&aMeertalig: AAN'
+      multilang-off: '&7Meertalig: UIT'
+      usecmds-on: '&aGeplande cmds: AAN'
+      usecmds-off: '&7Geplande cmds: UIT'
+      give-pocket-watch: '&6Geef Zakhorloge'
+      broadcast-time: '&aTijd uitzenden'
+      world-header: '&b&lWereld: &f{0}'
+      lock-active: '&aACTIEF'
+      lock-off: '&7uit'
+      anim-vanilla: '&7vanilla'
+      section-speed: '&eSnelheid'
+      sync-on: '&aSync: AAN'
+      sync-off: '&cSync: UIT'
+      sleep-on: '&aSlapen: AAN'
+      sleep-off: '&cSlapen: UIT'
+      anim-on: '&aSlaap-animatie: AAN'
+      anim-off: '&7Slaap-animatie: vanilla'
+      lock-world: '&dWereldtijd vergrendelen'
+      unlock-world: '&dWereldtijd ontgrendelen'
+      set-date-today: '&aDatum: vandaag'
+      reset-elapsed: '&cVerstreken dagen wissen'
+      resync-world: '&bHersynchroniseer met server'
+      check-this-world: '&dControleer deze wereld'
+      quick-jumps: '&dSnelle tijdsprongen'
+      time-dawn: '&6Dageraad'
+      time-morning: '&eOchtend'
+      time-noon: '&fMiddag'
+      time-sunset: '&6Zonsondergang'
+      time-night: '&8Nacht'
+      time-midnight: '&5Middernacht'
+      now-button: '&b/now'
+      speed-suffix: × snelheid
+      seasons-header: '&6&lSeizoenen {0}'
+      seasons-active: '&aACTIEF'
+      seasons-disabled: '&cuitgeschakeld'
+      enable-seasons: '&aSeizoenen inschakelen'
+      disable-seasons: '&cSeizoenen uitschakelen'
+      force-apply: '&eForceer nu'
+      preset-suffix-southern: '&7&ozuidelijk halfrond kalender'
+      year-button: '&fJaar: &e{0} MC dagen'
+      speed-label-half: '&7Half speed'
+      speed-label-vanilla: '&7Vanilla'
+      speed-label-double: '&7Double speed'
+      speed-label-quad: '&7Quad speed'
+      speed-label-octuple: '&7Octuple speed'
+      speed-label-custom: '&7Custom speed'
+      hemisphere-north: '&aNorthern hemisphere'
+      hemisphere-south: '&bSouthern hemisphere'
+      hemisphere-north-desc: Summer in June, winter in December.
+      hemisphere-south-desc: Summer in December, winter in June.
+      header-lore-1: '&7Admin settings panel.'
+      header-lore-refresh: '&7Refresh rate: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-language: {0}'
+      header-lore-usecmds: '&7Use commands: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} daglicht&8)'
+      chat-applied: '&aToegepast: &f{0}'
+      chat-toggled: '&aGewisseld: &f{0}'
+      chat-reloaded: '&aHerladen: &f{0}'
   pt_PT:
     prefix: '&e&l[Hora]'
     msg: É &e{tm_time24}&r do mundo {tm_world}, é {tm_daypart}.
@@ -259,23 +1333,123 @@ languages:
       night: a noite
       dawn: o amanhecer
     days:
-      d01: 'domingo'
-      d02: 'segunda-feira'
-      d03: 'terça-feira'
-      d04: 'quarta-feira'
-      d05: 'quinta-feira'
-      d06: 'sexta-feira'
-      d07: 'sábado'
+      d01: domingo
+      d02: segunda-feira
+      d03: terça-feira
+      d04: quarta-feira
+      d05: quinta-feira
+      d06: sexta-feira
+      d07: sábado
     months:
-       m01: janeiro
-       m02: fevereiro
-       m03: março
-       m04: abril
-       m05: maio
-       m06: junho
-       m07: julho
-       m08: agosto
-       m09: setembro
-       m10: outubro
-       m11: novembro
-       m12: dezembro
+      m01: janeiro
+      m02: fevereiro
+      m03: março
+      m04: abril
+      m05: maio
+      m06: junho
+      m07: julho
+      m08: agosto
+      m09: setembro
+      m10: outubro
+      m11: novembro
+      m12: dezembro
+    gui:
+      page-server: Servidor
+      page-world: Mundo
+      page-seasons: Estações
+      nav-prev: '&7← Anterior'
+      nav-next: '&7Seguinte →'
+      click-apply: '&eClicar para aplicar'
+      click-toggle: '&eClicar para alternar'
+      click-set: '&eClicar para definir'
+      click-jump: '&aClicar para saltar'
+      admin-only: '&8(só admin)'
+      error-in-game-only: GUI só no jogo.
+      error-admin-only: '[TM] GUI só para admins.'
+      reset-button: '&c&lRepor para vanilla'
+      reset-msg: '&a[TM] Todas as definições repostas para vanilla.'
+      reset-lore:
+      - '&7Repõe tudo para os valores por defeito:'
+      - '&8• &7daySpeed / nightSpeed = &f1.0'
+      - '&8• &7sync, sleep ON, lock OFF'
+      - '&8• &7animação = default'
+      - '&8• &7motor de estações OFF'
+      - '&8• &7debug / multi-lang / cmds OFF'
+      - ''
+      - '&c&lClicar para apagar todas as alterações'
+      header-title: '&b&lTimeManager &7v{0}'
+      on-text: '&aON'
+      off-text: '&7OFF'
+      section-reload: '&e&lRecarregar'
+      section-checks: '&b&lVerificações'
+      section-toggles: '&6&lInterruptores'
+      section-refresh-rate: '&d&lTaxa de atualização'
+      reload-all: '&eRecarregar tudo'
+      reload-config: '&eRecarregar config'
+      reload-lang: '&eRecarregar idioma'
+      reload-cmds: '&eRecarregar cmds'
+      check-config: '&aVerificar config'
+      check-time: '&aVerificar tempo'
+      check-update: '&5Verificar atualização'
+      show-placeholders: '&dMostrar placeholders'
+      debug-on: '&aDebug: ON'
+      debug-off: '&7Debug: OFF'
+      multilang-on: '&aMulti-idioma: ON'
+      multilang-off: '&7Multi-idioma: OFF'
+      usecmds-on: '&aCmds agendados: ON'
+      usecmds-off: '&7Cmds agendados: OFF'
+      give-pocket-watch: '&6Dar Relógio de Bolso'
+      broadcast-time: '&aTransmitir hora'
+      world-header: '&b&lMundo: &f{0}'
+      lock-active: '&aATIVO'
+      lock-off: '&7off'
+      anim-vanilla: '&7vanilla'
+      section-speed: '&eVelocidade'
+      sync-on: '&aSync: ON'
+      sync-off: '&cSync: OFF'
+      sleep-on: '&aSono: ON'
+      sleep-off: '&cSono: OFF'
+      anim-on: '&aAnimação de sono: ON'
+      anim-off: '&7Animação de sono: vanilla'
+      lock-world: '&dBloquear tempo do mundo'
+      unlock-world: '&dDesbloquear tempo do mundo'
+      set-date-today: '&aData: hoje'
+      reset-elapsed: '&cReiniciar dias decorridos'
+      resync-world: '&bResincronizar com servidor'
+      check-this-world: '&dVerificar este mundo'
+      quick-jumps: '&dSaltos rápidos'
+      time-dawn: '&6Madrugada'
+      time-morning: '&eManhã'
+      time-noon: '&fMeio-dia'
+      time-sunset: '&6Pôr-do-sol'
+      time-night: '&8Noite'
+      time-midnight: '&5Meia-noite'
+      now-button: '&b/now'
+      speed-suffix: × velocidade
+      seasons-header: '&6&lEstações {0}'
+      seasons-active: '&aATIVO'
+      seasons-disabled: '&cdesativado'
+      enable-seasons: '&aAtivar estações'
+      disable-seasons: '&cDesativar estações'
+      force-apply: '&eAplicar agora'
+      preset-suffix-southern: '&7&ocalendário hemisfério sul'
+      year-button: '&fAno: &e{0} dias MC'
+      speed-label-half: '&7Half speed'
+      speed-label-vanilla: '&7Vanilla'
+      speed-label-double: '&7Double speed'
+      speed-label-quad: '&7Quad speed'
+      speed-label-octuple: '&7Octuple speed'
+      speed-label-custom: '&7Custom speed'
+      hemisphere-north: '&aNorthern hemisphere'
+      hemisphere-south: '&bSouthern hemisphere'
+      hemisphere-north-desc: Summer in June, winter in December.
+      hemisphere-south-desc: Summer in December, winter in June.
+      header-lore-1: '&7Admin settings panel.'
+      header-lore-refresh: '&7Refresh rate: &f{0}t'
+      header-lore-debug: '&7Debug: {0}'
+      header-lore-multilang: '&7Multi-language: {0}'
+      header-lore-usecmds: '&7Use commands: {0}'
+      now-season-suffix: '&8(&7{tm_season} &8• &7{tm_season_daylight} luz solar&8)'
+      chat-applied: '&aAplicado: &f{0}'
+      chat-toggled: '&aAlternado: &f{0}'
+      chat-reloaded: '&aRecarregado: &f{0}'

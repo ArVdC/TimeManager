@@ -163,6 +163,23 @@ public class AdminCmdExecutor implements CommandExecutor {
 				TmNowItem.cmdNowItem(sender, target);
 				return true;
 			}
+			// Seasons engine status / control
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_SEASON)) {
+				String sub = (nbArgs >= 2) ? args[1] : null;
+				String arg = (nbArgs >= 3) ? args[2] : null;
+				net.vdcraft.arvdc.timemanager.cmdadmin.TmSeason.cmdSeason(sender, sub, arg);
+				return true;
+			}
+			// Open the in-game GUI explainer / admin tab. Accepts a handful
+			// of equally natural English aliases — pick whichever fits.
+			else if (args[0].equalsIgnoreCase(MainTM.CMD_GUI)
+					|| args[0].equalsIgnoreCase("admin")
+					|| args[0].equalsIgnoreCase("panel")
+					|| args[0].equalsIgnoreCase("menu")
+					|| args[0].equalsIgnoreCase("settings")) {
+				net.vdcraft.arvdc.timemanager.gui.TmGui.openFor(sender);
+				return true;
+			}
 			// Toggle sleep animation (nightSkipMode) for a world
 			else if (args[0].equalsIgnoreCase(MainTM.CMD_ANIMATION)) {
 				String w = (nbArgs >= 2) ? args[1] : defaultWorld;

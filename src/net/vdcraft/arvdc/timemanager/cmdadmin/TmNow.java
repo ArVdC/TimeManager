@@ -85,10 +85,33 @@ public class TmNow extends MainTM {
 				msg = msg.replace("&", "§");
 				msg = msg.replace("{" + PH_PREFIX + PH_PLAYER + "}", player);
 				msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
+
+				// Optional season suffix on the chat msg path. The lang.yml
+				// can define `now-season-suffix` per language; when the
+				// seasons engine is enabled and we're in the overworld
+				// (no daylight cycle in nether/end), we append it. Any
+				// {tm_season*} placeholders inside the suffix are resolved.
+				if (display.equalsIgnoreCase(ARG_MSG)
+						&& MainTM.getInstance().seasonService != null
+						&& MainTM.getInstance().seasonService.enabled()
+						&& !world.contains(ARG_NETHER) && !world.contains(ARG_THEEND)) {
+					String suffix = MainTM.getInstance().langConf.getString(
+							LG_LANGUAGES + "." + lang + ".gui.now-season-suffix");
+					if (suffix == null || suffix.isEmpty()) {
+						suffix = MainTM.getInstance().langConf.getString(
+								LG_LANGUAGES + ".en_US.gui.now-season-suffix");
+					}
+					if (suffix != null && !suffix.isEmpty()) {
+						suffix = suffix.replace("&", "§");
+						suffix = PlaceholdersHandler.replaceAllPlaceholders(suffix, world, lang, p);
+						msg = msg + " " + suffix;
+					}
+				}
+
 				if (display.equalsIgnoreCase(ARG_TITLE)) {
 					subtitle = subtitle.replace("&", "§");
 					subtitle = subtitle.replace("{" + PH_PREFIX + PH_PLAYER + "}", player);
-					subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);		
+					subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);
 				}
 				
 				// #7. Configure and send command

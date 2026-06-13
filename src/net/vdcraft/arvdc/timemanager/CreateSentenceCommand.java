@@ -27,8 +27,8 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	// List of admin sub-commands
 	List<String> tmCmdArgsList() {
-		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
-		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
+		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION, MainTM.CMD_SEASON, MainTM.CMD_GUI);
+		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION, MainTM.CMD_SEASON, MainTM.CMD_GUI);
 	}
 	// List of admin sub-commands having a 'help'
 	List<String> tmHelpArgsList() {
@@ -126,6 +126,13 @@ public class CreateSentenceCommand implements TabCompleter {
 	}
 	// Arguments list for '/now'
 	List<String> nowDisplayArgsList = Arrays.asList(MainTM.ARG_MSG, MainTM.ARG_TITLE, MainTM.ARG_ACTIONBAR);
+
+	// Vanilla /time autocomplete options surfaced by the /now alias for ops.
+	List<String> VANILLA_TIME_VERBS = Arrays.asList("set", "add", "query");
+	List<String> VANILLA_TIME_SET_OPTIONS = Arrays.asList(
+			"day", "noon", "night", "midnight",
+			"sunrise", "dawn", "morning", "midday", "dusk", "sunset", "evening");
+	List<String> VANILLA_TIME_QUERY_OPTIONS = Arrays.asList("daytime", "gametime", "day");
 	List<String> nowWorldsArgsList(CommandSender sender) {
 		List<String> tmWorldsArgs = new ArrayList<>();
 		tmWorldsArgs.addAll(worldsList(sender));
@@ -354,18 +361,41 @@ public class CreateSentenceCommand implements TabCompleter {
 				return null;
 			}
 		} else if (command.getName().equalsIgnoreCase(MainTM.CMD_NOW)) {
+			// Vanilla /time autocomplete for ops/permission holders. Lets
+			// /time set <day|noon|...>, /time add <ticks>, /time query <X>
+			// surface like the vanilla command alongside the /now options.
+			boolean canTime = sender.isOp() || sender.hasPermission("minecraft.command.time");
+			if (canTime && args.length == 1) {
+				for (String s : VANILLA_TIME_VERBS) {
+					if (s.toLowerCase().startsWith(args[0].toLowerCase()))
+						outputArgsList.add(s);
+				}
+			}
+			if (canTime && args.length == 2 && args[0].equalsIgnoreCase("set")) {
+				for (String s : VANILLA_TIME_SET_OPTIONS) {
+					if (s.toLowerCase().startsWith(args[1].toLowerCase()))
+						outputArgsList.add(s);
+				}
+			}
+			if (canTime && args.length == 2 && args[0].equalsIgnoreCase("query")) {
+				for (String s : VANILLA_TIME_QUERY_OPTIONS) {
+					if (s.toLowerCase().startsWith(args[1].toLowerCase()))
+						outputArgsList.add(s);
+				}
+			}
+
 			if (args.length == 1) { // Command '/now <...>'
 				if (sender.hasPermission(MainTM.PERM_NOW_DISPLAY)
 						|| sender.isOp()) {
 					for (String verif : nowDisplayArgsList) {
-						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))							
+						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))
 							outputArgsList.add(verif);
 					}
 				}
 				else if (sender.hasPermission(MainTM.PERM_NOW_WORLD)
 						|| sender.isOp()) {
 					for (String verif : nowWorldsArgsList(sender)) {
-						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))							
+						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))
 							outputArgsList.add(verif);
 					}
 				}
@@ -374,12 +404,10 @@ public class CreateSentenceCommand implements TabCompleter {
 				if ((sender.hasPermission(MainTM.PERM_NOW_WORLD) && sender.hasPermission(MainTM.PERM_NOW_DISPLAY)
 						|| sender.isOp())) {
 					for (String verif : nowWorldsArgsList(sender)) {
-						if (verif.toLowerCase().startsWith(args[1].toLowerCase()))							
+						if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
 							outputArgsList.add(verif);
 					}
 				}
-			} else {
-				return null;
 			}
 		} else {
 			return null;

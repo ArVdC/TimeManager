@@ -1,5 +1,5 @@
 name: TimeManager
-version: 1.12.3
+version: 2.12.3
 api-version: '1.21'
 authors: [ArVdC]
 main: net.vdcraft.arvdc.timemanager.MainTM
@@ -81,6 +81,9 @@ commands:
             /<command> placeholders
             /<command> hud [on|off|toggle]
             /<command> nowitem [player]
+            /<command> animation [world] [on|off|toggle]
+            /<command> season [status|enable|disable|preset <NAME>|year <days>|apply|list]
+            /<command> gui
     aliases:
       - tmanag
       - timemanag

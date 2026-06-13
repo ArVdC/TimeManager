@@ -127,3 +127,38 @@ config.yml
  DUST_COLOR_TRANSITION during the sleep / night-skip animation. Set to false
  to keep the original (subtler) particle look.
 -----
+*seasons* (root section)
+ Real-world-inspired day/night length modulation. When enabled, the plugin
+ walks a calendar of MC-time-based days and adjusts each affected world's
+ daySpeed / nightSpeed at the boundary of every MC day, so summer feels
+ long-day, short-night, and winter feels the opposite.
+  *enabled* (default false)        - master switch. OFF by default; vanilla
+                                     behaviour preserved until you opt in.
+  *preset*                         - one of: EQUATORIAL (12/12 year-round),
+                                     MEDITERRANEAN (~30-40 lat; mild swing),
+                                     TEMPERATE (~45-50 lat; Pacific Northwest;
+                                     16h/8h solstice swing — the recommended
+                                     default), SUBARCTIC (~60-65 lat; 20h/4h),
+                                     ARCTIC (>66 lat; polar day/night, clamped
+                                     to 5%/95% for speed math), and the same
+                                     names with _SOUTH suffix for southern
+                                     hemisphere calendar. CUSTOM uses the
+                                     custom-summer-daylight / custom-winter-
+                                     daylight values you set below.
+  *year-length-days* (default 32)  - MC days in one full calendar year.
+                                     Divided into 4 seasons of equal length.
+                                     Minimum 4.
+  *smooth-transition* (default true) - true = sinusoidal day-to-day swing,
+                                     so consecutive days differ by a small
+                                     step. false = each season pins to its
+                                     solstice value with hard cutoffs.
+  *affected-worlds* (list, default empty) - which world names the engine
+                                     touches. Empty = every world in
+                                     worldsList.
+ Solstice math: vanilla is 50% daylight (10 min day + 10 min night). The
+ preset's winter/summer values are daylight FRACTIONS (0..1). Speed at any
+ given moment = 0.5 / daylightFraction (and 0.5 / (1 - daylight) for night).
+ Slower daySpeed = longer day in real time.
+ Admin: /tm season  shows current state; the GUI's admin tab can swap
+ presets and force a season without restart.
+-----

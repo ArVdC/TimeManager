@@ -279,6 +279,8 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_HUD = "hud";
 	protected static final String CMD_NOWITEM = "nowitem";
 	protected static final String CMD_ANIMATION = "animation";
+	protected static final String CMD_SEASON = "season";
+	protected static final String CMD_GUI = "gui";
 
 	// "/tm set" sub-commands names
 	protected static final String CMD_SET_DATE = "date";
@@ -372,6 +374,12 @@ public class MainTM extends JavaPlugin {
 	public static final String PH_YY = "yy";
 	public static final String PH_YYYY = "yyyy";
 	public static final String PH_SERVERDAY = "serverday";
+	// Season placeholders — populated by the SeasonService when enabled.
+	public static final String PH_SEASON = "season";          // WINTER / SPRING / SUMMER / FALL
+	public static final String PH_SEASON_PRESET = "season_preset"; // TEMPERATE etc.
+	public static final String PH_SEASON_DAYOFYEAR = "season_dayofyear"; // 0..year-1
+	public static final String PH_SEASON_DAYLIGHT = "season_daylight";   // "47%" formatted
+	public static final String PH_SEASON_HEMISPHERE = "season_hemisphere"; // north/south
 
 	// Permissions names
 	protected static final String PERM_TM = "timemanager.admin";
@@ -394,6 +402,12 @@ public class MainTM extends JavaPlugin {
 	public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
 	public File configHeaderFileTxt = new File(this.getDataFolder(), CONFIGHEADERFILENAME);
 	public File langFileYaml = new File(this.getDataFolder(), LANGFILENAME);
+	// Seasons engine (real-world-inspired day/night modulation). Initialized
+	// in onEnable() so the field stays null on legacy server builds that
+	// reject the plugin pre-load.
+	public net.vdcraft.arvdc.timemanager.seasons.SeasonService seasonService;
+	public net.vdcraft.arvdc.timemanager.seasons.SeasonScheduler seasonScheduler;
+
 	public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
 	public File langHeaderFileTxt = new File(this.getDataFolder(), LANGHEADERFILENAME);
 	public File cmdsFileYaml = new File(this.getDataFolder(), CMDSFILENAME);
@@ -781,6 +795,7 @@ public class MainTM extends JavaPlugin {
 
 			// #11. Listen to chat events
 			getServer().getPluginManager().registerEvents(new ChatHandler(), this);
+			getServer().getPluginManager().registerEvents(new net.vdcraft.arvdc.timemanager.gui.TmGui(), this);
 			
 			// #12. Listen to commands events
 			getServer().getPluginManager().registerEvents(new PlayerCommandHandler(), this);
@@ -811,6 +826,15 @@ public class MainTM extends JavaPlugin {
 			int pluginId = 10412;
 	        Metrics metrics = new Metrics(this, pluginId);
 
+			// #16.5. Seasons engine (opt-in via seasons.enabled)
+			seasonService = new net.vdcraft.arvdc.timemanager.seasons.SeasonService();
+			seasonScheduler = new net.vdcraft.arvdc.timemanager.seasons.SeasonScheduler(seasonService);
+			if (seasonService.enabled()) {
+				Bukkit.getScheduler().runTaskLater(this, () -> seasonScheduler.start(), 100L);
+				MsgHandler.infoMsg("[seasons] enabled, preset=" + seasonService.preset()
+						+ ", year-length=" + seasonService.yearLengthDays() + " MC days");
+			}
+
 			// #17. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
@@ -829,6 +853,10 @@ public class MainTM extends JavaPlugin {
 		// #0. Don't disable the plugin with if not loaded first
 		if (serverMcVersion < reqMcVToLoadPlugin) {
 		} else {
+
+			// #0.5. Stop seasons engine before saving so its lastApplied state
+			// flushes to a clean config.
+			if (seasonScheduler != null) seasonScheduler.stop();
 
 			// #1. Save YAMLs
 			if (MainTM.serverMcVersion < MainTM.reqMcVForSleepPercentage)

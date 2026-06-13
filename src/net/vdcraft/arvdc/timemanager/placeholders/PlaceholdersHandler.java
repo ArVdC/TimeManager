@@ -144,6 +144,33 @@ public class PlaceholdersHandler extends MainTM {
 			if (serverDays < 0) serverDays = 0;
 			return String.valueOf(serverDays);
 
+		// Season placeholders. All resolve to a sensible "off" string when
+		// the seasons engine is disabled, so they can be embedded in
+		// templates safely.
+		case "{" + PH_PREFIX + PH_SEASON + "}" : {
+			var svc = MainTM.getInstance().seasonService;
+			if (svc == null || !svc.enabled() || w == null) return "off";
+			return svc.currentSeason(w).name();
+		}
+		case "{" + PH_PREFIX + PH_SEASON_PRESET + "}" : {
+			var svc = MainTM.getInstance().seasonService;
+			return svc == null ? "none" : svc.preset().name();
+		}
+		case "{" + PH_PREFIX + PH_SEASON_DAYOFYEAR + "}" : {
+			var svc = MainTM.getInstance().seasonService;
+			if (svc == null || w == null) return "0";
+			return String.valueOf(svc.dayOfYear(w));
+		}
+		case "{" + PH_PREFIX + PH_SEASON_DAYLIGHT + "}" : {
+			var svc = MainTM.getInstance().seasonService;
+			if (svc == null || !svc.enabled() || w == null) return "50%";
+			return Math.round(svc.daylightFraction(w) * 100) + "%";
+		}
+		case "{" + PH_PREFIX + PH_SEASON_HEMISPHERE + "}" : {
+			var svc = MainTM.getInstance().seasonService;
+			return svc != null && svc.isSouthernHemisphere() ? "south" : "north";
+		}
+
 		default :
 			return placeholder;
 		}
