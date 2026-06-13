@@ -62,12 +62,19 @@ public class LgFileHandler extends MainTM {
 				// #1.A.b. Actualize values
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
-				// #1.A.c. Update the file if older than 2.12.3 — bumped when
-				// the lang structure gained the `gui` sub-block per language
-				// (10 locales, ~110 keys each). updateLangFile() extracts the
-				// new template from the jar and re-applies the user's existing
-				// /now overrides on top.
-				if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 2, 12, 3, 4, 0)) {
+				// #1.A.c. Structural migration: if the existing lang.yml
+				// lacks the per-language `gui` sub-block (added in 2.12.3),
+				// rebuild it from the jar so the new locales (tr_TR, es_MX,
+				// he_IL) and the gui keys land while the user's /now
+				// overrides are preserved. Version-only checks don't work
+				// here because TM auto-bumps the version field on every
+				// load, so once a plugin has run a partially-migrated
+				// lang.yml is forever stuck at the latest version even
+				// without the new structure.
+				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
+				boolean missingGui = MainTM.getInstance().langConf
+						.getConfigurationSection(LG_LANGUAGES + ".en_US.gui") == null;
+				if (missingGui) {
 					updateLangFile();
 				} else MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
 			}
