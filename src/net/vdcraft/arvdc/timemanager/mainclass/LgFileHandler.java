@@ -62,8 +62,12 @@ public class LgFileHandler extends MainTM {
 				// #1.A.b. Actualize values
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
-				// #1.A.c. Update the file if < 1.10.0
-				if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 10, 0, 4, 0)) { // TODO Only update this when lang file changes.
+				// #1.A.c. Update the file if older than 2.12.3 — bumped when
+				// the lang structure gained the `gui` sub-block per language
+				// (10 locales, ~110 keys each). updateLangFile() extracts the
+				// new template from the jar and re-applies the user's existing
+				// /now overrides on top.
+				if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 2, 12, 3, 4, 0)) {
 					updateLangFile();
 				} else MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
 			}
