@@ -3,7 +3,7 @@
 ## Spigot plugin for time management and display
 
 
-### WHAT'S NEW IN 2.12.3
+### WHAT'S NEW IN 2.0.0
 - **Seasons engine** — day and night length sweep through the year like they do on Earth. Six latitude-style presets (Equatorial, Mediterranean, Temperate, Subarctic, Arctic, Custom), a north/south hemisphere switch, sinusoidal sweep between solstices, configurable year length (default 32 MC days). Off by default; opt in with `seasons.enabled: true`. Nether and End are auto-excluded since they have no daylight cycle. Drives the existing `daySpeed` / `nightSpeed` machinery on every MC day boundary, so the rest of TimeManager picks up the new values transparently.
 - **`/tm gui`** — three-page in-game admin panel with click feedback, currently-selected options glow, and a Reset-to-vanilla button on every page. Server / World / Seasons tabs. Aliases: `/tm admin`, `/tm panel`, `/tm menu`, `/tm settings`. Shown below.
 - **`/tm season`** — console-driven admin: `status | enable | disable | preset <NAME> | year <days> | apply | list`.

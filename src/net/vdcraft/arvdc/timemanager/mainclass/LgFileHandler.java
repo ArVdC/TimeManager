@@ -63,7 +63,7 @@ public class LgFileHandler extends MainTM {
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
 				// #1.A.c. Structural migration: if the existing lang.yml
-				// lacks the per-language `gui` sub-block (added in 2.12.3),
+				// lacks the per-language `gui` sub-block (added in 2.0.0),
 				// rebuild it from the jar so the new locales (tr_TR, es_MX,
 				// he_IL) and the gui keys land while the user's /now
 				// overrides are preserved. Version-only checks don't work
