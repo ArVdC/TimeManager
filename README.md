@@ -20,9 +20,9 @@ Existing 1.12.2 configs load unchanged.
 | ![Server tab](docs/screenshots/gui-server.png) | ![World tab](docs/screenshots/gui-world.png) | ![Seasons tab](docs/screenshots/gui-seasons.png) |
 
 ### TIME MANAGEMENT FUNCTIONALITIES
-Define a start time and a speed modifier per world. Set a suitable refresh rate for the performance of your server.
+Define a **start time** and a **speed modifier** per world. Set a suitable refresh rate for the performance of your server.
 
-Speed could be increased/decreased up to 20 times or match UTC time with offset to local time.
+**Speed** could be **increased/decreased** up to 20 times or match UTC time with offset to local time.
 
 Day and night can be set to different speed values, which can be great for RPG or some mini-games.
 
@@ -30,11 +30,15 @@ Worlds list is actualized and timers are synchronized on each server startup and
 
 Time and speed can be modified with in-game commands or reloading after manually changes.
 
-A specific time offset can be defined for each player.
+A **specific time offset** can be defined for each player.
 
-TimeManager can schedule commands that run at a time specified in the cmds.yml file. Scheduled commands can use the placeholders described below, with the exception of {tm_player}.
+TimeManager can **schedule commands** that run at a time specified in the cmds.yml file. Scheduled commands can use the placeholders described below, with the exception of {tm_player}.
 
 This plugin override the vanilla '/time' command. The command to change a single world timer is '/tm set time \[ticks|daypart|HH:mm:ss] \[world]'.
+
+**Seasons engine** — day and night length sweep through the year. Six latitude-style presets (Equatorial, Mediterranean, Temperate, Subarctic, Arctic, Custom), hemisphere switch, sinusoidal sweep between solstices, configurable year length.
+
+Admin **GUI** : three-page admin panel with click feedback (10 languages).
 
 ### SLEEP MANAGEMENT FUNCTIONALITIES
 TimeManager allows you to manage sleep: number of players required, animation during night skip, synchronization between worlds when waking up, etc.
@@ -53,6 +57,9 @@ Display argument can be: 'msg', 'title' or 'actionbar'.
 Nether and the End worlds could have a specific message.
 
 Hexadecimal colors can be used in the YAML files.
+
+### PLAYER COMMAND /now \<season suffix>
+Displays the season as suffix in chat when seasons are enabled (overworld only).
 
 ### PLACEHOLDERS
 The available placeholders are as follows :
@@ -100,6 +107,8 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 
 **/tm checkUpdate \[bukkit|curse|spigot|github]** Search if a newer version of the plugin exists on the chosen server. (MC 1.8.8+ only)
 
+**/tm gui** Opens an admin GUI.
+
 **/tm help \[cmd] \[\<subCmd>]** Help provides you the correct usage and a short description of targeted command and subcommand.
 
 **/tm now \[msg|title|actionbar] \[player|all|world]** Send the '/now' (chat, title or action bar) message to a specific player, all players in a specific world, or all online players.
@@ -107,6 +116,8 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 **/tm reload \[all|config|lang|cmds]** This command allows you to reload datas from yaml files after manual modifications. All timers will be immediately resynchronized.
 
 **/tm resync \[all|world]** This command will re-synchronize a single or all worlds timers, based on the startup server's time, the elapsed time and the current speed modifier.
+
+**/tm season \[status|enable|disable|preset<NAME>|year<days>|apply|list]** Handles all the season functions.
 
 **/tm set date \[today|yyyy-mm-dd] \[all|world]** Sets current date for the specified world (or all of them). Could be 'today' or any yyyy-mm-dd date. The length of the months corresponds to reality, with the exception of February which always lasts 28 days. A year therefore always lasts 365 days.
 
@@ -154,15 +165,18 @@ If a world is using the real time speed, the start value will determine the UTC 
 ### SHORT LIST OF COMMANDS AND ARGS
 - For Players:
   - /now \<msg|title|actionbar> \<world>
+  - /now \<season suffix>
 - For Admins:
   - /tm checkConfig
   - /tm checkSql
   - /tm checkTime \[all|world]
   - /tm checkUpdate \[bukkit|spigot|github]
+  - /tm gui
   - /tm help \[cmd] \[\<subCmd>]
   - /tm now \[msg|title|actionbar] \[all|player|world]
   - /tm reload \[all|config|lang|cmds]
   - /tm resync \[all|world]
+  - /tm season \[status|enable|disable|preset<NAME>|year<days>|apply|list]
   - /tm set date \[today|yyyy-mm-dd] \[all|world]
   - /tm set debugMode \[true|false]
   - /tm set defLang \[true|false]
@@ -280,6 +294,6 @@ String setLangToUse(Player p)
 * ~~Placeholders: Create signs where the placeholders constantly refresh.~~
 * ~~Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.~~
 * ~~Sleep: Improve particles displayed during sleep animation.~~
-* Backward compatibility: Make a 2.0 version with no backward compatibility, because of the new gamerule 'ADVANCE_TIME' that replace 'DAYLIGHT_CYCLE'.
+* ~~Backward compatibility: Make a 2.0 version with no backward compatibility, because of the new gamerule 'ADVANCE_TIME' that replace 'DAYLIGHT_CYCLE'.~~
 
 Please open an issue on GitHub if you want a specific improvement or encounter any bugs.
