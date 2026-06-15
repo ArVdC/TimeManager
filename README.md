@@ -89,7 +89,7 @@ Please note that these placeholders are case sensitive.
 They can be used in lang and cmds YAML files, but also in signs, books, chat messages and commands.
 
 #### DEPENDENCIES
-TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245) and [MVdWPlaceholderAPI](www.spigotmc.org/resources/mvdwplaceholderapi.11182). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
+TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
 
 ### ADMIN COMMAND /tm
 **/tm checkConfig** Admins and console can display a summary of the config.yml and lang.yml files.
@@ -223,7 +223,8 @@ The reference time and date can be that of any world, or the actual time.
 [![IMAGE 1. How to Basically Configure the Plugin](http://imageshack.com/a/img924/8047/gxPi0W.png)](https://www.youtube.com/playlist?list=PLPTZNgSLmtr9PxHD_7Y2VFhbSqH8gKBad)
 
 ### COMPATIBILITY
-v1.12.1: MC 1.9.4 to 1.21.x (tested on Paper 26.1.x)
+v1.12.3: MC 1.9.4 to 1.21.10
+v2.0.0: MC 1.21.11 to 26.1.20
 
 ### API
 Although the plugin is not intended to be an API, it is possible to use the different placeholders by importing the PlaceholdersHandler class in your Java code :
