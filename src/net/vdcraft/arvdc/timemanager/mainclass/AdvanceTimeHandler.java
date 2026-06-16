@@ -33,18 +33,18 @@ public class AdvanceTimeHandler extends MainTM {
 				if (serverMcVersion >= reqMcVToUseAdvanceTimeConstant && serverType.equalsIgnoreCase("spigot")) { // If Spigot server 26.1.2
 					w.setGameRule(GameRule.ADVANCE_TIME, false);
 				} else if (MainTM.serverMcVersion >= MainTM.reqMcVToUseAdvanceTimeGamerule) { // If any other server 1.21.11+
-					spawnAndExecuteCommand(w, "advance_time", false);
+					spawnAndExecuteCommand(w, GR_ADVANCE_TIME, false);
 				} else {// If any legacy server					
-					spawnAndExecuteCommand(w, "doDaylightCycle", false);
+					spawnAndExecuteCommand(w, GR_DO_DAYLIGHT_CYCLE, false);
 				}
 				MsgHandler.debugMsg(daylightFalseDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg				
 			} else { // If the speed of the world is increased or normal & async
 				if (serverMcVersion >= reqMcVToUseAdvanceTimeConstant && serverType.equalsIgnoreCase("spigot")) { // If Spigot server 26.1.2+
 					w.setGameRule(GameRule.ADVANCE_TIME, true);
 				} else if (MainTM.serverMcVersion >= MainTM.reqMcVToUseAdvanceTimeGamerule) { // If any other server 1.21.11+
-					spawnAndExecuteCommand(w, "advance_time", true);
+					spawnAndExecuteCommand(w, GR_ADVANCE_TIME, true);
 				} else {// If any legacy server					
-					spawnAndExecuteCommand(w, "doDaylightCycle", true);
+					spawnAndExecuteCommand(w, GR_DO_DAYLIGHT_CYCLE, true);
 			}
 				MsgHandler.debugMsg(daylightTrueDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			}

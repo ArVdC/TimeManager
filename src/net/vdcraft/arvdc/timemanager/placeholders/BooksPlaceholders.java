@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.mainclass;
+package net.vdcraft.arvdc.timemanager.placeholders;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -8,9 +8,8 @@ import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.inventory.meta.BookMeta;
 
 import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
-import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
 
-public class BooksHandler implements Listener {
+public class BooksPlaceholders implements Listener {
 
 	/**
 	 * When a player achieves a book, check for {tm_placeholders}

@@ -22,14 +22,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.bstats.bukkit.Metrics;
-import net.vdcraft.arvdc.timemanager.mainclass.BooksHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
+
 import net.vdcraft.arvdc.timemanager.mainclass.HiddenListenerHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.McVersionHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.SignsHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.UpdateHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.WorldListHandler;
@@ -37,9 +33,15 @@ import net.vdcraft.arvdc.timemanager.mainclass.NowItemHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.RefreshingSignHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SleepHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
-import net.vdcraft.arvdc.timemanager.placeholders.ChatHandler;
-import net.vdcraft.arvdc.timemanager.placeholders.ConsoleCommandHandler;
-import net.vdcraft.arvdc.timemanager.placeholders.PlayerCommandHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.BooksPlaceholders;
+import net.vdcraft.arvdc.timemanager.placeholders.ChatPlaceholders;
+import net.vdcraft.arvdc.timemanager.placeholders.ConsoleCommandPlaceholders;
+import net.vdcraft.arvdc.timemanager.placeholders.PlayerCommandPlaceholders;
+import net.vdcraft.arvdc.timemanager.placeholders.SignsPlaceholders;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CmdsFileHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.SignsFileHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PAPIHandler;
 
 @SuppressWarnings("unused")
@@ -106,6 +108,8 @@ public class MainTM extends JavaPlugin {
 	protected static int defTitleFadeIn = 20;
 	protected static int defTitleStay = 60;
 	protected static int defTitleFadeOut = 20;
+	public static String defSignsMarker = "[tm]";
+	protected static int defSignsRefresh = 40;
 
 	// Language to use if locale doesn't exist in the lang.yml = 'defaultLang'
 	protected static String serverLang;
@@ -113,6 +117,10 @@ public class MainTM extends JavaPlugin {
 	// Min and Max refresh parameters in ticks
 	protected static Integer refreshMin = 2;
 	protected static Integer refreshMax = 20;
+
+	// Min and Max signs refresh in ticks
+	public static Integer signsRefreshMin = 5;
+	public static Integer signsRefreshMax = 40;
 
 	// Handle the current refresh rate
 	protected static Integer refreshRateInt;
@@ -204,6 +212,18 @@ public class MainTM extends JavaPlugin {
 	protected static final String CF_PLACEHOLDER_MVDWPAPI = "MVdWPlaceholderAPI";
 	public static final String CF_PLACEHOLDER_CHAT = "inChatEnable";
 	public static final String CF_PLACEHOLDER_CMDS = "inCommandsEnable";
+	public static final String CF_SIGNS = "signs";
+	public static final String CF_SIGNS_USESIGNS = "enabled";
+	public static final String CF_SIGNS_REFRESH = "refresh-rate";
+	public static final String CF_SIGNS_MARKER  = "marker";
+	public static final String CF_NOW_ITEM_ENABLED = "now-item.enabled";
+	public static final String CF_NOW_ITEM_NAME = "now-item.display-name";
+	public static final String CF_NOW_ITEM_LORE = "now-item.lore";
+	public static final String CF_NOW_ITEM_CD	= "now-item.cooldown-ticks";
+	public static final String CF_HUD_ENABLED = "hud.actionbar.enabled";
+	public static final String CF_HUD_REFRESH = "hud.actionbar.refresh-rate";
+	public static final String CF_HUD_FORMAT  = "hud.actionbar.format";
+	public static final String CF_HUD_WORLDS  = "hud.actionbar.worlds";
 	
 	// Lang file keys
 	protected static final String LG_USEMULTILANG = "useMultiLang";
@@ -260,6 +280,19 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMDS_TIME = "time";
 	protected static final String CMDS_DATE = "date";
 	protected static final String CMDS_REPEATFREQ = "repeatFreq";
+	
+	// Signs file keys
+	public static final String SIGNS_SIGNSLIST = "signsList";
+	public static final String SIGNS_WORLD = "world";
+	public static final String SIGNS_POSITION = "position";
+	public static final String SIGNS_MATERIAL = "material";
+	public static final String SIGNS_FACE = "face";
+	public static final String SIGNS_SIDE = "side";
+	public static final String SIGNS_CONTENT = "content";
+	public static final String SIGNS_LINE1 = "line1";
+	public static final String SIGNS_LINE2 = "line2";
+	public static final String SIGNS_LINE3 = "line3";
+	public static final String SIGNS_LINE4 = "line4";
 
 	// Commands names
 	protected static final String CMD_TM = "tm";
@@ -380,7 +413,9 @@ public class MainTM extends JavaPlugin {
 	protected static final String PERM_NOW = "timemanager.now.cmd";
 	protected static final String PERM_NOW_DISPLAY = "timemanager.now.display";
 	protected static final String PERM_NOW_WORLD = "timemanager.now.world";
+	public static final String PERM_NOW_ITEM_USE = "timemanager.now-item.use";
 	public static final String PERM_PLACEHOLDERS = "timemanager.placeholders";
+	public static final String PERM_SIGNS_CREATE = "timemanager.signs.create";
 	public static final String PERM_SLEEP_ALLOWED = "timemanager.sleep.allowed";
 	public static final String PERM_SLEEP_COUNTED = "timemanager.sleep.counted";
 	
@@ -391,6 +426,8 @@ public class MainTM extends JavaPlugin {
 	protected static final String LANGHEADERFILENAME = "lang-header.txt";
 	protected static final String CMDSFILENAME = "cmds.yml";
 	protected static final String CMDSHEADERFILENAME = "cmds-header.txt";
+	public static final String SIGNSFILENAME = "signs.yml";
+	public static final String SIGNSHEADERFILENAME = "signs-header.txt";
 
 	// YAML files targets
 	public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
@@ -401,6 +438,9 @@ public class MainTM extends JavaPlugin {
 	public File cmdsFileYaml = new File(this.getDataFolder(), CMDSFILENAME);
 	public FileConfiguration cmdsConf = YamlConfiguration.loadConfiguration(cmdsFileYaml);
 	public File cmdsHeaderFileTxt = new File(this.getDataFolder(), CMDSHEADERFILENAME);
+	public File signsFileYaml = new File(this.getDataFolder(), SIGNSFILENAME);
+	public FileConfiguration signsConf = YamlConfiguration.loadConfiguration(signsFileYaml);
+	public File signsHeaderFileTxt = new File(this.getDataFolder(), SIGNSHEADERFILENAME);
 
 	// Use a lang_backup file
 	protected final static String LANGBCKPFILENAME = "lang_backup.yml";
@@ -409,6 +449,7 @@ public class MainTM extends JavaPlugin {
 	
 	// GameRules
 	public static final String GR_DO_DAYLIGHT_CYCLE = "doDaylightCycle" ;
+	public static final String GR_ADVANCE_TIME = "advance_time" ;
 	public static final String GR_PLAYERS_SLEEPING_PERCENTAGE = "playersSleepingPercentage" ;
 	public static final String GR_PLAYERS_SLEEPING_IGNORED = "sleepingIgnored" ;
 	public static final String GR_SEND_COMMAND_FEEDBACK = "sendCommandFeedback" ;
@@ -427,19 +468,24 @@ public class MainTM extends JavaPlugin {
 	protected static String plDisabledMsg = "The plugin is now disabled.";
 	protected static String cfgFileCreateMsg = "The configuration file was created.";
 	protected static String lgFileCreaMsg = "The language file was created.";
+	protected static String signsFileCreaMsg = "The signs file was created.";
 	protected static String cmdsFileCreaMsg = "The commands file was created.";
 	protected static String cfgFileExistMsg = "The configuration file already exists.";
 	protected static String lgFileExistMsg = "The language file already exists.";
 	protected static String cmdsFileExistMsg = "The commands file already exists.";
+	protected static String signsFileExistMsg = "The signs file already exists.";
 	protected static String cfgVersionMsg = "Enabled " + CONFIGFILENAME + " v";
 	protected static String lgVersionMsg = "Enabled " + LANGFILENAME + " v";
 	protected static String cmdsVersionMsg = "Enabled " + CMDSFILENAME + " v";
+	protected static String signsVersionMsg = "Enabled " + SIGNSFILENAME + " v";
 	protected static String cfgFileTryReloadMsg = "Reloading the configuration file.";
 	protected static String cfgFileReloadMsg = "The configuration file was reloaded.";
 	protected static String lgFileTryReloadMsg = "Reloading the language file.";
 	protected static String lgFileReloadMsg = "The language file was reloaded.";
 	protected static String cmdsFileTryReloadMsg = "Reloading the commands file.";
 	protected static String cmdsFileReloadMsg = "The commands file was reloaded.";
+	protected static String signsFileTryReloadMsg = "Reloading the signs file.";
+	protected static String signsFileReloadMsg = "The signs file was reloaded.";
 	public static String worldsCheckMsg = "The worlds list was actualized.";
 	protected static String multiLangIsOnMsg = "Multilanguage support is enable.";
 	protected static String multiLangIsOffMsg = "Multilanguage support is disable.";
@@ -575,8 +621,10 @@ public class MainTM extends JavaPlugin {
 	protected static String missingArgMsg = "This command requires one or more additional argument(s).";
 	protected static String isNotBooleanMsg = "This command requires a boolean argument, 'true' or 'false'.";
 	protected static String nbPlayersMustBeIntMsg = "The " + CF_NIGHTSKIP_REQUIREDPLAYERS + " value must be an integer or a percentage. Default value will be used.";
-	protected static String couldNotSaveLang = "File " + LANGFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
-	protected static String couldNotSaveCmds = "File " + CMDSFILENAME + " couldn't be saved on disk. In worst case, delete the file then restart the server.";
+	protected static String couldNotSavefileMsg = " couldn't be saved on disk. In worst case, delete the file then restart the server.";
+	protected static String couldNotSaveLang = "File " + LANGFILENAME + couldNotSavefileMsg;
+	protected static String couldNotSaveCmds = "File " + CMDSFILENAME + couldNotSavefileMsg;
+	protected static String couldNotSaveSigns = "File " + SIGNSFILENAME + couldNotSavefileMsg;
 	protected static String checkLogMsg = "Please check the console or log file.";
 	protected static String versionMCFormatMsg = "Unable to correctly determine your server MC version, the plugin will consider it is an old one.";
 	protected static String versionTMFormatMsg = "Unable to correctly determine the plugin version.";
@@ -658,6 +706,13 @@ public class MainTM extends JavaPlugin {
 	public static String durationToFractionDebugMsg = "The calculation of the duration as a speed multiplier is : ";
 	public static String addNewWorldDebugMsg = " §bdoes not exist yet, it will be added to the Timemanager worlds list.";
 	public static String deleteUnknowWorldDebugMsg = " §bdoes not exist anymore, it will be deleted from the Timemanager worlds list.";
+	public static String signsWrongWorldDebugMsg = "does not exist. It was replaced by the default value";
+	public static String signsOpenPart1DebugMsg = "opened a sign on side";
+	public static String signsOpenPart2DebugMsg = ", the first line of which is";
+	public static String signsRestoredLinesDebugMsg = "The four lines of text for the sign are :";
+	public static String signsSavingDebugMsg = "was saved in the signs.yml file.";
+	public static String signsDestroyedPart1DebugMsg = "was destroyed by";
+	public static String signsDestroyedPart2DebugMsg = "and has been removed from the list.";
 	
 	// Debug Calculation for timer synchronization (with colors)
 	protected static String actualTimeVar = "§c[actualTime]§b";
@@ -748,75 +803,80 @@ public class MainTM extends JavaPlugin {
 			// #1. Initiate this main class as the contain of the instance
 			instanceMainClass = this;
 
-			// #2. Activate the configuration file
+			// #2.A. Activate the configuration file
 			CfgFileHandler.loadConfig(ARG_FIRST);
 
-			// #3. Activate the languages file
+			// #2.B. Activate the languages file
 			LgFileHandler.loadLang(ARG_FIRST);
 			
-			// #4. Activate the scheduler file
+			// #2.C. Activate the scheduler file
 			CmdsFileHandler.loadCmds(ARG_FIRST);
 
-			// #5. Activate the class with admins commands
+			// #2.D. Activate the persistant signs file
+			SignsFileHandler.loadSigns(ARG_FIRST);
+
+			// #3.A. Activate the class with admins commands
 			CommandExecutor timemanagerExecutor = new AdminCmdExecutor();
 			getCommand(CMD_TM).setExecutor(timemanagerExecutor);
-			// Activate tab completion for admins commands
+			
+			// 3.B. Activate tab completion for admins commands
 			getCommand(CMD_TM).setTabCompleter(new CreateSentenceCommand());
 
-			// #6. Activate the class with players commands
+			// #4.A. Activate the class with players commands
 			CommandExecutor nowExecutor = new PlayerCmdExecutor();
 			getCommand(CMD_NOW).setExecutor(nowExecutor);
 
-			// #7. Activate tab completion for players commands
+			// #4.B. Activate tab completion for players commands
 			getCommand(CMD_NOW).setTabCompleter(new CreateSentenceCommand());
 
-			// #8.A. Listen to sleep events
+			// #5.A. Listen to sleep events
 			getServer().getPluginManager().registerEvents(new SleepHandler(), this);
-			// #8.B. Hidden listener (Check if MC version is at least 1.15.0)
+			
+			// #5.B. Hidden listener (Check if MC version is at least 1.15.0)
 			if (serverMcVersion >= reqMcVForTimeSkipEvent) getServer().getPluginManager().registerEvents(new HiddenListenerHandler(), this);
 
-			// #9. Listen to books events
-			getServer().getPluginManager().registerEvents(new BooksHandler(), this);
+			// #6. Listen to books events
+			getServer().getPluginManager().registerEvents(new BooksPlaceholders(), this);
 
-			// #10. Listen to signs events
-			getServer().getPluginManager().registerEvents(new SignsHandler(), this);
+			// #7. Listen to signs events
+			getServer().getPluginManager().registerEvents(new SignsPlaceholders(), this);
 
-			// #11. Listen to chat events
-			getServer().getPluginManager().registerEvents(new ChatHandler(), this);
+			// #8. Listen to chat events
+			getServer().getPluginManager().registerEvents(new ChatPlaceholders(), this);
 			
-			// #12. Listen to commands events
-			getServer().getPluginManager().registerEvents(new PlayerCommandHandler(), this);
-			getServer().getPluginManager().registerEvents(new ConsoleCommandHandler(), this);	
+			// #9. Listen to commands events
+			getServer().getPluginManager().registerEvents(new PlayerCommandPlaceholders(), this);
+			getServer().getPluginManager().registerEvents(new ConsoleCommandPlaceholders(), this);	
 			
-			// #13. Listen to worlds events
+			// #10. Listen to worlds events
 			getServer().getPluginManager().registerEvents(new WorldListHandler(), this);	 // TODO
 
-			// #13.A. Refreshing signs ([tm] marker) — listener + scheduler
+			// #11. Refreshing signs ([tm] marker) — listener + scheduler
 			getServer().getPluginManager().registerEvents(new RefreshingSignHandler(), this);
 			RefreshingSignHandler.init();
 
-			// #13.B. Pocket-watch /now item — listener + config defaults
+			// #12. Pocket-watch /now item — listener + config defaults
 			NowItemHandler.ensureDefaults();
 			getServer().getPluginManager().registerEvents(new NowItemHandler(), this);
 
-			// #14. Synchronize worlds and create scheduled task for faking the time increase/decrease
+			// #13. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();
 
-			// #15. Activate (or not) the placeholder APIs
+			// #14. Activate (or not) the placeholder APIs
 			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
 				new PAPIHandler(this).register();
 			}
 			
-			// #16. bStats
+			// #15. bStats
 			int pluginId = 10412;
 	        Metrics metrics = new Metrics(this, pluginId);
 
-			// #17. Confirm activation in console
+			// #16. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
-			// #18. Check for an update
+			// #17. Check for an update
 			if (serverMcVersion >= MainTM.reqMcVForUpdate)
 				UpdateHandler.delayCheckForUpdate();
 			else MsgHandler.warnMsg(updateCommandsDisabledMsg + reqMcVForUpdate.toString().replace(".0", "."));
@@ -837,6 +897,8 @@ public class MainTM extends JavaPlugin {
 				Bukkit.getServer().getWorlds().stream().forEach(world -> MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world.getName() + "." + CF_NIGHTSKIP_LEGACYPERCENTAGE, null));
 			this.saveConfig();
 			LgFileHandler.SaveLangYml();
+			CmdsFileHandler.SaveCmdsYml();
+			SignsFileHandler.SaveSignsYml();
 
 			// #2. Close SQL connection
 			SqlHandler.closeConnection("Host");

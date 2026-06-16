@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 
 public class TmNow extends MainTM {
 

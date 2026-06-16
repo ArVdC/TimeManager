@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.mainclass;
+package net.vdcraft.arvdc.timemanager.ymlfilesmanagement;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -13,6 +13,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.mainclass.CmdsScheduler;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class CmdsFileHandler extends MainTM {
 

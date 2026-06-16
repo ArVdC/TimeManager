@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.mainclass;
+package net.vdcraft.arvdc.timemanager.ymlfilesmanagement;
 
 import java.io.File;
 import java.io.FileOutputStream;

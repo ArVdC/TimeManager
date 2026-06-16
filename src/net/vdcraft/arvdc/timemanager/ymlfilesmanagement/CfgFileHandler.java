@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.mainclass;
+package net.vdcraft.arvdc.timemanager.ymlfilesmanagement;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -7,6 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.mainclass.ActionBarHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.DebugModeHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.LockTimeHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.SleepHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
+import net.vdcraft.arvdc.timemanager.mainclass.WorldListHandler;
 
 public class CfgFileHandler extends MainTM {
 

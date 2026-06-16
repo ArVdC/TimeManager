@@ -3,8 +3,8 @@ package net.vdcraft.arvdc.timemanager.cmdadmin;
 import org.bukkit.command.CommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CmdsFileHandler;
 
 public class TmSetUseCmds extends MainTM {
 

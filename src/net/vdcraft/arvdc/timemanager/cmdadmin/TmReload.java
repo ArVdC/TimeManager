@@ -4,11 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.CmdsFileHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.SpeedHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CmdsFileHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
 
 public class TmReload extends MainTM {
 

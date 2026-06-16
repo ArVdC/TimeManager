@@ -15,6 +15,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 
 /**
  * Optional ActionBar HUD that broadcasts a configurable time/day string to

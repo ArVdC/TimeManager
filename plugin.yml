@@ -1,6 +1,6 @@
 name: TimeManager
-version: 1.12.3
-api-version: '1.21'
+version: 2.0.1-b
+api-version: '26.1'
 authors: [ArVdC]
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdcraft.net
@@ -50,8 +50,13 @@ commands:
             /<command> checkSql
             /<command> checkTime [all|server|world]
             /<command> checkUpdate [bukkit|curse|spigot|github]
+            /<command> hud [on|off|toggle]
             /<command> help [cmd] [<subCmd>]
-            /<command> now [msg|title|actionbar] [all|player|world] 
+            /<command> lock <world> [time|here|realtime]
+            /<command> unlock <world>
+            /<command> now [msg|title|actionbar] [all|player|world]
+            /<command> nowitem [player]
+            /<command> placeholders
             /<command> reload [all|config|lang|cmds]
             /<command> resync [all|world]
             /<command> set date [today|yyyy-mm-dd] [all|world]
@@ -76,11 +81,6 @@ commands:
             /<command> set time [ticks|daypart|HH:mm:ss] [all|world]
             /<command> set update [none|bukkit|curse|spigot|github]
             /<command> set useCmds [true|false]
-            /<command> lock <world> [time|here|realtime]
-            /<command> unlock <world>
-            /<command> placeholders
-            /<command> hud [on|off|toggle]
-            /<command> nowitem [player]
     aliases:
       - tmanag
       - timemanag
@@ -90,7 +90,7 @@ commands:
   now:
     permission: timemanager.now.cmd
     usage: /<command> [<msg|title|actionbar>] [<world>]
-    description: Display a world actual time (in mc hours or in ticks) and/or date in the chat.
+    description: Display a world actual time (in mc hours or in ticks) and/or date in the chat, title or actionbar.
     aliases:
       - time
       - hour

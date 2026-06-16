@@ -16,9 +16,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdplayer.NowMsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 
 public class PlayerCmdExecutor implements CommandExecutor {
 

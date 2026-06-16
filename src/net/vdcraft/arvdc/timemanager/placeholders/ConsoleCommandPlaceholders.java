@@ -12,7 +12,7 @@ import org.bukkit.event.server.ServerCommandEvent;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
-public class ConsoleCommandHandler implements Listener {
+public class ConsoleCommandPlaceholders implements Listener {
 
 	/**
 	 * When a server command is executed, check for {tm_placeholders} and replace them

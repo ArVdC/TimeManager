@@ -97,7 +97,7 @@ public class RefreshingSignHandler implements Listener {
 
 	/* ─────────────── Persistence ─────────────── */
 
-	private static void loadFromDisk() {
+	public static void loadFromDisk() {
 		tracked.clear();
 		templates.clear();
 		if (signsFile == null || !signsFile.exists()) return;

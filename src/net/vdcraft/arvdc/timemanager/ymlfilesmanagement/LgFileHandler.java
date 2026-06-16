@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.mainclass;
+package net.vdcraft.arvdc.timemanager.ymlfilesmanagement;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import java.util.Set;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class LgFileHandler extends MainTM {
 	
