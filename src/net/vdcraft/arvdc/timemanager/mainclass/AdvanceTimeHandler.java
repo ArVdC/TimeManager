@@ -42,9 +42,9 @@ public class AdvanceTimeHandler extends MainTM {
 				if (serverMcVersion >= reqMcVToUseAdvanceTimeConstant && serverType.equalsIgnoreCase("spigot")) { // If Spigot server 26.1.2+
 					w.setGameRule(GameRule.ADVANCE_TIME, true);
 				} else if (MainTM.serverMcVersion >= MainTM.reqMcVToUseAdvanceTimeGamerule) { // If any other server 1.21.11+
-					spawnAndExecuteCommand(w, "advance_time", false);
+					spawnAndExecuteCommand(w, "advance_time", true);
 				} else {// If any legacy server					
-					spawnAndExecuteCommand(w, "doDaylightCycle", false);
+					spawnAndExecuteCommand(w, "doDaylightCycle", true);
 			}
 				MsgHandler.debugMsg(daylightTrueDebugMsg + " §e" + worldToSet + "§b."); // Console debug msg
 			}
