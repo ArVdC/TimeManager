@@ -89,6 +89,8 @@ public class MainTM extends JavaPlugin {
 	public static Double reqMcVForCancelLeaveBedEvent = 17.0; // PlayerBedLeaveEvent was not cancellable before MC 1.17.0
 	public static Double reqMcVForWorldIsBedWorks = 18.0; // World interface changed in MC 1.18
 	public static Double reqMcVForConfigFile = 19.0; // ConfigFile options changed in MC 1.19
+	public static Double reqMcVToUseAdvanceTimeGamerule = 21.11; // "/gamerule advancetime" only works with servers since 1.21.11
+	public static Double reqMcVToUseAdvanceTimeConstant = 21.11; // "ADVANCE_TIME" constant actually only works with Spigot servers since 1.21.11 // TODO >>> Must wait for an update to use a cleaner code
 
 	// Default config files values
 	protected static long defWakeUpTick = 0L;
