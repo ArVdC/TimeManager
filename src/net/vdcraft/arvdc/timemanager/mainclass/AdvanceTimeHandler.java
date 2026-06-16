@@ -1,4 +1,3 @@
-
 package net.vdcraft.arvdc.timemanager.mainclass;
 
 import org.bukkit.Bukkit;

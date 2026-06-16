@@ -158,6 +158,7 @@ public class UpdateHandler extends MainTM {
 	/**
 	 * Get latest version number from Spigot
 	 */
+	@SuppressWarnings("resource")
 	private static void checkUpdateOnSpigot() {
 		try {
 			HttpURLConnection con = (HttpURLConnection) checkURL.openConnection();
