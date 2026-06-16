@@ -53,7 +53,7 @@ public class TmSetSpeed extends MainTM {
 			// Restrain the firstStartTime value
 			ValuesConverter.restrainFirstStartTime(world);
 			// Do daylightCycle change if needed
-			AdvanceTimeHandler.adjustDaylightCycle(world);
+			AdvanceTimeHandler.adjustAdvanceTime(world);
 			// Save the config
 			MainTM.getInstance().saveConfig();
 			// Detect if this world needs to change its speed value

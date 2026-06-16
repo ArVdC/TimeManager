@@ -53,7 +53,7 @@ public class TmSetTime extends MainTM {
 				// Detect if this world needs to change its speed value
 				SpeedHandler.speedScheduler(world);
 				// Adjust doDaylightCycle value
-				AdvanceTimeHandler.adjustDaylightCycle(world);
+				AdvanceTimeHandler.adjustAdvanceTime(world);
 				// Notifications
 				String timeToSet = ValuesConverter.formattedTimeFromTick(tick, true);
 				MsgHandler.infoMsg(worldTimeChgMsg1 + " " + world + " " + worldTimeChgMsg2 + " tick #" + tick + " (" + timeToSet + ")."); // Console final msg (always)
