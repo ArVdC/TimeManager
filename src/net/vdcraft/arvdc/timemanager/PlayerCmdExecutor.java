@@ -64,6 +64,27 @@ public class PlayerCmdExecutor implements CommandExecutor {
 		int n = 0;
 		while (n < nbArgs) MsgHandler.devMsg("[" + (n) + "] : §e" + args[n++]); // Console dev msg
 
+		// #5.5. Smart /time routing for ops / minecraft.command.time holders:
+		//   /time set <daypart|tick|HH:mm:ss>  → /tm set time <X> <world>
+		//   /time add <ticks>                  → falls back to minecraft:time
+		//   /time query <X>                    → falls back to minecraft:time
+		// TM's "set time" path produces the plugin-styled chat output that
+		// matches the rest of TimeManager. add/query stay vanilla because
+		// TM has no equivalent surface for them.
+		if (nbArgs >= 1 && (sender.isOp() || sender.hasPermission("minecraft.command.time"))) {
+			String first = args[0].toLowerCase();
+			if (first.equals("set") && nbArgs >= 2) {
+				String value = args[1];
+				String tmCmd = MainTM.CMD_TM + " " + MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME
+						+ " " + value + " " + w.getName();
+				if (Bukkit.dispatchCommand(sender, tmCmd)) return true;
+			} else if (first.equals("add") || first.equals("query")) {
+				StringBuilder vanilla = new StringBuilder("minecraft:time");
+				for (String a : args) vanilla.append(' ').append(a);
+				if (Bukkit.dispatchCommand(sender, vanilla.toString())) return true;
+			}
+		}
+
 		// #6. If there is no argument, send default arguments
 		if (nbArgs == 0) {
 			NowMsgHandler.sendNowMsg(sender);

@@ -15,14 +15,16 @@ public class TmSetUseCmds extends MainTM {
 
 		// Check if the argument matches what is expected
 		if (onOff.equalsIgnoreCase(ARG_TRUE) || onOff.equalsIgnoreCase(ARG_FALSE)) {
-			MainTM.getInstance().cmdsConf.set(CMD_SET_USECMDS, onOff);
-			CmdsFileHandler.SaveCmdsYml();
+			MainTM.getInstance().getConfig().set(CMD_SET_USECMDS, onOff);
+			MainTM.getInstance().saveConfig();
 			if (onOff.equalsIgnoreCase(ARG_TRUE)) {
+				debugMode = true;
 				MsgHandler.colorMsg(enableCmdsSchedulerDebugMsg); // Console debug msg (always)
 				MsgHandler.playerAdminMsg(sender, enableCmdsSchedulerDebugMsg); // Player debug msg (in case)
 			} else if (onOff.equalsIgnoreCase(ARG_FALSE)) {
 				MsgHandler.colorMsg(disableCmdsSchedulerDebugMsg); // Console debug msg (always)
 				MsgHandler.playerAdminMsg(sender, disableCmdsSchedulerDebugMsg); // Player debug msg (in case)
+				debugMode = false;
 			}
 		}
 		// Else, return an error and help message

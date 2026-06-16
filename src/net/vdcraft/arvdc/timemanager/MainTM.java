@@ -40,8 +40,8 @@ import net.vdcraft.arvdc.timemanager.placeholders.PlayerCommandPlaceholders;
 import net.vdcraft.arvdc.timemanager.placeholders.SignsPlaceholders;
 import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CmdsFileHandler;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.SignsFileHandler;
+import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PAPIHandler;
 
 @SuppressWarnings("unused")
@@ -314,6 +314,8 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_HUD = "hud";
 	protected static final String CMD_NOWITEM = "nowitem";
 	protected static final String CMD_ANIMATION = "animation";
+	protected static final String CMD_SEASON = "season";
+	protected static final String CMD_GUI = "gui";
 
 	// "/tm set" sub-commands names
 	protected static final String CMD_SET_DATE = "date";
@@ -407,6 +409,12 @@ public class MainTM extends JavaPlugin {
 	public static final String PH_YY = "yy";
 	public static final String PH_YYYY = "yyyy";
 	public static final String PH_SERVERDAY = "serverday";
+	// Season placeholders — populated by the SeasonService when enabled.
+	public static final String PH_SEASON = "season";          // WINTER / SPRING / SUMMER / FALL
+	public static final String PH_SEASON_PRESET = "season_preset"; // TEMPERATE etc.
+	public static final String PH_SEASON_DAYOFYEAR = "season_dayofyear"; // 0..year-1
+	public static final String PH_SEASON_DAYLIGHT = "season_daylight";   // "47%" formatted
+	public static final String PH_SEASON_HEMISPHERE = "season_hemisphere"; // north/south
 
 	// Permissions names
 	protected static final String PERM_TM = "timemanager.admin";
@@ -433,6 +441,12 @@ public class MainTM extends JavaPlugin {
 	public File configFileYaml = new File(this.getDataFolder(), CONFIGFILENAME);
 	public File configHeaderFileTxt = new File(this.getDataFolder(), CONFIGHEADERFILENAME);
 	public File langFileYaml = new File(this.getDataFolder(), LANGFILENAME);
+	// Seasons engine (real-world-inspired day/night modulation). Initialized
+	// in onEnable() so the field stays null on legacy server builds that
+	// reject the plugin pre-load.
+	public net.vdcraft.arvdc.timemanager.seasons.SeasonService seasonService;
+	public net.vdcraft.arvdc.timemanager.seasons.SeasonScheduler seasonScheduler;
+
 	public FileConfiguration langConf = YamlConfiguration.loadConfiguration(langFileYaml);
 	public File langHeaderFileTxt = new File(this.getDataFolder(), LANGHEADERFILENAME);
 	public File cmdsFileYaml = new File(this.getDataFolder(), CMDSFILENAME);
@@ -843,37 +857,49 @@ public class MainTM extends JavaPlugin {
 
 			// #8. Listen to chat events
 			getServer().getPluginManager().registerEvents(new ChatPlaceholders(), this);
-			
-			// #9. Listen to commands events
+
+			// #9. Listen to gui
+			getServer().getPluginManager().registerEvents(new net.vdcraft.arvdc.timemanager.gui.TmGui(), this);
+
+			// #10. Listen to commands events
 			getServer().getPluginManager().registerEvents(new PlayerCommandPlaceholders(), this);
 			getServer().getPluginManager().registerEvents(new ConsoleCommandPlaceholders(), this);	
 			
-			// #10. Listen to worlds events
-			getServer().getPluginManager().registerEvents(new WorldListHandler(), this);	 // TODO
+			// #11. Listen to worlds events
+			getServer().getPluginManager().registerEvents(new WorldListHandler(), this);
 
-			// #11. Refreshing signs ([tm] marker) — listener + scheduler
+			// #12. Refreshing signs ([tm] marker) — listener + scheduler
 			getServer().getPluginManager().registerEvents(new RefreshingSignHandler(), this);
 			RefreshingSignHandler.init();
 
-			// #12. Pocket-watch /now item — listener + config defaults
+			// #13. Pocket-watch /now item — listener + config defaults
 			NowItemHandler.ensureDefaults();
 			getServer().getPluginManager().registerEvents(new NowItemHandler(), this);
 
-			// #13. Synchronize worlds and create scheduled task for faking the time increase/decrease
+			// #14. Synchronize worlds and create scheduled task for faking the time increase/decrease
 			SyncHandler.firstSync();
 
-			// #14. Activate (or not) the placeholder APIs
+			// #15. Activate (or not) the placeholder APIs
 			if (MainTM.getInstance().getConfig().getString(CF_PLACEHOLDERS + "." + CF_PLACEHOLDER_PAPI).equalsIgnoreCase(ARG_TRUE)
 					&& Bukkit.getPluginManager().getPlugin(CF_PLACEHOLDER_PAPI) != null) {
 				MsgHandler.debugMsg(CF_PLACEHOLDER_PAPI + " detected.");
 				new PAPIHandler(this).register();
 			}
 			
-			// #15. bStats
+			// #16. bStats
 			int pluginId = 10412;
 	        Metrics metrics = new Metrics(this, pluginId);
 
-			// #16. Confirm activation in console
+			// #17. Seasons engine (opt-in via seasons.enabled)
+			seasonService = new net.vdcraft.arvdc.timemanager.seasons.SeasonService();
+			seasonScheduler = new net.vdcraft.arvdc.timemanager.seasons.SeasonScheduler(seasonService);
+			if (seasonService.enabled()) {
+				Bukkit.getScheduler().runTaskLater(this, () -> seasonScheduler.start(), 100L);
+				MsgHandler.infoMsg("[seasons] enabled, preset=" + seasonService.preset()
+						+ ", year-length=" + seasonService.yearLengthDays() + " MC days");
+			}
+
+			// #18. Confirm activation in console
 			MsgHandler.infoMsg(plEnabledMsg);
 			
 			// #17. Check for an update
@@ -892,6 +918,10 @@ public class MainTM extends JavaPlugin {
 		if (serverMcVersion < reqMcVToLoadPlugin) {
 		} else {
 
+			// #0.5. Stop seasons engine before saving so its lastApplied state
+			// flushes to a clean config.
+			if (seasonScheduler != null) seasonScheduler.stop();
+
 			// #1. Save YAMLs
 			if (MainTM.serverMcVersion < MainTM.reqMcVForSleepPercentage)
 				Bukkit.getServer().getWorlds().stream().forEach(world -> MainTM.getInstance().getConfig().set(CF_WORLDSLIST + "." + world.getName() + "." + CF_NIGHTSKIP_LEGACYPERCENTAGE, null));
@@ -909,15 +939,4 @@ public class MainTM extends JavaPlugin {
 		}
 	}
 	
-	/**
-	 * 3. Custom wait
-	 */
-	public static void waitTime(Integer msToWait) {
-		try {
-			Thread.sleep(msToWait);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-
 };

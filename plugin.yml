@@ -1,6 +1,6 @@
 name: TimeManager
 version: 2.0.1-b
-api-version: '26.1'
+api-version: '1.21'
 authors: [ArVdC]
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdcraft.net
@@ -46,10 +46,12 @@ commands:
     permission: timemanager.admin
     usage: |
             Here is the complete list of commands, subcommands and arguments:
+            /<command> animation [world] [on|off|toggle]
             /<command> checkConfig
             /<command> checkSql
             /<command> checkTime [all|server|world]
             /<command> checkUpdate [bukkit|curse|spigot|github]
+            /<command> gui
             /<command> hud [on|off|toggle]
             /<command> help [cmd] [<subCmd>]
             /<command> lock <world> [time|here|realtime]
@@ -59,6 +61,7 @@ commands:
             /<command> placeholders
             /<command> reload [all|config|lang|cmds]
             /<command> resync [all|world]
+            /<command> season [status|enable|disable|preset <NAME>|year <days>|apply|list]
             /<command> set date [today|yyyy-mm-dd] [all|world]
             /<command> set debugMode [true|false]
             /<command> set defLang [lg_LG]

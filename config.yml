@@ -23,3 +23,13 @@ placeholders:
   inChatEnable: ''
   inCommandsEnable: ''
 debugMode: ''
+seasons:
+  enabled: false
+  preset: TEMPERATE
+  year-length-days: 32
+  smooth-transition: true
+  hemisphere: north
+  affected-worlds: []
+  custom:
+    winter-daylight: 0.33
+    summer-daylight: 0.67
