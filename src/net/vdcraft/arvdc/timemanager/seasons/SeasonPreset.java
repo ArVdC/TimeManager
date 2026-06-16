@@ -71,4 +71,5 @@ public enum SeasonPreset {
             return TEMPERATE;
         }
     }
-}
+    
+};

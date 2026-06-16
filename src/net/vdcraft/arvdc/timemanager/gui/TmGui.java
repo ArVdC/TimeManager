@@ -713,4 +713,5 @@ public class TmGui implements Listener {
         if (!title.startsWith(TITLE_TAG)) return;
         PAGE.remove(e.getPlayer().getUniqueId());
     }
-}
+    
+};

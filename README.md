@@ -99,6 +99,8 @@ They can be used in lang and cmds YAML files, but also in signs, books, chat mes
 TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
 
 ### ADMIN COMMAND /tm
+**/tm animation [<world>] [on|off|toggle|instant]** Admins and console can display a summary of the config.yml and lang.yml files.
+
 **/tm checkConfig** Admins and console can display a summary of the config.yml and lang.yml files.
 
 **/tm checkSql** Checks the availability of the mySql server according to the values provided in the config.yml file. This only checks the ip address and the correct port opening.
@@ -108,6 +110,8 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 **/tm checkUpdate \[bukkit|curse|spigot|github]** Search if a newer version of the plugin exists on the chosen server. (MC 1.8.8+ only)
 
 **/tm gui** Opens an admin GUI.
+
+**/tm hud [on|off]** Per-player toggle for the optional ActionBar HUD. Players use this to opt out (e.g. they prefer to keep the action bar clear for other plugins).
 
 **/tm help \[cmd] \[\<subCmd>]** Help provides you the correct usage and a short description of targeted command and subcommand.
 

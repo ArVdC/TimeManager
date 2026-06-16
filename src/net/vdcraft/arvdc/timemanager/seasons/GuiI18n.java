@@ -94,4 +94,5 @@ public final class GuiI18n {
             return null;
         }
     }
-}
+    
+};
