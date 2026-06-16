@@ -358,6 +358,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String ARG_CONFIG = "config";
 	protected static final String ARG_LANG = "lang";
 	protected static final String ARG_CMDS = "cmds";
+	protected static final String ARG_SIGNS = "signs";
 	protected static final String ARG_ACTIONBAR = "actionbar";
 	protected static final String ARG_TITLE = "title";
 	protected static final String ARG_MSG = "msg";
@@ -755,6 +756,10 @@ public class MainTM extends JavaPlugin {
 	protected static String worldTicksCalculation = worldTicksVar + " = " + currentTickVar + " / " + mcTimeRatioVar;
 	protected static String worldElapsedTimeCalculation = worldElapsedTimeVar + " = " + elapsedTimeVar + " * " + speedModifierVar;
 	
+	// Sign refreshing
+	public static String signsCreationDeniedPlayerMsg = "You don't have permission to create TimeManager signs.";
+	public static String signsRegistredPlayerMsg = "TimeManager sign registered. Placeholders will refresh automatically.";
+	
 	// Sleep listener
 	public static String sleepNewDayMsg = "The players slept and spent the night in the world";
 	public static String sleepLinkedNewDayMsg = "has also had its time changed at the same hour.";
@@ -870,7 +875,6 @@ public class MainTM extends JavaPlugin {
 
 			// #12. Refreshing signs ([tm] marker) — listener + scheduler
 			getServer().getPluginManager().registerEvents(new RefreshingSignHandler(), this);
-			RefreshingSignHandler.init();
 
 			// #13. Pocket-watch /now item — listener + config defaults
 			NowItemHandler.ensureDefaults();

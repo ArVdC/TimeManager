@@ -29,7 +29,7 @@ public class SignsPlaceholders implements Listener {
 		while (linesNb > 0) {
 			linesNb--;	
 			String l = e.getLine(linesNb);				
-			l = PlaceholdersHandler.replaceAllPlaceholders(l, world, lang, p);				
+			l = PlaceholdersHandler.replaceAllPlaceholders(l, world, lang, p, false);				
 			e.setLine(linesNb, l);
 		}
 	}

@@ -128,7 +128,7 @@ public class ActionBarHandler {
 			}
 			out.append(input, pos, open);
 			String token = input.substring(open, close + 1);
-			String resolved = PlaceholdersHandler.replacePlaceholder(token, world, lang, p);
+			String resolved = PlaceholdersHandler.replacePlaceholder(token, world, lang, p, false);
 			if (resolved == null) resolved = token; // unknown — leave literal
 			out.append(resolved);
 			pos = close + 1;

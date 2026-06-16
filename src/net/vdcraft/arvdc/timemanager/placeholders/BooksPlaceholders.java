@@ -28,7 +28,7 @@ public class BooksPlaceholders implements Listener {
 			int pagesNb = book.getPageCount();			
 			while (pagesNb > 0) {				
 				String pg = book.getPage(pagesNb);				
-				pg = PlaceholdersHandler.replaceAllPlaceholders(pg, world, lang, p);				
+				pg = PlaceholdersHandler.replaceAllPlaceholders(pg, world, lang, p, false);				
 				book.setPage(pagesNb, pg);				
 				pagesNb--;
 			}			
@@ -37,7 +37,7 @@ public class BooksPlaceholders implements Listener {
 		// Replace text in title
 		if (book.hasTitle()) {
 			String t = book.getTitle();
-			t = PlaceholdersHandler.replaceAllPlaceholders(t, world, lang, p);	
+			t = PlaceholdersHandler.replaceAllPlaceholders(t, world, lang, p, false);	
 			book.setTitle(t);
 		}
 		

@@ -70,10 +70,10 @@ public class NowMsgHandler extends MainTM {
 		
 		// #5. Replace placeholders
 		msg = msg.replace("&", "§");
-		msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
+		msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p, false);
 		if (display.equalsIgnoreCase("title")) {
 			subtitle = subtitle.replace("&", "§");
-			subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);		
+			subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p, false);		
 		}
 		
 		// #6. Replace hexadecimal colors by ChatColors

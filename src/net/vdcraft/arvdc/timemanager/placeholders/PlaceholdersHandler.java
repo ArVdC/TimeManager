@@ -14,7 +14,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * Replaces any available placeholder by the corresponding String
 	 * (returns a String)
 	 */
-	public static String replacePlaceholder(String placeholder, String world, String lang, Player p) {
+	public static String replacePlaceholder(String placeholder, String world, String lang, Player p, Boolean debugMsg) {
 		
 		World w = Bukkit.getServer().getWorld(world);
 		Long t = w.getTime();
@@ -180,7 +180,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * Replaces all placeholders found in a String
 	 * (returns a String)
 	 */
-	public static String replaceAllPlaceholders(String msg, String world, String lang, Player p) {
+	public static String replaceAllPlaceholders(String msg, String world, String lang, Player p, Boolean debugMsg) {
 		if (msg.contains("{tm_")) {
 			String[] phSlipt1 = msg.split("\\{");
 			for (String ph1 : phSlipt1) {
@@ -189,7 +189,7 @@ public class PlaceholdersHandler extends MainTM {
 					for (String ph2 : phSlipt2) {
 						if (ph2.contains("tm_")) {
 							ph2 = "{" + ph2 + "}";
-							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p);
+							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p, debugMsg);
 							MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\".");  // Console dev msg
 							msg = msg.replace(ph2, ph3);
 						}
@@ -205,7 +205,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * (returns a String)
 	 */
 	public static String replaceAllPlaceholders(String msg, String world, String lang) {
-		return replaceAllPlaceholders(msg, world, lang, null);		
+		return replaceAllPlaceholders(msg, world, lang, null, false);		
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * (returns a String)
 	 */
 	public static String replaceAllPlaceholders(String msg, World w, String lang, Player p) {
-		return replaceAllPlaceholders(msg, w.getName(), lang, p);		
+		return replaceAllPlaceholders(msg, w.getName(), lang, p, false);		
 	}
 
 	/**
@@ -221,6 +221,6 @@ public class PlaceholdersHandler extends MainTM {
 	 * (returns a String)
 	 */
 	public static String replaceAllPlaceholders(String msg, World w, String lang) {
-		return replaceAllPlaceholders(msg, w.getName(), lang, null);		
+		return replaceAllPlaceholders(msg, w.getName(), lang, null, false);		
 	}
 };

@@ -13,12 +13,21 @@ import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
 public class TmReload extends MainTM {
 
 	/**
-	 * CMD /tm reload [all|config|lang|cmds]
+	 * CMD /tm reload [all|config|lang|cmds|signs]
 	 */
 	public static void cmdReload(CommandSender sender, String whatToReload) {
 
+		// When do reload all files
+		if (whatToReload.equalsIgnoreCase(ARG_ALL)) {
+			cmdReload(sender, ARG_CONFIG);
+			cmdReload(sender, ARG_LANG);
+			cmdReload(sender, ARG_CMDS);
+			cmdReload(sender, ARG_SIGNS);
+			return;
+		}		
+		
 		// When do reload the config.yml file
-		if (whatToReload.equalsIgnoreCase(ARG_CONFIG) || whatToReload.equalsIgnoreCase("conf") || whatToReload.equalsIgnoreCase("cfg") || whatToReload.equalsIgnoreCase("all")) {
+		if (whatToReload.equalsIgnoreCase(ARG_CONFIG) || whatToReload.equalsIgnoreCase("conf") || whatToReload.equalsIgnoreCase("cfg")) {
 			CfgFileHandler.loadConfig(ARG_RE);
 			// Re-synchronize all the worlds based on a server constant point
 			TmResync.cmdResync(Bukkit.getServer().getConsoleSender(), ARG_ALL);
@@ -30,21 +39,29 @@ public class TmReload extends MainTM {
 			return;
 		}		
 		// When do reload the lang.yml file
-		if (whatToReload.equalsIgnoreCase(ARG_LANG) || whatToReload.equalsIgnoreCase("languages") || whatToReload.equalsIgnoreCase("lg") || whatToReload.equalsIgnoreCase("all")) {
+		if (whatToReload.equalsIgnoreCase(ARG_LANG) || whatToReload.equalsIgnoreCase("languages") || whatToReload.equalsIgnoreCase("lg")) {
 			LgFileHandler.loadLang(ARG_RE);
 			// 'lang.yml is reloaded' notification
 			MsgHandler.playerAdminMsg(sender, lgFileReloadMsg); // Player final msg (in case)
 			MsgHandler.infoMsg(lgFileReloadMsg); // Console final msg (always)
 			return;
-		}		
+		}
 		// When do reload the cmds.yml file
-		if (whatToReload.equalsIgnoreCase(ARG_CMDS) || whatToReload.equalsIgnoreCase("commands") || whatToReload.equalsIgnoreCase("cmd") || whatToReload.equalsIgnoreCase("all")) {
+		if (whatToReload.equalsIgnoreCase(ARG_CMDS) || whatToReload.equalsIgnoreCase("commands") || whatToReload.equalsIgnoreCase("cmd")) {
 			CmdsFileHandler.loadCmds(ARG_RE);
 			// 'cmds.yml is reloaded' notification
 			MsgHandler.playerAdminMsg(sender, cmdsFileReloadMsg); // Player final msg (in case)
 			MsgHandler.infoMsg(cmdsFileReloadMsg); // Console final msg (always)
 			return;
-		}		
+		}	
+		// When do reload the signs.yml file
+		if (whatToReload.equalsIgnoreCase(ARG_SIGNS) || whatToReload.equalsIgnoreCase("signslist") || whatToReload.equalsIgnoreCase("sgn")) {
+			CmdsFileHandler.loadCmds(ARG_RE);
+			// 'signs.yml is reloaded' notification
+			MsgHandler.playerAdminMsg(sender, signsFileReloadMsg); // Player final msg (in case)
+			MsgHandler.infoMsg(signsFileReloadMsg); // Console final msg (always)
+			return;
+		}	
 		// Else, return an error and help message
 		MsgHandler.cmdErrorMsg(sender, wrongYmlMsg, "reload");
 	}

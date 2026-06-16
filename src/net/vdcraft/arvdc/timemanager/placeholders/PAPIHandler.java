@@ -123,102 +123,102 @@ public class PAPIHandler extends PlaceholderExpansion {
 
         // %tm_tick%
         if(identifier.equals(MainTM.PH_TICK)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_time12%
         if(identifier.equals(MainTM.PH_TIME12)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_time24%
         if(identifier.equals(MainTM.PH_TIME24)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_hours12%
         if(identifier.equals(MainTM.PH_HOURS12)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_hours24%
         if(identifier.equals(MainTM.PH_HOURS24)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_minutes%
         if(identifier.equals(MainTM.PH_MINUTES)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_seconds%
         if(identifier.equals(MainTM.PH_SECONDS)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_ampm%
         if(identifier.equals(MainTM.PH_AMPM)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_dayPart%
         if(identifier.equals(MainTM.PH_DAYPART)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_currentday%
         if(identifier.equals(MainTM.PH_C_DAY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_elapseddays%
         if(identifier.equals(MainTM.PH_E_DAYS)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_weekdaynb%
         if(identifier.equals(MainTM.PH_DAYNAME)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_yeardaynb%
         if(identifier.equals(MainTM.PH_YEARDAY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }        
         
         // %tm_yearweek%
         if(identifier.equals(MainTM.PH_YEARWEEK)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_week%
         if(identifier.equals(MainTM.PH_WEEK)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_monthname%
         if(identifier.equals(MainTM.PH_MONTHNAME)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_dd%
         if(identifier.equals(MainTM.PH_DD)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_mm%
         if(identifier.equals(MainTM.PH_MM)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_yy%
         if(identifier.equals(MainTM.PH_YY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_yyyy%
         if(identifier.equals(MainTM.PH_YYYY)){
-			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
+			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player, false);
         }
 
         // %tm_serverday% — total whole days since the server's reference tick

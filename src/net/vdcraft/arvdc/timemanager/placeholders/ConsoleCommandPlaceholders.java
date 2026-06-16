@@ -51,7 +51,7 @@ public class ConsoleCommandPlaceholders implements Listener {
 					String lang = MainTM.getInstance().langConf.getString(MainTM.LG_DEFAULTLANG);
 
 					// #04. Replace placeholders in the message
-					String newCmd = PlaceholdersHandler.replaceAllPlaceholders(cmd, world, lang, null);
+					String newCmd = PlaceholdersHandler.replaceAllPlaceholders(cmd, world, lang, null, false);
 					
 					// #05. Send the modified message
 					e.setCommand(newCmd);

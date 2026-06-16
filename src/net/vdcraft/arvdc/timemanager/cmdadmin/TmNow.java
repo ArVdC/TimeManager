@@ -84,7 +84,7 @@ public class TmNow extends MainTM {
 				// #6. Replace placeholders
 				msg = msg.replace("&", "§");
 				msg = msg.replace("{" + PH_PREFIX + PH_PLAYER + "}", player);
-				msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
+				msg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p, false);
 
 				// Optional season suffix on the chat msg path. The lang.yml
 				// can define `now-season-suffix` per language; when the
@@ -103,7 +103,7 @@ public class TmNow extends MainTM {
 					}
 					if (suffix != null && !suffix.isEmpty()) {
 						suffix = suffix.replace("&", "§");
-						suffix = PlaceholdersHandler.replaceAllPlaceholders(suffix, world, lang, p);
+						suffix = PlaceholdersHandler.replaceAllPlaceholders(suffix, world, lang, p, false);
 						msg = msg + " " + suffix;
 					}
 				}
@@ -111,7 +111,7 @@ public class TmNow extends MainTM {
 				if (display.equalsIgnoreCase(ARG_TITLE)) {
 					subtitle = subtitle.replace("&", "§");
 					subtitle = subtitle.replace("{" + PH_PREFIX + PH_PLAYER + "}", player);
-					subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p);
+					subtitle = PlaceholdersHandler.replaceAllPlaceholders(subtitle, world, lang, p, false);
 				}
 				
 				// #7. Configure and send command

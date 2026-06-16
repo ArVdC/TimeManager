@@ -34,7 +34,7 @@ public class ChatPlaceholders implements Listener {
 				String lang = PlayerLangHandler.setLangToUse(p);
 				
 				// #04. Replace placeholders in the message
-				String newMsg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p);
+				String newMsg = PlaceholdersHandler.replaceAllPlaceholders(msg, world, lang, p, false);
 				
 				// #05. Send the modified message
 				e.setMessage(newMsg);
