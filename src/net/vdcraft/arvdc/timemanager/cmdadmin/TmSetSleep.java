@@ -11,7 +11,7 @@ import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 public class TmSetSleep extends MainTM {
 
 	/**
-	 * CMD /tm set sleep [true|false|linked] [world]
+	 * CMD /tm set sleep [true|false|linked] [all|world]
 	 */
 	public static void cmdSetSleep(CommandSender sender, String sleepValue, String world) {
 

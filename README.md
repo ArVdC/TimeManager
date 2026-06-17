@@ -99,7 +99,6 @@ They can be used in lang and cmds YAML files, but also in signs, books, chat mes
 TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.org/resources/placeholderapi.6245). You just need to place the API in your plugin folder and set the related node to 'true' in the TimeManager config.yml file.
 
 ### ADMIN COMMAND /tm
-**/tm animation [<world>] [on|off|toggle|instant]** Admins and console can display a summary of the config.yml and lang.yml files.
 
 **/tm checkConfig** Admins and console can display a summary of the config.yml and lang.yml files.
 
@@ -147,6 +146,8 @@ TimeManager can display its placeholders through [PlaceholderAPI](www.spigotmc.o
 
 **/tm set refreshRate \[ticks]** Sets the delay (in ticks) before actualizing the speed stretch/expand effect. Must be an integer between '2' and '20'. Default value is '10' ticks, please note that a too small value can cause server lags.
 
+**/tm set sleepAnimation \[on|off|toggle|instant] \[all|world]** Shortcut for nightSkipMode = animation/default on a world. Activates sounds, text and particles during the night-skip sequence.
+
 **/tm set sleep \[true|false|linked] \[all|world]** Defines if players can sleep until the next day in the specified world (or in all of them). By default, all worlds will start with parameter true, unless their timer is in real time who will be necessary false.
 If you want to both allow sleep and keep the same time in multiple worlds, you can use the 'linked' function which allows a group of worlds to spend the night together.
 
@@ -171,7 +172,6 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /now \<msg|title|actionbar> \<world>
   - /now \<season suffix>
 - For Admins:
-  - /tm animation \[on|off]
   - /tm checkConfig
   - /tm checkSql
   - /tm checkTime \[all|world]
@@ -195,6 +195,7 @@ If a world is using the real time speed, the start value will determine the UTC 
   - /tm set playerOffset \[-23999 → 23999] \[all|player]
   - /tm set playerTime \[ticks|daypart|HH:mm:ss|reset] \[all|player]
   - /tm set refreshRate \[ticks]
+  - /tm set sleepAnimation \[on|off|toggle|instant] \[all|world]
   - /tm set sleep \[true|false] \[all|world]
   - /tm set speed \[0.0 → 20.0] \[all|world]
   - /tm set speedDay \[0.0 → 20.0] \[all|world]
@@ -243,6 +244,7 @@ The reference time and date can be that of any world, or the actual time.
 
 ### COMPATIBILITY
 v1.12.3: MC 1.9.4 to 1.21.10
+
 v2.0.0: MC 1.21.11 to 26.1.20
 
 ### API
@@ -299,6 +301,6 @@ String setLangToUse(Player p)
 * ~~Placeholders: Create signs where the placeholders constantly refresh.~~
 * ~~Player Items: Create a custom item (and associated permissions and options) to use the '/now' command.~~
 * ~~Sleep: Improve particles displayed during sleep animation.~~
-* ~~Backward compatibility: Make a 2.0 version with no backward compatibility, because of the new gamerule 'ADVANCE_TIME' that replace 'DAYLIGHT_CYCLE'.~~
+* Backward compatibility: Make a 2.0.1 version with backward compatibility, that can handle the new gamerule 'ADVANCE_TIME' that replace 'DAYLIGHT_CYCLE'.
 
 Please open an issue on GitHub if you want a specific improvement or encounter any bugs.

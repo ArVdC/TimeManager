@@ -14,7 +14,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHelp;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmAnimation;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleepAnimation;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHud;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmLock;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmNowItem;
@@ -180,13 +180,6 @@ public class AdminCmdExecutor implements CommandExecutor {
 				net.vdcraft.arvdc.timemanager.gui.TmGui.openFor(sender);
 				return true;
 			}
-			// Toggle sleep animation (nightSkipMode) for a world
-			else if (args[0].equalsIgnoreCase(MainTM.CMD_ANIMATION)) {
-				String w = (nbArgs >= 2) ? args[1] : defaultWorld;
-				String onOff = (nbArgs >= 3) ? args[2] : null;
-				TmAnimation.cmdAnimation(sender, w, onOff);
-				return true;
-			}
 			// Lock a world's time at a given tick (or current tick if omitted)
 			else if (args[0].equalsIgnoreCase(MainTM.CMD_LOCK)) {
 				String w = (nbArgs >= 2) ? args[1] : defaultWorld;
@@ -335,6 +328,13 @@ public class AdminCmdExecutor implements CommandExecutor {
 							return true;
 						}
 					}
+				}
+				// Toggle sleep animation (nightSkipMode) for a world
+				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEPANIMATION)) {
+					String onOff = (nbArgs >= 2) ? args[2] : null;
+					String w = (nbArgs >= 3) ? args[3] : defaultWorld;
+					TmSetSleepAnimation.cmdSetSleepAnimation(sender, onOff, w);
+					return true;
 				}
 				// Set the source server of the update message
 				else if ((args[1].equalsIgnoreCase(MainTM.CMD_SET_UPDATE))

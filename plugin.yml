@@ -46,7 +46,6 @@ commands:
     permission: timemanager.admin
     usage: |
             Here is the complete list of commands, subcommands and arguments:
-            /<command> animation [world] [on|off|toggle]
             /<command> checkConfig
             /<command> checkSql
             /<command> checkTime [all|server|world]
@@ -75,6 +74,7 @@ commands:
             /<command> set playerOffset [-23999 → 23999] [all|player]
             /<command> set playerTime [ticks|daypart|HH:mm:ss|reset] [all|player]
             /<command> set refreshRate [ticks]
+			/<command> set sleepAnimation [on|off|toggle|instant] [all|world]
             /<command> set sleep [true|false] [all|world]
             /<command> set speed [0.0 → 20.0] [all|world]
             /<command> set speedDay [0.0 → 20.0] [all|world]
