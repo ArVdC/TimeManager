@@ -14,9 +14,13 @@ public class TmSetUseCmds extends MainTM {
 	public static void cmdUseCmds(CommandSender sender, String onOff) {
 
 		// Check if the argument matches what is expected
-		if (onOff.equalsIgnoreCase(ARG_TRUE) || onOff.equalsIgnoreCase(ARG_FALSE)) {
-			MainTM.getInstance().getConfig().set(CMD_SET_USECMDS, onOff);
-			MainTM.getInstance().saveConfig();
+		if (onOff.equalsIgnoreCase(ARG_ON)) {
+			onOff = ARG_TRUE;
+		} else if (onOff.equalsIgnoreCase(ARG_OFF)) {
+			onOff = ARG_FALSE;
+		} else if (onOff.equalsIgnoreCase(ARG_TRUE) || onOff.equalsIgnoreCase(ARG_FALSE)) {
+			MainTM.getInstance().cmdsConf.set(CMD_SET_USECMDS, onOff);
+			CmdsFileHandler.SaveCmdsYml();
 			if (onOff.equalsIgnoreCase(ARG_TRUE)) {
 				debugMode = true;
 				MsgHandler.colorMsg(enableCmdsSchedulerDebugMsg); // Console debug msg (always)

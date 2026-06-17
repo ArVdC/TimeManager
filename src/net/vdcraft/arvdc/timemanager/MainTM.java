@@ -346,6 +346,8 @@ public class MainTM extends JavaPlugin {
 	// Commands arguments and YAML key names
 	public static final String ARG_TRUE = "true";
 	public static final String ARG_FALSE = "false";
+	public static final String ARG_ON = "on";
+	public static final String ARG_OFF = "off";
 	protected static final String ARG_NONE = "none";
 	protected static final String ARG_FIRST = "first";
 	protected static final String ARG_RE = "re";
