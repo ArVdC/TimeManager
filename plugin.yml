@@ -73,6 +73,7 @@ commands:
             /<command> set playerOffset [-23999 → 23999] [all|player]
             /<command> set playerTime [ticks|daypart|HH:mm:ss|reset] [all|player]
             /<command> set refreshRate [ticks]
+            /<command> set sleepAnimation [on|off|toggle|instant] [all|world]
             /<command> set sleep [true|false] [all|world]
             /<command> set speed [0.0 → 20.0] [all|world]
             /<command> set speedDay [0.0 → 20.0] [all|world]
@@ -87,7 +88,6 @@ commands:
             /<command> placeholders
             /<command> hud [on|off|toggle]
             /<command> nowitem [player]
-            /<command> animation [world] [on|off|toggle]
             /<command> season [status|enable|disable|preset <NAME>|year <days>|apply|list]
             /<command> gui
     aliases:

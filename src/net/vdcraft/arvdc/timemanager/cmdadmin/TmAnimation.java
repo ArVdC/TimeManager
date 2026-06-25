@@ -21,14 +21,22 @@ import net.vdcraft.arvdc.timemanager.MainTM;
 public class TmAnimation extends MainTM {
 
 	public static void cmdAnimation(CommandSender sender, String world, String onOffArg) {
-		// #1. Validate
-		if (Bukkit.getWorld(world) == null) {
-			sender.sendMessage(ChatColor.RED + "Unknown world: " + ChatColor.YELLOW + world);
+
+		// #1. Modify all worlds (port of ArVdC's 'all' handling from
+		// TmSetSleepAnimation, kept under our original cmdAnimation signature).
+		if (world.equalsIgnoreCase(ARG_ALL)) {
+			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
+				cmdAnimation(sender, listedWorld, onOffArg);
+			}
 			return;
 		}
-		if (!MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
-			sender.sendMessage(ChatColor.RED + "World " + ChatColor.YELLOW + world
-					+ ChatColor.RED + " isn't tracked by TimeManager.");
+
+		// #2. Validate world name
+		else if (Bukkit.getWorld(world) == null) {
+			sender.sendMessage(ChatColor.RED + "Unknown world: " + ChatColor.YELLOW + world);
+			return;
+		} else if (!MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
+			sender.sendMessage(ChatColor.RED + "World " + ChatColor.YELLOW + world + ChatColor.RED + " isn't tracked by TimeManager.");
 			return;
 		}
 
