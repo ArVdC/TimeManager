@@ -366,11 +366,17 @@ public class TmGui implements Listener {
         if (isLocked) glow(lockItem);
         set(inv, 27, action(lockItem, "toggle-lock"));
 
-        ItemStack animItem = item(pickMat("FIREWORK_ROCKET", "FIREWORK"),
-                animOn ? GuiI18n.s("anim-on") : GuiI18n.s("anim-off"),
-                lst("", GuiI18n.s("click-toggle")));
-        if (animOn) glow(animItem);
-        set(inv, 28, action(animItem, "toggle-anim"));
+        // Night-skip animation needs the Particle / modern Sound enums introduced
+        // in 1.9; the underlying feature is gated to MC 1.9+ in SleepHandler, so
+        // we hide the GUI toggle on older servers to avoid setting a flag that
+        // would never take effect.
+        if (MainTM.serverMcVersion >= MainTM.reqMcVForSleepAnimation) {
+            ItemStack animItem = item(pickMat("FIREWORK_ROCKET", "FIREWORK"),
+                    animOn ? GuiI18n.s("anim-on") : GuiI18n.s("anim-off"),
+                    lst("", GuiI18n.s("click-toggle")));
+            if (animOn) glow(animItem);
+            set(inv, 28, action(animItem, "toggle-anim"));
+        }
 
         set(inv, 29, action(item(pickMat("WRITABLE_BOOK", "BOOK_AND_QUILL"), GuiI18n.s("set-date-today"),
                 lst("&8/tm set date today")), "set-date-today"));

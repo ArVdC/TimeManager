@@ -140,7 +140,11 @@ public class SleepHandler implements Listener {
 							nightSkipProcess(w, ogDaySpeed, ogNightSpeed);
 							return;
 						}
-						if (nightCycleAnimation.equalsIgnoreCase(MainTM.ARG_ANIMATION)) startSleepAnimation(w, t);
+						// Night-skip animation is gated to MC 1.9+ because the
+						// particle and sound APIs it relies on (org.bukkit.Particle,
+						// modern Sound enum constants) do not exist on 1.8 or older.
+						if (nightCycleAnimation.equalsIgnoreCase(MainTM.ARG_ANIMATION)
+								&& MainTM.serverMcVersion >= MainTM.reqMcVForSleepAnimation) startSleepAnimation(w, t);
 					}				
 					// #1.B. Loop this until the end of the sleep (= 99 ticks)
 					if (st <= 99) {

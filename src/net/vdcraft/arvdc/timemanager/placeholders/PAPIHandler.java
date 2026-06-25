@@ -221,15 +221,38 @@ public class PAPIHandler extends PlaceholderExpansion {
 			return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
-        // %tm_serverday% — total whole days since the server's reference tick
-        // (kept across restarts via initialTickNb in config or MySQL). This is
-        // a server-wide counter, distinct from %tm_elapseddays% which is per
-        // world / based on World#getFullTime.
+        // %tm_serverday% — whole days since the plugin was first enabled on
+        // this server. Counts via wall-clock ms instead of TM's "server tick"
+        // because the latter is reduced modulo 1 day (1728000 ticks), which
+        // would make the diff oscillate between 0 and 71 instead of growing
+        // monotonically. We persist the install timestamp under a separate
+        // config key the first time we are asked, so the counter survives
+        // restarts even when the original firstEverTickNb was the bugged
+        // modulo value.
         if(identifier.equals(MainTM.PH_SERVERDAY)){
-            long currentTick = net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter.getServerTick();
-            long days = (currentTick - MainTM.getFirstEverTick()) / 24000L;
+            org.bukkit.configuration.file.FileConfiguration cfg = plugin.getConfig();
+            String key = "initialTick.firstEverInstallEpochMs";
+            long installMs = cfg.getLong(key, -1L);
+            if (installMs <= 0L) {
+                installMs = System.currentTimeMillis();
+                cfg.set(key, installMs);
+                plugin.saveConfig();
+            }
+            long days = (System.currentTimeMillis() - installMs) / 86400000L;
             if (days < 0) days = 0;
             return String.valueOf(days);
+        }
+
+        // Seasons engine placeholders. Each one delegates to PlaceholdersHandler
+        // which knows how to compute the value from SeasonService. Without
+        // these branches PAPI returns null and the raw "%tm_season%" leaks
+        // into chat/dashboards.
+        if(identifier.equals(MainTM.PH_SEASON)
+                || identifier.equals(MainTM.PH_SEASON_PRESET)
+                || identifier.equals(MainTM.PH_SEASON_DAYOFYEAR)
+                || identifier.equals(MainTM.PH_SEASON_DAYLIGHT)
+                || identifier.equals(MainTM.PH_SEASON_HEMISPHERE)){
+            return PlaceholdersHandler.replacePlaceholder("{" + MainTM.PH_PREFIX + identifier + "}", world, lang, player);
         }
 
         // We return null if an invalid placeholder (f.e. %someplugin_placeholder3%) was provided

@@ -80,6 +80,7 @@ public class MainTM extends JavaPlugin {
 	public static Double reqMcVForStatistics = 13.0; // New statistics were added in MC 1.13.0
 	public static Double maxMcVForTabCompHack = 13.02;  // Tab completion needed a hack to handle spaces in worlds names until MC 1.13.2
 	public static Double reqMcVForSounds = 14.0; // New sounds were added in MC 1.14.0
+	public static Double reqMcVForSleepAnimation = 9.0; // Night-skip animation references Sound + Particle enums that did not exist before MC 1.9
 	public static Double reqMcVForWakeup = 14.0; // HumanEntity.wakeup() method added in MC 1.14.0
 	public static Double reqMcVForTimeSkipEvent = 15.0; // New TimeSkipEvent appeared in MC 1.15.0
 	public static Double reqMcVForNewSendTitleMsg = 16.0; // Title's syntax changed in MC 1.16.0

@@ -14,8 +14,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.block.sign.SignSide;
-import org.bukkit.block.sign.Side;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -178,12 +176,20 @@ public class RefreshingSignHandler implements Listener {
 			Sign sign = (Sign) b.getState();
 			String[] tpl = templates.get(key);
 			if (tpl == null) continue;
-			SignSide side = sign.getSide(Side.FRONT);
-			side.setLine(0, ChatColor.translateAlternateColorCodes('&',
-					MainTM.getInstance().getConfig().getString(CF_SIGNS_MARKER, "[tm]")));
-			side.setLine(1, resolve(tpl[0], worldName));
-			side.setLine(2, resolve(tpl[1], worldName));
-			side.setLine(3, resolve(tpl[2], worldName));
+			// First line shows the localised TM prefix from lang.yml (e.g. "&e&l[Time]"),
+			// not the raw config marker. Players still type the marker (default "[tm]")
+			// to register the sign; the marker is only used for detection, not display.
+			String prefix = MainTM.getInstance().langConf.getString(
+					"languages.default.prefix",
+					MainTM.getInstance().getConfig().getString(CF_SIGNS_MARKER, "[tm]"));
+			// Use the legacy Sign#setLine API directly. It still works on
+			// modern Paper (writes to the FRONT side) and exists all the way
+			// back to early Bukkit, so we avoid the 1.20-only Sign$Side class
+			// that NoClassDefs on pre-1.20 servers.
+			writeLineSafely(sign, 0, ChatColor.translateAlternateColorCodes('&', prefix));
+			writeLineSafely(sign, 1, resolve(tpl[0], worldName));
+			writeLineSafely(sign, 2, resolve(tpl[1], worldName));
+			writeLineSafely(sign, 3, resolve(tpl[2], worldName));
 			sign.update(false, false);
 		}
 		if (!stale.isEmpty()) {
@@ -226,7 +232,30 @@ public class RefreshingSignHandler implements Listener {
 
 	/* ─────────────── Listeners ─────────────── */
 
-	@EventHandler
+	/** Cross-version sign line writer. Falls back from the legacy setLine to
+	 *  the modern Sign$Side API only if the legacy method is missing. */
+	@SuppressWarnings("deprecation")
+	private static void writeLineSafely(Sign sign, int idx, String text) {
+		try {
+			sign.setLine(idx, text);
+		} catch (Throwable ignored) {
+			try {
+				Class<?> sideEnum = Class.forName("org.bukkit.block.sign.Side");
+				Object front = sideEnum.getField("FRONT").get(null);
+				Object signSide = sign.getClass().getMethod("getSide", sideEnum).invoke(sign, front);
+				signSide.getClass().getMethod("setLine", int.class, String.class).invoke(signSide, idx, text);
+			} catch (Throwable t) {
+				// Nothing we can do — give up silently rather than spam the log.
+			}
+		}
+	}
+
+	// LOWEST so we capture the raw {tm_*} template the player typed BEFORE
+	// SignsHandler (registered later with default priority) overwrites the
+	// lines with the resolved one-shot values. Without this, signs.yml
+	// stores the rendered text (e.g. "56") and the periodic refresh has
+	// nothing dynamic to resolve.
+	@EventHandler(priority = org.bukkit.event.EventPriority.LOWEST)
 	public void onSignChange(SignChangeEvent e) {
 		String marker = MainTM.getInstance().getConfig().getString(CF_SIGNS_MARKER, "[tm]");
 		String line0 = ChatColor.stripColor(e.getLine(0) == null ? "" : e.getLine(0)).trim();
