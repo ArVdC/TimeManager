@@ -146,7 +146,7 @@ public class UpdateHandler extends MainTM {
 			String[] list = reader.readLine().replace("]", "").replace("[", "").replace("},{", "}," + splitMarker + "{").split(splitMarker);
 			response = list[list.length - 1];
 			reader.close();
-			JsonObject o = JsonParser.parseString(response).getAsJsonObject();
+			JsonObject o = new JsonParser().parse(response).getAsJsonObject();
 			JsonElement e = (JsonElement) o.get("name");
 			latestVersion = e.toString().replaceFirst("TimeManager v", "").replace("\"", "");
 			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_BUKKIT + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg
@@ -158,7 +158,6 @@ public class UpdateHandler extends MainTM {
 	/**
 	 * Get latest version number from Spigot
 	 */
-	@SuppressWarnings("resource")
 	private static void checkUpdateOnSpigot() {
 		try {
 			HttpURLConnection con = (HttpURLConnection) checkURL.openConnection();
@@ -180,7 +179,7 @@ public class UpdateHandler extends MainTM {
 			final BufferedReader reader = new BufferedReader(new InputStreamReader(connec.getInputStream()));
 			response = reader.readLine();
 			reader.close();
-			JsonObject o = JsonParser.parseString(response).getAsJsonObject();
+			JsonObject o = new JsonParser().parse(response).getAsJsonObject();
 			JsonElement e = (JsonElement) o.get("tag_name");
 			latestVersion = e.toString().replaceFirst("v", "").replace("\"", "");
 			MsgHandler.debugMsg(LatestVersionPart1DebugMsg + " " + ARG_GITHUB + " is " + latestVersion + " " + LatestVersionPart2DebugMsg + " " + versionTM()); // Console debug msg

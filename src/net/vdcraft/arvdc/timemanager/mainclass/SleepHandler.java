@@ -2,9 +2,6 @@ package net.vdcraft.arvdc.timemanager.mainclass;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,12 +37,7 @@ public class SleepHandler implements Listener {
 
 	// Add player's name in a list when a night cycle animation is in progress
 	public static List<String> playerAnimationIsInProgress = new ArrayList<String>();
-
-	// Bed-block locations for each currently-sleeping player. Used by the
-	// particle code instead of teleporting the player onto the bed at sleep
-	// start, which used to break Bedrock clients via Geyser.
-	private static final Map<UUID, Location> bedLocations = new ConcurrentHashMap<>();
-
+	
 	/**
 	 * When a player try to sleep, authorize entering the bed but check if the time need to be spend until the dawn or not
 	 */
@@ -118,12 +110,9 @@ public class SleepHandler implements Listener {
 			return;// Player does not have the rule to be count
 		}
 		
-		// #4. Remember the bed block so the particle code can locate it later.
-		// We intentionally do NOT teleport the player here: on Bedrock,
-		// Geyser translates the teleport into a "stand up" packet, which
-		// kicks the player out of bed before the sleep starts.
+		// #4. Teleport the player (in order to better identify the bed block later)
 		Location bedLocation = e.getBed().getLocation();
-		bedLocations.put(p.getUniqueId(), bedLocation);
+		p.teleport(bedLocation);
 		
 		// #5. As soon as the last sleeping player confirms the correct ratio, go further;
 		if (enoughSleepingPlayers(w, 1, true)) {
@@ -334,11 +323,9 @@ public class SleepHandler implements Listener {
 			public void run() {
 				if (enoughSleepingPlayers(w, 0, false)) {
 					for (Player p : sleepingPlayersList(w)) {
-						// Stored on bed-enter; survives the fact that we no
-						// longer teleport the player onto the bed block.
-						Location loc = bedLocations.get(p.getUniqueId());
-						if (loc == null) continue;
-						Block bedBlock = loc.getBlock();
+						Location loc = p.getLocation();
+						// Get the block under the player
+						Block bedBlock = loc.getBlock().getRelative(0, 0, 0);
 						// Retrieve bed direction
                         String facing = findBedDirection(bedBlock);
                         // Adjust the location of the particles depending on bed direction
@@ -511,7 +498,6 @@ public class SleepHandler implements Listener {
 	private void whenPlayerStopsSleepWithAnim(PlayerBedLeaveEvent e) throws InterruptedException {
 		Player p = e.getPlayer();
 		World w = p.getWorld();
-		bedLocations.remove(p.getUniqueId());
 		if (worldAnimationIsInProgress.contains(w.getName())) {
 			playerAnimationIsInProgress.add(p.getName());
 		}

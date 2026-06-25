@@ -275,7 +275,7 @@ public class CmdsScheduler extends MainTM {
 										String[] phSlipt2 = ph1.split("\\}");
 										for (String ph2 : phSlipt2) {
 											if (ph2.contains(PH_PREFIX)) {
-												String ph3 = PlaceholdersHandler.replacePlaceholder("{" + ph2 + "}", world, lang, null, false);
+												String ph3 = PlaceholdersHandler.replacePlaceholder("{" + ph2 + "}", world, lang, null);
 												MsgHandler.devMsg("A placeholder was detected : §e" + "{" + ph2 + "}" + "§9 will be changed by \"§e" + ph3 + "§9\".");
 												String ph = "{" + ph2 + "}";
 												command = command.replace(ph, ph3);

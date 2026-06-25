@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.ymlfilesmanagement;
+package net.vdcraft.arvdc.timemanager.mainclass;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -7,15 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.ActionBarHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.DebugModeHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.LockTimeHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.SleepHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.SqlHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.SyncHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
-import net.vdcraft.arvdc.timemanager.mainclass.WorldListHandler;
 
 public class CfgFileHandler extends MainTM {
 
@@ -23,8 +14,13 @@ public class CfgFileHandler extends MainTM {
 	 * Activate or reload the configuration file
 	 */
 	public static void loadConfig(String firstOrRe) {
-		
-		MainTM.getInstance().getConfig().options().parseComments(true);
+
+		// FileConfigurationOptions#parseComments(boolean) is part of the 1.19
+		// config-options refresh — pre-1.19 calling it throws NoSuchMethodError
+		// at plugin enable. Gate it behind the existing reqMcVForConfigFile flag.
+		if (serverMcVersion != null && serverMcVersion >= reqMcVForConfigFile) {
+			MainTM.getInstance().getConfig().options().parseComments(true);
+		}
 		
 		// #1. Only at the server startup:
 		if (firstOrRe.equalsIgnoreCase(ARG_FIRST)) {
@@ -55,8 +51,11 @@ public class CfgFileHandler extends MainTM {
 			MsgHandler.devMsg("The §eheader§9 of " + CONFIGFILENAME + " file contents : §e" + header); // Console dev msg
 			// #1.D.c. Delete the txt file
 			MainTM.getInstance().configHeaderFileTxt.delete();
-			// #1.D.d. Set the header into the yml file
-			MainTM.getInstance().getConfig().options().setHeader(header);
+			// #1.D.d. Set the header into the yml file (1.19+ API; pre-1.19
+			// only had header(String) and would NoSuchMethodError on setHeader).
+			if (serverMcVersion != null && serverMcVersion >= reqMcVForConfigFile) {
+				MainTM.getInstance().getConfig().options().setHeader(header);
+			}
 			
 		}
 		

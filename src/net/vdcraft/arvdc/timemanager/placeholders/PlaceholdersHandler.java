@@ -14,7 +14,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * Replaces any available placeholder by the corresponding String
 	 * (returns a String)
 	 */
-	public static String replacePlaceholder(String placeholder, String world, String lang, Player p, Boolean debugMsg) {
+	public static String replacePlaceholder(String placeholder, String world, String lang, Player p) {
 		
 		World w = Bukkit.getServer().getWorld(world);
 		Long t = w.getTime();
@@ -148,26 +148,26 @@ public class PlaceholdersHandler extends MainTM {
 		// the seasons engine is disabled, so they can be embedded in
 		// templates safely.
 		case "{" + PH_PREFIX + PH_SEASON + "}" : {
-			var svc = MainTM.getInstance().seasonService;
+			net.vdcraft.arvdc.timemanager.seasons.SeasonService svc = MainTM.getInstance().seasonService;
 			if (svc == null || !svc.enabled() || w == null) return "off";
 			return svc.currentSeason(w).name();
 		}
 		case "{" + PH_PREFIX + PH_SEASON_PRESET + "}" : {
-			var svc = MainTM.getInstance().seasonService;
+			net.vdcraft.arvdc.timemanager.seasons.SeasonService svc = MainTM.getInstance().seasonService;
 			return svc == null ? "none" : svc.preset().name();
 		}
 		case "{" + PH_PREFIX + PH_SEASON_DAYOFYEAR + "}" : {
-			var svc = MainTM.getInstance().seasonService;
+			net.vdcraft.arvdc.timemanager.seasons.SeasonService svc = MainTM.getInstance().seasonService;
 			if (svc == null || w == null) return "0";
 			return String.valueOf(svc.dayOfYear(w));
 		}
 		case "{" + PH_PREFIX + PH_SEASON_DAYLIGHT + "}" : {
-			var svc = MainTM.getInstance().seasonService;
+			net.vdcraft.arvdc.timemanager.seasons.SeasonService svc = MainTM.getInstance().seasonService;
 			if (svc == null || !svc.enabled() || w == null) return "50%";
 			return Math.round(svc.daylightFraction(w) * 100) + "%";
 		}
 		case "{" + PH_PREFIX + PH_SEASON_HEMISPHERE + "}" : {
-			var svc = MainTM.getInstance().seasonService;
+			net.vdcraft.arvdc.timemanager.seasons.SeasonService svc = MainTM.getInstance().seasonService;
 			return svc != null && svc.isSouthernHemisphere() ? "south" : "north";
 		}
 
@@ -180,7 +180,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * Replaces all placeholders found in a String
 	 * (returns a String)
 	 */
-	public static String replaceAllPlaceholders(String msg, String world, String lang, Player p, Boolean debugMsg) {
+	public static String replaceAllPlaceholders(String msg, String world, String lang, Player p) {
 		if (msg.contains("{tm_")) {
 			String[] phSlipt1 = msg.split("\\{");
 			for (String ph1 : phSlipt1) {
@@ -189,7 +189,7 @@ public class PlaceholdersHandler extends MainTM {
 					for (String ph2 : phSlipt2) {
 						if (ph2.contains("tm_")) {
 							ph2 = "{" + ph2 + "}";
-							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p, debugMsg);
+							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p);
 							MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\".");  // Console dev msg
 							msg = msg.replace(ph2, ph3);
 						}
@@ -205,7 +205,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * (returns a String)
 	 */
 	public static String replaceAllPlaceholders(String msg, String world, String lang) {
-		return replaceAllPlaceholders(msg, world, lang, null, false);		
+		return replaceAllPlaceholders(msg, world, lang, null);		
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class PlaceholdersHandler extends MainTM {
 	 * (returns a String)
 	 */
 	public static String replaceAllPlaceholders(String msg, World w, String lang, Player p) {
-		return replaceAllPlaceholders(msg, w.getName(), lang, p, false);		
+		return replaceAllPlaceholders(msg, w.getName(), lang, p);		
 	}
 
 	/**
@@ -221,6 +221,6 @@ public class PlaceholdersHandler extends MainTM {
 	 * (returns a String)
 	 */
 	public static String replaceAllPlaceholders(String msg, World w, String lang) {
-		return replaceAllPlaceholders(msg, w.getName(), lang, null, false);		
+		return replaceAllPlaceholders(msg, w.getName(), lang, null);		
 	}
 };

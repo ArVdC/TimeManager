@@ -6,9 +6,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
+import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
 
 public class TmCheckConfig extends MainTM {
 

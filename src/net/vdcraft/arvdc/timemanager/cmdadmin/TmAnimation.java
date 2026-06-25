@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 /**
- * /tm set sleepAnimation [on|off|toggle|instant] [all|world]
+ * /tm animation &lt;world&gt; [on|off|toggle]
  *
  * Shortcut for flipping {@code worldsList.<world>.nightSkipMode} between
  * {@code animation} and {@code default}. When {@code animation} is on, the
@@ -18,18 +18,9 @@ import net.vdcraft.arvdc.timemanager.MainTM;
  * No argument or {@code toggle} flips the current value. {@code on} forces
  * animation; {@code off} forces default.
  */
-public class TmSetSleepAnimation extends MainTM {
+public class TmAnimation extends MainTM {
 
-	public static void cmdSetSleepAnimation(CommandSender sender, String onOff, String world) {
-
-		// Modify all worlds
-		if (world.equalsIgnoreCase(ARG_ALL)) {
-			// Relaunch this for each world
-			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
-				cmdSetSleepAnimation(sender, onOff, listedWorld);
-			}
-		}
-		
+	public static void cmdAnimation(CommandSender sender, String world, String onOffArg) {
 		// #1. Validate
 		if (Bukkit.getWorld(world) == null) {
 			sender.sendMessage(ChatColor.RED + "Unknown world: " + ChatColor.YELLOW + world);
@@ -46,16 +37,17 @@ public class TmSetSleepAnimation extends MainTM {
 		boolean isOn = current.equalsIgnoreCase(ARG_ANIMATION);
 
 		boolean enable;
-		if (onOff == null || onOff.isEmpty() || onOff.equalsIgnoreCase(ARG_TOGGLE)) {
+		if (onOffArg == null || onOffArg.isEmpty() || onOffArg.equalsIgnoreCase("toggle")) {
 			enable = !isOn;
-		} else if (onOff.equalsIgnoreCase(ARG_ON) || onOff.equalsIgnoreCase(ARG_TRUE)
-				|| onOff.equalsIgnoreCase(ARG_ANIMATION)) {
+		} else if (onOffArg.equalsIgnoreCase("on") || onOffArg.equalsIgnoreCase("true")
+				|| onOffArg.equalsIgnoreCase(ARG_ANIMATION)) {
 			enable = true;
-		} else if (onOff.equalsIgnoreCase(ARG_OFF) || onOff.equalsIgnoreCase(ARG_FALSE)
-				|| onOff.equalsIgnoreCase(ARG_DEFAULT)) {
+		} else if (onOffArg.equalsIgnoreCase("off") || onOffArg.equalsIgnoreCase("false")
+				|| onOffArg.equalsIgnoreCase(ARG_DEFAULT)) {
 			enable = false;
-		} else if (onOff.equalsIgnoreCase(ARG_INSTANT)) {
-			// Pass through explicit 'instant' option from the original nightSkipMode enum.
+		} else if (onOffArg.equalsIgnoreCase(ARG_INSTANT)) {
+			// Pass through explicit 'instant' option from the original
+			// nightSkipMode enum.
 			MainTM.getInstance().getConfig().set(key, ARG_INSTANT);
 			MainTM.getInstance().saveConfig();
 			sender.sendMessage(ChatColor.GOLD + "nightSkipMode for " + ChatColor.YELLOW + world
@@ -75,5 +67,4 @@ public class TmSetSleepAnimation extends MainTM {
 				+ (enable ? ChatColor.GREEN + "ON" : ChatColor.RED + "OFF")
 				+ ChatColor.GRAY + " (nightSkipMode = " + newValue + ").");
 	}
-	
-};
+}

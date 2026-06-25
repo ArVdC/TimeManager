@@ -1,7 +1,6 @@
 package net.vdcraft.arvdc.timemanager.mainclass;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 
 /**
  * Convenience single-key shortcut for locking or speeding up a world.

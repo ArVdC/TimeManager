@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.ymlfilesmanagement;
+package net.vdcraft.arvdc.timemanager.mainclass;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +14,6 @@ import java.util.Set;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class LgFileHandler extends MainTM {
 	
@@ -64,19 +62,8 @@ public class LgFileHandler extends MainTM {
 				// #1.A.b. Actualize values
 				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
 			} else {
-				// #1.A.c. Structural migration: if the existing lang.yml
-				// lacks the per-language `gui` sub-block (added in 2.0.0),
-				// rebuild it from the jar so the new locales (tr_TR, es_MX,
-				// he_IL) and the gui keys land while the user's /now
-				// overrides are preserved. Version-only checks don't work
-				// here because TM auto-bumps the version field on every
-				// load, so once a plugin has run a partially-migrated
-				// lang.yml is forever stuck at the latest version even
-				// without the new structure.
-				MainTM.getInstance().langConf = YamlConfiguration.loadConfiguration(MainTM.getInstance().langFileYaml);
-				boolean missingGui = MainTM.getInstance().langConf
-						.getConfigurationSection(LG_LANGUAGES + ".en_US.gui") == null;
-				if (missingGui) {
+				// #1.A.c. Update the file if < 1.10.0
+				if (ValuesConverter.requestedPluginVersionIsNewerThanCurrent("lg", 1, 10, 0, 4, 0)) { // TODO Only update this when lang file changes.
 					updateLangFile();
 				} else MsgHandler.infoMsg(lgFileExistMsg); // Console log msg
 			}
@@ -93,8 +80,10 @@ public class LgFileHandler extends MainTM {
 			MsgHandler.devMsg("The §eheader§9 of " + LANGFILENAME + " file contents : §e" + header); // Console dev msg
 			// #1.B.c. Delete the txt file
 			MainTM.getInstance().langHeaderFileTxt.delete();
-			// #1.B.d. Set the header into the yml file
-			MainTM.getInstance().langConf.options().setHeader(header);
+			// #1.B.d. Set the header into the yml file (1.19+ API only).
+			if (serverMcVersion != null && serverMcVersion >= reqMcVForConfigFile) {
+				MainTM.getInstance().langConf.options().setHeader(header);
+			}
 		}
 
 		// #2. When using the admin command /tm reload

@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.ymlfilesmanagement;
+package net.vdcraft.arvdc.timemanager.mainclass;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -13,9 +13,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.mainclass.CmdsScheduler;
-import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
-import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
 
 public class CmdsFileHandler extends MainTM {
 
@@ -49,8 +46,10 @@ public class CmdsFileHandler extends MainTM {
 			MsgHandler.devMsg("The §eheader§9 of " + CMDSFILENAME + " file contents : §e" + header); // Console dev msg
 			// #1.B.c. Delete the txt file
 			MainTM.getInstance().cmdsHeaderFileTxt.delete();
-			// #1.B.d. Set the header into the yml file
-			MainTM.getInstance().cmdsConf.options().setHeader(header);
+			// #1.B.d. Set the header into the yml file (1.19+ API only).
+			if (serverMcVersion != null && serverMcVersion >= reqMcVForConfigFile) {
+				MainTM.getInstance().cmdsConf.options().setHeader(header);
+			}
 		}
 
 		// #2. When using the admin command /tm reload

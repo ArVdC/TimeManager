@@ -71,7 +71,7 @@ public class SeasonService {
             // Default: only overworld-environment worlds. Nether and End
             // have no daylight cycle, so applying speeds to them just
             // produces "Cannot set time" warnings every refresh.
-            var list = MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST);
+            org.bukkit.configuration.ConfigurationSection list = MainTM.getInstance().getConfig().getConfigurationSection(MainTM.CF_WORLDSLIST);
             if (list != null) {
                 for (String w : list.getKeys(false)) {
                     World wo = Bukkit.getWorld(w);
@@ -125,11 +125,11 @@ public class SeasonService {
         if (!smoothTransition()) {
             // Pin to the solstice value of whatever quarter we're in.
             Season s = currentSeason(w);
-            return switch (s) {
-                case WINTER -> p.winterDaylight();
-                case SUMMER -> p.summerDaylight();
-                default -> mid;
-            };
+            switch (s) {
+                case WINTER: return p.winterDaylight();
+                case SUMMER: return p.summerDaylight();
+                default:     return mid;
+            }
         }
 
         return mid + amp * sinusoid;
@@ -165,7 +165,7 @@ public class SeasonService {
         String prev = lastApplied.get(worldName);
         if (stamp.equals(prev)) return;
 
-        var cfg = MainTM.getInstance().getConfig();
+        org.bukkit.configuration.file.FileConfiguration cfg = MainTM.getInstance().getConfig();
         String base = MainTM.CF_WORLDSLIST + "." + worldName + ".";
         cfg.set(base + MainTM.CF_D_SPEED, daySpeed);
         cfg.set(base + MainTM.CF_N_SPEED, nightSpeed);
@@ -199,5 +199,4 @@ public class SeasonService {
     private static double round2(double v) {
         return Math.round(v * 100.0) / 100.0;
     }
-    
-};
+}

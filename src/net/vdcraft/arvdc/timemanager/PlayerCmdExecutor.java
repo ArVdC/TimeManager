@@ -16,9 +16,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdplayer.NowMsgHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.ValuesConverter;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 
 public class PlayerCmdExecutor implements CommandExecutor {
 
@@ -70,9 +70,26 @@ public class PlayerCmdExecutor implements CommandExecutor {
 		//   /time query <X>                    → falls back to minecraft:time
 		// TM's "set time" path produces the plugin-styled chat output that
 		// matches the rest of TimeManager. add/query stay vanilla because
-		// TM has no equivalent surface for them.
+		// TM has no equivalent surface for them. The vanilla fallback may
+		// not exist on pre-1.13 servers; if it fails we still fall through
+		// to the legacy "set <daypart>" /tm dispatch below.
 		if (nbArgs >= 1 && (sender.isOp() || sender.hasPermission("minecraft.command.time"))) {
 			String first = args[0].toLowerCase();
+			// Daypart shortcut: /time day|night|noon|midnight|... [world]
+			// → /tm set time <daypart> <world>. Vanilla only accepts these
+			// after the literal "set" subcommand; TM lifts that restriction
+			// so muscle memory from common server commands keeps working.
+			List<String> dayparts = Arrays.asList("day", "morning", "noon", "midday",
+					"sunset", "dusk", "evening", "night", "midnight", "sunrise", "dawn");
+			if (dayparts.contains(first)) {
+				String targetWorld = w.getName();
+				if (nbArgs >= 2 && Bukkit.getServer().getWorld(args[1]) != null) {
+					targetWorld = args[1];
+				}
+				String tmCmd = MainTM.CMD_TM + " " + MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME
+						+ " " + first + " " + targetWorld;
+				if (Bukkit.dispatchCommand(sender, tmCmd)) return true;
+			}
 			if (first.equals("set") && nbArgs >= 2) {
 				String value = args[1];
 				String tmCmd = MainTM.CMD_TM + " " + MainTM.CMD_SET + " " + MainTM.CMD_SET_TIME

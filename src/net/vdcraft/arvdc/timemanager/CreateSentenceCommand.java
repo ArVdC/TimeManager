@@ -15,9 +15,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import net.vdcraft.arvdc.timemanager.mainclass.CfgFileHandler;
+import net.vdcraft.arvdc.timemanager.mainclass.LgFileHandler;
 import net.vdcraft.arvdc.timemanager.mainclass.MsgHandler;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
 
 public class CreateSentenceCommand implements TabCompleter {
 
@@ -27,8 +27,8 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	// List of admin sub-commands
 	List<String> tmCmdArgsList() {
-		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_SEASON, MainTM.CMD_GUI);
-		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_SEASON, MainTM.CMD_GUI);
+		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
+		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
 	}
 	// List of admin sub-commands having a 'help'
 	List<String> tmHelpArgsList() {
@@ -63,7 +63,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmReloadArgsList = Arrays.asList(MainTM.ARG_ALL, MainTM.ARG_CONFIG, MainTM.ARG_LANG, MainTM.ARG_CMDS);
 	// Arguments list for '/tm set'
 	List<String> tmSetArgsList() {
-		List<String> SetArgs = Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_DURATION, MainTM.CMD_SET_D_DURATION, MainTM.CMD_SET_N_DURATION, MainTM.CMD_SET_E_DAYS,  MainTM.CMD_SET_FIRSTSTARTTIME, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_PLAYEROFFSET, MainTM.CMD_SET_PLAYERTIME, MainTM.CMD_SET_SLEEPANIMATION, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
+		List<String> SetArgs = Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_DURATION, MainTM.CMD_SET_D_DURATION, MainTM.CMD_SET_N_DURATION, MainTM.CMD_SET_E_DAYS,  MainTM.CMD_SET_FIRSTSTARTTIME, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_PLAYEROFFSET, MainTM.CMD_SET_PLAYERTIME, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
 		if (MainTM.serverMcVersion < MainTM.reqMcVForUpdate) SetArgs.remove(MainTM.CMD_SET_UPDATE);
 		return SetArgs;
 	}
@@ -90,8 +90,6 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmSetDateArgsList = Arrays.asList("today", "0001-01-01");
 	// Number of days arguments for '/tm set elapsedDays'
 	List<String> tmSetDaysArgsList = Arrays.asList("0", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365");
-	// Arguments list for '/tm set sleepAnimation
-	List<String> tmSetSleepAnimationArgsList = Arrays.asList(MainTM.ARG_ON, MainTM.ARG_OFF, MainTM.ARG_TOGGLE, MainTM.ARG_INSTANT);
 	// Arguments list for '/tm set sleep
 	List<String> tmSetSleepArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE, MainTM.ARG_LINKED);
 	// Modifier arguments for '/tm set duration'
@@ -128,13 +126,6 @@ public class CreateSentenceCommand implements TabCompleter {
 	}
 	// Arguments list for '/now'
 	List<String> nowDisplayArgsList = Arrays.asList(MainTM.ARG_MSG, MainTM.ARG_TITLE, MainTM.ARG_ACTIONBAR);
-
-	// Vanilla /time autocomplete options surfaced by the /now alias for ops.
-	List<String> VANILLA_TIME_VERBS = Arrays.asList("set", "add", "query");
-	List<String> VANILLA_TIME_SET_OPTIONS = Arrays.asList(
-			"day", "noon", "night", "midnight",
-			"sunrise", "dawn", "morning", "midday", "dusk", "sunset", "evening");
-	List<String> VANILLA_TIME_QUERY_OPTIONS = Arrays.asList("daytime", "gametime", "day");
 	List<String> nowWorldsArgsList(CommandSender sender) {
 		List<String> tmWorldsArgs = new ArrayList<>();
 		tmWorldsArgs.addAll(worldsList(sender));
@@ -266,12 +257,6 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
 								outputArgsList.add(verif);
 						}
-					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEPANIMATION)) // Command '/tm set sleepAnimation <...>'
-					{
-						for (String verif : tmSetSleepAnimationArgsList) {
-							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))								
-								outputArgsList.add(verif);
-						}
 					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)) // Command '/tm set sleep <...>'
 					{
 						for (String verif : tmSetSleepArgsList) {
@@ -350,7 +335,6 @@ public class CreateSentenceCommand implements TabCompleter {
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_N_DURATION)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_FIRSTSTARTTIME)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEPANIMATION)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)
@@ -370,41 +354,18 @@ public class CreateSentenceCommand implements TabCompleter {
 				return null;
 			}
 		} else if (command.getName().equalsIgnoreCase(MainTM.CMD_NOW)) {
-			// Vanilla /time autocomplete for ops/permission holders. Lets
-			// /time set <day|noon|...>, /time add <ticks>, /time query <X>
-			// surface like the vanilla command alongside the /now options.
-			boolean canTime = sender.isOp() || sender.hasPermission("minecraft.command.time");
-			if (canTime && args.length == 1) {
-				for (String s : VANILLA_TIME_VERBS) {
-					if (s.toLowerCase().startsWith(args[0].toLowerCase()))
-						outputArgsList.add(s);
-				}
-			}
-			if (canTime && args.length == 2 && args[0].equalsIgnoreCase("set")) {
-				for (String s : VANILLA_TIME_SET_OPTIONS) {
-					if (s.toLowerCase().startsWith(args[1].toLowerCase()))
-						outputArgsList.add(s);
-				}
-			}
-			if (canTime && args.length == 2 && args[0].equalsIgnoreCase("query")) {
-				for (String s : VANILLA_TIME_QUERY_OPTIONS) {
-					if (s.toLowerCase().startsWith(args[1].toLowerCase()))
-						outputArgsList.add(s);
-				}
-			}
-
 			if (args.length == 1) { // Command '/now <...>'
 				if (sender.hasPermission(MainTM.PERM_NOW_DISPLAY)
 						|| sender.isOp()) {
 					for (String verif : nowDisplayArgsList) {
-						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))
+						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))							
 							outputArgsList.add(verif);
 					}
 				}
 				else if (sender.hasPermission(MainTM.PERM_NOW_WORLD)
 						|| sender.isOp()) {
 					for (String verif : nowWorldsArgsList(sender)) {
-						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))
+						if (verif.toLowerCase().startsWith(args[0].toLowerCase()))							
 							outputArgsList.add(verif);
 					}
 				}
@@ -413,10 +374,12 @@ public class CreateSentenceCommand implements TabCompleter {
 				if ((sender.hasPermission(MainTM.PERM_NOW_WORLD) && sender.hasPermission(MainTM.PERM_NOW_DISPLAY)
 						|| sender.isOp())) {
 					for (String verif : nowWorldsArgsList(sender)) {
-						if (verif.toLowerCase().startsWith(args[1].toLowerCase()))
+						if (verif.toLowerCase().startsWith(args[1].toLowerCase()))							
 							outputArgsList.add(verif);
 					}
 				}
+			} else {
+				return null;
 			}
 		} else {
 			return null;
