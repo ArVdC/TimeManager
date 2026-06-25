@@ -22,22 +22,21 @@ public class TmSetSleepAnimation extends MainTM {
 
 	public static void cmdSetSleepAnimation(CommandSender sender, String onOff, String world) {
 
-		// Modify all worlds
+		// #1. Modify all worlds
 		if (world.equalsIgnoreCase(ARG_ALL)) {
 			// Relaunch this for each world
 			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				cmdSetSleepAnimation(sender, onOff, listedWorld);
 			}
-		}
-		
-		// #1. Validate
-		if (Bukkit.getWorld(world) == null) {
-			sender.sendMessage(ChatColor.RED + "Unknown world: " + ChatColor.YELLOW + world);
 			return;
 		}
-		if (!MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
-			sender.sendMessage(ChatColor.RED + "World " + ChatColor.YELLOW + world
-					+ ChatColor.RED + " isn't tracked by TimeManager.");
+		
+		// #2. Validate world name
+		else if (Bukkit.getWorld(world) == null) {
+			sender.sendMessage(ChatColor.RED + "Unknown world: " + ChatColor.YELLOW + world);
+			return;
+		} else if (!MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {
+			sender.sendMessage(ChatColor.RED + "World " + ChatColor.YELLOW + world + ChatColor.RED + " isn't tracked by TimeManager.");
 			return;
 		}
 
