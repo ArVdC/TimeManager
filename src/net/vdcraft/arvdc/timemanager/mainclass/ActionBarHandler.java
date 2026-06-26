@@ -15,7 +15,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.vdcraft.arvdc.timemanager.MainTM;
 import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 
 /**
  * Optional ActionBar HUD that broadcasts a configurable time/day string to
@@ -79,7 +78,21 @@ public class ActionBarHandler {
 		int refresh = Math.max(5, MainTM.getInstance().getConfig().getInt(CF_HUD_REFRESH, 20));
 		taskId = new BukkitRunnable() {
 			@Override
-			public void run() { broadcast(); }
+			public void run() {
+				try {
+					broadcast();
+				} catch (Throwable t) {
+					// BukkitRunnable swallows exceptions thrown by a repeating
+					// task on some Paper builds — catch + log explicitly so
+					// configuration / placeholder bugs don't fail silently.
+					// Cancel ourselves to avoid hammering the log forever.
+					MainTM.getInstance().getLogger().warning(
+							"ActionBar HUD broadcast failed: "
+									+ t.getClass().getSimpleName() + ": " + t.getMessage());
+					cancel();
+					taskId = -1;
+				}
+			}
 		}.runTaskTimer(MainTM.getInstance(), refresh, refresh).getTaskId();
 	}
 
@@ -128,7 +141,7 @@ public class ActionBarHandler {
 			}
 			out.append(input, pos, open);
 			String token = input.substring(open, close + 1);
-			String resolved = PlaceholdersHandler.replacePlaceholder(token, world, lang, p, false);
+			String resolved = PlaceholdersHandler.replacePlaceholder(token, world, lang, p);
 			if (resolved == null) resolved = token; // unknown — leave literal
 			out.append(resolved);
 			pos = close + 1;

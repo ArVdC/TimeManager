@@ -8,7 +8,6 @@ import net.vdcraft.arvdc.timemanager.seasons.SeasonService;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -17,12 +16,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,26 +37,76 @@ import java.util.UUID;
  * Three pages — Server, World (current world), Seasons. Currently-active
  * options glow (enchant glint, hidden flag). Slot 0 of every page holds
  * the Reset-to-vanilla button.
+ *
+ * Java 8 source level — no var, no switch-expressions, no pattern-matching
+ * instanceof, no List.of (the latter replaced by Arrays.asList / lst()).
  */
 public class TmGui implements Listener {
 
     private static final String TITLE_TAG = ChatColor.DARK_AQUA + "TimeManager";
 
+    /** Marker holder so the click/close handlers can identify our GUI on any
+     *  MC version. InventoryView.getTitle() only landed in 1.13; holders work
+     *  back to 1.4, which is the entire range this unified jar targets. */
+    private static final class TmGuiHolder implements InventoryHolder {
+        @Override public Inventory getInventory() { return null; }
+    }
+
     private static final double[] SPEED_PRESETS = {0.5, 1.0, 2.0, 4.0, 8.0};
     private static final int[] YEAR_PRESETS = {8, 16, 32, 64};
     private static final long[] REFRESH_PRESETS = {5L, 20L, 100L};
 
-    private static final NamespacedKey ACTION_KEY =
-            new NamespacedKey(MainTM.getInstance(), "action");
-
     /** Tracks which page each viewing player is on, so nav clicks know where to go. */
-    private static final Map<UUID, Integer> PAGE = new HashMap<>();
+    private static final Map<UUID, Integer> PAGE = new HashMap<UUID, Integer>();
+
+    /** Per-player slot → action-ID map. Built when a page is constructed and
+     *  consulted by the click handler. Replaces the old PersistentDataContainer
+     *  approach so the GUI works on every MC version (1.9.4 through 26.x);
+     *  PDC + NamespacedKey only landed in MC 1.14. */
+    private static final Map<UUID, Map<Integer, String>> SLOT_ACTIONS =
+            new HashMap<UUID, Map<Integer, String>>();
+
+    /** action() stashes its id here; the very next set() call consumes it and
+     *  records it against the slot in SLOT_ACTIONS. Lets the existing
+     *  set(inv, N, action(item, "id")) shape stay intact across the file. */
+    private static final ThreadLocal<String> PENDING_ACTION = new ThreadLocal<String>();
+    private static final ThreadLocal<Player>  BUILDING_FOR  = new ThreadLocal<Player>();
+
+    /** Set during openPage() while we are swapping the player from one TM
+     *  page to another. The InventoryCloseEvent for the old page fires
+     *  synchronously inside p.openInventory() — without this guard, onClose
+     *  would wipe the slot map for the page we just built. */
+    private static final ThreadLocal<Boolean> NAVIGATING = new ThreadLocal<Boolean>();
+
+    /**
+     * Pick the first Material name in the list that exists on the runtime
+     * server. Lets the same compiled jar render fitting icons across MC
+     * versions — newer name first, older fallback after. Returns PAPER if
+     * none exist (unreachable for the lists we use here).
+     */
+    private static Material pickMat(String... names) {
+        for (String n : names) {
+            try { return Material.valueOf(n); }
+            catch (IllegalArgumentException ignored) {}
+        }
+        return Material.PAPER;
+    }
+
+    /** Java 8-friendly replacement for List.of(...). Returns a mutable list
+     *  (the GUI never mutates lore lists once built, so the immutability of
+     *  Java 9's List.of isn't load-bearing here). */
+    private static List<String> lst(String... items) {
+        List<String> out = new ArrayList<String>(items.length);
+        for (String s : items) out.add(s);
+        return out;
+    }
 
     public static void openFor(CommandSender sender) {
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player)) {
             MsgHandler.playerAdminMsg(sender, ChatColor.RED + GuiI18n.s("error-in-game-only"));
             return;
         }
+        Player p = (Player) sender;
         if (!p.isOp() && !p.hasPermission("timemanager.admin")) {
             p.sendMessage(ChatColor.RED + GuiI18n.s("error-admin-only"));
             return;
@@ -65,34 +115,68 @@ public class TmGui implements Listener {
     }
 
     private static void openPage(Player p, int page) {
-        Inventory inv = switch (page) {
-            case 1 -> buildWorld(p);
-            case 2 -> buildSeasons(p);
-            default -> buildServer(p);
-        };
+        // Reset the slot map and pending-action stash for this fresh build.
+        SLOT_ACTIONS.put(p.getUniqueId(), new HashMap<Integer, String>());
+        BUILDING_FOR.set(p);
+        PENDING_ACTION.remove();
+        Inventory inv;
+        try {
+            switch (page) {
+                case 1:  inv = buildWorld(p);   break;
+                case 2:  inv = buildSeasons(p); break;
+                default: inv = buildServer(p);  break;
+            }
+        } finally {
+            BUILDING_FOR.remove();
+            PENDING_ACTION.remove();
+        }
         // p.openInventory fires InventoryCloseEvent for the old inv FIRST,
-        // which runs onClose -> PAGE.remove(). Set PAGE after, otherwise
-        // the next click sees page 0 and navigation never advances.
-        p.openInventory(inv);
+        // which runs onClose. The NAVIGATING flag prevents that handler from
+        // wiping the slot map / page index we just built for the new page.
+        NAVIGATING.set(Boolean.TRUE);
+        try {
+            p.openInventory(inv);
+        } finally {
+            NAVIGATING.remove();
+        }
         PAGE.put(p.getUniqueId(), page);
+    }
+
+    /** Wrapper for inv.setItem that consumes the PENDING_ACTION stash (set by
+     *  the wrapping action() call) and records it as the slot's action-id. */
+    private static void set(Inventory inv, int slot, ItemStack it) {
+        inv.setItem(slot, it);
+        String id = PENDING_ACTION.get();
+        if (id == null) return;
+        PENDING_ACTION.remove();
+        Player p = BUILDING_FOR.get();
+        if (p == null) return;
+        Map<Integer, String> m = SLOT_ACTIONS.get(p.getUniqueId());
+        if (m != null) m.put(slot, id);
     }
 
     /* =========================================================
        PAGE 1: SERVER
        ========================================================= */
     private static Inventory buildServer(Player p) {
-        Inventory inv = Bukkit.createInventory(p, 54,
+        Inventory inv = Bukkit.createInventory(new TmGuiHolder(), 54,
                 TITLE_TAG + " — " + ChatColor.stripColor(GuiI18n.s("page-server")));
 
-        boolean debug    = MainTM.getInstance().getConfig().getBoolean("debugMode", false);
-        boolean multi    = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString("multiLang", "false"));
-        boolean useCmdsB = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString("useCmds", "false"));
+        // The three toggles live in different YAML files, all stored as the
+        // literal string "true"/"false" (not YAML booleans). Reading from
+        // the wrong file or via getBoolean leaves the button stuck on OFF.
+        //   debugMode  → config.yml
+        //   multiLang  → lang.yml   (key: useMultiLang)
+        //   useCmds    → cmds.yml   (key: useCmds)
+        boolean debug    = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString("debugMode", "false"));
+        boolean multi    = "true".equalsIgnoreCase(MainTM.getInstance().langConf.getString("useMultiLang", "false"));
+        boolean useCmdsB = "true".equalsIgnoreCase(MainTM.getInstance().cmdsConf.getString("useCmds", "false"));
         long refreshRate = MainTM.getInstance().getConfig().getLong(MainTM.CF_REFRESHRATE, 5);
 
         // Header
-        inv.setItem(4, action(item(Material.CLOCK,
+        set(inv, 4, action(item(pickMat("CLOCK", "WATCH"),
                 GuiI18n.f("header-title", MainTM.getInstance().getDescription().getVersion()),
-                List.of(GuiI18n.s("header-lore-1"),
+                lst(GuiI18n.s("header-lore-1"),
                         "",
                         GuiI18n.f("header-lore-refresh", refreshRate),
                         GuiI18n.f("header-lore-debug", debug ? GuiI18n.s("on-text") : GuiI18n.s("off-text")),
@@ -100,65 +184,70 @@ public class TmGui implements Listener {
                         GuiI18n.f("header-lore-usecmds", useCmdsB ? GuiI18n.s("on-text") : GuiI18n.s("off-text")))), "header"));
 
         // Row 1: Reload
-        inv.setItem(10, action(item(Material.LECTERN,        GuiI18n.s("section-reload"),    List.of()), "section"));
-        inv.setItem(11, action(item(Material.LECTERN,        GuiI18n.s("reload-all"),
-                List.of("&8/tm reload all")), "reload-all"));
-        inv.setItem(12, action(item(Material.WRITABLE_BOOK,  GuiI18n.s("reload-config"),
-                List.of("&8/tm reload config")), "reload-config"));
-        inv.setItem(13, action(item(Material.BOOK,           GuiI18n.s("reload-lang"),
-                List.of("&8/tm reload lang")), "reload-lang"));
-        inv.setItem(14, action(item(Material.WRITTEN_BOOK,   GuiI18n.s("reload-cmds"),
-                List.of("&8/tm reload cmds")), "reload-cmds"));
+        set(inv, 10, action(item(pickMat("LECTERN", "BOOKSHELF"),        GuiI18n.s("section-reload"),    lst()), "section"));
+        set(inv, 11, action(item(pickMat("LECTERN", "BOOKSHELF"),        GuiI18n.s("reload-all"),
+                lst("&8/tm reload all")), "reload-all"));
+        set(inv, 12, action(item(pickMat("WRITABLE_BOOK", "BOOK_AND_QUILL"),  GuiI18n.s("reload-config"),
+                lst("&8/tm reload config")), "reload-config"));
+        set(inv, 13, action(item(pickMat("BOOK"),           GuiI18n.s("reload-lang"),
+                lst("&8/tm reload lang")), "reload-lang"));
+        set(inv, 14, action(item(pickMat("WRITTEN_BOOK"),   GuiI18n.s("reload-cmds"),
+                lst("&8/tm reload cmds")), "reload-cmds"));
 
         // Row 2: Checks
-        inv.setItem(19, action(item(Material.SPYGLASS,    GuiI18n.s("section-checks"),     List.of()), "section"));
-        inv.setItem(20, action(item(Material.SPYGLASS,    GuiI18n.s("check-config"),
-                List.of("&8/tm checkConfig")), "check-config"));
-        inv.setItem(21, action(item(Material.COMPASS,     GuiI18n.s("check-time"),
-                List.of("&8/tm checkTime all")), "check-time"));
-        inv.setItem(22, action(item(Material.ENDER_EYE,   GuiI18n.s("check-update"),
-                List.of("&8/tm checkUpdate")), "check-update"));
-        inv.setItem(23, action(item(Material.NAME_TAG,    GuiI18n.s("show-placeholders"),
-                List.of("&7%tm_*%", "&8/tm placeholders")), "show-placeholders"));
+        set(inv, 19, action(item(pickMat("SPYGLASS", "COMPASS"),    GuiI18n.s("section-checks"),     lst()), "section"));
+        set(inv, 20, action(item(pickMat("SPYGLASS", "COMPASS"),    GuiI18n.s("check-config"),
+                lst("&8/tm checkConfig")), "check-config"));
+        set(inv, 21, action(item(pickMat("COMPASS"),     GuiI18n.s("check-time"),
+                lst("&8/tm checkTime all")), "check-time"));
+        set(inv, 22, action(item(pickMat("ENDER_EYE"),   GuiI18n.s("check-update"),
+                lst("&8/tm checkUpdate")), "check-update"));
+        set(inv, 23, action(item(pickMat("NAME_TAG"),    GuiI18n.s("show-placeholders"),
+                lst("&7%tm_*%", "&8/tm placeholders")), "show-placeholders"));
 
         // Row 3: Toggles
-        inv.setItem(28, action(item(Material.LEVER, GuiI18n.s("section-toggles"), List.of()), "section"));
-        ItemStack debugItem = item(Material.REDSTONE_TORCH,
+        set(inv, 28, action(item(pickMat("LEVER"), GuiI18n.s("section-toggles"), lst()), "section"));
+        ItemStack debugItem = item(pickMat("REDSTONE_TORCH"),
                 debug ? GuiI18n.s("debug-on") : GuiI18n.s("debug-off"),
-                List.of("", GuiI18n.s("click-toggle")));
+                lst("", GuiI18n.s("click-toggle")));
         if (debug) glow(debugItem);
-        inv.setItem(29, action(debugItem, "toggle-debug"));
+        set(inv, 29, action(debugItem, "toggle-debug"));
 
-        ItemStack multiItem = item(Material.OAK_SIGN,
+        ItemStack multiItem = item(pickMat("OAK_SIGN", "SIGN", "SIGN_POST"),
                 multi ? GuiI18n.s("multilang-on") : GuiI18n.s("multilang-off"),
-                List.of("", GuiI18n.s("click-toggle")));
+                lst("", GuiI18n.s("click-toggle")));
         if (multi) glow(multiItem);
-        inv.setItem(30, action(multiItem, "toggle-multilang"));
+        set(inv, 30, action(multiItem, "toggle-multilang"));
 
-        ItemStack cmdsItem = item(Material.COMMAND_BLOCK,
+        ItemStack cmdsItem = item(pickMat("COMMAND_BLOCK"),
                 useCmdsB ? GuiI18n.s("usecmds-on") : GuiI18n.s("usecmds-off"),
-                List.of("", GuiI18n.s("click-toggle")));
+                lst("", GuiI18n.s("click-toggle")));
         if (useCmdsB) glow(cmdsItem);
-        inv.setItem(31, action(cmdsItem, "toggle-usecmds"));
+        set(inv, 31, action(cmdsItem, "toggle-usecmds"));
 
         // Row 4: Refresh rate
-        inv.setItem(37, action(item(Material.CLOCK, GuiI18n.s("section-refresh-rate"), List.of()), "section"));
+        set(inv, 37, action(item(pickMat("CLOCK", "WATCH"), GuiI18n.s("section-refresh-rate"), lst()), "section"));
         int slot = 38;
         for (long ticks : REFRESH_PRESETS) {
             ItemStack it = item(refreshIcon(ticks), "&f" + ticks + "t",
-                    List.of("", GuiI18n.s("click-apply")));
+                    lst("", GuiI18n.s("click-apply")));
             if (refreshRate == ticks) glow(it);
-            inv.setItem(slot++, action(it, "refresh-" + ticks));
+            set(inv, slot++, action(it, "refresh-" + ticks));
         }
 
         // Row 5: Misc
-        inv.setItem(46, action(item(Material.CLOCK, GuiI18n.s("give-pocket-watch"),
-                List.of("&8/tm nowitem")), "give-nowitem"));
-        inv.setItem(52, action(item(Material.PAINTING, GuiI18n.s("broadcast-time"),
-                List.of("&8/tm now msg all")), "broadcast-time"));
+        // Pocket-watch needs PersistentDataContainer for right-click detection
+        // (1.13+); on legacy servers MainTM skips NowItemHandler registration
+        // entirely, so the button would just hand out an inert clock.
+        if (MainTM.serverMcVersion >= MainTM.reqMcVForGamerules) {
+            set(inv, 46, action(item(pickMat("CLOCK", "WATCH"), GuiI18n.s("give-pocket-watch"),
+                    lst("&8/tm nowitem")), "give-nowitem"));
+        }
+        set(inv, 52, action(item(pickMat("PAINTING"), GuiI18n.s("broadcast-time"),
+                lst("&8/tm now msg all")), "broadcast-time"));
 
-        inv.setItem(0, resetButton());
-        inv.setItem(8, previewItem(p));
+        set(inv, 0, resetButton());
+        set(inv, 8, previewItem(p));
         navRow(inv, 0);
         return inv;
     }
@@ -194,21 +283,21 @@ public class TmGui implements Listener {
         double nightSpeed = MainTM.getInstance().getConfig().getDouble(
                 MainTM.CF_WORLDSLIST + "." + world + "." + MainTM.CF_N_SPEED, 1.0);
 
-        List<String> lore = new ArrayList<>();
+        List<String> lore = new ArrayList<String>();
         lore.add(GuiI18n.f("overview-real-time", realClock));
         lore.add(GuiI18n.f("overview-world-time", world, mcClock));
         lore.add(GuiI18n.f("overview-speeds", daySpeed, nightSpeed));
         lore.add(seasonLine);
         lore.add("");
         lore.add(GuiI18n.s("overview-info-line"));
-        return action(item(Material.RECOVERY_COMPASS, GuiI18n.s("overview-title"), lore), "header");
+        return action(item(pickMat("RECOVERY_COMPASS", "COMPASS"), GuiI18n.s("overview-title"), lore), "header");
     }
 
     /* =========================================================
        PAGE 2: WORLD
        ========================================================= */
     private static Inventory buildWorld(Player p) {
-        Inventory inv = Bukkit.createInventory(p, 54,
+        Inventory inv = Bukkit.createInventory(new TmGuiHolder(), 54,
                 TITLE_TAG + " — " + ChatColor.stripColor(GuiI18n.s("page-world")));
         String world = p.getWorld().getName();
         String base = MainTM.CF_WORLDSLIST + "." + world + ".";
@@ -223,8 +312,8 @@ public class TmGui implements Listener {
         boolean animOn = "animation".equalsIgnoreCase(nightSkipMode);
 
         // Header
-        inv.setItem(4, action(item(Material.GRASS_BLOCK, GuiI18n.f("world-header", world),
-                List.of("",
+        set(inv, 4, action(item(pickMat("GRASS_BLOCK", "GRASS"), GuiI18n.f("world-header", world),
+                lst("",
                         GuiI18n.f("world-day-speed", curSpeed),
                         GuiI18n.f("world-night-speed", curNight),
                         GuiI18n.f("world-sync-line", sync ? GuiI18n.s("on-text") : GuiI18n.s("off-text")),
@@ -233,69 +322,75 @@ public class TmGui implements Listener {
                         GuiI18n.f("world-anim-line", animOn ? GuiI18n.s("on-text") : GuiI18n.s("anim-vanilla")))), "header"));
 
         // Speed presets
-        inv.setItem(9, action(item(Material.SUNFLOWER, GuiI18n.s("section-speed"), List.of()), "section"));
+        set(inv, 9, action(item(pickMat("SUNFLOWER", "DOUBLE_PLANT", "YELLOW_FLOWER"), GuiI18n.s("section-speed"), lst()), "section"));
         int slot = 10;
         for (double speed : SPEED_PRESETS) {
             ItemStack it = item(speedIcon(speed), "&f" + formatSpeed(speed) + GuiI18n.s("speed-suffix"),
-                    List.of(speedLabel(speed), "", GuiI18n.s("click-apply")));
+                    lst(speedLabel(speed), "", GuiI18n.s("click-apply")));
             if (Math.abs(curSpeed - speed) < 0.001 && Math.abs(curNight - speed) < 0.001) glow(it);
-            inv.setItem(slot++, action(it, "speed-" + speed));
+            set(inv, slot++, action(it, "speed-" + speed));
         }
 
         // Toggles
-        ItemStack syncItem = item(Material.COMPASS,
+        ItemStack syncItem = item(pickMat("COMPASS"),
                 sync ? GuiI18n.s("sync-on") : GuiI18n.s("sync-off"),
-                List.of("", GuiI18n.s("click-toggle")));
+                lst("", GuiI18n.s("click-toggle")));
         if (sync) glow(syncItem);
-        inv.setItem(16, action(syncItem, "toggle-sync"));
+        set(inv, 16, action(syncItem, "toggle-sync"));
 
-        ItemStack sleepItem = item(Material.RED_BED,
+        ItemStack sleepItem = item(pickMat("RED_BED", "BED"),
                 sleep ? GuiI18n.s("sleep-on") : GuiI18n.s("sleep-off"),
-                List.of("", GuiI18n.s("click-toggle")));
+                lst("", GuiI18n.s("click-toggle")));
         if (sleep) glow(sleepItem);
-        inv.setItem(17, action(sleepItem, "toggle-sleep"));
+        set(inv, 17, action(sleepItem, "toggle-sleep"));
 
         // Time jumps
-        inv.setItem(18, action(item(Material.RECOVERY_COMPASS, GuiI18n.s("quick-jumps"), List.of()), "section"));
-        inv.setItem(19, action(item(Material.ORANGE_DYE,  GuiI18n.s("time-dawn"),
-                List.of("&7t=23000", "", GuiI18n.s("click-jump"))),     "time-23000"));
-        inv.setItem(20, action(item(Material.YELLOW_DYE,  GuiI18n.s("time-morning"),
-                List.of("&7t=1000", "", GuiI18n.s("click-jump"))),       "time-1000"));
-        inv.setItem(21, action(item(Material.GLOWSTONE,   GuiI18n.s("time-noon"),
-                List.of("&7t=6000", "", GuiI18n.s("click-jump"))),       "time-6000"));
-        inv.setItem(22, action(item(Material.CAMPFIRE,    GuiI18n.s("time-sunset"),
-                List.of("&7t=12000", "", GuiI18n.s("click-jump"))),     "time-12000"));
-        inv.setItem(23, action(item(Material.BLACK_DYE,   GuiI18n.s("time-night"),
-                List.of("&7t=14000", "", GuiI18n.s("click-jump"))),     "time-14000"));
-        inv.setItem(24, action(item(Material.OBSIDIAN,    GuiI18n.s("time-midnight"),
-                List.of("&7t=18000", "", GuiI18n.s("click-jump"))),     "time-18000"));
+        set(inv, 18, action(item(pickMat("RECOVERY_COMPASS", "COMPASS"), GuiI18n.s("quick-jumps"), lst()), "section"));
+        set(inv, 19, action(item(pickMat("ORANGE_DYE", "ORANGE_WOOL"),  GuiI18n.s("time-dawn"),
+                lst("&7t=23000", "", GuiI18n.s("click-jump"))),     "time-23000"));
+        set(inv, 20, action(item(pickMat("YELLOW_DYE", "DANDELION_YELLOW", "YELLOW_WOOL"),  GuiI18n.s("time-morning"),
+                lst("&7t=1000", "", GuiI18n.s("click-jump"))),       "time-1000"));
+        set(inv, 21, action(item(pickMat("GLOWSTONE"),   GuiI18n.s("time-noon"),
+                lst("&7t=6000", "", GuiI18n.s("click-jump"))),       "time-6000"));
+        set(inv, 22, action(item(pickMat("CAMPFIRE", "TORCH"),    GuiI18n.s("time-sunset"),
+                lst("&7t=12000", "", GuiI18n.s("click-jump"))),     "time-12000"));
+        set(inv, 23, action(item(pickMat("BLACK_DYE", "INK_SACK"),   GuiI18n.s("time-night"),
+                lst("&7t=14000", "", GuiI18n.s("click-jump"))),     "time-14000"));
+        set(inv, 24, action(item(pickMat("OBSIDIAN"),    GuiI18n.s("time-midnight"),
+                lst("&7t=18000", "", GuiI18n.s("click-jump"))),     "time-18000"));
 
         // Lock / animation / date / elapsed / resync
-        ItemStack lockItem = item(Material.IRON_BARS,
+        ItemStack lockItem = item(pickMat("IRON_BARS"),
                 isLocked ? GuiI18n.s("unlock-world") : GuiI18n.s("lock-world"),
-                List.of("", GuiI18n.s("click-toggle")));
+                lst("", GuiI18n.s("click-toggle")));
         if (isLocked) glow(lockItem);
-        inv.setItem(27, action(lockItem, "toggle-lock"));
+        set(inv, 27, action(lockItem, "toggle-lock"));
 
-        ItemStack animItem = item(Material.FIREWORK_ROCKET,
-                animOn ? GuiI18n.s("anim-on") : GuiI18n.s("anim-off"),
-                List.of("", GuiI18n.s("click-toggle")));
-        if (animOn) glow(animItem);
-        inv.setItem(28, action(animItem, "toggle-anim"));
+        // Night-skip animation needs the Particle / modern Sound enums introduced
+        // in 1.9; the underlying feature is gated to MC 1.9+ in SleepHandler, so
+        // we hide the GUI toggle on older servers to avoid setting a flag that
+        // would never take effect.
+        if (MainTM.serverMcVersion >= MainTM.reqMcVForSleepAnimation) {
+            ItemStack animItem = item(pickMat("FIREWORK_ROCKET", "FIREWORK"),
+                    animOn ? GuiI18n.s("anim-on") : GuiI18n.s("anim-off"),
+                    lst("", GuiI18n.s("click-toggle")));
+            if (animOn) glow(animItem);
+            set(inv, 28, action(animItem, "toggle-anim"));
+        }
 
-        inv.setItem(29, action(item(Material.WRITABLE_BOOK, GuiI18n.s("set-date-today"),
-                List.of("&8/tm set date today")), "set-date-today"));
-        inv.setItem(30, action(item(Material.SOUL_LANTERN, GuiI18n.s("reset-elapsed"),
-                List.of("&8/tm set elapsedDays 0")), "reset-elapsed"));
-        inv.setItem(31, action(item(Material.HOPPER, GuiI18n.s("resync-world"),
-                List.of("&8/tm resync")), "resync-world"));
-        inv.setItem(32, action(item(Material.NETHER_STAR, GuiI18n.s("check-this-world"),
-                List.of("&8/tm checkTime")), "check-this-world"));
+        set(inv, 29, action(item(pickMat("WRITABLE_BOOK", "BOOK_AND_QUILL"), GuiI18n.s("set-date-today"),
+                lst("&8/tm set date today")), "set-date-today"));
+        set(inv, 30, action(item(pickMat("SOUL_LANTERN", "LANTERN", "REDSTONE_LAMP"), GuiI18n.s("reset-elapsed"),
+                lst("&8/tm set elapsedDays 0")), "reset-elapsed"));
+        set(inv, 31, action(item(pickMat("HOPPER"), GuiI18n.s("resync-world"),
+                lst("&8/tm resync")), "resync-world"));
+        set(inv, 32, action(item(pickMat("NETHER_STAR"), GuiI18n.s("check-this-world"),
+                lst("&8/tm checkTime")), "check-this-world"));
 
-        inv.setItem(40, action(item(Material.RECOVERY_COMPASS, GuiI18n.s("now-button"),
-                List.of("&8/now")), "now-button"));
+        set(inv, 40, action(item(pickMat("RECOVERY_COMPASS", "COMPASS"), GuiI18n.s("now-button"),
+                lst("&8/now")), "now-button"));
 
-        inv.setItem(0, resetButton());
+        set(inv, 0, resetButton());
         navRow(inv, 1);
         return inv;
     }
@@ -304,7 +399,7 @@ public class TmGui implements Listener {
        PAGE 3: SEASONS
        ========================================================= */
     private static Inventory buildSeasons(Player p) {
-        Inventory inv = Bukkit.createInventory(p, 54,
+        Inventory inv = Bukkit.createInventory(new TmGuiHolder(), 54,
                 TITLE_TAG + " — " + ChatColor.stripColor(GuiI18n.s("page-seasons")));
         SeasonService svc = MainTM.getInstance().seasonService;
         boolean enabled = svc != null && svc.enabled();
@@ -312,8 +407,8 @@ public class TmGui implements Listener {
         int year = svc == null ? 32 : svc.yearLengthDays();
 
         String state = enabled ? GuiI18n.s("seasons-active") : GuiI18n.s("seasons-disabled");
-        inv.setItem(4, action(item(Material.WHEAT, GuiI18n.f("seasons-header", state),
-                List.of(GuiI18n.f("season-current-preset", cur.label()),
+        set(inv, 4, action(item(pickMat("WHEAT"), GuiI18n.f("seasons-header", state),
+                lst(GuiI18n.f("season-current-preset", cur.label()),
                         GuiI18n.f("season-year-length", year),
                         enabled ? GuiI18n.f("season-status-line", svc.describe(p.getWorld())) : "")), "header"));
 
@@ -326,44 +421,44 @@ public class TmGui implements Listener {
         for (int i = 0; i < presets.length && i < slots.length; i++) {
             SeasonPreset preset = presets[i];
             ItemStack it = item(iconFor(preset), "&f" + preset.label(),
-                    List.of(GuiI18n.f("preset-winter-daylight", Math.round(preset.winterDaylight() * 100)),
+                    lst(GuiI18n.f("preset-winter-daylight", Math.round(preset.winterDaylight() * 100)),
                             GuiI18n.f("preset-summer-daylight", Math.round(preset.summerDaylight() * 100)),
                             "",
                             GuiI18n.s("click-apply")));
             if (preset == cur) glow(it);
-            inv.setItem(slots[i], action(it, "preset-" + preset.name()));
+            set(inv, slots[i], action(it, "preset-" + preset.name()));
         }
 
         // Hemisphere toggle (replaces _SOUTH preset variants)
         boolean south = svc != null && svc.isSouthernHemisphere();
         ItemStack hemi = item(
-                south ? Material.PRISMARINE_CRYSTALS : Material.SUNFLOWER,
+                south ? pickMat("PRISMARINE_CRYSTALS") : pickMat("SUNFLOWER", "DOUBLE_PLANT", "YELLOW_FLOWER"),
                 south ? GuiI18n.s("hemisphere-south") : GuiI18n.s("hemisphere-north"),
-                List.of("",
+                lst("",
                         south ? "&7" + GuiI18n.s("hemisphere-south-desc")
                               : "&7" + GuiI18n.s("hemisphere-north-desc"),
                         "",
                         GuiI18n.s("click-toggle")));
         if (south) glow(hemi);
-        inv.setItem(16, action(hemi, "toggle-hemisphere"));
+        set(inv, 16, action(hemi, "toggle-hemisphere"));
 
         int yearSlot = 37;
         for (int yp : YEAR_PRESETS) {
-            ItemStack it = item(Material.MAP, GuiI18n.f("year-button", yp),
-                    List.of("", GuiI18n.s("click-set")));
+            ItemStack it = item(pickMat("MAP"), GuiI18n.f("year-button", yp),
+                    lst("", GuiI18n.s("click-set")));
             if (yp == year) glow(it);
-            inv.setItem(yearSlot++, action(it, "year-" + yp));
+            set(inv, yearSlot++, action(it, "year-" + yp));
         }
 
-        ItemStack toggle = item(enabled ? Material.REDSTONE_BLOCK : Material.EMERALD_BLOCK,
+        ItemStack toggle = item(enabled ? pickMat("REDSTONE_BLOCK") : pickMat("EMERALD_BLOCK"),
                 enabled ? GuiI18n.s("disable-seasons") : GuiI18n.s("enable-seasons"),
-                List.of());
+                lst());
         if (enabled) glow(toggle);
-        inv.setItem(25, action(toggle, enabled ? "seasons-disable" : "seasons-enable"));
+        set(inv, 25, action(toggle, enabled ? "seasons-disable" : "seasons-enable"));
 
-        inv.setItem(34, action(item(Material.PAPER, GuiI18n.s("force-apply"), List.of()), "seasons-apply"));
+        set(inv, 34, action(item(Material.PAPER, GuiI18n.s("force-apply"), lst()), "seasons-apply"));
 
-        inv.setItem(0, resetButton());
+        set(inv, 0, resetButton());
         navRow(inv, 2);
         return inv;
     }
@@ -375,21 +470,21 @@ public class TmGui implements Listener {
         int base = inv.getSize() - 9;
         String[] tabKeys = {"page-server", "page-world", "page-seasons"};
         for (int i = 0; i < 3; i++) {
-            Material m = (i == currentPage) ? Material.LIME_STAINED_GLASS_PANE : Material.GRAY_STAINED_GLASS_PANE;
-            ItemStack pane = item(m, "&7" + GuiI18n.s(tabKeys[i]), List.of());
+            Material m = (i == currentPage) ? pickMat("LIME_STAINED_GLASS_PANE", "STAINED_GLASS_PANE") : pickMat("GRAY_STAINED_GLASS_PANE", "STAINED_GLASS_PANE");
+            ItemStack pane = item(m, "&7" + GuiI18n.s(tabKeys[i]), lst());
             if (i == currentPage) glow(pane);
-            inv.setItem(base + 3 + i, action(pane, "nav-tab-" + i));
+            set(inv, base + 3 + i, action(pane, "nav-tab-" + i));
         }
         if (currentPage > 0) {
-            inv.setItem(base, action(item(Material.ARROW, GuiI18n.s("nav-prev"), List.of()), "nav-prev"));
+            set(inv, base, action(item(pickMat("ARROW"), GuiI18n.s("nav-prev"), lst()), "nav-prev"));
         }
         if (currentPage < 2) {
-            inv.setItem(base + 8, action(item(Material.ARROW, GuiI18n.s("nav-next"), List.of()), "nav-next"));
+            set(inv, base + 8, action(item(pickMat("ARROW"), GuiI18n.s("nav-next"), lst()), "nav-next"));
         }
     }
 
     private static ItemStack resetButton() {
-        ItemStack it = item(Material.BARRIER, GuiI18n.s("reset-button"), GuiI18n.l("reset-lore"));
+        ItemStack it = item(pickMat("BARRIER"), GuiI18n.s("reset-button"), GuiI18n.l("reset-lore"));
         return action(it, "reset-vanilla");
     }
 
@@ -400,7 +495,7 @@ public class TmGui implements Listener {
         ItemMeta meta = it.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
-            List<String> out = new ArrayList<>(lore.size());
+            List<String> out = new ArrayList<String>(lore.size());
             for (String l : lore) {
                 if (l == null || l.isEmpty()) { out.add(""); continue; }
                 out.add(ChatColor.translateAlternateColorCodes('&', l));
@@ -411,13 +506,12 @@ public class TmGui implements Listener {
         return it;
     }
 
+    /** Stash the action-id for the immediately following set() call. The
+     *  ItemStack is returned untouched so call sites can stay shaped as
+     *  set(inv, slot, action(item, "id")). */
     private static ItemStack action(ItemStack it, String actionId) {
         if (it == null) return null;
-        ItemMeta meta = it.getItemMeta();
-        if (meta != null) {
-            meta.getPersistentDataContainer().set(ACTION_KEY, PersistentDataType.STRING, actionId);
-            it.setItemMeta(meta);
-        }
+        PENDING_ACTION.set(actionId);
         return it;
     }
 
@@ -432,17 +526,27 @@ public class TmGui implements Listener {
         } catch (Throwable ignored) {}
     }
 
-    private static String actionOf(ItemStack it) {
-        if (it == null) return null;
-        ItemMeta meta = it.getItemMeta();
-        if (meta == null) return null;
-        return meta.getPersistentDataContainer().get(ACTION_KEY, PersistentDataType.STRING);
+    /** Returns the action-id recorded against the given slot for this player,
+     *  or null if the slot has no registered button. */
+    private static String actionAt(Player p, int slot) {
+        if (p == null) return null;
+        Map<Integer, String> m = SLOT_ACTIONS.get(p.getUniqueId());
+        return m == null ? null : m.get(slot);
     }
 
     private static void glow(ItemStack it) {
         ItemMeta meta = it.getItemMeta();
         if (meta == null) return;
-        try { meta.addEnchant(Enchantment.UNBREAKING, 1, true); } catch (Throwable t) {}
+        Enchantment ench = null;
+        // UNBREAKING is the 1.13+ name, DURABILITY the legacy one. getByName
+        // resolves whichever the runtime server provides; both render glint.
+        try { ench = Enchantment.getByName("UNBREAKING"); } catch (Throwable ignored) {}
+        if (ench == null) {
+            try { ench = Enchantment.getByName("DURABILITY"); } catch (Throwable ignored) {}
+        }
+        if (ench != null) {
+            try { meta.addEnchant(ench, 1, true); } catch (Throwable ignored) {}
+        }
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         it.setItemMeta(meta);
     }
@@ -452,46 +556,48 @@ public class TmGui implements Listener {
     }
 
     private static String speedLabel(double s) {
-        String key = switch ((int) Math.round(s * 10)) {
-            case 5  -> "speed-label-half";
-            case 10 -> "speed-label-vanilla";
-            case 20 -> "speed-label-double";
-            case 40 -> "speed-label-quad";
-            case 80 -> "speed-label-octuple";
-            default -> "speed-label-custom";
-        };
+        String key;
+        switch ((int) Math.round(s * 10)) {
+            case 5:  key = "speed-label-half";     break;
+            case 10: key = "speed-label-vanilla";  break;
+            case 20: key = "speed-label-double";   break;
+            case 40: key = "speed-label-quad";     break;
+            case 80: key = "speed-label-octuple";  break;
+            default: key = "speed-label-custom";   break;
+        }
         return GuiI18n.s(key);
     }
 
     private static Material speedIcon(double s) {
-        if (s < 1.0) return Material.LIGHT_BLUE_DYE;
-        if (s == 1.0) return Material.WHITE_DYE;
-        if (s <= 2.0) return Material.YELLOW_DYE;
-        if (s <= 4.0) return Material.ORANGE_DYE;
-        return Material.RED_DYE;
+        if (s < 1.0)  return pickMat("LIGHT_BLUE_DYE", "LIGHT_BLUE_WOOL");
+        if (s == 1.0) return pickMat("WHITE_DYE", "BONE_MEAL");
+        if (s <= 2.0) return pickMat("YELLOW_DYE", "DANDELION_YELLOW", "YELLOW_WOOL");
+        if (s <= 4.0) return pickMat("ORANGE_DYE", "ORANGE_WOOL");
+        return pickMat("RED_DYE", "ROSE_RED", "INK_SACK");
     }
 
     private static Material refreshIcon(long t) {
-        if (t <= 1) return Material.GUNPOWDER;
-        if (t <= 5) return Material.SUGAR;
-        if (t <= 20) return Material.WHEAT_SEEDS;
-        return Material.STONE;
+        if (t <= 1) return pickMat("GUNPOWDER", "SULPHUR");
+        if (t <= 5) return pickMat("SUGAR");
+        if (t <= 20) return pickMat("WHEAT_SEEDS");
+        return pickMat("STONE");
     }
 
     private static Material iconFor(SeasonPreset p) {
-        return switch (p) {
-            case EQUATORIAL -> Material.JUNGLE_LEAVES;
-            case MEDITERRANEAN -> Material.BIRCH_LEAVES;
-            case TEMPERATE -> Material.OAK_LEAVES;
-            case SUBARCTIC -> Material.SPRUCE_LEAVES;
-            case ARCTIC -> Material.SNOW_BLOCK;
-            case CUSTOM -> Material.WRITABLE_BOOK;
-        };
+        switch (p) {
+            case EQUATORIAL:    return pickMat("JUNGLE_LEAVES", "LEAVES");
+            case MEDITERRANEAN: return pickMat("BIRCH_LEAVES", "LEAVES");
+            case TEMPERATE:     return pickMat("OAK_LEAVES", "LEAVES");
+            case SUBARCTIC:     return pickMat("SPRUCE_LEAVES", "LEAVES");
+            case ARCTIC:        return pickMat("SNOW_BLOCK");
+            case CUSTOM:        return pickMat("WRITABLE_BOOK", "BOOK_AND_QUILL");
+            default:            return Material.PAPER;
+        }
     }
 
     private static void resetToVanilla() {
-        var cfg = MainTM.getInstance().getConfig();
-        var wl = cfg.getConfigurationSection(MainTM.CF_WORLDSLIST);
+        org.bukkit.configuration.file.FileConfiguration cfg = MainTM.getInstance().getConfig();
+        org.bukkit.configuration.ConfigurationSection wl = cfg.getConfigurationSection(MainTM.CF_WORLDSLIST);
         if (wl != null) {
             for (String w : wl.getKeys(false)) {
                 String base = MainTM.CF_WORLDSLIST + "." + w + ".";
@@ -522,23 +628,24 @@ public class TmGui implements Listener {
        ========================================================= */
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        String title = e.getView().getTitle();
-        if (!title.startsWith(TITLE_TAG)) return;
+        Inventory top = e.getInventory();
+        if (top == null || !(top.getHolder() instanceof TmGuiHolder)) return;
         e.setCancelled(true);
-        if (!(e.getWhoClicked() instanceof Player p)) return;
+        if (!(e.getWhoClicked() instanceof Player)) return;
+        Player p = (Player) e.getWhoClicked();
         if (!p.isOp() && !p.hasPermission("timemanager.admin")) return;
 
-        String act = actionOf(e.getCurrentItem());
+        String act = actionAt(p, e.getRawSlot());
         if (act == null || "section".equals(act) || "header".equals(act)) return;
 
         // Nav
         if ("nav-prev".equals(act)) {
-            int cur = PAGE.getOrDefault(p.getUniqueId(), 0);
+            int cur = PAGE.containsKey(p.getUniqueId()) ? PAGE.get(p.getUniqueId()) : 0;
             openPage(p, Math.max(0, cur - 1));
             return;
         }
         if ("nav-next".equals(act)) {
-            int cur = PAGE.getOrDefault(p.getUniqueId(), 0);
+            int cur = PAGE.containsKey(p.getUniqueId()) ? PAGE.get(p.getUniqueId()) : 0;
             openPage(p, Math.min(2, cur + 1));
             return;
         }
@@ -552,7 +659,7 @@ public class TmGui implements Listener {
         if ("reset-vanilla".equals(act)) {
             resetToVanilla();
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', GuiI18n.s("reset-msg")));
-            int cur = PAGE.getOrDefault(p.getUniqueId(), 0);
+            int cur = PAGE.containsKey(p.getUniqueId()) ? PAGE.get(p.getUniqueId()) : 0;
             openPage(p, cur);
             return;
         }
@@ -560,100 +667,97 @@ public class TmGui implements Listener {
         String world = p.getWorld().getName();
         String base = MainTM.CF_WORLDSLIST + "." + world + ".";
 
-        switch (act) {
-            // Page 1
-            case "reload-all"        -> { p.performCommand("tm reload all"); chatConfirm(p, "chat-reloaded", "all"); openPage(p, 0); return; }
-            case "reload-config"     -> { p.performCommand("tm reload config"); chatConfirm(p, "chat-reloaded", "config"); openPage(p, 0); return; }
-            case "reload-lang"       -> { p.performCommand("tm reload lang"); chatConfirm(p, "chat-reloaded", "lang"); openPage(p, 0); return; }
-            case "reload-cmds"       -> { p.performCommand("tm reload cmds"); chatConfirm(p, "chat-reloaded", "cmds"); openPage(p, 0); return; }
-            case "check-config"      -> { p.performCommand("tm checkConfig"); return; }
-            case "check-time"        -> { p.performCommand("tm checkTime all"); return; }
-            case "check-update"      -> { p.performCommand("tm checkUpdate"); return; }
-            case "show-placeholders" -> { p.performCommand("tm placeholders"); return; }
-            case "give-nowitem"      -> { p.performCommand("tm nowitem"); return; }
-            case "broadcast-time"    -> { p.performCommand("tm now msg all"); return; }
-            case "toggle-debug" -> {
-                boolean cur = MainTM.getInstance().getConfig().getBoolean("debugMode", false);
-                p.performCommand("tm set debugMode " + (!cur));
-                chatConfirm(p, "chat-toggled", "Debug = " + (!cur));
-                openPage(p, 0); return;
+        // Page 1
+        if ("reload-all".equals(act))       { p.performCommand("tm reload all"); chatConfirm(p, "chat-reloaded", "all"); openPage(p, 0); return; }
+        if ("reload-config".equals(act))    { p.performCommand("tm reload config"); chatConfirm(p, "chat-reloaded", "config"); openPage(p, 0); return; }
+        if ("reload-lang".equals(act))      { p.performCommand("tm reload lang"); chatConfirm(p, "chat-reloaded", "lang"); openPage(p, 0); return; }
+        if ("reload-cmds".equals(act))      { p.performCommand("tm reload cmds"); chatConfirm(p, "chat-reloaded", "cmds"); openPage(p, 0); return; }
+        if ("check-config".equals(act))     { p.performCommand("tm checkConfig"); return; }
+        if ("check-time".equals(act))       { p.performCommand("tm checkTime all"); return; }
+        if ("check-update".equals(act))     { p.performCommand("tm checkUpdate"); return; }
+        if ("show-placeholders".equals(act)){ p.performCommand("tm placeholders"); return; }
+        if ("give-nowitem".equals(act))     { p.performCommand("tm nowitem"); return; }
+        if ("broadcast-time".equals(act))   { p.performCommand("tm now msg all"); return; }
+        if ("toggle-debug".equals(act)) {
+            boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString("debugMode", "false"));
+            p.performCommand("tm set debugMode " + (!cur));
+            chatConfirm(p, "chat-toggled", "Debug = " + (!cur));
+            openPage(p, 0); return;
+        }
+        if ("toggle-multilang".equals(act)) {
+            boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().langConf.getString("useMultiLang", "false"));
+            p.performCommand("tm set multiLang " + (!cur));
+            chatConfirm(p, "chat-toggled", "Multi-language = " + (!cur));
+            openPage(p, 0); return;
+        }
+        if ("toggle-usecmds".equals(act)) {
+            boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().cmdsConf.getString("useCmds", "false"));
+            p.performCommand("tm set useCmds " + (!cur));
+            chatConfirm(p, "chat-toggled", "Scheduled cmds = " + (!cur));
+            openPage(p, 0); return;
+        }
+        // Page 2
+        if ("toggle-sync".equals(act)) {
+            boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString(base + MainTM.CF_SYNC, "true"));
+            p.performCommand("tm set sync " + (!cur) + " " + world);
+            chatConfirm(p, "chat-toggled", "Sync = " + (!cur));
+            openPage(p, 1); return;
+        }
+        if ("toggle-sleep".equals(act)) {
+            boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString(base + MainTM.CF_SLEEP, "true"));
+            p.performCommand("tm set sleep " + (!cur) + " " + world);
+            chatConfirm(p, "chat-toggled", "Sleep = " + (!cur));
+            openPage(p, 1); return;
+        }
+        if ("toggle-anim".equals(act)) {
+            p.performCommand("tm animation " + world + " toggle");
+            chatConfirm(p, "chat-toggled", "Sleep animation");
+            openPage(p, 1); return;
+        }
+        if ("toggle-lock".equals(act)) {
+            String locked = MainTM.getInstance().getConfig().getString(base + MainTM.CF_LOCKTIME, "");
+            if (locked == null || locked.isEmpty()) {
+                p.performCommand("tm lock " + world);
+                chatConfirm(p, "chat-applied", "Locked " + world);
+            } else {
+                p.performCommand("tm unlock " + world);
+                chatConfirm(p, "chat-applied", "Unlocked " + world);
             }
-            case "toggle-multilang" -> {
-                boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString("multiLang", "false"));
-                p.performCommand("tm set multiLang " + (!cur));
-                chatConfirm(p, "chat-toggled", "Multi-language = " + (!cur));
-                openPage(p, 0); return;
-            }
-            case "toggle-usecmds" -> {
-                boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString("useCmds", "false"));
-                p.performCommand("tm set useCmds " + (!cur));
-                chatConfirm(p, "chat-toggled", "Scheduled cmds = " + (!cur));
-                openPage(p, 0); return;
-            }
-            // Page 2
-            case "toggle-sync" -> {
-                boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString(base + MainTM.CF_SYNC, "true"));
-                p.performCommand("tm set sync " + (!cur) + " " + world);
-                chatConfirm(p, "chat-toggled", "Sync = " + (!cur));
-                openPage(p, 1); return;
-            }
-            case "toggle-sleep" -> {
-                boolean cur = "true".equalsIgnoreCase(MainTM.getInstance().getConfig().getString(base + MainTM.CF_SLEEP, "true"));
-                p.performCommand("tm set sleep " + (!cur) + " " + world);
-                chatConfirm(p, "chat-toggled", "Sleep = " + (!cur));
-                openPage(p, 1); return;
-            }
-            case "toggle-anim" -> {
-                p.performCommand("tm animation " + world + " toggle");
-                chatConfirm(p, "chat-toggled", "Sleep animation");
-                openPage(p, 1); return;
-            }
-            case "toggle-lock" -> {
-                String locked = MainTM.getInstance().getConfig().getString(base + MainTM.CF_LOCKTIME, "");
-                if (locked == null || locked.isEmpty()) {
-                    p.performCommand("tm lock " + world);
-                    chatConfirm(p, "chat-applied", "Locked " + world);
-                } else {
-                    p.performCommand("tm unlock " + world);
-                    chatConfirm(p, "chat-applied", "Unlocked " + world);
-                }
-                openPage(p, 1); return;
-            }
-            case "set-date-today"  -> { p.performCommand("tm set date today " + world); chatConfirm(p, "chat-applied", "Date → today"); openPage(p, 1); return; }
-            case "reset-elapsed"   -> { p.performCommand("tm set elapsedDays 0 " + world); chatConfirm(p, "chat-applied", "Elapsed days = 0"); openPage(p, 1); return; }
-            case "resync-world"    -> { p.performCommand("tm resync " + world); chatConfirm(p, "chat-applied", "Resynced " + world); openPage(p, 1); return; }
-            case "check-this-world"-> { p.performCommand("tm checkTime " + world); return; }
-            case "now-button"      -> { p.performCommand("now"); return; }
-            // Page 3
-            case "seasons-enable" -> {
-                MainTM.getInstance().getConfig().set("seasons.enabled", true);
-                MainTM.getInstance().saveConfig();
-                if (MainTM.getInstance().seasonScheduler != null) MainTM.getInstance().seasonScheduler.restart();
-                chatConfirm(p, "chat-toggled", "Seasons = ON");
-                openPage(p, 2); return;
-            }
-            case "seasons-disable" -> {
-                MainTM.getInstance().getConfig().set("seasons.enabled", false);
-                MainTM.getInstance().saveConfig();
-                if (MainTM.getInstance().seasonScheduler != null) MainTM.getInstance().seasonScheduler.stop();
-                chatConfirm(p, "chat-toggled", "Seasons = OFF");
-                openPage(p, 2); return;
-            }
-            case "seasons-apply" -> {
-                if (MainTM.getInstance().seasonService != null) MainTM.getInstance().seasonService.applyToAll();
-                chatConfirm(p, "chat-applied", "Seasons re-applied");
-                return;
-            }
-            case "toggle-hemisphere" -> {
-                String cur = MainTM.getInstance().getConfig().getString("seasons.hemisphere", "north");
-                String next = "south".equalsIgnoreCase(cur) ? "north" : "south";
-                MainTM.getInstance().getConfig().set("seasons.hemisphere", next);
-                MainTM.getInstance().saveConfig();
-                if (MainTM.getInstance().seasonService != null) MainTM.getInstance().seasonService.applyToAll();
-                chatConfirm(p, "chat-applied", "Hemisphere = " + next);
-                openPage(p, 2); return;
-            }
-            default -> {}
+            openPage(p, 1); return;
+        }
+        if ("set-date-today".equals(act))   { p.performCommand("tm set date today " + world); chatConfirm(p, "chat-applied", "Date → today"); openPage(p, 1); return; }
+        if ("reset-elapsed".equals(act))    { p.performCommand("tm set elapsedDays 0 " + world); chatConfirm(p, "chat-applied", "Elapsed days = 0"); openPage(p, 1); return; }
+        if ("resync-world".equals(act))     { p.performCommand("tm resync " + world); chatConfirm(p, "chat-applied", "Resynced " + world); openPage(p, 1); return; }
+        if ("check-this-world".equals(act)) { p.performCommand("tm checkTime " + world); return; }
+        if ("now-button".equals(act))       { p.performCommand("now"); return; }
+        // Page 3
+        if ("seasons-enable".equals(act)) {
+            MainTM.getInstance().getConfig().set("seasons.enabled", true);
+            MainTM.getInstance().saveConfig();
+            if (MainTM.getInstance().seasonScheduler != null) MainTM.getInstance().seasonScheduler.restart();
+            chatConfirm(p, "chat-toggled", "Seasons = ON");
+            openPage(p, 2); return;
+        }
+        if ("seasons-disable".equals(act)) {
+            MainTM.getInstance().getConfig().set("seasons.enabled", false);
+            MainTM.getInstance().saveConfig();
+            if (MainTM.getInstance().seasonScheduler != null) MainTM.getInstance().seasonScheduler.stop();
+            chatConfirm(p, "chat-toggled", "Seasons = OFF");
+            openPage(p, 2); return;
+        }
+        if ("seasons-apply".equals(act)) {
+            if (MainTM.getInstance().seasonService != null) MainTM.getInstance().seasonService.applyToAll();
+            chatConfirm(p, "chat-applied", "Seasons re-applied");
+            return;
+        }
+        if ("toggle-hemisphere".equals(act)) {
+            String cur = MainTM.getInstance().getConfig().getString("seasons.hemisphere", "north");
+            String next = "south".equalsIgnoreCase(cur) ? "north" : "south";
+            MainTM.getInstance().getConfig().set("seasons.hemisphere", next);
+            MainTM.getInstance().saveConfig();
+            if (MainTM.getInstance().seasonService != null) MainTM.getInstance().seasonService.applyToAll();
+            chatConfirm(p, "chat-applied", "Hemisphere = " + next);
+            openPage(p, 2); return;
         }
 
         // Parameterised actions
@@ -709,9 +813,14 @@ public class TmGui implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent e) {
-        String title = e.getView().getTitle();
-        if (!title.startsWith(TITLE_TAG)) return;
-        PAGE.remove(e.getPlayer().getUniqueId());
+        Inventory top = e.getInventory();
+        if (top == null || !(top.getHolder() instanceof TmGuiHolder)) return;
+        // Mid-navigation close: another TM page is opening in the same call.
+        // Wiping state here would clear the slot map of the page we just
+        // built and the click handler would treat every button as null.
+        if (Boolean.TRUE.equals(NAVIGATING.get())) return;
+        UUID id = e.getPlayer().getUniqueId();
+        PAGE.remove(id);
+        SLOT_ACTIONS.remove(id);
     }
-    
-};
+}

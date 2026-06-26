@@ -11,7 +11,6 @@ import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.event.world.WorldUnloadEvent;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
 
 public class WorldListHandler implements Listener {
 

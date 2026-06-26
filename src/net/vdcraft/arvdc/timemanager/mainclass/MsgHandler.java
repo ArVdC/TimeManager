@@ -94,10 +94,19 @@ public class MsgHandler extends MainTM {
 	}
 
 	/**
-	 * Player title msg (with custom values)
+	 * Player title msg (with custom values).
+	 * The 5-arg sendTitle overload was added in MC 1.11. Pre-1.11 the only
+	 * Bukkit-side title API was the 2-arg sendTitle(String, String), which
+	 * uses vanilla's hard-coded fade timings. Branch on serverMcVersion so
+	 * the bedless-wakeup-title path doesn't NoSuchMethodError on 1.9-1.10.
 	 */
-	public static void playerTitleMsg(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {		
-		p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+	@SuppressWarnings("deprecation")
+	public static void playerTitleMsg(Player p, String title, String subtitle, int fadeIn, int stay, int fadeOut) {
+		if (MainTM.serverMcVersion >= 11.0) {
+			p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+		} else {
+			p.sendTitle(title, subtitle);
+		}
 	}
 	
 	/**

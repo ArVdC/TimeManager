@@ -41,11 +41,11 @@ public class TmPlaceholders extends MainTM {
 		{ PH_YY,         "Year, 2-digit" },
 		{ PH_YYYY,       "Year, 4-digit" },
 		{ PH_SERVERDAY,  "Server-wide elapsed days (persists across restarts)" },
-		{ PH_SEASON,           "Current season (WINTER / SPRING / SUMMER / FALL or 'off')" },
-		{ PH_SEASON_PRESET,    "Active season preset (TEMPERATE / ARCTIC / CUSTOM / ...)" },
-		{ PH_SEASON_DAYOFYEAR, "Day of season-year (0..year-length-1)" },
-		{ PH_SEASON_DAYLIGHT,  "Daylight share for this MC day, e.g. '47%'" },
-		{ PH_SEASON_HEMISPHERE,"Hemisphere — north or south" },
+		{ PH_SEASON,             "Current season for the player's world (or 'off')" },
+		{ PH_SEASON_PRESET,      "Active seasons preset (Equatorial, Mediterranean, ...)" },
+		{ PH_SEASON_DAYOFYEAR,   "Day index within the configured year length" },
+		{ PH_SEASON_DAYLIGHT,    "Current daylight percentage (e.g. 47%)" },
+		{ PH_SEASON_HEMISPHERE,  "Configured hemisphere (north / south)" },
 	};
 
 	public static void cmdPlaceholders(CommandSender sender) {

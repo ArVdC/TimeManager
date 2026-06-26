@@ -17,8 +17,6 @@ import org.bukkit.command.CommandSender;
 
 import net.md_5.bungee.api.ChatColor;
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.CfgFileHandler;
-import net.vdcraft.arvdc.timemanager.ymlfilesmanagement.LgFileHandler;
 
 public class ValuesConverter extends MainTM {
 	
@@ -525,8 +523,10 @@ public class ValuesConverter extends MainTM {
 			if (day > maxLength) day = maxLength;
 			LocalDateTime currentLdt = LocalDateTime.of(year, month, day, 0, 0, 0);
 			LocalDateTime zeroLdt = LocalDateTime.of(0001, 01, 01, 0, 0, 0);
-			Duration d = Duration.between(zeroLdt, currentLdt);
-			Long elapsedDays = TimeUnit.DAYS.convert(d);
+			// TimeUnit.convert(Duration) is a Java 11+ overload. Use the
+			// Duration-direct getter that exists since Java 8 — total seconds
+			// divided by seconds-per-day gives whole-day difference.
+			long elapsedDays = Duration.between(zeroLdt, currentLdt).getSeconds() / 86400L;
 			Long fulltime = elapsedDays * 24000; // (= 20m * 60s * 20t)
 			return fulltime;
 		} catch (NumberFormatException nfe) {
@@ -545,9 +545,10 @@ public class ValuesConverter extends MainTM {
 		int day = Calendar.getInstance().get(Calendar.DATE);
 		LocalDate currentLdt = LocalDate.of(year, month, day);
 		LocalDate zeroLdt = LocalDate.of(1, 1, 1);
-		Duration d = Duration.between(zeroLdt, currentLdt);
-		Long elapsedDays = TimeUnit.DAYS.convert(d);
-		return elapsedDays;
+		// ChronoUnit.DAYS.between is the date-aware diff; Duration.between
+		// requires temporal types that carry seconds (LocalDateTime/Instant)
+		// and throws UnsupportedTemporalTypeException on plain LocalDate.
+		return java.time.temporal.ChronoUnit.DAYS.between(zeroLdt, currentLdt);
 	}
 	
 	/**
@@ -788,6 +789,10 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String replaceChars(String version) {
 		MsgHandler.devMsg("Plugin version to convert : " + version);
+		if (version == null || version.isEmpty()) {
+			MsgHandler.errorMsg(versionTMFormatMsg);
+			return null;
+		}
 		version = version.replace("dev", "d")
 				.replace("alpha", "a")
 				.replace("beta", "b")
@@ -799,7 +804,28 @@ public class ValuesConverter extends MainTM {
 				.replace("-", ".")
 				.replace("...", ".")
 				.replace("..", ".");
+		// Drop trailing build/qualifier tokens (e.g. "1.12.3.legacy",
+		// "1.12.2.snapshot.1"). The version comparator only looks at
+		// MAJOR.MINOR.PATCH.RELEASE.DEV — anything past the last numeric
+		// segment is noise and would crash Integer.parseInt below.
+		String[] parts = version.split("[.]");
+		StringBuilder cleaned = new StringBuilder();
+		for (String part : parts) {
+			if (part.isEmpty()) continue;
+			try {
+				Integer.parseInt(part);
+			} catch (NumberFormatException nfe) {
+				break;
+			}
+			if (cleaned.length() > 0) cleaned.append('.');
+			cleaned.append(part);
+		}
+		version = cleaned.toString();
 		MsgHandler.devMsg("Plugin version converted : " + version);
+		if (version.isEmpty()) {
+			MsgHandler.errorMsg(versionTMFormatMsg);
+			return null;
+		}
 		try {
 			String versionIntTest = version.replace(".", "");
 			Integer.parseInt(versionIntTest); // Prevent all other parse errors

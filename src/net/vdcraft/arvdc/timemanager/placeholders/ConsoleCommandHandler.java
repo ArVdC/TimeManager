@@ -12,7 +12,7 @@ import org.bukkit.event.server.ServerCommandEvent;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
 
-public class ConsoleCommandPlaceholders implements Listener {
+public class ConsoleCommandHandler implements Listener {
 
 	/**
 	 * When a server command is executed, check for {tm_placeholders} and replace them
@@ -51,7 +51,7 @@ public class ConsoleCommandPlaceholders implements Listener {
 					String lang = MainTM.getInstance().langConf.getString(MainTM.LG_DEFAULTLANG);
 
 					// #04. Replace placeholders in the message
-					String newCmd = PlaceholdersHandler.replaceAllPlaceholders(cmd, world, lang, null, false);
+					String newCmd = PlaceholdersHandler.replaceAllPlaceholders(cmd, world, lang, null);
 					
 					// #05. Send the modified message
 					e.setCommand(newCmd);

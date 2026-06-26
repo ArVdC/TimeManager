@@ -1,6 +1,12 @@
 name: TimeManager
-version: 2.0.1-b
-api-version: '26.1'
+version: 2.1.0
+# api-version '1.13' is the lowest field value modern Paper accepts; pre-1.13
+# servers don't know the field and silently ignore it, so the jar still loads
+# back to 1.9.4. Setting it to 1.13 also tells 1.13+ Paper "skip the legacy
+# Material rewriter" — important because TM references Material.CLOCK (added
+# in 1.13) which the rewriter otherwise can't map back to the pre-flattening
+# Material.WATCH.
+api-version: '1.13'
 authors: [ArVdC]
 main: net.vdcraft.arvdc.timemanager.MainTM
 website: vdcraft.net
@@ -50,17 +56,10 @@ commands:
             /<command> checkSql
             /<command> checkTime [all|server|world]
             /<command> checkUpdate [bukkit|curse|spigot|github]
-            /<command> gui
-            /<command> hud [on|off|toggle]
             /<command> help [cmd] [<subCmd>]
-            /<command> lock <world> [time|here|realtime]
-            /<command> unlock <world>
-            /<command> now [msg|title|actionbar] [all|player|world]
-            /<command> nowitem [player]
-            /<command> placeholders
+            /<command> now [msg|title|actionbar] [all|player|world] 
             /<command> reload [all|config|lang|cmds]
             /<command> resync [all|world]
-            /<command> season [status|enable|disable|preset <NAME>|year <days>|apply|list]
             /<command> set date [today|yyyy-mm-dd] [all|world]
             /<command> set debugMode [true|false]
             /<command> set defLang [lg_LG]
@@ -84,6 +83,13 @@ commands:
             /<command> set time [ticks|daypart|HH:mm:ss] [all|world]
             /<command> set update [none|bukkit|curse|spigot|github]
             /<command> set useCmds [true|false]
+            /<command> lock <world> [time|here|realtime]
+            /<command> unlock <world>
+            /<command> placeholders
+            /<command> hud [on|off|toggle]
+            /<command> nowitem [player]
+            /<command> season [status|enable|disable|preset <NAME>|year <days>|apply|list]
+            /<command> gui
     aliases:
       - tmanag
       - timemanag
@@ -93,7 +99,7 @@ commands:
   now:
     permission: timemanager.now.cmd
     usage: /<command> [<msg|title|actionbar>] [<world>]
-    description: Display a world actual time (in mc hours or in ticks) and/or date in the chat, title or actionbar.
+    description: Display a world actual time (in mc hours or in ticks) and/or date in the chat.
     aliases:
       - time
       - hour

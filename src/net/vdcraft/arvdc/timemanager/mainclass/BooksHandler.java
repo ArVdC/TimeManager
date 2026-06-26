@@ -1,4 +1,4 @@
-package net.vdcraft.arvdc.timemanager.placeholders;
+package net.vdcraft.arvdc.timemanager.mainclass;
 
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -8,8 +8,9 @@ import org.bukkit.event.player.PlayerEditBookEvent;
 import org.bukkit.inventory.meta.BookMeta;
 
 import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
+import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
 
-public class BooksPlaceholders implements Listener {
+public class BooksHandler implements Listener {
 
 	/**
 	 * When a player achieves a book, check for {tm_placeholders}
@@ -28,7 +29,7 @@ public class BooksPlaceholders implements Listener {
 			int pagesNb = book.getPageCount();			
 			while (pagesNb > 0) {				
 				String pg = book.getPage(pagesNb);				
-				pg = PlaceholdersHandler.replaceAllPlaceholders(pg, world, lang, p, false);				
+				pg = PlaceholdersHandler.replaceAllPlaceholders(pg, world, lang, p);				
 				book.setPage(pagesNb, pg);				
 				pagesNb--;
 			}			
@@ -37,7 +38,7 @@ public class BooksPlaceholders implements Listener {
 		// Replace text in title
 		if (book.hasTitle()) {
 			String t = book.getTitle();
-			t = PlaceholdersHandler.replaceAllPlaceholders(t, world, lang, p, false);	
+			t = PlaceholdersHandler.replaceAllPlaceholders(t, world, lang, p);	
 			book.setTitle(t);
 		}
 		
