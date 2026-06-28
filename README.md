@@ -267,7 +267,7 @@ Stores the refreshing `[tm]` signs the plugin manages. Each entry holds the worl
 |-------------------|--------------|----------|-------------|----------------|-----------------|
 | 1.9.4 to 26.x     | Yes          | Yes      | Yes         | Yes            | Yes             |
 | 1.8.x             | Yes          | Yes      | Yes         | Yes            | No (gated to 1.9+) |
-| 1.7.10            | Yes          | Yes      | No          | Untested       | No              |
+| 1.7.10            | Yes          | Yes      | Yes          | Untested       | No              |
 | 1.6.4 and older   | No           | -        | -           | -              | -               |
 
 **Officially supported:** 1.8.8 through 26.x with all features.
