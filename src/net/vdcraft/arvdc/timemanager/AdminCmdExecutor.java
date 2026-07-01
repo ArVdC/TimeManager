@@ -14,7 +14,6 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHelp;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmAnimation;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmHud;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmLock;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmNowItem;
@@ -37,9 +36,10 @@ import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetPlayerOffset;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetPlayerTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetRefreshRate;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetFullTime;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleep;
+import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleepAnimation;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSpeed;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetStart;
-import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSleep;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetSync;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetTime;
 import net.vdcraft.arvdc.timemanager.cmdadmin.TmSetUpdateMsgSrc;
@@ -161,13 +161,6 @@ public class AdminCmdExecutor implements CommandExecutor {
 			else if (args[0].equalsIgnoreCase(MainTM.CMD_NOWITEM)) {
 				String target = (nbArgs >= 2) ? args[1] : null;
 				TmNowItem.cmdNowItem(sender, target);
-				return true;
-			}
-			// Toggle sleep animation (nightSkipMode) for a world
-			else if (args[0].equalsIgnoreCase(MainTM.CMD_ANIMATION)) {
-				String w = (nbArgs >= 2) ? args[1] : defaultWorld;
-				String onOff = (nbArgs >= 3) ? args[2] : null;
-				TmAnimation.cmdAnimation(sender, w, onOff);
 				return true;
 			}
 			// Seasons engine status / control
@@ -467,6 +460,18 @@ public class AdminCmdExecutor implements CommandExecutor {
 					} else {
 						String sleepOrNo = args[2];
 						TmSetSleep.cmdSetSleep(sender, sleepOrNo, concatWorldName);
+						return true;
+					}
+				}
+				// Toggle the sleeping animation (nightSkipMode) on/off for a world TODO
+				else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEPANIMATION)) {
+					if (((nbArgs < 4) && (sender instanceof ConsoleCommandSender)) || ((nbArgs < 3) && ((sender instanceof Player) || (sender instanceof BlockCommandSender)))) {
+						MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_SLEEPANIMATION); // Send error and help msg
+						return true;
+					} else {
+						String onOff = (nbArgs >= 2) ? args[2] : null;
+						String w = (nbArgs >= 3) ? args[3] : defaultWorld;
+						TmSetSleepAnimation.cmdSetSleepAnimation(sender, onOff, w);
 						return true;
 					}
 				}

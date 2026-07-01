@@ -27,8 +27,8 @@ public class CreateSentenceCommand implements TabCompleter {
 
 	// List of admin sub-commands
 	List<String> tmCmdArgsList() {
-		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
-		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM, MainTM.CMD_ANIMATION);
+		if (MainTM.serverMcVersion >= MainTM.reqMcVForUpdate) return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_CHECKUPDATE, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM);
+		else return Arrays.asList(MainTM.CMD_CHECKCONFIG, MainTM.CMD_CHECKSQL, MainTM.CMD_CHECKTIME, MainTM.CMD_HELP, MainTM.CMD_TMNOW, MainTM.CMD_RELOAD, MainTM.CMD_RESYNC, MainTM.CMD_SET, MainTM.CMD_LOCK, MainTM.CMD_UNLOCK, MainTM.CMD_PLACEHOLDERS, MainTM.CMD_HUD, MainTM.CMD_NOWITEM);
 	}
 	// List of admin sub-commands having a 'help'
 	List<String> tmHelpArgsList() {
@@ -63,7 +63,7 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmReloadArgsList = Arrays.asList(MainTM.ARG_ALL, MainTM.ARG_CONFIG, MainTM.ARG_LANG, MainTM.ARG_CMDS);
 	// Arguments list for '/tm set'
 	List<String> tmSetArgsList() {
-		List<String> SetArgs = Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_DURATION, MainTM.CMD_SET_D_DURATION, MainTM.CMD_SET_N_DURATION, MainTM.CMD_SET_E_DAYS,  MainTM.CMD_SET_FIRSTSTARTTIME, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_PLAYEROFFSET, MainTM.CMD_SET_PLAYERTIME, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
+		List<String> SetArgs = Arrays.asList(MainTM.CMD_SET_DATE, MainTM.CMD_SET_DEBUG, MainTM.CMD_SET_DEFLANG, MainTM.CMD_SET_DURATION, MainTM.CMD_SET_D_DURATION, MainTM.CMD_SET_N_DURATION, MainTM.CMD_SET_E_DAYS,  MainTM.CMD_SET_FIRSTSTARTTIME, MainTM.CMD_SET_INITIALTICK, MainTM.CMD_SET_MULTILANG, MainTM.CMD_SET_REFRESHRATE, MainTM.CMD_SET_PLAYEROFFSET, MainTM.CMD_SET_PLAYERTIME, MainTM.CMD_SET_SLEEP, MainTM.CMD_SET_SLEEPANIMATION, MainTM.CMD_SET_SPEED, MainTM.CMD_SET_D_SPEED, MainTM.CMD_SET_N_SPEED, MainTM.CMD_SET_START, MainTM.CMD_SET_SYNC, MainTM.CMD_SET_TIME, MainTM.CMD_SET_UPDATE, MainTM.CMD_SET_USECMDS);
 		if (MainTM.serverMcVersion < MainTM.reqMcVForUpdate) SetArgs.remove(MainTM.CMD_SET_UPDATE);
 		return SetArgs;
 	}
@@ -92,6 +92,8 @@ public class CreateSentenceCommand implements TabCompleter {
 	List<String> tmSetDaysArgsList = Arrays.asList("0", "031", "059", "090", "120", "151", "181", "212", "243", "273", "304", "334", "365");
 	// Arguments list for '/tm set sleep
 	List<String> tmSetSleepArgsList = Arrays.asList(MainTM.ARG_TRUE, MainTM.ARG_FALSE, MainTM.ARG_LINKED);
+	// Arguments list for '/tm set sleepAnimation'
+	List<String> tmSetSleepAnimationArgsList = Arrays.asList(MainTM.ARG_ON, MainTM.ARG_ANIMATION, MainTM.ARG_OFF, MainTM.ARG_DEFAULT, MainTM.ARG_TOGGLE, MainTM.ARG_INSTANT);
 	// Modifier arguments for '/tm set duration'
 	List<String> tmDurationArgsList = Arrays.asList("01m", "10m", "20m", "40m", "01h", "03h-30m", "02d", "07d");
 	// Modifier arguments for '/tm set speed'
@@ -263,6 +265,12 @@ public class CreateSentenceCommand implements TabCompleter {
 							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))								
 								outputArgsList.add(verif);
 						}
+					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEPANIMATION)) // Command '/tm set sleepAnimation <...>'
+					{
+						for (String verif : tmSetSleepAnimationArgsList) {
+							if (verif.toLowerCase().startsWith(args[2].toLowerCase()))
+								outputArgsList.add(verif);
+						}
 					} else if (args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED) || args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)) // Commands '/tm set speed <...>' '/tm set speedDay <...>' '/tm set speedNight <...>'
 					{
 						for (String verif : tmSpeedArgsList) {
@@ -335,10 +343,11 @@ public class CreateSentenceCommand implements TabCompleter {
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_N_DURATION)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_E_DAYS)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_FIRSTSTARTTIME)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP)
+						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEPANIMATION)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_D_SPEED)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_N_SPEED)
-						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SLEEP) 
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_START)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_SYNC)
 						|| args[1].equalsIgnoreCase(MainTM.CMD_SET_TIME))

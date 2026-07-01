@@ -9,7 +9,6 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -24,7 +23,6 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import net.vdcraft.arvdc.timemanager.MainTM;
-import net.vdcraft.arvdc.timemanager.cmdplayer.PlayerLangHandler;
 import net.vdcraft.arvdc.timemanager.placeholders.PlaceholdersHandler;
 
 /**
@@ -220,7 +218,7 @@ public class RefreshingSignHandler implements Listener {
 			String token = line.substring(open, close + 1);
 			String resolved;
 			try {
-				resolved = PlaceholdersHandler.replacePlaceholder(token, world, lang, null);
+				resolved = PlaceholdersHandler.replacePlaceholder(token, world, lang, null, false);
 			} catch (Throwable t) {
 				resolved = token;
 			}

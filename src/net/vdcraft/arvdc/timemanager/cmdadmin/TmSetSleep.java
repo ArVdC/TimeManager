@@ -21,6 +21,7 @@ public class TmSetSleep extends MainTM {
 			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
 				cmdSetSleep(sender, sleepValue, listedWorld);
 			}
+			return;
 		}
 		// Else, if the string argument is a listed world, modify a single world
 		else if (MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false).contains(world)) {

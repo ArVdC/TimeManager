@@ -80,8 +80,8 @@ public class TmHelp extends MainTM {
 			+ " [on|off|toggle] " + ChatColor.GRAY + "Toggle the per-player ActionBar HUD. Requires hud.actionbar.enabled: true in config for the broadcaster to run globally.";
 	private static String nowItemHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_NOWITEM
 			+ " [player] " + ChatColor.GRAY + "Gives a custom CLOCK 'Pocket Watch' item that runs the /now action on right-click.";
-	private static String animationHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_ANIMATION
-			+ " <world> [on|off|toggle] " + ChatColor.GRAY + "Shortcut for nightSkipMode = animation/default on a world. Controls the sleep particle show.";
+	private static String setSleepAnimationHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET_SLEEPANIMATION
+			+ " [on|off|toggle|instant] [all|world] " + ChatColor.GRAY + "Shortcut for nightSkipMode = animation/default on a world. Controls the sleep particle show.";
 	// Except this line, used when 'set' is used without additional argument
 	private static String missingSetArgHelpMsg = ChatColor.GOLD + "/" + CMD_TM + " " + CMD_SET + " ["
 			+ CMD_SET_DATE + "|"
@@ -98,6 +98,7 @@ public class TmHelp extends MainTM {
 			+ CMD_SET_PLAYERTIME + "|"
 			+ CMD_SET_REFRESHRATE + "|"
 			+ CMD_SET_SLEEP + "|"
+			+ CMD_SET_SLEEPANIMATION + "|"
 			+ CMD_SET_SPEED + "|"
 			+ CMD_SET_D_SPEED + "|"
 			+ CMD_SET_N_SPEED + "|"
@@ -161,6 +162,9 @@ public class TmHelp extends MainTM {
 					break;
 				case CMD_SET_SLEEP : // /tm help set sleep
 					specificCmdMsg = setSleepHelpMsg; // Help msg (in case of 2 args)
+					break;
+				case CMD_SET_SLEEPANIMATION : // /tm help set sleepAnimation
+					specificCmdMsg = setSleepAnimationHelpMsg; // Help msg (in case of 2 args)
 					break;
 				case CMD_SET_SPEED : // /tm help set speed
 					specificCmdMsg = setSpeedHelpMsg; // Help msg (in case of 2 args)
@@ -232,9 +236,6 @@ public class TmHelp extends MainTM {
 			case CMD_NOWITEM :
 				specificCmdMsg = nowItemHelpMsg;
 				break;
-			case CMD_ANIMATION :
-				specificCmdMsg = animationHelpMsg;
-				break;
 			// Maybe someone could forget the 'set' part, so think of its place
 			case CMD_SET_DATE :
 			case CMD_SET_DEBUG :
@@ -249,6 +250,7 @@ public class TmHelp extends MainTM {
 			case CMD_SET_PLAYERTIME :
 			case CMD_SET_REFRESHRATE :
 			case CMD_SET_SLEEP :
+			case CMD_SET_SLEEPANIMATION :
 			case CMD_SET_SPEED :
 			case CMD_SET_D_SPEED :
 			case CMD_SET_N_SPEED :
@@ -287,7 +289,7 @@ public class TmHelp extends MainTM {
 			sender.sendMessage(resyncHelpMsg);
 			sender.sendMessage(lockHelpMsg);
 			sender.sendMessage(unlockHelpMsg);
-			sender.sendMessage(animationHelpMsg);
+			sender.sendMessage(setSleepAnimationHelpMsg);
 			sender.sendMessage(hudHelpMsg);
 			sender.sendMessage(nowItemHelpMsg);
 			sender.sendMessage(ChatColor.GRAY + " ");
