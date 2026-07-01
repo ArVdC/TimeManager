@@ -8,7 +8,6 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -438,6 +437,9 @@ public class ValuesConverter extends MainTM {
 	 */
 	public static String formattedTimeFromTick(long ticks, boolean msg) {
 		return formattedTimeFromTick(ticks, PH_TIME24, msg);
+	}
+	public static String formattedTimeFromTick(long ticks, String format) {
+		return formattedTimeFromTick(ticks, format, false); // Avoid console spam
 	}
 	public static String formattedTimeFromTick(long ticks, String format, boolean msg) {
 		long newTicks = (ticks + 6000L) * 72L; // Adjust offset and go real time

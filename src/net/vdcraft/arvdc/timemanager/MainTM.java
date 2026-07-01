@@ -279,7 +279,6 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_PLACEHOLDERS = "placeholders";
 	protected static final String CMD_HUD = "hud";
 	protected static final String CMD_NOWITEM = "nowitem";
-	protected static final String CMD_ANIMATION = "animation";
 	protected static final String CMD_SEASON = "season";
 	protected static final String CMD_GUI = "gui";
 
@@ -300,6 +299,7 @@ public class MainTM extends JavaPlugin {
 	protected static final String CMD_SET_PLAYERTIME = "playerTime";
 	protected static final String CMD_SET_REFRESHRATE = "refreshRate";
 	protected static final String CMD_SET_SLEEP= "sleep";
+	protected static final String CMD_SET_SLEEPANIMATION = "sleepAnimation";
 	protected static final String CMD_SET_SPEED = "speed";
 	protected static final String CMD_SET_D_SPEED = "speedDay";
 	protected static final String CMD_SET_N_SPEED = "speedNight";
@@ -312,6 +312,9 @@ public class MainTM extends JavaPlugin {
 	// Commands arguments and YAML key names
 	public static final String ARG_TRUE = "true";
 	public static final String ARG_FALSE = "false";
+	public static final String ARG_ON = "on";
+	public static final String ARG_OFF = "off";
+	public static final String ARG_TOGGLE = "toggle";
 	protected static final String ARG_NONE = "none";
 	protected static final String ARG_FIRST = "first";
 	protected static final String ARG_RE = "re";

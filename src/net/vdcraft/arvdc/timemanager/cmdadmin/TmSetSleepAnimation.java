@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import net.vdcraft.arvdc.timemanager.MainTM;
 
 /**
- * /tm animation &lt;world&gt; [on|off|toggle]
+ * /tm animation [on|off|toggle] <world|all>
  *
  * Shortcut for flipping {@code worldsList.<world>.nightSkipMode} between
  * {@code animation} and {@code default}. When {@code animation} is on, the
@@ -18,15 +18,14 @@ import net.vdcraft.arvdc.timemanager.MainTM;
  * No argument or {@code toggle} flips the current value. {@code on} forces
  * animation; {@code off} forces default.
  */
-public class TmAnimation extends MainTM {
+public class TmSetSleepAnimation extends MainTM {
 
-	public static void cmdAnimation(CommandSender sender, String world, String onOffArg) {
+	public static void cmdSetSleepAnimation(CommandSender sender, String onOffArg, String world) {
 
-		// #1. Modify all worlds (port of ArVdC's 'all' handling from
-		// TmSetSleepAnimation, kept under our original cmdAnimation signature).
+		// #1. Modify all worlds
 		if (world.equalsIgnoreCase(ARG_ALL)) {
 			for (String listedWorld : MainTM.getInstance().getConfig().getConfigurationSection(CF_WORLDSLIST).getKeys(false)) {
-				cmdAnimation(sender, listedWorld, onOffArg);
+				cmdSetSleepAnimation(sender, onOffArg, listedWorld);
 			}
 			return;
 		}
@@ -62,7 +61,7 @@ public class TmAnimation extends MainTM {
 					+ ChatColor.GOLD + " is now " + ChatColor.YELLOW + ARG_INSTANT);
 			return;
 		} else {
-			sender.sendMessage(ChatColor.RED + "Usage: /tm animation <world> [on|off|toggle|instant]");
+			sender.sendMessage(ChatColor.RED + "Usage: /tm animation [on|off|toggle|instant] [all|world]");
 			return;
 		}
 

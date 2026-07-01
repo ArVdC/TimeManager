@@ -15,6 +15,9 @@ public class PlaceholdersHandler extends MainTM {
 	 * (returns a String)
 	 */
 	public static String replacePlaceholder(String placeholder, String world, String lang, Player p) {
+		return replacePlaceholder(placeholder, world, lang, p, false); // Avoid console spam
+	}
+	public static String replacePlaceholder(String placeholder, String world, String lang, Player p, Boolean Msg) {
 		
 		World w = Bukkit.getServer().getWorld(world);
 		Long t = w.getTime();
@@ -189,7 +192,7 @@ public class PlaceholdersHandler extends MainTM {
 					for (String ph2 : phSlipt2) {
 						if (ph2.contains("tm_")) {
 							ph2 = "{" + ph2 + "}";
-							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p);
+							String ph3 = PlaceholdersHandler.replacePlaceholder(ph2, world, lang, p, false);
 							MsgHandler.devMsg("A placeholder was detected : \"§e" + ph2 + "§9\" will be changed by \"§e" + ph3 + "§9\".");  // Console dev msg
 							msg = msg.replace(ph2, ph3);
 						}
