@@ -355,7 +355,7 @@ public class AdminCmdExecutor implements CommandExecutor {
 			}
 		}
 		// Set time offset for player(s)
-		if (nbArgs >= 2) {
+		if (nbArgs >= 2 && args[0].equalsIgnoreCase(MainTM.CMD_SET)) {
 			if (args[1].equalsIgnoreCase(MainTM.CMD_SET_PLAYEROFFSET)) {
 				if (((nbArgs < 4) && !(sender instanceof Player)) || ((nbArgs < 3) && (sender instanceof Player))) {
 					MsgHandler.cmdErrorMsg(sender, MainTM.missingArgMsg, MainTM.CMD_SET + " " + MainTM.CMD_SET_PLAYEROFFSET); // Send error and help msg

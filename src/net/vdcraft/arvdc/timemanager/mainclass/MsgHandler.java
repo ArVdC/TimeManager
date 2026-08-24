@@ -44,7 +44,7 @@ public class MsgHandler extends MainTM {
 	public static void cmdErrorMsg(CommandSender sender, String msgError, String cmdHelp) {
 		playerAdminMsg(sender, ChatColor.RED + msgError); // Player error msg (in case is player)
 		warnMsg(msgError); // Console error msg (always)
-		Bukkit.dispatchCommand(sender, CMD_TM + " " + CMD_HELP + cmdHelp); // Sender help msg (always)
+		Bukkit.dispatchCommand(sender, CMD_TM + " " + CMD_HELP + " " + cmdHelp); // Sender help msg (always)
 	}
 
 	/**
