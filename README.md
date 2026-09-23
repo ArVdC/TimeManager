@@ -3,6 +3,12 @@
 ## Spigot plugin for time management and display
 
 
+### WHAT'S NEW IN 2.1.1
+- **`/tm set playerTime` no longer floods the console.** Setting a player time printed the same conversion warning in a loop.
+- **`/tm reload all` reloads all three files again.** 'all' matched the config block and returned, so lang.yml and cmds.yml were never re-read - including for a bare `/tm reload`, which is dispatched as 'all'.
+- **Sign settings apply on `/tm reload config`.** `signs.enabled` and `signs.refreshRate` needed a full server restart; the refresh task is now restarted with the config, like the action bar.
+- **`/tm animation` is now `/tm set sleepAnimation [on|off|toggle|instant] [all|world]`**, and the tick conversion debug line no longer spams the console.
+
 ### WHAT'S NEW IN 2.1.0
 - **One jar for every Minecraft version**. The same build runs on Paper 1.9.4 through 26.x. Item icons and APIs that change between versions resolve at runtime based on what the server actually exposes.
 - **GUI works on every supported version**. The click dispatcher no longer relies on PersistentDataContainer, so the admin menu opens and reacts to clicks back to 1.9.4. Slot-to-action mappings live in memory and the inventory is identified by a marker holder.
