@@ -216,6 +216,13 @@ public class CfgFileHandler extends MainTM {
 		ActionBarHandler.ensureDefaults();
 		ActionBarHandler.startOrRestart();
 
+		// #13.C. Same for the refreshing signs: 'signs.enabled' and 'signs.refreshRate' have to
+		// take effect on '/tm reload config', not only on a full server restart. On the first
+		// load RefreshingSignHandler.init() starts the task itself, once the signs are read.
+		if (firstOrRe.equalsIgnoreCase(MainTM.ARG_RE)) {
+			RefreshingSignHandler.startOrRestart();
+		}
+
 		// #14. Restore debugMode node location
 		DebugModeHandler.debugModeNodeRelocate();
 		
