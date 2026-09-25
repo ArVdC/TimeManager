@@ -3,6 +3,9 @@
 ## Spigot plugin for time management and display
 
 
+### WHAT'S NEW IN 2.1.2
+- **The 2.1.1 jar failed to enable** with `NoClassDefFoundError: org/bstats/bukkit/Metrics`: the plugin's own classes still pointed at the un-relocated bStats package. 2.1.2 is the same code with that fixed. No other changes.
+
 ### WHAT'S NEW IN 2.1.1
 - **`/tm set playerTime` no longer floods the console.** Setting a player time printed the same conversion warning in a loop.
 - **`/tm reload all` reloads all three files again.** 'all' matched the config block and returned, so lang.yml and cmds.yml were never re-read - including for a bare `/tm reload`, which is dispatched as 'all'.

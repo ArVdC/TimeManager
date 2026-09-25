@@ -1,5 +1,5 @@
 name: TimeManager
-version: 2.1.1
+version: 2.1.2
 # api-version '1.13' is the lowest field value modern Paper accepts; pre-1.13
 # servers don't know the field and silently ignore it, so the jar still loads
 # back to 1.9.4. Setting it to 1.13 also tells 1.13+ Paper "skip the legacy
